@@ -2,7 +2,7 @@ import React from "react";
 import { Form } from "antd";
 import {InputLabel} from "../InputLabelComponent/InputLabel";
 import {Logo} from "../PicturesComponents/Logo";
-import {Button} from "../ButtonComponent/Button";
+import {Buttons} from "../ButtonComponent/Button";
 import {InputPattern} from "../InputComponent/Input";
 import styles from "./styles/CodeConfirmation.module.scss";
 
@@ -23,7 +23,7 @@ export const CodeConfirmation = () => {
                     </div>
                 </Form.Item>
                 <div className={styles.btnBlue}>
-                    <Button type="submit" text={"Подтвердить"}/>
+                    <Buttons type="submit" text={"Подтвердить"}/>
                 </div>
                 <p className={styles.btnSignature}>Отправить код повторно</p>
             </Form>

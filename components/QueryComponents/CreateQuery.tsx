@@ -1,18 +1,17 @@
-import React, {useState} from "react";
+import React from "react";
 import {Form, Select} from "antd";
 import {InputLabel} from "../InputLabelComponent/InputLabel";
 import {InputPattern} from "../InputComponent/Input";
 import {Logo} from "../PicturesComponents/Logo";
 import {TextAreas} from "../TextAreaComponent/TextArea";
-import {Button} from "../ButtonComponent/Button";
+import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/CreateQuery.module.scss";
 
 export const CreateQuery = () => {
-    const [modalActive, setModalActive] = useState(true);
 
     return (
-        <div className={styles.containerQuery}>
+        <>
             <div className={styles.container}>
                 <Form className={styles.form}>
                     <Form.Item className={styles.logo}>
@@ -71,15 +70,14 @@ export const CreateQuery = () => {
                     </Form.Item>
                     <div className={styles.containerBtn}>
                         <div className={styles.btnWhite}>
-                            <Button text={"Отменить"}/>
+                            <Buttons text={"Отменить"} />
                         </div>
                         <div className={styles.btnBlue}>
-                            <Button text={"Отправить"}/>
+                            <Buttons text={"Отправить"} />
                         </div>
                     </div>
                 </Form>
             </div>
-
-        </div>
+        </>
     );
 };

@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Select } from "antd";
 import {InputLabel} from "../InputLabelComponent/InputLabel";
 import {Logo} from "../PicturesComponents/Logo";
-import {Button} from "../ButtonComponent/Button";
+import {Buttons} from "../ButtonComponent/Button";
 import {InputPattern} from "../InputComponent/Input";
 
 import styles from './styles/Registration.module.scss';
@@ -37,10 +37,10 @@ export const Registration = () => {
                 </Form.Item>
                 <div className={styles.containerBtn}>
                     <div className={styles.btnWhite}>
-                        <Button type="submit" text={"Пропустить"}/>
+                        <Buttons type="submit" text={"Пропустить"}/>
                     </div>
                     <div className={styles.btnBlue}>
-                        <Button type="submit" text={"Завершить"}/>
+                        <Buttons type="submit" text={"Завершить"}/>
                     </div>
                 </div>
             </Form>
