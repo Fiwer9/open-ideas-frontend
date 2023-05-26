@@ -1,11 +1,10 @@
-import Head from 'next/head';
-import Image from 'next/image';
-import styles from '@/styles/Home.module.scss';
+import React from "react";
+import {LogIn} from "../components/AuthComponents/LogIn";
 
-export default function Home() {
-  return (
-    <div>
-      <h1>Hello, РусГидро!</h1>
-    </div>
-  )
+export default function Index() {
+    return (
+        <div>
+            <LogIn />
+        </div>
+    )
 }
