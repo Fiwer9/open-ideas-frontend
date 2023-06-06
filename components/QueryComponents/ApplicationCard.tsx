@@ -1,13 +1,14 @@
 import React from "react";
-import {Checkbox, Form} from "antd";
+import {Form} from "antd";
 import {HeartOutlined} from "@ant-design/icons";
 import {Row, Col} from "antd";
 import {Logo} from "../PicturesComponents/Logo";
 import {TextAreas} from "../TextAreaComponent/TextArea";
+import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/ApplicationCard.module.scss";
 
-export const ApplicationCard = () => {
+export const ApplicationCard = ({children}: any) => {
   return (
       <div className={styles.container}>
           <Form className={styles.form}>
@@ -79,9 +80,13 @@ export const ApplicationCard = () => {
                       <TextAreas placeholder={"Напишите комментарий по этой инициативе"}/>
                   </div>
               </Form.Item>
-              <div className={styles.checkboxContainer}>
-                  <Checkbox className={styles.checkbox}>Отклонено</Checkbox>
-                  <Checkbox className={styles.checkbox}>Одобрено для реализации</Checkbox>
+              <div className={styles.footerContainer}>
+                  <div className={styles.buttonsContainer}>
+                      {children}
+                  </div>
+                  <div className={`${styles.btnBlue} ${styles.btnForm}`}>
+                      <Buttons text={"Отправить"}/>
+                  </div>
               </div>
           </Form>
       </div>

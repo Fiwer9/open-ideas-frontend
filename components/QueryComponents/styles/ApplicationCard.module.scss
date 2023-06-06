@@ -20,10 +20,19 @@
           display: flex;
           align-items: center;
 
-          .icon {
+          .likes {
             padding: 7px 7px;
             border: 1px solid rgba(0, 0, 0, 0.4);
             border-radius: 4px;
+            background-color: transparent;
+            cursor: pointer;
+          }
+
+          button.likes:active {
+            .iconLike {
+              color: $color-pink;
+              fill: $color-pink;
+            }
           }
 
           .numberLikes {
@@ -150,15 +159,10 @@
       }
     }
 
-    .checkboxContainer {
-      margin-top: 16px;
-      text-align: left;
-
-      .checkbox {
-        margin: 0;
-        padding: 5px 12px;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-      }
+    .footerContainer{
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
     }
   }
 }
