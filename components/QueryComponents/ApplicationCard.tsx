@@ -17,7 +17,7 @@ export const ApplicationCard = ({children}: any) => {
                       <Logo />
                       <div className={styles.headerContent}>
                           <div className={styles.iconContainer}>
-                              <HeartOutlined className={styles.icon}/>
+                              <HeartOutlined className={styles.likes}/>
                               <p className={styles.numberLikes}>123</p>
                           </div>
                           <p className={styles.statusQuery}>Заявка отклонена</p>
