@@ -4,6 +4,7 @@
   @extend %container;
 
   .form {
+    min-width: 572px;
     @extend %form;
 
     .content {
@@ -16,7 +17,7 @@
 
     .formItems {
       margin: 0;
-      margin-top: 24px;
+      margin-top: 18px;
 
       .label {
         text-align: left;

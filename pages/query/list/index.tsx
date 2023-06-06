@@ -1,10 +1,10 @@
 import React from "react";
-import {LogIn} from "../../components/AuthComponents/LogIn";
+import {QueryList} from "../../../components/QueryComponents/QueryList";
 
 export default function Index() {
     return (
         <div>
-            <LogIn />
+            <QueryList />
         </div>
     )
 }
