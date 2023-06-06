@@ -1,0 +1,24 @@
+@import "../../../styles/variable.scss";
+
+.container {
+  @extend %container;
+
+  .form {
+    @extend %form;
+
+    .content {
+      margin-top: 35px;
+
+      .inputlabel {
+        font-size: 20px;
+      }
+
+      .text {
+        margin: 0;
+        margin-bottom: 80px;
+        font-size: 16px;
+      }
+    }
+  }
+}
+

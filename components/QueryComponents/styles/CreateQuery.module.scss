@@ -1,0 +1,32 @@
+@import "../../../styles/variable.scss";
+
+.container {
+  @extend %container;
+
+  .form {
+    @extend %form;
+
+    .content {
+      margin: 0;
+
+      .title {
+        font-size: 32px;
+      }
+    }
+
+    .formItems {
+      margin: 0;
+      margin-top: 24px;
+
+      .label {
+        text-align: left;
+      }
+    }
+
+    .containerBtn {
+      margin-top: 32px;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}

@@ -1,0 +1,26 @@
+@import "../../../styles/variable.scss";
+
+.container {
+  @extend %container;
+
+  .form {
+    @extend %form;
+
+    .content {
+      margin-top: 11px;
+
+      .title {
+        font-size: 20px;
+      }
+
+      .input {
+        margin-top: 14px;
+      }
+    }
+
+    .btnBlue {
+      margin-top: 32px;
+    }
+  }
+}
+
