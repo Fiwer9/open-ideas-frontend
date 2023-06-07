@@ -5,6 +5,7 @@ import {Logo} from "../PicturesComponents/Logo";
 import {Buttons} from "../ButtonComponent/Button";
 import {InputPattern} from "../InputComponent/Input";
 import styles from "./styles/CodeConfirmation.module.scss";
+import router from "next/router";
 
 export const CodeConfirmation = () => {
     return (
@@ -23,7 +24,7 @@ export const CodeConfirmation = () => {
                     </div>
                 </Form.Item>
                 <div className={styles.btnBlue}>
-                    <Buttons type="submit" text={"Подтвердить"}/>
+                    <Buttons onClick={() => router.push('/queries')} type="submit" text={"Подтвердить"}/>
                 </div>
                 <p className={styles.btnSignature}>Отправить код повторно</p>
             </Form>

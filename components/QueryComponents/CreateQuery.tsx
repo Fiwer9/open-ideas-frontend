@@ -7,6 +7,7 @@ import {TextAreas} from "../TextAreaComponent/TextArea";
 import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/CreateQuery.module.scss";
+import router from "next/router";
 
 export const CreateQuery = () => {
 
@@ -70,10 +71,10 @@ export const CreateQuery = () => {
                     </Form.Item>
                     <div className={styles.containerBtn}>
                         <div className={styles.btnWhite}>
-                            <Buttons text={"Отменить"} />
+                            <Buttons onClick={() => router.push('/queries')} text={"Отменить"} />
                         </div>
                         <div className={styles.btnBlue}>
-                            <Buttons text={"Отправить"} />
+                            <Buttons onClick={() => router.push('/queries')} text={"Отправить"} />
                         </div>
                     </div>
                 </Form>
