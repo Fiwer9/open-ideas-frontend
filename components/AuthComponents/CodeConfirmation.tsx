@@ -26,7 +26,9 @@ export const CodeConfirmation = () => {
                 <div className={styles.btnBlue}>
                     <Buttons onClick={() => router.push('/queries')} type="submit" text={"Подтвердить"}/>
                 </div>
-                <p className={styles.btnSignature}>Отправить код повторно</p>
+                <div className={styles.btnRepeatCode}>
+                    <Buttons text={'Отправить код повторно'}/>
+                </div>
             </Form>
         </div>
     );
