@@ -4,6 +4,7 @@ import {InputPattern} from "../InputComponent/Input";
 import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/QueryList.module.scss";
+import router from "next/router";
 
 export const QueryList = () => {
     const dataSource = [
@@ -78,33 +79,45 @@ export const QueryList = () => {
         },
     ];
 
-  return (
-      <div className={styles.content}>
-          <div className={styles.titleContainer}>
-              <h1 className={styles.title}>Заявки</h1>
-          </div>
-          <div className={styles.infContainer}>
-              <div className={styles.inputContainer}>
-                  <div className={styles.inputNumber}>
-                      <InputPattern placeholder={"Номер заявки"}/>
-                  </div>
-                  <div className={styles.inputSearch}>
-                      <InputPattern placeholder={"Поиск по идеям"}/>
-                  </div>
-              </div>
-              <div className={styles.btnContainer}>
-                  <div className={styles.btnBlue}>
-                      <Buttons text={"Создать заявку"}/>
-                  </div>
-                  <Checkbox className={styles.checkbox}>Архив</Checkbox>
-              </div>
-          </div>
-          <div className={styles.tableContainer}>
-              <Table className={styles.table} dataSource={dataSource} columns={columns} />
-          </div>
-          <div className={styles.linkContainer}>
-              <Button className={styles.link} type="link">НАЗАД</Button>
-          </div>
-      </div>
-  );
+    const handleRowClick = (link: String) => {
+        router.push(`/queries/application`);
+        // router.push(`/queries/${link}`);
+    };
+
+    return (
+        <div className={styles.content}>
+            <div className={styles.titleContainer}>
+                <h1 className={styles.title}>Заявки</h1>
+            </div>
+            <div className={styles.infContainer}>
+                <div className={styles.inputContainer}>
+                    <div className={styles.inputNumber}>
+                        <InputPattern placeholder={"Номер заявки"}/>
+                    </div>
+                    <div className={styles.inputSearch}>
+                        <InputPattern placeholder={"Поиск по идеям"}/>
+                    </div>
+                </div>
+                <div className={styles.btnContainer}>
+                    <div className={styles.btnBlue}>
+                        <Buttons onClick={() => router.push(`/queries/create`)} text={"Создать заявку"}/>
+                    </div>
+                    <Checkbox className={styles.checkbox}>Архив</Checkbox>
+                </div>
+            </div>
+            <div className={styles.tableContainer}>
+                <Table
+                    className={styles.table}
+                    dataSource={dataSource}
+                    columns={columns}
+                    onRow={(element) => ({
+                        onClick: () => handleRowClick(element.key),
+                    })}
+                />
+            </div>
+            <div className={styles.linkContainer}>
+                <Button onClick={() => router.push(`/`)} className={styles.link} type="link">НАЗАД</Button>
+            </div>
+        </div>
+    );
 };

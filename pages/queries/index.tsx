@@ -1,5 +1,5 @@
 import React from "react";
-import {QueryList} from "../../../components/QueryComponents/QueryList";
+import {QueryList} from "../../components/QueryComponents/QueryList";
 
 export default function Index() {
     return (
