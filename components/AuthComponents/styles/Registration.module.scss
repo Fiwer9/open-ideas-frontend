@@ -4,6 +4,7 @@
   @extend %container;
 
   .form {
+    max-width: 472px;
     @extend %form;
 
     .content {

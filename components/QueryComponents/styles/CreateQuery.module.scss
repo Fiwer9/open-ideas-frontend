@@ -1,15 +1,30 @@
 @import "../../../styles/variable.scss";
 
 .container {
+  padding: 16px 0;
   @extend %container;
 
   .form {
-    min-width: 572px;
+    max-width: 572px;
+    height: 100vh;
+    overflow: auto;
+    -ms-overflow-style: none;
     @extend %form;
 
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+
     .content {
+      margin: 0;
+
       .title {
         font-size: 32px;
+      }
+      @media (max-width: 320px) {
+        .title {
+          font-size: 20px;
+        }
       }
     }
 
