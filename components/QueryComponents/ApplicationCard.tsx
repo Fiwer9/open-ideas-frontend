@@ -26,30 +26,30 @@ export const ApplicationCard = ({children}: any) => {
                   </div>
               </Form.Item>
               <Col className={styles.col}>
-                  <Row>
+                  <Row className={styles.row}>
                       <p className={styles.rowText}>Номер заявки:</p>
                       <p className={styles.rowInf}>1</p>
                   </Row>
-                  <Row>
+                  <Row className={styles.row}>
                       <p className={styles.rowText}>Инициатива (Идея):</p>
                       <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
                   </Row>
-                  <Row>
+                  <Row className={styles.row}>
                       <p className={styles.rowText}>Описание инициативы:</p>
                       <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
                   </Row>
-                  <Row>
+                  <Row className={styles.row}>
                       <p className={styles.rowText}>Направление:</p>
                       <p className={styles.rowInf}>Рабочее пространство</p>
                   </Row>
-                  <Row>
+                  <Row className={styles.row}>
                       <p className={styles.rowText}>Организация:</p>
                       <p className={styles.rowInf}>Волжская ГЭС</p>
                   </Row>
-                  <Row>
+                  <Row className={styles.row}>
                       <p className={`${styles.rowText} ${styles.comments}`}>Комментарии:</p>
                   </Row>
-                  <Row>
+                  <Row className={styles.row}>
                       <div className={styles.userContainer}>
                           <div className={styles.userAvatar}></div>
                           <div className={styles.user}>
@@ -62,7 +62,7 @@ export const ApplicationCard = ({children}: any) => {
                           </div>
                       </div>
                   </Row>
-                  <Row>
+                  <Row className={styles.row}>
                       <div className={styles.userContainer}>
                           <div className={styles.userAvatar}></div>
                           <div className={styles.user}>

@@ -20,8 +20,7 @@
 
     .title {
       margin: {
-        top: 21px;
-        left: 32px;
+        left: 8px;
         bottom: 21px;
       }
       font: {
@@ -110,6 +109,57 @@
         size: 20px;
       }
       color: $color-violet;
+    }
+  }
+  @media (max-width: 720px) {
+    padding: 16px;
+  }
+  @media (max-width: 320px) {
+    .titleContainer {
+      display: flex;
+      .title {
+        margin: 16px auto 24px;
+      }
+    }
+
+    .infContainer {
+      justify-content: center;
+      align-items: center;
+
+      .inputContainer {
+        flex-direction: column;
+
+        .inputNumber {
+          max-width: 288px;
+          width: 100%;
+        }
+      }
+      .btnContainer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        gap: 16px;
+
+        .btnBlue {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          max-width: 135px;
+          width: 100%;
+          height: 32px;
+
+          font-size: 14px;
+          white-space: nowrap;
+        }
+
+        .checkbox {
+          max-width: 88px;
+          width: 100%;
+        }
+      }
     }
   }
 }
