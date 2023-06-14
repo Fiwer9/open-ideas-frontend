@@ -1,7 +1,6 @@
 @import "../../../styles/variable.scss";
 
 .container {
-  padding: 16px 0;
   @extend %container;
 
   .form {
