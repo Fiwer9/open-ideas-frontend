@@ -15,7 +15,9 @@ export const ApplicationCard = ({children}: any) => {
           <Form className={styles.form}>
               <Form.Item className={styles.logo}>
                   <div className={styles.headerContainer}>
-                      <Logo />
+                      <div className={styles.logo}>
+                        <Logo />
+                      </div>
                       <div className={styles.headerContent}>
                           <div className={styles.iconContainer}>
                               <HeartOutlined className={styles.likes}/>
