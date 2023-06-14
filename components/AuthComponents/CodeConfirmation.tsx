@@ -27,7 +27,7 @@ export const CodeConfirmation = () => {
                     <Buttons onClick={() => router.push('/queries')} type="submit" text={"Подтвердить"}/>
                 </div>
                 <div className={styles.btnRepeatCode}>
-                    <Buttons text={'Отправить код повторно'}/>
+                    <Buttons onClick={() => router.push('../../')}  text={'Отправить код повторно'}/>
                 </div>
             </Form>
         </div>
