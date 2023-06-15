@@ -8,6 +8,7 @@ import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/CreateQuery.module.scss";
 import Modal from "../ModalsComponents/Modal";
+import router from "next/router";
 
 export const CreateQuery = () => {
     const [modalActive, setModalActive] = useState(false);
@@ -75,7 +76,10 @@ export const CreateQuery = () => {
                             <Buttons text={"Отменить"} />
                         </div>
                         <div className={styles.btnBlue}>
-                            <Buttons text={"Отправить"} onClick={() => setModalActive(true)}/>
+                            <Buttons text={"Отправить"} onClick={() => {
+                                setModalActive(true);
+                                router.push('/queries')}
+                            }/>
                         </div>
                     </div>
                 </Form>
