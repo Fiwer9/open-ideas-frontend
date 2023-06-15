@@ -190,6 +190,17 @@
       margin-top: 18px;
       display: flex;
       justify-content: space-between;
+      flex-wrap: wrap;
+
+      .btnBlue {
+        display: flex;
+        align-items: center;
+      }
+
+      @media (max-width: 490px) {
+        justify-content: center;
+        gap: 8px;
+      }
     }
   }
 }
