@@ -7,6 +7,7 @@ import {TextAreas} from "../TextAreaComponent/TextArea";
 import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/ApplicationCard.module.scss";
+import router from "next/router";
 
 export const ApplicationCard = ({children}: any) => {
   return (
@@ -85,7 +86,7 @@ export const ApplicationCard = ({children}: any) => {
                       {children}
                   </div>
                   <div className={`${styles.btnBlue} ${styles.btnForm}`}>
-                      <Buttons text={"Отправить"}/>
+                      <Buttons onClick={() => router.push('/queries')} text={"Отправить"}/>
                   </div>
               </div>
           </Form>

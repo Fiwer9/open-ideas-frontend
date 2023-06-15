@@ -4,6 +4,7 @@ import {InputLabel} from "../InputLabelComponent/InputLabel";
 import {Logo} from "../PicturesComponents/Logo";
 import {Buttons} from "../ButtonComponent/Button";
 import {InputPattern} from "../InputComponent/Input";
+import router from "next/router";
 
 import styles from './styles/LogIn.module.scss';
 
@@ -23,7 +24,7 @@ export const LogIn = () => {
                     </div>
                 </Form.Item>
                 <div className={styles.btnBlue}>
-                    <Buttons type="submit" text={'Продолжить'} />
+                    <Buttons onClick={() => router.push('/auth/code')} type="submit" text={'Продолжить'} />
                 </div>
             </Form>
         </div>

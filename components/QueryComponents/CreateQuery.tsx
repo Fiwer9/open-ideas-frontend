@@ -73,7 +73,7 @@ export const CreateQuery = () => {
                     </Form.Item>
                     <div className={styles.containerBtn}>
                         <div className={styles.btnWhite}>
-                            <Buttons text={"Отменить"} />
+                            <Buttons onClick={() => router.push('/queries')} text={"Отменить"} />
                         </div>
                         <div className={styles.btnBlue}>
                             <Buttons text={"Отправить"} onClick={() => {
