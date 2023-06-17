@@ -1,18 +1,13 @@
 @import "../../../styles/variable.scss";
 
-.container {
-  @extend %container;
+.card {
+  max-width: 572px;
+  margin: 3% auto;
+  width: 100%;
+  border-radius: 2px;
+  box-shadow: 2px 6px 8px 2px rgba(0, 0, 0, 0.15);
 
   .form {
-    max-width: 572px;
-    height: 100vh;
-    overflow: auto;
-    -ms-overflow-style: none;
-    @extend %form;
-
-    &::-webkit-scrollbar {
-      width: 0;
-    }
 
     .logo {
       margin-bottom: 0;
@@ -29,6 +24,7 @@
 
       .title {
         font-size: 32px;
+        text-align: center;
       }
       @media (max-width: 320px) {
         .title {
@@ -51,10 +47,6 @@
       margin-top: 32px;
       display: flex;
       justify-content: space-between;
-    }
-
-    @media (max-width: 320px) {
-      padding: 8px;
     }
   }
 }

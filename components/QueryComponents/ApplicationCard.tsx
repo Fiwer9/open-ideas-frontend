@@ -1,5 +1,5 @@
 import React from "react";
-import {Form} from "antd";
+import {Card, Form} from "antd";
 import {HeartOutlined} from "@ant-design/icons";
 import {Row, Col} from "antd";
 import {Logo} from "../PicturesComponents/Logo";
@@ -11,12 +11,12 @@ import router from "next/router";
 
 export const ApplicationCard = ({children}: any) => {
   return (
-      <div className={styles.container}>
+      <Card className={styles.card}>
           <Form className={styles.form}>
               <Form.Item className={styles.logo}>
                   <div className={styles.headerContainer}>
                       <div className={styles.logo}>
-                        <Logo />
+                        <Logo width={147} height={42} />
                       </div>
                       <div className={styles.headerContent}>
                           <div className={styles.iconContainer}>
@@ -83,15 +83,32 @@ export const ApplicationCard = ({children}: any) => {
                       <TextAreas placeholder={"Напишите комментарий по этой инициативе"}/>
                   </div>
               </Form.Item>
-              <div className={styles.footerContainer}>
-                  <div className={styles.buttonsContainer}>
-                      {children}
-                  </div>
-                  <div className={`${styles.btnBlue} ${styles.btnForm}`}>
-                      <Buttons onClick={() => router.push('/queries')} text={"Отправить"}/>
-                  </div>
+              {children? (
+                <div className={styles.footerContainerChild}>
+                    <div className={styles.buttonsContainer}>
+                        {children}
+                    </div>
+                    <div className={styles.submitBtns}>
+                        <div className={styles.btnWhite}>
+                          <Buttons onClick={() => router.push("/queries")} text={"Отменить"} />
+                        </div>
+                        <div className={`${styles.btnBlue} ${styles.btnForm}`}>
+                            <Buttons onClick={() => router.push('/queries')} text={"Отправить"}/>
+                        </div>
+                    </div>
               </div>
+                  ) : (
+                  <div className={styles.footerContainer}>
+                      <div className={styles.btnWhite}>
+                          <Buttons onClick={() => router.push("/queries")} text={"Отменить"} />
+                      </div>
+                      <div className={`${styles.btnBlue} ${styles.btnForm}`}>
+                          <Buttons onClick={() => router.push('/queries')} text={"Отправить"}/>
+                      </div>
+                  </div>
+                  )}
+
           </Form>
-      </div>
+      </Card>
   );
 };

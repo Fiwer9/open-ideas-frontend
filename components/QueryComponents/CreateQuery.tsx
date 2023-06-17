@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Select } from "antd";
+import {Form, Select, Card} from "antd";
 import { InputLabel } from "../InputLabelComponent/InputLabel";
 import { InputPattern } from "../InputComponent/Input";
 import { Logo } from "../PicturesComponents/Logo";
@@ -11,10 +11,10 @@ import router from "next/router";
 
 export const CreateQuery = () => {
     return (
-        <div className={styles.container}>
+        <Card className={styles.card}>
             <Form className={styles.form}>
                 <div className={styles.logo}>
-                    <Logo />
+                    <Logo width={126.82} height={36} />
                 </div>
                 <div className={styles.content}>
                     <div className={styles.title}>
@@ -76,6 +76,6 @@ export const CreateQuery = () => {
                     </div>
                 </div>
             </Form>
-        </div>
+        </Card>
     );
 };

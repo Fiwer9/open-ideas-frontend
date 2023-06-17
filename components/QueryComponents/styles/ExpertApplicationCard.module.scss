@@ -4,9 +4,8 @@
   display: flex;
   flex-wrap: wrap;
 
-  @media (max-width: 395px) {
+  @media (max-width: 615px) {
     justify-content: center;
-    gap: 8px;
   }
   .checkbox {
     margin: 0;
