@@ -12,6 +12,11 @@ import router from "next/router";
 
 export const CreateQuery = () => {
     const [modalActive, setModalActive] = useState(false);
+    const [secondModalActive, setSecondModalActive] = useState(false);
+    const closeModal = () => {
+      setModalActive(false);
+      setSecondModalActive(false);
+    };
 
     return (
         <>
@@ -78,7 +83,7 @@ export const CreateQuery = () => {
                         <div className={styles.btnBlue}>
                             <Buttons text={"Отправить"} onClick={() => {
                                 setModalActive(true);
-                                router.push('/queries')}
+                                router.push('/queries/create')}
                             }/>
                         </div>
                     </div>
@@ -87,20 +92,29 @@ export const CreateQuery = () => {
 
             <div className={styles.modalContainer}>
                 <Modal
-                    className active={modalActive} setActive={setModalActive}
+                    className={styles.models} active={modalActive} setActive={setModalActive}
                     text={"Вы уверены, что хотите зарегистрировать заявку и внесли все необходимые данные? После регистрации внесение изменений невозможно"}
-                    textBtn={"Отправить"}
+                    textBtnWhite={"Назад"}
+                    textBtnBlue={"Отправить"}
+                    onClickWhite={closeModal}
+                    onClickBlue={() => {
+                        setSecondModalActive(true);
+                        router.push('/queries/create')}
+                    }
                 >
                 </Modal>
             </div>
-            {/*<div className={styles.modalContainer}>*/}
-            {/*    <Modal*/}
-            {/*        className active={modalActive} setActive={setModalActive}*/}
-            {/*        text={"Вы уверены, что хотите отменить создание заявки? При отмене заявки ранее внесенная информация не будет сохранена"}*/}
-            {/*        textBtn={"Выйти"}*/}
-            {/*    >*/}
-            {/*    </Modal>*/}
-            {/*</div>*/}
+            <div className={styles.modalContainer}>
+                <Modal
+                    className active={secondModalActive} setActive={setSecondModalActive}
+                    text={"Вы уверены, что хотите отменить создание заявки? При отмене заявки ранее внесенная информация не будет сохранена"}
+                    textBtnWhite={"Назад"}
+                    textBtnBlue={"Выйти"}
+                    onClickWhite={closeModal}
+                    onClickBlue={() => { router.push('/queries') }}
+                >
+                </Modal>
+            </div>
         </>
     );
 };

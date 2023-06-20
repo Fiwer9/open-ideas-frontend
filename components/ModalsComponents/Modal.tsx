@@ -5,30 +5,30 @@ import {Form} from "antd";
 
 import styles from "./styles/Modal.module.scss";
 
-const Modal = ({ active, setActive, text, textBtn }: any) => {
+const Modal = ({ active, setActive, text, textBtnWhite, textBtnBlue, onClickWhite, onClickBlue }: any) => {
     return (
         <>
             {active ?
-      <div className={styles.modal} onClick={() => setActive(false)}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-              <Form className={styles.modalForm}>
-                  <Form.Item className={styles.logo}>
-                      <Logo />
-                  </Form.Item>
-                  <Form.Item className={styles.modelText}>
-                      <p>{text}</p>
-                  </Form.Item>
-                  <div className={styles.btnContainer}>
-                      <div className={styles.btnWhite}>
-                          <Buttons text={"Назад"} />
-                      </div>
-                      <div className={styles.btnBlue}>
-                          <Buttons text={textBtn} />
-                      </div>
+              <div className={styles.modal} onClick={() => setActive(false)}>
+                  <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                      <Form className={styles.modalForm}>
+                          <Form.Item className={styles.logo}>
+                              <Logo />
+                          </Form.Item>
+                          <Form.Item className={styles.modelText}>
+                              <p>{text}</p>
+                          </Form.Item>
+                          <div className={styles.btnContainer}>
+                              <div className={styles.btnWhite}>
+                                  <Buttons text={textBtnWhite} onClick={onClickWhite}/>
+                              </div>
+                              <div className={styles.btnBlue}>
+                                  <Buttons text={textBtnBlue} onClick={onClickBlue}/>
+                              </div>
+                          </div>
+                      </Form>
                   </div>
-              </Form>
-          </div>
-      </div>
+              </div>
             : <></>}
             </>
     );
