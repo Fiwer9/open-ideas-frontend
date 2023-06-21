@@ -99,6 +99,7 @@ export const CreateQuery = () => {
                     onClickWhite={closeModal}
                     onClickBlue={() => {
                         setSecondModalActive(true);
+                        setModalActive(false)
                         router.push('/queries/create')}
                     }
                 >
