@@ -80,35 +80,36 @@ export const CreateQuery = () => {
                         <div className={styles.btnWhite}>
                             <Buttons text={"Отменить"} onClick={() => {
                                 setSecondModalActive(true);
-                                router.push('/queries/create')}
-                            } />
+                            }}/>
                         </div>
                         <div className={styles.btnBlue}>
                             <Buttons text={"Отправить"} onClick={() => {
                                 setModalActive(true);
-                                router.push('/queries/create')}
-                            }/>
+                            }}/>
                         </div>
                     </div>
                 </Form>
             </Card>
-
-            <Modal
-                className={styles.models} active={modalActive} setActive={setModalActive}
-                text={"Вы уверены, что хотите зарегистрировать заявку и внесли все необходимые данные? После регистрации внесение изменений невозможно"}
-                textBtnWhite={"Назад"}
-                textBtnBlue={"Отправить"}
-                onClickWhite={closeModal}
-                onClickBlue={() => router.push('/queries')}
-            />
-            <Modal
-                className={styles.models} active={secondModalActive} setActive={setSecondModalActive}
-                text={"Вы уверены, что хотите отменить создание заявки? При отмене заявки ранее внесенная информация не будет сохранена"}
-                textBtnWhite={"Назад"}
-                textBtnBlue={"Выйти"}
-                onClickWhite={closeModal}
-                onClickBlue={() => router.push('/queries')}
-            />
+            {modalActive && (
+                <Modal
+                    className={styles.models} active={modalActive} setActive={setModalActive}
+                    text={"Вы уверены, что хотите зарегистрировать заявку и внесли все необходимые данные? После регистрации внесение изменений невозможно"}
+                    textBtnWhite={"Назад"}
+                    textBtnBlue={"Отправить"}
+                    onClickWhite={closeModal}
+                    onClickBlue={() => router.push('/queries')}
+                />
+            )}
+            {secondModalActive && (
+                <Modal
+                    className={styles.models} active={secondModalActive} setActive={setSecondModalActive}
+                    text={"Вы уверены, что хотите отменить создание заявки? При отмене заявки ранее внесенная информация не будет сохранена"}
+                    textBtnWhite={"Назад"}
+                    textBtnBlue={"Выйти"}
+                    onClickWhite={closeModal}
+                    onClickBlue={() => router.push('/queries')}
+                />
+            )}
         </>
     );
 };
