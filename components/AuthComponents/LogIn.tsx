@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Form} from "antd";
 import {InputLabel} from "../InputLabelComponent/InputLabel";
 import {Logo} from "../PicturesComponents/Logo";
@@ -7,8 +7,18 @@ import {InputPattern} from "../InputComponent/Input";
 import router from "next/router";
 
 import styles from './styles/LogIn.module.scss';
+import {useDispatch} from "react-redux";
+import {loginUser} from "../../services/getLoginService/LoginSlice";
 
 export const LogIn = () => {
+    const [email, setEmail] = useState<string>('');
+
+    const dispatch = useDispatch();
+
+    const handleLogin = () => {
+        // @ts-ignore
+        dispatch(loginUser(email))
+    }
     return (
         <div className={styles.container}>
             <Form className={styles.form}>
@@ -20,11 +30,14 @@ export const LogIn = () => {
                         <InputLabel title={'Войдите при помощи почты'} />
                     </div>
                     <div className={styles.input}>
-                        <InputPattern placeholder="Напишите свою почту"/>
+                        <InputPattern onChange={(evt: any) => setEmail(evt.target.value)} value={email} placeholder="Напишите свою почту"/>
                     </div>
                 </Form.Item>
                 <div className={styles.btnBlue}>
-                    <Buttons onClick={() => router.push('/auth/code')} type="submit" text={'Продолжить'} />
+                    <Buttons onClick={() => {
+                        handleLogin();
+                        router.push('/auth/code');
+                    }} type="submit" text={'Продолжить'} />
                 </div>
             </Form>
         </div>
