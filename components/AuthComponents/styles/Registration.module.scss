@@ -4,6 +4,7 @@
   @extend %container;
 
   .form {
+    max-width: 472px;
     @extend %form;
 
     .content {
@@ -17,6 +18,12 @@
     .contentSelect {
       margin: 0;
       margin-top: 16px;
+
+      @media (max-width: 320px) {
+        .contentSelectTitle {
+          font-size: 16px;
+        }
+      }
 
       .mySelectContainer {
         .ant-select {

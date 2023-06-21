@@ -1,5 +1,5 @@
 import React from "react";
-import { Form } from "antd";
+import {Form} from "antd";
 import {InputLabel} from "../InputLabelComponent/InputLabel";
 import {Logo} from "../PicturesComponents/Logo";
 import {Buttons} from "../ButtonComponent/Button";
@@ -13,7 +13,7 @@ export const LogIn = () => {
         <div className={styles.container}>
             <Form className={styles.form}>
                 <Form.Item className={styles.logo}>
-                    <Logo />
+                    <Logo width={112} height={32} />
                 </Form.Item>
                 <Form.Item className={styles.content}>
                     <div className={styles.title}>

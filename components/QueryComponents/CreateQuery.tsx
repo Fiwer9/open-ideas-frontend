@@ -1,10 +1,10 @@
-import React, {useState} from "react";
-import {Form, Select} from "antd";
-import {InputLabel} from "../InputLabelComponent/InputLabel";
-import {InputPattern} from "../InputComponent/Input";
-import {Logo} from "../PicturesComponents/Logo";
-import {TextAreas} from "../TextAreaComponent/TextArea";
-import {Buttons} from "../ButtonComponent/Button";
+import React from "react";
+import {Form, Select, Card} from "antd";
+import { InputLabel } from "../InputLabelComponent/InputLabel";
+import { InputPattern } from "../InputComponent/Input";
+import { Logo } from "../PicturesComponents/Logo";
+import { TextAreas } from "../TextAreaComponent/TextArea";
+import { Buttons } from "../ButtonComponent/Button";
 
 import styles from "./styles/CreateQuery.module.scss";
 import Modal from "../ModalsComponents/Modal";
@@ -20,7 +20,7 @@ export const CreateQuery = () => {
 
     return (
         <>
-            <div className={styles.container}>
+            <Card className={styles.card}>
                 <Form className={styles.form}>
                     <Form.Item className={styles.logo}>
                         <Logo />
@@ -91,7 +91,7 @@ export const CreateQuery = () => {
                         </div>
                     </div>
                 </Form>
-            </div>
+            </Card>
 
             <Modal
                 className={styles.models} active={modalActive} setActive={setModalActive}

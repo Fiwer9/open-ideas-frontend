@@ -14,13 +14,13 @@ export const Registration = () => {
                     <Logo />
                 </Form.Item>
                 <Form.Item className={styles.content}>
-                    <InputLabel title={"Введите своё Ф. И. О."}/>
+                    <InputLabel className={styles.title} title={"Введите своё Ф. И. О."}/>
                     <div className={styles.input}>
                         <InputPattern placeholder={"Напишите фамилию, имя и отчество"}/>
                     </div>
                 </Form.Item>
                 <Form.Item className={styles.contentSelect}>
-                    <InputLabel title={"Выберите свою организацию"}/>
+                    <InputLabel className={styles.contentSelectTitle} title={"Выберите свою организацию"}/>
                     <div className={styles.mySelectContainer}>
                         <Select
                             className={styles.select}

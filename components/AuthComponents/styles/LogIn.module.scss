@@ -4,10 +4,11 @@
   @extend %container;
 
   .form {
+    max-width: 472px;
     @extend %form;
 
     .content {
-      margin-top: 11px;
+      margin: 0;
 
       .title {
         font-size: 20px;
@@ -15,11 +16,27 @@
 
       .input {
         margin-top: 14px;
+        width: 100%;
+
+        input {
+          max-width: 400px;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .title {
+          font-size: 16px;
+        }
       }
     }
 
     .btnBlue {
+      @extend .btnBlue;
       margin-top: 32px;
+    }
+
+    @media (max-width: 320px) {
+      padding: 16px 8px;
     }
   }
 }
