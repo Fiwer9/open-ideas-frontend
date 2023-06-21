@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Form, Select, Card} from "antd";
 import { InputLabel } from "../InputLabelComponent/InputLabel";
 import { InputPattern } from "../InputComponent/Input";
@@ -7,75 +7,108 @@ import { TextAreas } from "../TextAreaComponent/TextArea";
 import { Buttons } from "../ButtonComponent/Button";
 
 import styles from "./styles/CreateQuery.module.scss";
+import Modal from "../ModalsComponents/Modal";
 import router from "next/router";
 
 export const CreateQuery = () => {
+    const [modalActive, setModalActive] = useState(false);
+    const [secondModalActive, setSecondModalActive] = useState(false);
+    const closeModal = () => {
+      setModalActive(false);
+      setSecondModalActive(false);
+    };
+
     return (
-        <Card className={styles.card}>
-            <Form className={styles.form}>
-                <div className={styles.logo}>
-                    <Logo width={126.82} height={36} />
-                </div>
-                <div className={styles.content}>
-                    <div className={styles.title}>
-                        <InputLabel title={"Создание заявки"} />
+        <>
+            <Card className={styles.card}>
+                <Form className={styles.form}>
+                    <Form.Item className={styles.logo}>
+                        <Logo />
+                    </Form.Item>
+                    <Form.Item className={styles.content}>
+                        <div className={styles.title}>
+                            <InputLabel title={"Создание заявки"}/>
+                        </div>
+                    </Form.Item>
+                    <Form.Item className={styles.formItems}>
+                        <div className={styles.label}>
+                            <InputLabel title={"Ф. И. О."}/>
+                        </div>
+                        <InputPattern />
+                    </Form.Item>
+                    <Form.Item className={styles.formItems}>
+                        <div className={styles.label}>
+                            <InputLabel title={"Организация"}/>
+                        </div>
+                        <InputPattern />
+                    </Form.Item>
+                    <Form.Item className={styles.formItems}>
+                        <div className={styles.label}>
+                            <InputLabel title={"Инициатива (Идея)"}/>
+                        </div>
+                        <InputPattern placeholder={"Напишите название инициативы "}/>
+                    </Form.Item>
+                    <Form.Item className={styles.formItems}>
+                        <div className={styles.label}>
+                            <InputLabel title={"Направление"}/>
+                        </div>
+                        <div className={styles.mySelectContainer}>
+                            <Select
+                                defaultValue="Направление инициативы"
+                                options={[
+                                    { value: 'TechnologicalProcesses', label: 'Технологические процессы' },
+                                    { value: 'BusinessProcesses', label: 'Бизнес-процессы' },
+                                    { value: 'LaborProtection', label: 'Охрана труда' },
+                                    { value: 'Workspace', label: 'Рабочее пространство' },
+                                ]}
+                            />
+                        </div>
+                    </Form.Item>
+                    <Form.Item className={styles.formItems}>
+                        <div className={styles.label}>
+                            <InputLabel title={"Описание инициативы"}/>
+                        </div>
+                        <TextAreas placeholder={"Напишите описание инициативы"}/>
+                    </Form.Item>
+                    <Form.Item className={styles.formItems}>
+                        <div className={styles.label}>
+                            <InputLabel title={"Эффект от доработки"}/>
+                        </div>
+                        <TextAreas placeholder={"Напишите ожидаемый эффект от доработки"}/>
+                    </Form.Item>
+                    <div className={styles.containerBtn}>
+                        <div className={styles.btnWhite}>
+                            <Buttons text={"Отменить"} onClick={() => {
+                                setSecondModalActive(true);
+                                router.push('/queries/create')}
+                            } />
+                        </div>
+                        <div className={styles.btnBlue}>
+                            <Buttons text={"Отправить"} onClick={() => {
+                                setModalActive(true);
+                                router.push('/queries/create')}
+                            }/>
+                        </div>
                     </div>
-                </div>
-                <div className={styles.formItems}>
-                    <div className={styles.label}>
-                        <InputLabel title={"Ф. И. О."} />
-                    </div>
-                    <InputPattern />
-                </div>
-                <div className={styles.formItems}>
-                    <div className={styles.label}>
-                        <InputLabel title={"Организация"} />
-                    </div>
-                    <InputPattern />
-                </div>
-                <div className={styles.formItems}>
-                    <div className={styles.label}>
-                        <InputLabel title={"Инициатива (Идея)"} />
-                    </div>
-                    <InputPattern placeholder={"Напишите название инициативы "} />
-                </div>
-                <Form.Item className={styles.formItems}>
-                    <div className={styles.label}>
-                        <InputLabel title={"Направление"} />
-                    </div>
-                    <div className={styles.mySelectContainer}>
-                        <Select
-                            defaultValue="Направление инициативы"
-                            options={[
-                                { value: "TechnologicalProcesses", label: "Технологические процессы" },
-                                { value: "BusinessProcesses", label: "Бизнес-процессы" },
-                                { value: "LaborProtection", label: "Охрана труда" },
-                                { value: "Workspace", label: "Рабочее пространство" },
-                            ]}
-                        />
-                    </div>
-                </Form.Item>
-                <div className={styles.formItems}>
-                    <div className={styles.label}>
-                        <InputLabel title={"Описание инициативы"} />
-                    </div>
-                    <TextAreas placeholder={"Напишите описание инициативы"} />
-                </div>
-                <div className={styles.formItems}>
-                    <div className={styles.label}>
-                        <InputLabel title={"Эффект от доработки"} />
-                    </div>
-                    <TextAreas placeholder={"Напишите ожидаемый эффект от доработки"} />
-                </div>
-                <div className={styles.containerBtn}>
-                    <div className={styles.btnWhite}>
-                        <Buttons onClick={() => router.push("/queries")} text={"Отменить"} />
-                    </div>
-                    <div className={styles.btnBlue}>
-                        <Buttons onClick={() => router.push("/queries")} text={"Отправить"} />
-                    </div>
-                </div>
-            </Form>
-        </Card>
+                </Form>
+            </Card>
+
+            <Modal
+                className={styles.models} active={modalActive} setActive={setModalActive}
+                text={"Вы уверены, что хотите зарегистрировать заявку и внесли все необходимые данные? После регистрации внесение изменений невозможно"}
+                textBtnWhite={"Назад"}
+                textBtnBlue={"Отправить"}
+                onClickWhite={closeModal}
+                onClickBlue={() => router.push('/queries')}
+            />
+            <Modal
+                className={styles.models} active={secondModalActive} setActive={setSecondModalActive}
+                text={"Вы уверены, что хотите отменить создание заявки? При отмене заявки ранее внесенная информация не будет сохранена"}
+                textBtnWhite={"Назад"}
+                textBtnBlue={"Выйти"}
+                onClickWhite={closeModal}
+                onClickBlue={() => router.push('/queries')}
+            />
+        </>
     );
 };
