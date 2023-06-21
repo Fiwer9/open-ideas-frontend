@@ -16,7 +16,7 @@ const Modal = ({ active, setActive, text, textBtnWhite, textBtnBlue, onClickWhit
                               <Logo />
                           </Form.Item>
                           <Form.Item className={styles.modelText}>
-                              <p>{text}</p>
+                              <p className={styles.text}>{text}</p>
                           </Form.Item>
                           <div className={styles.btnContainer}>
                               <div className={styles.btnWhite}>
@@ -30,7 +30,7 @@ const Modal = ({ active, setActive, text, textBtnWhite, textBtnBlue, onClickWhit
                   </div>
               </div>
             : <></>}
-            </>
+        </>
     );
 }
 

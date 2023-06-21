@@ -93,28 +93,22 @@ export const CreateQuery = () => {
                 </Form>
             </div>
 
-            <div className={styles.modalContainer}>
-                <Modal
-                    className={styles.models} active={modalActive} setActive={setModalActive}
-                    text={"Вы уверены, что хотите зарегистрировать заявку и внесли все необходимые данные? После регистрации внесение изменений невозможно"}
-                    textBtnWhite={"Назад"}
-                    textBtnBlue={"Отправить"}
-                    onClickWhite={closeModal}
-                    onClickBlue={() => router.push('/queries')}
-                >
-                </Modal>
-            </div>
-            <div className={styles.modalContainer}>
-                <Modal
-                    className active={secondModalActive} setActive={setSecondModalActive}
-                    text={"Вы уверены, что хотите отменить создание заявки? При отмене заявки ранее внесенная информация не будет сохранена"}
-                    textBtnWhite={"Назад"}
-                    textBtnBlue={"Выйти"}
-                    onClickWhite={closeModal}
-                    onClickBlue={() => router.push('/queries')}
-                >
-                </Modal>
-            </div>
+            <Modal
+                className={styles.models} active={modalActive} setActive={setModalActive}
+                text={"Вы уверены, что хотите зарегистрировать заявку и внесли все необходимые данные? После регистрации внесение изменений невозможно"}
+                textBtnWhite={"Назад"}
+                textBtnBlue={"Отправить"}
+                onClickWhite={closeModal}
+                onClickBlue={() => router.push('/queries')}
+            />
+            <Modal
+                className={styles.models} active={secondModalActive} setActive={setSecondModalActive}
+                text={"Вы уверены, что хотите отменить создание заявки? При отмене заявки ранее внесенная информация не будет сохранена"}
+                textBtnWhite={"Назад"}
+                textBtnBlue={"Выйти"}
+                onClickWhite={closeModal}
+                onClickBlue={() => router.push('/queries')}
+            />
         </>
     );
 };
