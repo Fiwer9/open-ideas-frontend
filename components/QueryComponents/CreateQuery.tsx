@@ -78,7 +78,10 @@ export const CreateQuery = () => {
                     </Form.Item>
                     <div className={styles.containerBtn}>
                         <div className={styles.btnWhite}>
-                            <Buttons onClick={() => router.push('/queries')} text={"Отменить"} />
+                            <Buttons text={"Отменить"} onClick={() => {
+                                setSecondModalActive(true);
+                                router.push('/queries/create')}
+                            } />
                         </div>
                         <div className={styles.btnBlue}>
                             <Buttons text={"Отправить"} onClick={() => {
@@ -97,11 +100,7 @@ export const CreateQuery = () => {
                     textBtnWhite={"Назад"}
                     textBtnBlue={"Отправить"}
                     onClickWhite={closeModal}
-                    onClickBlue={() => {
-                        setSecondModalActive(true);
-                        setModalActive(false)
-                        router.push('/queries/create')}
-                    }
+                    onClickBlue={() => router.push('/queries')}
                 >
                 </Modal>
             </div>
@@ -112,7 +111,7 @@ export const CreateQuery = () => {
                     textBtnWhite={"Назад"}
                     textBtnBlue={"Выйти"}
                     onClickWhite={closeModal}
-                    onClickBlue={() => { router.push('/queries') }}
+                    onClickBlue={() => router.push('/queries')}
                 >
                 </Modal>
             </div>
