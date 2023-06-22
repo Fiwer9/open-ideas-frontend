@@ -1,13 +1,23 @@
-import React from "react";
-import { Form } from "antd";
+import React, {useContext, useState} from "react";
+import {Form, Input} from "antd";
 import {InputLabel} from "../InputLabelComponent/InputLabel";
 import {Logo} from "../PicturesComponents/Logo";
 import {Buttons} from "../ButtonComponent/Button";
-import {InputPattern} from "../InputComponent/Input";
 import styles from "./styles/CodeConfirmation.module.scss";
 import router from "next/router";
+import {Context} from "../../pages/_app";
 
 export const CodeConfirmation = () => {
+    const [code, setCode] = useState('');
+    const { store } = useContext(Context);
+    const confirmEmail = async () => {
+        try {
+            await store.confirmEmail(code);
+        } catch (error: any) {
+            console.log(error.response?.data?.message);
+        }
+    };
+
     return (
         <div className={styles.container}>
             <Form className={styles.form}>
@@ -20,11 +30,14 @@ export const CodeConfirmation = () => {
                     </div>
                     <p className={styles.text}>Введите код отправленный на почту example@mail.ru</p>
                     <div className={styles.input}>
-                        <InputPattern placeholder={"Код подтверждения с Email"}/>
+                        <Input onChange={(evt: any) => setCode(evt.target.value)} value={code} placeholder={"Код подтверждения с Email"}/>
                     </div>
                 </Form.Item>
                 <div className={styles.btnBlue}>
-                    <Buttons onClick={() => router.push('/queries')} type="submit" text={"Подтвердить"}/>
+                    <Buttons onClick={() => {
+                        router.push('/queries')
+                        confirmEmail()}
+                    } type="submit" text={"Подтвердить"}/>
                 </div>
                 <div className={styles.btnRepeatCode}>
                     <Buttons onClick={() => router.push('../../')}  text={'Отправить код повторно'}/>

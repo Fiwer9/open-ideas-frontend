@@ -1,11 +1,23 @@
 import type { AppProps } from 'next/app'
-import {Provider} from "react-redux";
-import store from "../store/store";
+import Store from "../store/store";
+import {createContext} from "react";
+
+interface State {
+    store: Store,
+}
+
+const store = new Store();
+
+export const Context = createContext<State>({
+    store,
+})
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-      <Provider store={store}>
+      <Context.Provider value={{
+          store
+      }}>
         <Component {...pageProps} />
-      </Provider>
+      </Context.Provider>
   )
 }

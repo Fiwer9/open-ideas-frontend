@@ -1,24 +1,25 @@
-import React, {useState} from "react";
-import {Form} from "antd";
+import React, {useContext, useState} from "react";
+import {Form, Input} from "antd";
 import {InputLabel} from "../InputLabelComponent/InputLabel";
 import {Logo} from "../PicturesComponents/Logo";
 import {Buttons} from "../ButtonComponent/Button";
-import {InputPattern} from "../InputComponent/Input";
 import router from "next/router";
 
 import styles from './styles/LogIn.module.scss';
-import {useDispatch} from "react-redux";
-import {loginUser} from "../../services/getLoginService/LoginSlice";
+import {Context} from "../../pages/_app";
 
 export const LogIn = () => {
     const [email, setEmail] = useState<string>('');
+    const { store } = useContext(Context);
 
-    const dispatch = useDispatch();
+    const sendCode = async () => {
+        try {
+            await store.sendCode(email);
+        } catch (error: any) {
+            console.log(error.response?.data?.message);
+        }
+    };
 
-    const handleLogin = () => {
-        // @ts-ignore
-        dispatch(loginUser(email))
-    }
     return (
         <div className={styles.container}>
             <Form className={styles.form}>
@@ -30,12 +31,12 @@ export const LogIn = () => {
                         <InputLabel title={'Войдите при помощи почты'} />
                     </div>
                     <div className={styles.input}>
-                        <InputPattern onChange={(evt: any) => setEmail(evt.target.value)} value={email} placeholder="Напишите свою почту"/>
+                        <Input onChange={(evt: any) => setEmail(evt.target.value)} value={email} placeholder="Напишите свою почту"/>
                     </div>
                 </Form.Item>
                 <div className={styles.btnBlue}>
                     <Buttons onClick={() => {
-                        handleLogin();
+                        sendCode();
                         router.push('/auth/code');
                     }} type="submit" text={'Продолжить'} />
                 </div>
