@@ -5,12 +5,22 @@ import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/QueryList.module.scss";
 import router from "next/router";
+import type { ColumnsType } from 'antd/es/table';
+
+interface DataType {
+    key: React.Key;
+    number: number;
+    initiative: string;
+    direction: string;
+    organization: string;
+    status: string;
+}
 
 export const QueryList = () => {
-    const dataSource = [
+    const dataSource : DataType[] = [
         {
             key: '1',
-            number: '1',
+            number: 1,
             initiative: 'Сделать так, чтобы не дуло в кабинете 303',
             direction: 'Рабочее пространство',
             organization: 'Волжская ГЭС',
@@ -18,7 +28,7 @@ export const QueryList = () => {
         },
         {
             key: '2',
-            number: '2',
+            number: 2,
             initiative: 'Нужно, чтобы был кулер на втором этаже',
             direction: 'Рабочее пространство',
             organization: 'Воткинская ГЭС',
@@ -26,7 +36,7 @@ export const QueryList = () => {
         },
         {
             key: '3',
-            number: '3',
+            number: 3,
             initiative: 'Закупить больше принтеров, для ускорения работы',
             direction: 'Технологические процессы',
             organization: 'Волжская ГЭС',
@@ -34,7 +44,7 @@ export const QueryList = () => {
         },
         {
             key: '4',
-            number: '4',
+            number: 4,
             initiative: 'Сделать ремонт в кабинете 501',
             direction: 'Технологические процессы',
             organization: 'Воткинская ГЭС',
@@ -42,40 +52,56 @@ export const QueryList = () => {
         },
     ];
 
-    const columns = [
+    const direct = ['Технологические процессы', 'Бизнес процессы', 'Охрана труда', 'Рабочее пространство'];
+    const org = ['Волжская ГЭС', 'Воткинская ГЭС'];
+    const status = ['Зарегистрирована', 'На рассмотрении', 'Анализируется экспертом', 'На рассмотрении у руководства', 'Принята к реализации', 'Отклонена', 'Реализована'];
+
+    const columns: ColumnsType<DataType> = [
         {
             title: 'Номер заявки',
             dataIndex: 'number',
-            sorter: {},
             width: "9%",
+            showSorterTooltip: false,
+            sorter: (a, b) => a.number - b.number,
         },
         {
             title: 'Инициатива (Идея)',
             dataIndex: 'initiative',
             key: 'initiative',
             width: "44%",
-            filters: []
         },
         {
             title: 'Направление',
             dataIndex: 'direction',
             key: 'direction',
             width: "16%",
-            filters: []
+            filters: direct.map((direction) => ({
+                text: direction,
+                value: direction,
+            })),
+            onFilter: (value: any, record: any) => record.direction === value,
         },
         {
             title: 'Организация',
             dataIndex: 'organization',
             key: 'organization',
             width: "16%",
-            filters: []
+            filters: org.map((organization) => ({
+                text: organization,
+                value: organization,
+            })),
+            onFilter: (value: any, record: any) => record.organization === value,
         },
         {
             title: 'Статус заявки',
             dataIndex: 'status',
             key: 'status',
             width: "16%",
-            filters: []
+            filters: status.map((status) => ({
+                    text: status,
+                    value: status,
+                })),
+            onFilter: (value: any, record: any) => record.status === value,
         },
     ];
 
