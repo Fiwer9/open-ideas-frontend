@@ -4,6 +4,8 @@ import axios from "axios";
 import {AuthResponse} from "../models/response/AuthResponse";
 import {API_URL} from "../http";
 import AuthService from "../services/LoginService";
+import CommentService from "../services/CommentService";
+import LikesService from "../services/LikesService";
 
 export default class Store {
     user = {} as IUser;
@@ -21,13 +23,10 @@ export default class Store {
     }
 
     async sendCode(email: string) {
-        console.log(email)
         try {
             const response = await AuthService.sendCode(email);
             console.log(response);
-            AuthService.setCurrentEmailID(response.data.id);
-            const user = {id: response.data.id, email: response.data.email, token: response.data.token}
-            sessionStorage.setItem('user', JSON.stringify(user));
+            sessionStorage.setItem('email', response.data.email);
             this.setAuth(false);
             this.setUser(response.data.user);
         } catch (e: any) {
@@ -35,13 +34,29 @@ export default class Store {
         }
     }
 
+    async sendComment(comment: string, query: number, user: number) {
+        try {
+            const response = await CommentService.sendComment(comment, query, user);
+            console.log(response);
+        } catch (e: any) {
+            console.log(e.response?.data?.message);
+        }
+    }
+
+    async patchLike(id: number, data: [number]) {
+        try {
+            const response = await LikesService.patchLike(id, data);
+        } catch (e: any) {
+            console.log(e.response?.data?.message);
+        }
+    }
+
     async confirmEmail(code: string) {
         try {
-            console.log(code)
             const response = await AuthService.confirmEmail(code);
             console.log(response);
-            const user = {id: response.data.id, email: response.data.email, token: response.data.token}
-            sessionStorage.setItem('token', user.token)
+            const user = {user_id: response.data.user_id}
+            sessionStorage.setItem('user_id', user.user_id)
             this.setAuth(true);
             this.setUser(response.data.user);
         } catch (e: any) {
@@ -54,7 +69,7 @@ export default class Store {
         try {
             const response = await AuthService.logout();
             console.log(response)
-            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('user_id');
             this.setAuth(false);
             this.setUser({} as IUser);
         } catch (e: any) {
@@ -66,7 +81,7 @@ export default class Store {
         try {
             const response = await axios.get<AuthResponse>(`${API_URL}/session`, {withCredentials: true})
             console.log(response);
-            sessionStorage.setItem('token', response.data.token)
+            sessionStorage.setItem('user_id', response.data.user_id)
             this.setAuth(true);
             this.setUser(response.data.user);
         } catch (e: any) {

@@ -1,65 +1,79 @@
-import React from "react";
-import {Checkbox, Table, Button} from "antd";
+import React, {useEffect, useState} from "react";
+import {Button, Checkbox, Table} from "antd";
 import {InputPattern} from "../InputComponent/Input";
 import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/QueryList.module.scss";
 import router from "next/router";
+import {QueriesResponse} from "../../models/response/QueriesResponse";
+import QueriesService from "../../services/QueriesService";
+import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
+import OrganizationsService from "../../services/OrganizationsService";
+import {getDirectionTranslation, getOrganizationName, getStatusTranslation} from "../../utils/utils";
 
 export const QueryList = () => {
-    const dataSource = [
+    const [isLoading, setIsLoading] = useState(false);
+    const [organizations, setOrganizations] = useState<OrganizationsResponse[]>([])
+    const [queriesTableData, setQueriesTableData] = useState<QueriesResponse[]>([
         {
-            key: '1',
-            number: '1',
-            initiative: 'Сделать так, чтобы не дуло в кабинете 303',
-            direction: 'Рабочее пространство',
-            organization: 'Волжская ГЭС',
-            status: 'Анализ заявки экспертом',
-        },
-        {
-            key: '2',
-            number: '2',
-            initiative: 'Нужно, чтобы был кулер на втором этаже',
-            direction: 'Рабочее пространство',
-            organization: 'Воткинская ГЭС',
-            status: 'Анализ заявки экспертом',
-        },
-        {
-            key: '3',
-            number: '3',
-            initiative: 'Закупить больше принтеров, для ускорения работы',
-            direction: 'Технологические процессы',
-            organization: 'Волжская ГЭС',
-            status: 'Заявка принята к реализации',
-        },
-        {
-            key: '4',
-            number: '4',
-            initiative: 'Сделать ремонт в кабинете 501',
-            direction: 'Технологические процессы',
-            organization: 'Воткинская ГЭС',
-            status: 'Заявка принята к реализации',
-        },
-    ];
+            id: 1,
+            date: "",
+            status: "",
+            description: '',
+            organization: 0,
+            expert_users: [],
+            implementation_effect: '',
+            initiative_direction: '',
+            name: '',
+            initiator_users: [],
+        }
+    ])
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true)
+            try {
+                const data = await QueriesService.getQueriesTableData()
+                const organizations = await OrganizationsService.getOrganizations()
+                setQueriesTableData(data.data);
+                setOrganizations(organizations.data);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
+        fetchData();
+    }, [])
+
+
+
 
     const columns = [
         {
             title: 'Номер заявки',
-            dataIndex: 'number',
+            dataIndex: 'id',
+            key: 'id',
             sorter: {},
             width: "9%",
+            onRow: (record: QueriesResponse) => ({
+                onClick: () => handleRowClick(record.id)
+            })
         },
         {
             title: 'Инициатива (Идея)',
-            dataIndex: 'initiative',
-            key: 'initiative',
+            dataIndex: 'name',
+            key: 'name',
             width: "44%",
             filters: []
         },
         {
             title: 'Направление',
-            dataIndex: 'direction',
-            key: 'direction',
+            dataIndex: 'initiative_direction',
+            key: 'initiative_direction',
+            render: (text: string) => getDirectionTranslation(text),
             width: "16%",
             filters: []
         },
@@ -67,6 +81,7 @@ export const QueryList = () => {
             title: 'Организация',
             dataIndex: 'organization',
             key: 'organization',
+            render: (text: number) => getOrganizationName(text, organizations),
             width: "16%",
             filters: []
         },
@@ -74,13 +89,14 @@ export const QueryList = () => {
             title: 'Статус заявки',
             dataIndex: 'status',
             key: 'status',
+            render: (text: string) => getStatusTranslation(text),
             width: "16%",
             filters: []
         },
     ];
 
-    const handleRowClick = (link: String) => {
-        router.push(`/queries/application`);
+    const handleRowClick = (queryId: any) => {
+        router.push(`/queries/application?queryId=${queryId.id}`);
         // router.push(`/queries/${link}`);
     };
 
@@ -109,11 +125,16 @@ export const QueryList = () => {
                 <div className={styles.tableContainer}>
                     <Table
                         className={styles.table}
-                        dataSource={dataSource}
+                        dataSource={queriesTableData}
                         columns={columns}
-                        onRow={(element) => ({
-                            onClick: () => handleRowClick(element.key),
+                        loading={isLoading}
+                        onRow={(element: any) => ({
+                            onClick: () => {
+                                console.log(element)
+                                handleRowClick(element)
+                            },
                         })}
+                        rowKey="id"
                     />
                 </div>
                 <div className={styles.linkContainer}>

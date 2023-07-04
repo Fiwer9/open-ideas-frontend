@@ -1,7 +1,24 @@
-import React from "react";
+import React, {createContext} from "react";
 import {LogIn} from "../components/AuthComponents/LogIn";
+import Store from "../store/store";
+
+interface State {
+    store: Store,
+}
+
+const store = new Store();
+
+export const Context = createContext<State>({
+    store,
+})
 
 export default function Index() {
+    // useEffect(() => {
+    //     if(sessionStorage.getItem('user_id')) {
+    //         store.checkAuth()
+    //         router.push('/queries')
+    //     }
+    // }, [])
     return (
         <div>
             <LogIn />

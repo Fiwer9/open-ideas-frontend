@@ -70,6 +70,34 @@
             margin-left: 24px;
           }
         }
+
+        .statusCheck {
+          background: #4b7271;
+        }
+
+        .statusRegistered {
+          background: #790298;
+        }
+
+        .statusAnalysis{
+          background: #1890FF;
+        }
+
+        .statusAccepted{
+          background: #6c57e0;
+        }
+
+        .statusImplementation{
+          background: #D09B11D9;
+        }
+
+        .statusRejected{
+          background: #EC0B4E;
+        }
+
+        .statusDone{
+          background: #00A71B;
+        }
       }
     }
 
@@ -179,6 +207,10 @@
 
       .textArea {
         margin-top: 14px;
+
+        .textAreaCustom {
+          height: 200px;
+        }
       }
     }
 
