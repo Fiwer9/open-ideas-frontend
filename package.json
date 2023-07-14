@@ -16,8 +16,6 @@
     "@types/react-dom": "18.2.1",
     "antd": "^5.4.6",
     "axios": "^1.4.0",
-    "mobx": "^6.9.0",
-    "mobx-react-lite": "^3.4.3",
     "dotenv": "^16.3.1",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.1",
@@ -25,6 +23,8 @@
     "eslint-plugin-html": "^7.1.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
+    "mobx": "^6.9.0",
+    "mobx-react-lite": "^3.4.3",
     "next": "13.3.1",
     "prettier": "^2.8.8",
     "react": "18.2.0",
@@ -32,6 +32,7 @@
     "react-redux": "^8.1.0",
     "react-router-dom": "^6.10.0",
     "sass": "^1.62.1",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "universal-cookie": "^4.0.4"
   }
 }

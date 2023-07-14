@@ -3,8 +3,8 @@ import {IUser} from "../IUser";
 export interface AuthResponse {
     user: IUser;
     email: string;
-    user_id: string;
+    _auth_user_id: string;
     id: string;
     sessionid: string;
-    csrftoken: string;
+    _csrftoken: string;
 }

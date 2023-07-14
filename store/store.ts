@@ -1,8 +1,5 @@
 import {IUser} from "../models/IUser";
 import {makeAutoObservable} from "mobx";
-import axios from "axios";
-import {AuthResponse} from "../models/response/AuthResponse";
-import {API_URL} from "../http";
 import AuthService from "../services/LoginService";
 import CommentService from "../services/CommentService";
 import LikesService from "../services/LikesService";
@@ -55,8 +52,9 @@ export default class Store {
         try {
             const response = await AuthService.confirmEmail(code);
             console.log(response);
-            const user = {user_id: response.data.user_id}
+            const user = {user_id: response.data._auth_user_id, csrftoken: response.data._csrftoken}
             sessionStorage.setItem('user_id', user.user_id)
+            sessionStorage.setItem('csrftoken', user.csrftoken)
             this.setAuth(true);
             this.setUser(response.data.user);
         } catch (e: any) {
@@ -72,18 +70,6 @@ export default class Store {
             sessionStorage.removeItem('user_id');
             this.setAuth(false);
             this.setUser({} as IUser);
-        } catch (e: any) {
-            console.log(e.response?.data?.message);
-        }
-    }
-
-    async checkAuth() {
-        try {
-            const response = await axios.get<AuthResponse>(`${API_URL}/session`, {withCredentials: true})
-            console.log(response);
-            sessionStorage.setItem('user_id', response.data.user_id)
-            this.setAuth(true);
-            this.setUser(response.data.user);
         } catch (e: any) {
             console.log(e.response?.data?.message);
         }

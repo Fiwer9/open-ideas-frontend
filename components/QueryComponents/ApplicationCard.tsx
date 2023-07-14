@@ -12,7 +12,6 @@ import OrganizationsService from "../../services/OrganizationsService";
 import {QueriesResponse} from "../../models/response/QueriesResponse";
 import {getDirectionTranslation, getOrganizationName, getStatusTranslation} from "../../utils/utils";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
-import {comment} from "postcss";
 import CommentService from "../../services/CommentService";
 import {CommentResponse} from "../../models/response/CommentResponse";
 import UsersService from "../../services/UsersService";
@@ -28,7 +27,6 @@ export const ApplicationCard = ({queryId}: { queryId: string }, {children}: any)
     const [dataComment, setDataComment] = useState<CommentResponse[]>([])
     const [users, setUsers] = useState<UserResponse[]>([])
     const { store } = useContext(Context);
-    const [statusClassName, setStatusClassName] = useState('')
     const [applicationData, setApplicationData] = useState<QueriesResponse>({
         name: '',
         initiator_users: [],
@@ -49,7 +47,6 @@ export const ApplicationCard = ({queryId}: { queryId: string }, {children}: any)
                 const data = await QueriesService.getQueriesTableDataById(queryId)
                 const organizations = await OrganizationsService.getOrganizations()
                 setApplicationData(data.data)
-                setStatusClassName(getStatusClassName(applicationData.status));
                 setOrganization(organizations.data)
                 console.log(applicationData)
             } catch (error) {
@@ -76,7 +73,7 @@ export const ApplicationCard = ({queryId}: { queryId: string }, {children}: any)
             }
         }
         fetchData()
-    }, [comment])
+    }, [])
 
     function getStatusClassName(status: string) {
         switch (status) {
@@ -168,7 +165,7 @@ export const ApplicationCard = ({queryId}: { queryId: string }, {children}: any)
                               <HeartOutlined className={styles.likes} onClick={() => patchLike(Number(sessionStorage.getItem('user_id')))}/>
                               <p className={styles.numberLikes}>{getLikes()}</p>
                           </div>
-                          <p className={`${styles.statusQuery} ${statusClassName}`}>{getStatusTranslation(applicationData.status)}</p>
+                          <p className={`${styles.statusQuery} ${getStatusClassName(applicationData.status)}`}>{getStatusTranslation(applicationData.status)}</p>
                       </div>
                   </div>
               </Form.Item>
