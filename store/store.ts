@@ -1,6 +1,6 @@
 import {IUser} from "../models/IUser";
 import {makeAutoObservable} from "mobx";
-import AuthService from "../services/LoginService";
+import AuthService from "../services/getLoginService/LoginService";
 import CommentService from "../services/CommentService";
 import LikesService from "../services/LikesService";
 

@@ -1,18 +1,16 @@
 import axios from 'axios';
-import dotenv from 'dotenv'
 
-
-dotenv.config();
-
-axios.defaults.xsrfCookieName = 'csrftoken';
-axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-
-export const API_URL = process.env.NEXT_APP_API_URL;
+export const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const $api = axios.create({
     withCredentials: true,
-    baseURL: API_URL
+    baseURL: API_URL,
+    xsrfHeaderName: "X-CSRFToken",
+    xsrfCookieName: "csrftoken",
+    headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        "Content-Type": "application/json",
+    },
 })
-
 
 export default $api;
