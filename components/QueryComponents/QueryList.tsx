@@ -10,10 +10,36 @@ import QueriesService from "../../services/QueriesService";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import OrganizationsService from "../../services/OrganizationsService";
 import {getDirectionTranslation, getOrganizationName, getStatusTranslation} from "../../utils/utils";
+import UsersService from "../../services/UsersService";
+import {UserResponse} from "../../models/response/UserResponse";
 
 export const QueryList = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [organizations, setOrganizations] = useState<OrganizationsResponse[]>([])
+    const [user, setUser] = useState<UserResponse>(
+        {
+            id: 0,
+            password: '',
+            last_login: '',
+            is_superuser: false,
+            username: '',
+            first_name: '',
+            last_name: '',
+            is_staff: false,
+            is_active: false,
+            date_joined: '',
+            name: '',
+            email: '',
+            department: {
+                id: 0,
+                organization: 0,
+                name: ''
+            },
+            groups: [],
+            user_permissions: [],
+            likes: [],
+        }
+    )
     const [queriesTableData, setQueriesTableData] = useState<QueriesResponse[]>([
         {
             id: 1,
@@ -36,8 +62,10 @@ export const QueryList = () => {
             try {
                 const data = await QueriesService.getQueriesTableData()
                 const organizations = await OrganizationsService.getOrganizations()
+                const user = await UsersService.getCurrentUser(Number(sessionStorage.getItem('user_id')))
                 setQueriesTableData(data.data);
                 setOrganizations(organizations.data);
+                setUser(user.data)
             } catch (error) {
                 console.error(error);
             } finally {
@@ -47,9 +75,6 @@ export const QueryList = () => {
 
         fetchData();
     }, [])
-
-
-
 
     const columns = [
         {
@@ -95,8 +120,25 @@ export const QueryList = () => {
         },
     ];
 
+    const checkExpert = (queryId: any) => {
+        let isExpert = false;
+
+        queriesTableData.forEach((query) => {
+            if (queryId.id === query.id) {
+                query.expert_users.forEach((user) => {
+                    console.log(user, Number(sessionStorage.getItem('user_id')));
+                    if (user === Number(sessionStorage.getItem('user_id'))) {
+                        isExpert = true;
+                    }
+                });
+            }
+        });
+
+        return isExpert;
+    }
+
     const handleRowClick = (queryId: any) => {
-        router.push(`/queries/application?queryId=${queryId.id}`);
+        router.push(checkExpert(queryId)? `/queries/expert?queryId=${queryId.id}` : `/queries/application?queryId=${queryId.id}`);
         // router.push(`/queries/${link}`);
     };
 

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Form, Select, Card, Input} from "antd";
 import { InputLabel } from "../InputLabelComponent/InputLabel";
 import { Logo } from "../PicturesComponents/Logo";
@@ -11,8 +11,8 @@ import {UserResponse} from "../../models/response/UserResponse";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import OrganizationsService from "../../services/OrganizationsService";
 import UsersService from "../../services/UsersService";
-import {getOrganizationName} from "../../utils/utils";
-import TextArea from "antd/es/input/TextArea";
+import {formatDate, getOrganizationId, getOrganizationName} from "../../utils/utils";
+import {Context} from "../../pages/_app";
 
 export const CreateQuery = () => {
     const [modalActive, setModalActive] = useState(false);
@@ -43,10 +43,11 @@ export const CreateQuery = () => {
             likes: [],
         }
     )
-    let direction = '';
+    const [direction, setDirection] = useState('')
     const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
     const [idea, setIdea] = useState('')
     const [secondModalActive, setSecondModalActive] = useState(false);
+    const { store } = useContext(Context);
     const closeModal = () => {
       setModalActive(false);
       setSecondModalActive(false);
@@ -74,9 +75,14 @@ export const CreateQuery = () => {
         return users.department.organization
     }
 
-    function postQuery(date: string, name: string, description: string, initiative_direction: string, status: string,
-                       implementation_effect: string, organization: number, initiator_users: [], expert_users: []) {
-
+    const postQuery = async (date: string, name: string, description: string, initiative_direction: string, status: string,
+                       implementation_effect: string, organization: number, initiator_users: [number])=> {
+        try {
+            await store.postQuery(date, name, description, initiative_direction, status,
+                implementation_effect, organization, initiator_users);
+        } catch (error: any) {
+            console.log(error.response?.data?.message);
+        }
     }
 
     return (
@@ -125,7 +131,7 @@ export const CreateQuery = () => {
                                     { value: 'workspace', label: 'Рабочее пространство' },
                                 ]}
                                 onChange={(e: any) => {
-                                    direction = e;
+                                    setDirection(e)
                                     console.log(direction)
                                 }}
                             />
@@ -135,19 +141,19 @@ export const CreateQuery = () => {
                         <div className={styles.label}>
                             <InputLabel title={"Описание инициативы"}/>
                         </div>
-                        <TextArea className={styles.textAreaCustom} placeholder={"Напишите описание инициативы"} onChange={(e) => {
+                        <textarea className={styles.textAreaCustom} placeholder={"Напишите описание инициативы"} onChange={(e) => {
                             setDescription(e.target.value)
-                        }} value={description}/>
+                        }} value={description || ''}/>
                     </Form.Item>
                     <Form.Item className={styles.formItems}>
                         <div className={styles.label}>
                             <InputLabel title={"Эффект от доработки"}/>
                         </div>
-                        <TextArea className={styles.textAreaCustom} placeholder={"Напишите ожидаемый эффект от доработки"}
+                        <textarea className={styles.textAreaCustom} placeholder={"Напишите ожидаемый эффект от доработки"}
                                   onChange={(e) => {
                                       setEffect(e.target.value)
                                       console.log(effect)
-                                  }} value={effect}/>
+                                  }} value={effect || ''}/>
                     </Form.Item>
                     <div className={styles.containerBtn}>
                         <div className={styles.btnWhite}>
@@ -173,6 +179,10 @@ export const CreateQuery = () => {
                 textBtnBlue={"Отправить"}
                 onClickWhite={closeModal}
                 onClickBlue={() => {
+                    const currentDate = new Date();
+                    const formattedEndDate = formatDate(currentDate, '-');
+                    postQuery(formattedEndDate, idea, description, direction, 'check', effect,
+                        getOrganizationId(getOrganization(), organization)[0], [users.id])
                     router.push('/queries')
                 }}
             />

@@ -6,6 +6,21 @@ export function getOrganizationName(text: number, organizations: any) {
     })
 }
 
+export function getOrganizationId(text: number, organizations: any) {
+    return organizations.map((organization: any) => {
+        if (organization.id === text) {
+            return organization.id
+        }
+    })
+}
+
+export function formatDate(date: any, separator='.') {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${year}${separator}${month}${separator}${day}`;
+}
+
 export const getDirectionTranslation = (direction: string) => {
     switch (direction) {
         case "tech_process":

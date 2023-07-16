@@ -1,8 +1,9 @@
 import {IUser} from "../models/IUser";
 import {makeAutoObservable} from "mobx";
-import AuthService from "../services/getLoginService/LoginService";
+import AuthService from "../services/LoginService";
 import CommentService from "../services/CommentService";
 import LikesService from "../services/LikesService";
+import QueriesService from "../services/QueriesService";
 
 export default class Store {
     user = {} as IUser;
@@ -31,6 +32,17 @@ export default class Store {
         }
     }
 
+    async postQuery(date: string, name: string, description: string, initiative_direction: string, status: string,
+                    implementation_effect: string, organization: number, initiator_users: [number]){
+        try {
+            const response = await QueriesService.postQuery(date, name, description, initiative_direction, status,
+                implementation_effect, organization, initiator_users);
+            console.log(response);
+        } catch (e: any) {
+            console.log(e.response?.data?.message);
+        }
+    }
+
     async sendComment(comment: string, query: number, user: number) {
         try {
             const response = await CommentService.sendComment(comment, query, user);
@@ -52,9 +64,8 @@ export default class Store {
         try {
             const response = await AuthService.confirmEmail(code);
             console.log(response);
-            const user = {user_id: response.data._auth_user_id, csrftoken: response.data._csrftoken}
+            const user = {user_id: response.data.user_id}
             sessionStorage.setItem('user_id', user.user_id)
-            sessionStorage.setItem('csrftoken', user.csrftoken)
             this.setAuth(true);
             this.setUser(response.data.user);
         } catch (e: any) {

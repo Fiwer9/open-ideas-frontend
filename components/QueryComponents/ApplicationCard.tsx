@@ -17,10 +17,15 @@ import {CommentResponse} from "../../models/response/CommentResponse";
 import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
 import {Context} from "../../pages/_app";
-import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
 
-export const ApplicationCard = ({queryId}: { queryId: string }, {children}: any) => {
+type ApplicationCardProps = {
+    queryId: string;
+    children?: React.ReactNode;
+    status: string;
+};
+
+export const ApplicationCard = ({ queryId, children, status }: ApplicationCardProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
     const [commentValue, setCommentValue] = useState('');
@@ -40,6 +45,8 @@ export const ApplicationCard = ({queryId}: { queryId: string }, {children}: any)
         id: 0
     })
 
+    useEffect(() => { console.log(status)}, [status])
+
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true)
@@ -55,6 +62,7 @@ export const ApplicationCard = ({queryId}: { queryId: string }, {children}: any)
                 setIsLoading(false)
             }
         }
+        console.log(queryId)
         queryId ? fetchData() : router.push('/queries')
 
     }, [queryId])
@@ -214,7 +222,7 @@ export const ApplicationCard = ({queryId}: { queryId: string }, {children}: any)
               <Form.Item className={styles.textAreaContainer}>
                   <p className={styles.textAreaTitle}>Оставьте свой комментарий по инициативе здесь:</p>
                   <div className={styles.textArea}>
-                      <TextArea
+                      <textarea
                           className={styles.textAreaCustom}
                           placeholder={"Напишите комментарий по этой инициативе"}
                           onChange={(evt: any) => {
@@ -233,11 +241,13 @@ export const ApplicationCard = ({queryId}: { queryId: string }, {children}: any)
                         <div className={styles.btnWhite}>
                           <Buttons text={"Отменить"} onClick={() => {
                               router.push('/queries');
-                              sendComment(commentValue);
                           }}/>
                         </div>
                         <div className={`${styles.btnBlue} ${styles.btnForm}`}>
-                            <Buttons onClick={() => router.push('/queries')} text={"Отправить"}/>
+                            <Buttons onClick={() => {
+                                sendComment(commentValue);
+                                router.push('/queries')}}
+                                     text={"Отправить"}/>
                         </div>
                     </div>
               </div>
