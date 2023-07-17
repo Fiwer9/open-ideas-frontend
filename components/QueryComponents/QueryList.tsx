@@ -51,7 +51,7 @@ export const QueryList = () => {
             implementation_effect: '',
             initiative_direction: '',
             name: '',
-            initiator_users: [],
+            initiator_users: [0],
         }
     ])
 

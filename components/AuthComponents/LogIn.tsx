@@ -31,13 +31,16 @@ export const LogIn = () => {
                         <InputLabel title={'Войдите при помощи почты'} />
                     </div>
                     <div className={styles.input}>
-                        <Input onChange={(evt: any) => setEmail(evt.target.value)} value={email} placeholder="Напишите свою почту"/>
+                        <Input onChange={(evt: any) => setEmail(evt.target.value)} value={email} placeholder="Напишите свою почту" required/>
                     </div>
                 </Form.Item>
                 <div className={styles.btnBlue}>
                     <Buttons onClick={() => {
-                        sendCode();
-                        router.push('/auth/code');
+                        email&& sendCode();
+                        email&& router.push({
+                            pathname: '/auth/code',
+                            query: { email: email }
+                        });
                     }} type="submit" text={'Продолжить'} />
                 </div>
             </Form>

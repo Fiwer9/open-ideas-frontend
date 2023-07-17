@@ -7,7 +7,11 @@ import styles from "./styles/CodeConfirmation.module.scss";
 import router from "next/router";
 import {Context} from "../../pages/_app";
 
-export const CodeConfirmation = () => {
+type ConfirmationProps = {
+    email: string;
+};
+
+export const CodeConfirmation = ({ email }: ConfirmationProps) => {
     const [code, setCode] = useState('');
     const { store } = useContext(Context);
     const confirmEmail = async () => {
@@ -28,15 +32,15 @@ export const CodeConfirmation = () => {
                     <div className={styles.title}>
                         <InputLabel title={"Подтверждение через почту"}/>
                     </div>
-                    <p className={styles.text}>Введите код отправленный на почту example@mail.ru</p>
+                    <p className={styles.text}>Введите код отправленный на почту {email}</p>
                     <div className={styles.input}>
-                        <Input onChange={(evt: any) => setCode(evt.target.value)} value={code} placeholder={"Код подтверждения с Email"}/>
+                        <Input onChange={(evt: any) => setCode(evt.target.value)} value={code} placeholder={"Код подтверждения с Email"} required/>
                     </div>
                 </Form.Item>
                 <div className={styles.btnBlue}>
                     <Buttons onClick={() => {
-                        router.push('/queries')
-                        confirmEmail()}
+                        code&& router.push('/queries')
+                        code&& confirmEmail()}
                     } type="submit" text={"Подтвердить"}/>
                 </div>
                 <div className={styles.btnRepeatCode}>

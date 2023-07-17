@@ -43,6 +43,17 @@ export default class Store {
         }
     }
 
+    async patchQuery(date: string, name: string, description: string, initiative_direction: string, status: string,
+                     implementation_effect: string, organization: number, initiator_users: [number], id: number) {
+        try {
+            const response = await QueriesService.patchQuery(date, name, description, initiative_direction, status,
+                implementation_effect, organization, initiator_users, id);
+            console.log(response);
+        } catch (e: any) {
+            console.log(e.response?.data?.message);
+        }
+    }
+
     async sendComment(comment: string, query: number, user: number) {
         try {
             const response = await CommentService.sendComment(comment, query, user);
@@ -52,7 +63,7 @@ export default class Store {
         }
     }
 
-    async patchLike(id: number, data: [number]) {
+    async patchLike(id: number, data: any) {
         try {
             const response = await LikesService.patchLike(id, data);
         } catch (e: any) {

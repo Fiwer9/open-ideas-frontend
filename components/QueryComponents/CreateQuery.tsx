@@ -11,7 +11,7 @@ import {UserResponse} from "../../models/response/UserResponse";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import OrganizationsService from "../../services/OrganizationsService";
 import UsersService from "../../services/UsersService";
-import {formatDate, getOrganizationId, getOrganizationName} from "../../utils/utils";
+import {formatDateToServer, getOrganizationId, getOrganizationName} from "../../utils/utils";
 import {Context} from "../../pages/_app";
 
 export const CreateQuery = () => {
@@ -107,7 +107,7 @@ export const CreateQuery = () => {
                         <div className={styles.label}>
                             <InputLabel title={"Организация"}/>
                         </div>
-                        <Input value={getOrganizationName(getOrganization(), organization)} disabled={true} />
+                        <Input value={getOrganizationName(getOrganization(), organization)[0]} disabled={true} />
                     </Form.Item>
                     <Form.Item className={styles.formItems}>
                         <div className={styles.label}>
@@ -115,9 +115,9 @@ export const CreateQuery = () => {
                         </div>
                         <Input placeholder={"Напишите название инициативы "} onChange={((e: any) => {
                             setIdea(e.target.value)
-                        })} value={idea}/>
+                        })} value={idea} required/>
                     </Form.Item>
-                    <Form.Item className={styles.formItems}>
+                    <Form.Item className={styles.formItems} required={true}>
                         <div className={styles.label}>
                             <InputLabel title={"Направление"}/>
                         </div>
@@ -143,7 +143,7 @@ export const CreateQuery = () => {
                         </div>
                         <textarea className={styles.textAreaCustom} placeholder={"Напишите описание инициативы"} onChange={(e) => {
                             setDescription(e.target.value)
-                        }} value={description || ''}/>
+                        }} value={description || ''} required={true}/>
                     </Form.Item>
                     <Form.Item className={styles.formItems}>
                         <div className={styles.label}>
@@ -153,7 +153,7 @@ export const CreateQuery = () => {
                                   onChange={(e) => {
                                       setEffect(e.target.value)
                                       console.log(effect)
-                                  }} value={effect || ''}/>
+                                  }} value={effect || ''} required={true}/>
                     </Form.Item>
                     <div className={styles.containerBtn}>
                         <div className={styles.btnWhite}>
@@ -180,10 +180,11 @@ export const CreateQuery = () => {
                 onClickWhite={closeModal}
                 onClickBlue={() => {
                     const currentDate = new Date();
-                    const formattedEndDate = formatDate(currentDate, '-');
-                    postQuery(formattedEndDate, idea, description, direction, 'check', effect,
+                    const formattedEndDate = formatDateToServer(currentDate, '-');
+                    idea&& description&& direction&& effect&& postQuery(formattedEndDate, idea, description, direction, 'check', effect,
                         getOrganizationId(getOrganization(), organization)[0], [users.id])
-                    router.push('/queries')
+                    idea&& description&& direction&& effect&& router.push('/queries')
+                    closeModal()
                 }}
             />
             <Modal

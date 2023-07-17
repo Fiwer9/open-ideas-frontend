@@ -16,4 +16,11 @@ export default class QueriesService {
         return $api.post(`/queries/queries/`, {date, name, description, initiative_direction, status,
             implementation_effect, organization, initiator_users});
     }
+
+    static async patchQuery(date: string, name: string, description: string, initiative_direction: string, status: string,
+                           implementation_effect: string, organization: number, initiator_users: [number], id: number):Promise<AxiosResponse> {
+        console.log(organization)
+        return $api.patch(`/queries/queries/${id}/`, {date, name, description, initiative_direction, status,
+            implementation_effect, organization, initiator_users});
+    }
 }

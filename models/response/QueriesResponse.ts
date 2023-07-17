@@ -7,6 +7,6 @@ export interface QueriesResponse {
     status: string;
     implementation_effect: string;
     organization: number;
-    initiator_users: [];
+    initiator_users: [number];
     expert_users: [];
 }
