@@ -105,10 +105,10 @@ export const QueryList = () => {
         },
     ];
 
-    const handleRowClick = (link: String) => {
+    const handleRowClick = () => {
         router.push(`/queries/application`);
-        // router.push(`/queries/${link}`);
     };
+
 
     return (
         <div className={styles.container}>
@@ -137,8 +137,8 @@ export const QueryList = () => {
                         className={styles.table}
                         dataSource={dataSource}
                         columns={columns}
-                        onRow={(element) => ({
-                            onClick: () => handleRowClick(element.key),
+                        onRow={() => ({
+                            onClick: () => handleRowClick(),
                         })}
                     />
                 </div>
