@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Card, Form, Radio} from "antd";
-import {HeartOutlined} from "@ant-design/icons";
+import {HeartFilled, HeartOutlined} from "@ant-design/icons";
 import {Row, Col} from "antd";
 import {Logo} from "../PicturesComponents/Logo";
 import {Buttons} from "../ButtonComponent/Button";
@@ -37,6 +37,7 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
     const [users, setUsers] = useState<UserResponse[]>([])
     const { store } = useContext(Context);
     const [status, setStatus] = useState('')
+    const [isLiked, setIsLiked] = useState(false)
     const [applicationData, setApplicationData] = useState<QueriesResponse>({
         name: '',
         initiator_users: [0],
@@ -60,7 +61,18 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
                 const organizations = await OrganizationsService.getOrganizations()
                 setApplicationData(data.data)
                 setOrganization(organizations.data)
+                const comments = await CommentService.getComments()
+                const users = await UsersService.getUsers()
+                setDataComment(comments.data)
+                setUsers(users.data)
                 console.log(applicationData)
+                for (let user of users.data) {
+                    for (let query of user.likes) {
+                        if (query.id === Number(queryId)) {
+                            setIsLiked(true)
+                        }
+                    }
+                }
             } catch (error) {
                 console.error(error);
             } finally {
@@ -71,22 +83,6 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
         queryId ? fetchData() : router.push('/queries')
 
     }, [queryId])
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await CommentService.getComments()
-                const users = await UsersService.getUsers()
-                setDataComment(data.data)
-                setUsers(users.data)
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setIsLoading(false)
-            }
-        }
-        fetchData()
-    }, [])
 
     function getStatusClassName(status: string) {
         switch (status) {
@@ -124,15 +120,15 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
 
     function getLikes() {
         let like = 0;
-       return (users.map((user) => {
-            return user.likes.map((query) => {
+        for (let user of users) {
+            for (let query of user.likes) {
                 if (query.id === Number(queryId)) {
                     like += 1;
-                    return like;
+
                 }
-                return like;
-            })
-        }))
+            }
+        }
+        return like;
     }
 
     const sendComment = async (comment: string) => {
@@ -156,9 +152,44 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
         return isExpert;
     }
 
-    const patchLike = async (id: number) => {
+    const getAllUserLikes = () => {
+        const res = []
+        for (let user of users) {
+            if (user.id === Number(sessionStorage.getItem('user_id'))) {
+                for (let query of user.likes) {
+                    res.push(query.id)
+                }
+            }
+        }
+        return res
+    }
+
+    useEffect(() => {
+
+    }, [isLiked])
+
+    const patchAddLike = async (id: number) => {
         try {
-            await store.patchLike(id, [Number(queryId)]);
+            const likes = getAllUserLikes()
+            likes.push(Number(queryId))
+            console.log(likes)
+            await store.patchLike(id, likes);
+            const users = await UsersService.getUsers()
+            setUsers(users.data)
+        } catch (error: any) {
+            console.log(error.response?.data?.message);
+        }
+    }
+
+    const patchRemoveLike = async (id: number) => {
+        try {
+            const likes = getAllUserLikes()
+            const index = likes.indexOf(Number(queryId));
+            if(index > -1) {
+                likes.splice(index, 1)
+            }
+            console.log(likes)
+            await store.patchLike(id, likes);
             const users = await UsersService.getUsers()
             setUsers(users.data)
         } catch (error: any) {
@@ -191,7 +222,17 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
                       </div>
                       <div className={styles.headerContent}>
                           <div className={styles.iconContainer}>
-                              <HeartOutlined className={styles.likes} onClick={() => patchLike(Number(sessionStorage.getItem('user_id')))}/>
+                              {isLiked? (
+                                  <HeartFilled className={styles.likes} style={{color: '#FF185D'}} onClick={() => {
+                                      patchRemoveLike(Number(sessionStorage.getItem('user_id')))
+                                      setIsLiked(false)
+                                  }}/>
+                              ) : (
+                                  <HeartOutlined className={styles.likes} onClick={() => {
+                                      patchAddLike(Number(sessionStorage.getItem('user_id')))
+                                      setIsLiked(true)
+                                  }}/>
+                              )}
                               <p className={styles.numberLikes}>{getLikes()}</p>
                           </div>
                           <p className={`${styles.statusQuery} ${getStatusClassName(applicationData.status)}`}>{getStatusTranslation(applicationData.status)}</p>
