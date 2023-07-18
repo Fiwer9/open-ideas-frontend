@@ -13,10 +13,10 @@ const Modal = ({ active, setActive, text, textBtnWhite, textBtnBlue, onClickWhit
                   <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                       <Form className={styles.modalForm}>
                           <Form.Item className={styles.logo}>
-                              <Logo />
+                              <Logo width={126.82} height={36} />
                           </Form.Item>
                           <Form.Item className={styles.modelText}>
-                              <p className={styles.text}>{text}</p>
+                              <p className={textBtnBlue === 'Отправить'? styles.text : styles.textCancel}>{text}</p>
                           </Form.Item>
                           <div className={styles.btnContainer}>
                               <div className={styles.btnWhite}>

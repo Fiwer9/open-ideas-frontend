@@ -159,14 +159,12 @@ export const CreateQuery = () => {
                         <div className={styles.btnWhite}>
                             <Buttons text={"Отменить"} onClick={() => {
                                 setSecondModalActive(true);
-                                router.push('/queries/create')}
-                            } />
+                            }}/>
                         </div>
                         <div className={styles.btnBlue}>
                             <Buttons text={"Отправить"} onClick={() => {
                                 setModalActive(true);
-                                router.push('/queries/create')}
-                            }/>
+                            }}/>
                         </div>
                     </div>
                 </Form>

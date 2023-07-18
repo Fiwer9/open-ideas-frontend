@@ -12,6 +12,17 @@ import OrganizationsService from "../../services/OrganizationsService";
 import {getDirectionTranslation, getOrganizationName, getStatusTranslation} from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
+import type { ColumnsType } from 'antd/es/table';
+
+interface DataType {
+    key: React.Key;
+    number: number;
+    initiative: string;
+    direction: string;
+    organization: string;
+    status: string;
+    onRow: any;
+}
 
 export const QueryList = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -76,13 +87,18 @@ export const QueryList = () => {
         fetchData();
     }, [])
 
+    const direct = ['Технологические процессы', 'Бизнес процессы', 'Охрана труда', 'Рабочее пространство'];
+    const org = ['Волжская ГЭС', 'Воткинская ГЭС'];
+    const status = ['Зарегистрирована', 'На рассмотрении', 'Анализируется экспертом', 'На рассмотрении у руководства', 'Принята к реализации', 'Отклонена', 'Реализована'];
+
     const columns = [
         {
             title: 'Номер заявки',
             dataIndex: 'id',
             key: 'id',
-            sorter: {},
             width: "9%",
+            showSorterTooltip: false,
+            sorter: (a: any, b: any) => a.number - b.number,
             onRow: (record: QueriesResponse) => ({
                 onClick: () => handleRowClick(record.id)
             })
@@ -92,7 +108,6 @@ export const QueryList = () => {
             dataIndex: 'name',
             key: 'name',
             width: "44%",
-            filters: []
         },
         {
             title: 'Направление',
@@ -100,7 +115,11 @@ export const QueryList = () => {
             key: 'initiative_direction',
             render: (text: string) => getDirectionTranslation(text),
             width: "16%",
-            filters: []
+            filters: direct.map((direction) => ({
+                text: direction,
+                value: direction,
+            })),
+            onFilter: (value: any, record: any) => record.direction === value,
         },
         {
             title: 'Организация',
@@ -108,7 +127,11 @@ export const QueryList = () => {
             key: 'organization',
             render: (text: number) => getOrganizationName(text, organizations),
             width: "16%",
-            filters: []
+            filters: org.map((organization) => ({
+                text: organization,
+                value: organization,
+            })),
+            onFilter: (value: any, record: any) => record.organization === value,
         },
         {
             title: 'Статус заявки',
@@ -116,7 +139,11 @@ export const QueryList = () => {
             key: 'status',
             render: (text: string) => getStatusTranslation(text),
             width: "16%",
-            filters: []
+            filters: status.map((status) => ({
+                    text: status,
+                    value: status,
+                })),
+            onFilter: (value: any, record: any) => record.status === value,
         },
     ];
 
@@ -141,6 +168,7 @@ export const QueryList = () => {
         router.push(checkExpert(queryId)? `/queries/expert?queryId=${queryId.id}` : `/queries/application?queryId=${queryId.id}`);
         // router.push(`/queries/${link}`);
     };
+
 
     return (
         <div className={styles.container}>
