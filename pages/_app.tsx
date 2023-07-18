@@ -1,5 +1,23 @@
 import type { AppProps } from 'next/app'
+import Store from "../store/store";
+import {createContext} from "react";
+
+interface State {
+    store: Store,
+}
+
+const store = new Store();
+
+export const Context = createContext<State>({
+    store,
+})
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+      <Context.Provider value={{
+          store
+      }}>
+        <Component {...pageProps} />
+      </Context.Provider>
+  )
 }

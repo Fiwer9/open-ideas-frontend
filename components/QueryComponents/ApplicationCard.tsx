@@ -1,17 +1,188 @@
-import React from "react";
-import {Card, Form} from "antd";
+import React, {useContext, useEffect, useState} from "react";
+import {Card, Form, Radio} from "antd";
 import {HeartOutlined} from "@ant-design/icons";
 import {Row, Col} from "antd";
 import {Logo} from "../PicturesComponents/Logo";
-import {TextAreas} from "../TextAreaComponent/TextArea";
 import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/ApplicationCard.module.scss";
 import router from "next/router";
+import QueriesService from "../../services/QueriesService";
+import OrganizationsService from "../../services/OrganizationsService";
+import {QueriesResponse} from "../../models/response/QueriesResponse";
+import {
+    formatDateToServer,
+    getDirectionTranslation,
+    getOrganizationName,
+    getStatusTranslation
+} from "../../utils/utils";
+import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
+import CommentService from "../../services/CommentService";
+import {CommentResponse} from "../../models/response/CommentResponse";
+import UsersService from "../../services/UsersService";
+import {UserResponse} from "../../models/response/UserResponse";
+import {Context} from "../../pages/_app";
+import dayjs from "dayjs";
 
-export const ApplicationCard = ({children}: any) => {
+type ApplicationCardProps = {
+    queryId: string;
+    user_status: string;
+};
+
+export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
+    const [commentValue, setCommentValue] = useState('');
+    const [dataComment, setDataComment] = useState<CommentResponse[]>([])
+    const [users, setUsers] = useState<UserResponse[]>([])
+    const { store } = useContext(Context);
+    const [status, setStatus] = useState('')
+    const [applicationData, setApplicationData] = useState<QueriesResponse>({
+        name: '',
+        initiator_users: [0],
+        implementation_effect: '',
+        initiative_direction: '',
+        organization: 0,
+        expert_users: [],
+        status: '',
+        description: '',
+        date: '',
+        id: 0
+    })
+
+    useEffect(() => { console.log(status)}, [status])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true)
+            try {
+                const data = await QueriesService.getQueriesTableDataById(queryId)
+                const organizations = await OrganizationsService.getOrganizations()
+                setApplicationData(data.data)
+                setOrganization(organizations.data)
+                console.log(applicationData)
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false)
+            }
+        }
+        console.log(queryId)
+        queryId ? fetchData() : router.push('/queries')
+
+    }, [queryId])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await CommentService.getComments()
+                const users = await UsersService.getUsers()
+                setDataComment(data.data)
+                setUsers(users.data)
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false)
+            }
+        }
+        fetchData()
+    }, [])
+
+    function getStatusClassName(status: string) {
+        switch (status) {
+            case 'registered':
+                return styles.statusRegistered;
+            case 'check':
+                return styles.statusCheck;
+            case 'analysis':
+                return styles.statusAnalysis;
+            case 'accepted':
+                return styles.statusAccepted;
+            case 'implementation':
+                return styles.statusImplementation;
+            case 'rejected':
+                return styles.statusRejected;
+            case 'done':
+                return styles.statusDone;
+            default:
+                return '';
+        }
+    }
+
+    function getUserName(userId: number) {
+        return users.map((user: any) => {
+            if (user.id === userId) {
+                return user.name
+            }
+        })
+    }
+
+    function formatDate(date: string) {
+        const currentDate = date.split('T')
+        return dayjs(currentDate[0], 'YYYY-MM-DD').format('DD.MM.YYYY')
+    }
+
+    function getLikes() {
+        let like = 0;
+       return (users.map((user) => {
+            return user.likes.map((query) => {
+                if (query.id === Number(queryId)) {
+                    like += 1;
+                    return like;
+                }
+                return like;
+            })
+        }))
+    }
+
+    const sendComment = async (comment: string) => {
+        try {
+            const userId = sessionStorage.getItem('user_id');
+            await store.sendComment(comment, Number(queryId), userId ? Number(userId) : 0);
+        } catch (error: any) {
+            console.log(error.response?.data?.message);
+        }
+    }
+
+    const checkExpert = (comment_user: number) => {
+        let isExpert = false;
+
+        applicationData.expert_users.forEach((user) => {
+            if (user === Number(sessionStorage.getItem('user_id'))) {
+                isExpert = true;
+            }
+        });
+
+        return isExpert;
+    }
+
+    const patchLike = async (id: number) => {
+        try {
+            await store.patchLike(id, [Number(queryId)]);
+            const users = await UsersService.getUsers()
+            setUsers(users.data)
+        } catch (error: any) {
+            console.log(error.response?.data?.message);
+        }
+    }
+
+    const patchQuery = async (status: string) => {
+        try {
+            const currentDate = new Date();
+            const date = formatDateToServer(currentDate, '-')
+            await store.patchQuery(date, applicationData.name, applicationData.description,
+                applicationData.initiative_direction, status, applicationData.implementation_effect,
+                applicationData.organization, applicationData.initiator_users, Number(queryId));
+        } catch (error: any) {
+            console.log(error.response?.data?.message);
+        }
+    }
+
+    if (!queryId) {
+        return null;
+    }
   return (
-      <Card className={styles.card}>
+      <Card className={styles.card} loading={isLoading}>
           <Form className={styles.form}>
               <Form.Item className={styles.logo}>
                   <div className={styles.headerContainer}>
@@ -20,80 +191,93 @@ export const ApplicationCard = ({children}: any) => {
                       </div>
                       <div className={styles.headerContent}>
                           <div className={styles.iconContainer}>
-                              <HeartOutlined className={styles.likes}/>
-                              <p className={styles.numberLikes}>123</p>
+                              <HeartOutlined className={styles.likes} onClick={() => patchLike(Number(sessionStorage.getItem('user_id')))}/>
+                              <p className={styles.numberLikes}>{getLikes()}</p>
                           </div>
-                          <p className={styles.statusQuery}>Заявка отклонена</p>
+                          <p className={`${styles.statusQuery} ${getStatusClassName(applicationData.status)}`}>{getStatusTranslation(applicationData.status)}</p>
                       </div>
                   </div>
               </Form.Item>
               <Col className={styles.col}>
                   <Row className={styles.row}>
                       <p className={styles.rowText}>Номер заявки:</p>
-                      <p className={styles.rowInf}>1</p>
+                      <p className={styles.rowInf}>{applicationData.id}</p>
                   </Row>
                   <Row className={styles.row}>
                       <p className={styles.rowText}>Инициатива (Идея):</p>
-                      <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
+                      <p className={styles.rowInf}>{applicationData.name}</p>
                   </Row>
                   <Row className={styles.row}>
                       <p className={styles.rowText}>Описание инициативы:</p>
-                      <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
+                      <p className={styles.rowInf}>{applicationData.description}</p>
                   </Row>
                   <Row className={styles.row}>
                       <p className={styles.rowText}>Направление:</p>
-                      <p className={styles.rowInf}>Рабочее пространство</p>
+                      <p className={styles.rowInf}>{getDirectionTranslation(applicationData.initiative_direction)}</p>
                   </Row>
                   <Row className={styles.row}>
                       <p className={styles.rowText}>Организация:</p>
-                      <p className={styles.rowInf}>Волжская ГЭС</p>
+                      <p className={styles.rowInf}>{getOrganizationName(applicationData.organization, organization)}</p>
                   </Row>
                   <Row className={styles.row}>
                       <p className={`${styles.rowText} ${styles.comments}`}>Комментарии:</p>
                   </Row>
-                  <Row className={styles.row}>
-                      <div className={styles.userContainer}>
-                          <div className={styles.userAvatar}></div>
-                          <div className={styles.user}>
-                              <div className={styles.userName}>
-                                  <p className={styles.name}>Иванов Олег</p>
-                                  <p className={styles.status}>(Эксперт)</p>
+                  {dataComment
+                      .filter((comment) => comment.query === Number(queryId))
+                      .map((comment, index) => (
+                      <Row className={styles.row} key={index}>
+                          <div className={styles.userContainer}>
+                              <div className={styles.userAvatar}></div>
+                              <div className={styles.user}>
+                                  <div className={styles.userName}>
+                                      <p className={styles.name}>{getUserName(comment.user)}</p>
+                                      <p className={styles.status}>{checkExpert(comment.user)? '(Expert)' : '(User)'}</p>
+                                  </div>
+                                  <p className={styles.data}>{formatDate(comment.created_at)}</p>
+                                  <p className={styles.comment}>{comment.comment_text}</p>
                               </div>
-                              <p className={styles.data}>19.04.2023</p>
-                              <p className={styles.comment}>Согласен с данной идеей!</p>
                           </div>
-                      </div>
-                  </Row>
-                  <Row className={styles.row}>
-                      <div className={styles.userContainer}>
-                          <div className={styles.userAvatar}></div>
-                          <div className={styles.user}>
-                              <div className={styles.userName}>
-                                  <p className={styles.name}>Иванов Иван</p>
-                              </div>
-                              <p className={styles.data}>19.04.2023</p>
-                              <p className={styles.comment}>Согласен с данной идеей!</p>
-                          </div>
-                      </div>
-                  </Row>
+                      </Row>
+                      ))}
               </Col>
               <Form.Item className={styles.textAreaContainer}>
                   <p className={styles.textAreaTitle}>Оставьте свой комментарий по инициативе здесь:</p>
                   <div className={styles.textArea}>
-                      <TextAreas placeholder={"Напишите комментарий по этой инициативе"}/>
+                      <textarea
+                          className={styles.textAreaCustom}
+                          placeholder={"Напишите комментарий по этой инициативе"}
+                          onChange={(evt: any) => {
+                              setCommentValue(evt.target.value);
+                          }}
+                          value={commentValue}
+                      />
                   </div>
               </Form.Item>
-              {children? (
+              {user_status? (
                 <div className={styles.footerContainerChild}>
                     <div className={styles.buttonsContainer}>
-                        {children}
+                        <div className={styles.checkboxContainer}>
+                            <Radio.Group onChange={(e) => {
+                                setStatus(e.target.value)
+                                console.log(e)
+                            }} value={status}>
+                                <Radio className={styles.checkbox} value={'rejected'}> Отклонено</Radio>
+                                <Radio className={styles.checkbox} value={'accepted'}>Одобрено для реализации</Radio>
+                            </Radio.Group>
+                        </div>
                     </div>
                     <div className={styles.submitBtns}>
                         <div className={styles.btnWhite}>
-                          <Buttons onClick={() => router.push("/queries")} text={"Отменить"} />
+                          <Buttons text={"Отменить"} onClick={() => {
+                              router.push('/queries');
+                          }}/>
                         </div>
                         <div className={`${styles.btnBlue} ${styles.btnForm}`}>
-                            <Buttons onClick={() => router.push('/queries')} text={"Отправить"}/>
+                            <Buttons onClick={() => {
+                                commentValue&& sendComment(commentValue);
+                                status&& patchQuery(status)
+                                router.push('/queries')}}
+                                     text={"Отправить"}/>
                         </div>
                     </div>
               </div>
@@ -103,7 +287,10 @@ export const ApplicationCard = ({children}: any) => {
                           <Buttons onClick={() => router.push("/queries")} text={"Отменить"} />
                       </div>
                       <div className={`${styles.btnBlue} ${styles.btnForm}`}>
-                          <Buttons onClick={() => router.push('/queries')} text={"Отправить"}/>
+                          <Buttons text={"Отправить"} type='submit' onClick={() => {
+                              router.push('/queries');
+                              commentValue&& sendComment(commentValue);
+                          }}/>
                       </div>
                   </div>
                   )}

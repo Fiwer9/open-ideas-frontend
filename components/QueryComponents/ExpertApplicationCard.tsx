@@ -1,16 +1,9 @@
 import React from "react";
-import {Checkbox} from "antd";
 import {ApplicationCard} from "./ApplicationCard";
 
-import styles from "./styles/ExpertApplicationCard.module.scss";
 
-export const ExpertApplicationCard = () => {
+export const ExpertApplicationCard = ({queryId}: { queryId: string }) => {
     return (
-        <ApplicationCard children={
-            <div className={styles.checkboxContainer}>
-                <Checkbox className={styles.checkbox}>Отклонено</Checkbox>
-                <Checkbox className={styles.checkbox}>Одобрено для реализации</Checkbox>
-            </div>
-        }/>
+        <ApplicationCard queryId={queryId} user_status={'expert'}/>
     );
 };

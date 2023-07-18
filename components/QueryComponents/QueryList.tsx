@@ -1,10 +1,17 @@
-import React from "react";
-import {Checkbox, Table, Button} from "antd";
+import React, {useEffect, useState} from "react";
+import {Button, Checkbox, Table} from "antd";
 import {InputPattern} from "../InputComponent/Input";
 import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/QueryList.module.scss";
 import router from "next/router";
+import {QueriesResponse} from "../../models/response/QueriesResponse";
+import QueriesService from "../../services/QueriesService";
+import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
+import OrganizationsService from "../../services/OrganizationsService";
+import {getDirectionTranslation, getOrganizationName, getStatusTranslation} from "../../utils/utils";
+import UsersService from "../../services/UsersService";
+import {UserResponse} from "../../models/response/UserResponse";
 import type { ColumnsType } from 'antd/es/table';
 
 interface DataType {
@@ -14,66 +21,99 @@ interface DataType {
     direction: string;
     organization: string;
     status: string;
+    onRow: any;
 }
 
 export const QueryList = () => {
-    const dataSource : DataType[] = [
+    const [isLoading, setIsLoading] = useState(false);
+    const [organizations, setOrganizations] = useState<OrganizationsResponse[]>([])
+    const [user, setUser] = useState<UserResponse>(
         {
-            key: '1',
-            number: 1,
-            initiative: 'Сделать так, чтобы не дуло в кабинете 303',
-            direction: 'Рабочее пространство',
-            organization: 'Волжская ГЭС',
-            status: 'Анализ заявки экспертом',
-        },
+            id: 0,
+            password: '',
+            last_login: '',
+            is_superuser: false,
+            username: '',
+            first_name: '',
+            last_name: '',
+            is_staff: false,
+            is_active: false,
+            date_joined: '',
+            name: '',
+            email: '',
+            department: {
+                id: 0,
+                organization: 0,
+                name: ''
+            },
+            groups: [],
+            user_permissions: [],
+            likes: [],
+        }
+    )
+    const [queriesTableData, setQueriesTableData] = useState<QueriesResponse[]>([
         {
-            key: '2',
-            number: 2,
-            initiative: 'Нужно, чтобы был кулер на втором этаже',
-            direction: 'Рабочее пространство',
-            organization: 'Воткинская ГЭС',
-            status: 'Анализ заявки экспертом',
-        },
-        {
-            key: '3',
-            number: 3,
-            initiative: 'Закупить больше принтеров, для ускорения работы',
-            direction: 'Технологические процессы',
-            organization: 'Волжская ГЭС',
-            status: 'Заявка принята к реализации',
-        },
-        {
-            key: '4',
-            number: 4,
-            initiative: 'Сделать ремонт в кабинете 501',
-            direction: 'Технологические процессы',
-            organization: 'Воткинская ГЭС',
-            status: 'Заявка принята к реализации',
-        },
-    ];
+            id: 1,
+            date: "",
+            status: "",
+            description: '',
+            organization: 0,
+            expert_users: [],
+            implementation_effect: '',
+            initiative_direction: '',
+            name: '',
+            initiator_users: [0],
+        }
+    ])
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true)
+            try {
+                const data = await QueriesService.getQueriesTableData()
+                const organizations = await OrganizationsService.getOrganizations()
+                const user = await UsersService.getCurrentUser(Number(sessionStorage.getItem('user_id')))
+                setQueriesTableData(data.data);
+                setOrganizations(organizations.data);
+                setUser(user.data)
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
+        fetchData();
+    }, [])
 
     const direct = ['Технологические процессы', 'Бизнес процессы', 'Охрана труда', 'Рабочее пространство'];
     const org = ['Волжская ГЭС', 'Воткинская ГЭС'];
     const status = ['Зарегистрирована', 'На рассмотрении', 'Анализируется экспертом', 'На рассмотрении у руководства', 'Принята к реализации', 'Отклонена', 'Реализована'];
 
-    const columns: ColumnsType<DataType> = [
+    const columns = [
         {
             title: 'Номер заявки',
-            dataIndex: 'number',
+            dataIndex: 'id',
+            key: 'id',
             width: "9%",
             showSorterTooltip: false,
-            sorter: (a, b) => a.number - b.number,
+            sorter: (a: any, b: any) => a.id - b.id,
+            onRow: (record: QueriesResponse) => ({
+                onClick: () => handleRowClick(record.id)
+            })
         },
         {
             title: 'Инициатива (Идея)',
-            dataIndex: 'initiative',
-            key: 'initiative',
+            dataIndex: 'name',
+            key: 'name',
             width: "44%",
         },
         {
             title: 'Направление',
-            dataIndex: 'direction',
-            key: 'direction',
+            dataIndex: 'initiative_direction',
+            key: 'initiative_direction',
+            render: (text: string) => getDirectionTranslation(text),
             width: "16%",
             filters: direct.map((direction) => ({
                 text: direction,
@@ -85,6 +125,7 @@ export const QueryList = () => {
             title: 'Организация',
             dataIndex: 'organization',
             key: 'organization',
+            render: (text: number) => getOrganizationName(text, organizations),
             width: "16%",
             filters: org.map((organization) => ({
                 text: organization,
@@ -96,6 +137,7 @@ export const QueryList = () => {
             title: 'Статус заявки',
             dataIndex: 'status',
             key: 'status',
+            render: (text: string) => getStatusTranslation(text),
             width: "16%",
             filters: status.map((status) => ({
                     text: status,
@@ -105,8 +147,26 @@ export const QueryList = () => {
         },
     ];
 
-    const handleRowClick = () => {
-        router.push(`/queries/application`);
+    const checkExpert = (queryId: any) => {
+        let isExpert = false;
+
+        queriesTableData.forEach((query) => {
+            if (queryId.id === query.id) {
+                query.expert_users.forEach((user) => {
+                    console.log(user, Number(sessionStorage.getItem('user_id')));
+                    if (user === Number(sessionStorage.getItem('user_id'))) {
+                        isExpert = true;
+                    }
+                });
+            }
+        });
+
+        return isExpert;
+    }
+
+    const handleRowClick = (queryId: any) => {
+        router.push(checkExpert(queryId)? `/queries/expert?queryId=${queryId.id}` : `/queries/application?queryId=${queryId.id}`);
+        // router.push(`/queries/${link}`);
     };
 
 
@@ -135,11 +195,16 @@ export const QueryList = () => {
                 <div className={styles.tableContainer}>
                     <Table
                         className={styles.table}
-                        dataSource={dataSource}
+                        dataSource={queriesTableData}
                         columns={columns}
-                        onRow={() => ({
-                            onClick: () => handleRowClick(),
+                        loading={isLoading}
+                        onRow={(element: any) => ({
+                            onClick: () => {
+                                console.log(element)
+                                handleRowClick(element)
+                            },
                         })}
+                        rowKey="id"
                     />
                 </div>
                 <div className={styles.linkContainer}>
