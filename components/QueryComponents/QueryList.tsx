@@ -98,7 +98,7 @@ export const QueryList = () => {
             key: 'id',
             width: "9%",
             showSorterTooltip: false,
-            sorter: (a: any, b: any) => a.number - b.number,
+            sorter: (a: any, b: any) => a.id - b.id,
             onRow: (record: QueriesResponse) => ({
                 onClick: () => handleRowClick(record.id)
             })
