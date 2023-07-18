@@ -144,7 +144,7 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
         let isExpert = false;
 
         applicationData.expert_users.forEach((user) => {
-            if (user === Number(sessionStorage.getItem('user_id'))) {
+            if (user === comment_user) {
                 isExpert = true;
             }
         });
