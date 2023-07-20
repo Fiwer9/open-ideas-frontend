@@ -12,21 +12,11 @@ import OrganizationsService from "../../services/OrganizationsService";
 import {getDirectionTranslation, getOrganizationName, getStatusTranslation} from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
-import type { ColumnsType } from 'antd/es/table';
-
-interface DataType {
-    key: React.Key;
-    number: number;
-    initiative: string;
-    direction: string;
-    organization: string;
-    status: string;
-    onRow: any;
-}
 
 export const QueryList = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [organizations, setOrganizations] = useState<OrganizationsResponse[]>([])
+    const [isArchive, setIsArchive] = useState(false)
     const [user, setUser] = useState<UserResponse>(
         {
             id: 0,
@@ -85,7 +75,7 @@ export const QueryList = () => {
         }
 
         fetchData();
-    }, [])
+    }, [isArchive])
 
     const direct = ['Технологические процессы', 'Бизнес процессы', 'Охрана труда', 'Рабочее пространство'];
     const org = ['Волжская ГЭС', 'Воткинская ГЭС'];
@@ -189,13 +179,14 @@ export const QueryList = () => {
                         <div className={styles.btnBlue}>
                             <Buttons onClick={() => router.push(`/queries/create`)} text={"Создать заявку"}/>
                         </div>
-                        <Checkbox className={styles.checkbox}>Архив</Checkbox>
+                        <Checkbox className={styles.checkbox} onChange={(e) => setIsArchive(e.target.checked)}>Архив</Checkbox>
                     </div>
                 </div>
                 <div className={styles.tableContainer}>
                     <Table
                         className={styles.table}
-                        dataSource={queriesTableData}
+                        dataSource={isArchive? queriesTableData.filter((query) => query.status === 'rejected')
+                        : queriesTableData.filter((query) => query.status !== 'rejected')}
                         columns={columns}
                         loading={isLoading}
                         onRow={(element: any) => ({

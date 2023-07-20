@@ -13,13 +13,21 @@ type ConfirmationProps = {
 
 export const CodeConfirmation = ({ email }: ConfirmationProps) => {
     const [code, setCode] = useState('');
+    const [error, setError] = useState<string | null>(null); // Добавляем состояние для ошибки
     const { store } = useContext(Context);
     const confirmEmail = async () => {
         try {
-            await store.confirmEmail(code);
+            const response = await store.confirmEmail(code);
+            response&& setError(String(response))
+            !response&& router.push('/queries')
         } catch (error: any) {
-            console.log(error.response?.data?.message);
+            setError(error.response?.data?.message || 'Произошла ошибка');
         }
+    };
+
+    const handleInputChange = (evt: any) => {
+        setCode(evt.target.value)
+        setError(null)
     };
 
     return (
@@ -34,14 +42,15 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
                     </div>
                     <p className={styles.text}>Введите код отправленный на почту {email}</p>
                     <div className={styles.input}>
-                        <Input onChange={(evt: any) => setCode(evt.target.value)} value={code} placeholder={"Код подтверждения с Email"} required/>
+                        <Input onChange={handleInputChange} status={error ? 'error' : undefined} value={!error? code : ''} placeholder={!error? "Код подтверждения с Email" : error} required/>
                     </div>
                 </Form.Item>
                 <div className={styles.btnBlue}>
                     <Buttons onClick={() => {
-                        code&& router.push('/queries')
-                        code&& confirmEmail()}
-                    } type="submit" text={"Подтвердить"}/>
+                        if (code && !error) {
+                            confirmEmail()
+                        }
+                    }} type="submit" text={"Подтвердить"}/>
                 </div>
                 <div className={styles.btnRepeatCode}>
                     <Buttons onClick={() => router.push('../../')}  text={'Отправить код повторно'}/>

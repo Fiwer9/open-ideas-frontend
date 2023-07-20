@@ -28,7 +28,7 @@ export default class Store {
             this.setAuth(false);
             this.setUser(response.data.user);
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            return e.response.data.email
         }
     }
 
@@ -80,7 +80,7 @@ export default class Store {
             this.setAuth(true);
             this.setUser(response.data.user);
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            return e.response.data.detail
         }
     }
 

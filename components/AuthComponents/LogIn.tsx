@@ -10,14 +10,25 @@ import {Context} from "../../pages/_app";
 
 export const LogIn = () => {
     const [email, setEmail] = useState<string>('');
+    const [error, setError] = useState<string | null>(null); // Добавляем состояние для ошибки
     const { store } = useContext(Context);
 
     const sendCode = async () => {
         try {
-            await store.sendCode(email);
+            const response = await store.sendCode(email);
+            response&& setError(String(response))
+            !response&& router.push({
+                pathname: '/auth/code',
+                query: { email: email }
+            });
         } catch (error: any) {
-            console.log(error.response?.data?.message);
+            setError(error.response?.data?.message || 'Произошла ошибка');
         }
+    };
+
+    const handleInputChange = (evt: any) => {
+        setEmail(evt.target.value);
+        setError(null)
     };
 
     return (
@@ -31,16 +42,14 @@ export const LogIn = () => {
                         <InputLabel title={'Войдите при помощи почты'} />
                     </div>
                     <div className={styles.input}>
-                        <Input onChange={(evt: any) => setEmail(evt.target.value)} value={email} placeholder="Напишите свою почту" required/>
+                        <Input onChange={handleInputChange} status={error ? 'error' : undefined} value={!error? email : ''} placeholder={!error? "Напишите свою почту" : error} required/>
                     </div>
                 </Form.Item>
                 <div className={styles.btnBlue}>
                     <Buttons onClick={() => {
-                        email&& sendCode();
-                        email&& router.push({
-                            pathname: '/auth/code',
-                            query: { email: email }
-                        });
+                        if (email && !error) {
+                            sendCode();
+                        }
                     }} type="submit" text={'Продолжить'} />
                 </div>
             </Form>
