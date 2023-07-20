@@ -56,3 +56,18 @@ export const getStatusTranslation = (status: string) => {
             return "";
     }
 };
+
+export const getDirectionTranslationOnEng = (direction: string) => {
+    switch (direction) {
+        case "Технологические процессы":
+            return "tech_process";
+        case "Бизнес процессы":
+            return "business_process";
+        case "Охрана труда":
+            return "work_safety";
+        case "Рабочее пространство":
+            return "workspace";
+        default:
+            return "";
+    }
+}
