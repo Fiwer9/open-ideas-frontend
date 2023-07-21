@@ -9,20 +9,14 @@ import {QueriesResponse} from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import OrganizationsService from "../../services/OrganizationsService";
-import {getDirectionTranslation, getOrganizationName, getStatusTranslation} from "../../utils/utils";
+import {
+    getDirectionTranslation,
+    getDirectionTranslationOnEng,
+    getOrganizationName,
+    getStatusTranslation
+} from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
-import type { ColumnsType } from 'antd/es/table';
-
-interface DataType {
-    key: React.Key;
-    number: number;
-    initiative: string;
-    direction: string;
-    organization: string;
-    status: string;
-    onRow: any;
-}
 
 export const QueryList = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -87,9 +81,11 @@ export const QueryList = () => {
         fetchData();
     }, [])
 
-    const direct = ['Технологические процессы', 'Бизнес процессы', 'Охрана труда', 'Рабочее пространство'];
-    const org = ['Волжская ГЭС', 'Воткинская ГЭС'];
-    const status = ['Зарегистрирована', 'На рассмотрении', 'Анализируется экспертом', 'На рассмотрении у руководства', 'Принята к реализации', 'Отклонена', 'Реализована'];
+    const items = queriesTableData;
+    const organiz = organizations;
+    const direct = [...new Set(items.map((item) => getDirectionTranslation(item.initiative_direction)))];
+    const org = [...new Set(organiz.map((item) => item.name))];
+    const status = [...new Set(items.map((item) => getStatusTranslation(item.status)))];
 
     const columns = [
         {
@@ -119,7 +115,7 @@ export const QueryList = () => {
                 text: direction,
                 value: direction,
             })),
-            onFilter: (value: any, record: any) => record.direction === value,
+            onFilter: (value: any, record: any) => record.initiative_direction.includes(getDirectionTranslationOnEng(value)),
         },
         {
             title: 'Организация',
@@ -131,7 +127,8 @@ export const QueryList = () => {
                 text: organization,
                 value: organization,
             })),
-            onFilter: (value: any, record: any) => record.organization === value,
+            onFilter: (value: any, record: any) => getOrganizationName(record.organization, organizations).includes(value),
+
         },
         {
             title: 'Статус заявки',
@@ -143,7 +140,7 @@ export const QueryList = () => {
                     text: status,
                     value: status,
                 })),
-            onFilter: (value: any, record: any) => record.status === value,
+            onFilter: (value: any, record: any) => getStatusTranslation(record.status).includes(value),
         },
     ];
 
