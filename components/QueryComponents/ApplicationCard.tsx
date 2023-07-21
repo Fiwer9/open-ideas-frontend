@@ -4,7 +4,7 @@ import {HeartFilled, HeartOutlined} from "@ant-design/icons";
 import {Row, Col} from "antd";
 import {Logo} from "../PicturesComponents/Logo";
 import {Buttons} from "../ButtonComponent/Button";
-
+import avatar from "../../public/img/avatar.jpg"
 import styles from "./styles/ApplicationCard.module.scss";
 import router from "next/router";
 import QueriesService from "../../services/QueriesService";
@@ -23,6 +23,7 @@ import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
 import {Context} from "../../pages/_app";
 import dayjs from "dayjs";
+import Image from "next/image";
 
 type ApplicationCardProps = {
     queryId: string;
@@ -50,8 +51,6 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
         date: '',
         id: 0
     })
-
-    useEffect(() => { console.log(status)}, [status])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -268,11 +267,13 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
                       .map((comment, index) => (
                       <Row className={styles.row} key={index}>
                           <div className={styles.userContainer}>
-                              <div className={styles.userAvatar}></div>
+                              <div className={styles.userAvatar}>
+                                  <Image src={avatar} width={60} alt={'Аватарка'}></Image>
+                              </div>
                               <div className={styles.user}>
                                   <div className={styles.userName}>
                                       <p className={styles.name}>{getUserName(comment.user)}</p>
-                                      <p className={styles.status}>{checkExpert(comment.user)? '(Expert)' : '(User)'}</p>
+                                      <p className={styles.status}>{checkExpert(comment.user)? '(Эксперт)' : '(Пользователь)'}</p>
                                   </div>
                                   <p className={styles.data}>{formatDate(comment.created_at)}</p>
                                   <p className={styles.comment}>{comment.comment_text}</p>

@@ -21,6 +21,7 @@ import {UserResponse} from "../../models/response/UserResponse";
 export const QueryList = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [organizations, setOrganizations] = useState<OrganizationsResponse[]>([])
+    const [isArchive, setIsArchive] = useState(false)
     const [user, setUser] = useState<UserResponse>(
         {
             id: 0,
@@ -79,7 +80,7 @@ export const QueryList = () => {
         }
 
         fetchData();
-    }, [])
+    }, [isArchive])
 
     const items = queriesTableData;
     const organiz = organizations;
@@ -186,13 +187,14 @@ export const QueryList = () => {
                         <div className={styles.btnBlue}>
                             <Buttons onClick={() => router.push(`/queries/create`)} text={"Создать заявку"}/>
                         </div>
-                        <Checkbox className={styles.checkbox}>Архив</Checkbox>
+                        <Checkbox className={styles.checkbox} onChange={(e) => setIsArchive(e.target.checked)}>Архив</Checkbox>
                     </div>
                 </div>
                 <div className={styles.tableContainer}>
                     <Table
                         className={styles.table}
-                        dataSource={queriesTableData}
+                        dataSource={isArchive? queriesTableData.filter((query) => query.status === 'rejected')
+                        : queriesTableData.filter((query) => query.status !== 'rejected')}
                         columns={columns}
                         loading={isLoading}
                         onRow={(element: any) => ({
