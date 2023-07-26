@@ -17,6 +17,7 @@ import {
 } from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
+import {LogOut} from "../AuthComponents/LogOut";
 
 export const QueryList = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -169,47 +170,50 @@ export const QueryList = () => {
 
 
     return (
-        <div className={styles.container}>
-            <div className={styles.content}>
-                <div className={styles.titleContainer}>
-                    <h1 className={styles.title}>Заявки</h1>
-                </div>
-                <div className={styles.infContainer}>
-                    <div className={styles.inputContainer}>
-                        <div className={styles.inputNumber}>
-                            <InputPattern placeholder={"Номер заявки"}/>
+        <>
+            <LogOut/>
+            <div className={styles.container}>
+                <div className={styles.content}>
+                    <div className={styles.titleContainer}>
+                        <h1 className={styles.title}>Заявки</h1>
+                    </div>
+                    <div className={styles.infContainer}>
+                        <div className={styles.inputContainer}>
+                            <div className={styles.inputNumber}>
+                                <InputPattern placeholder={"Номер заявки"}/>
+                            </div>
+                            <div className={styles.inputSearch}>
+                                <InputPattern placeholder={"Поиск по идеям"}/>
+                            </div>
                         </div>
-                        <div className={styles.inputSearch}>
-                            <InputPattern placeholder={"Поиск по идеям"}/>
+                        <div className={styles.btnContainer}>
+                            <div className={styles.btnBlue}>
+                                <Buttons onClick={() => router.push(`/queries/create`)} text={"Создать заявку"}/>
+                            </div>
+                            <Checkbox className={styles.checkbox} onChange={(e) => setIsArchive(e.target.checked)}>Архив</Checkbox>
                         </div>
                     </div>
-                    <div className={styles.btnContainer}>
-                        <div className={styles.btnBlue}>
-                            <Buttons onClick={() => router.push(`/queries/create`)} text={"Создать заявку"}/>
-                        </div>
-                        <Checkbox className={styles.checkbox} onChange={(e) => setIsArchive(e.target.checked)}>Архив</Checkbox>
+                    <div className={styles.tableContainer}>
+                        <Table
+                            className={styles.table}
+                            dataSource={isArchive? queriesTableData.filter((query) => query.status === 'rejected')
+                            : queriesTableData.filter((query) => query.status !== 'rejected')}
+                            columns={columns}
+                            loading={isLoading}
+                            onRow={(element: any) => ({
+                                onClick: () => {
+                                    console.log(element)
+                                    handleRowClick(element)
+                                },
+                            })}
+                            rowKey="id"
+                        />
                     </div>
-                </div>
-                <div className={styles.tableContainer}>
-                    <Table
-                        className={styles.table}
-                        dataSource={isArchive? queriesTableData.filter((query) => query.status === 'rejected')
-                        : queriesTableData.filter((query) => query.status !== 'rejected')}
-                        columns={columns}
-                        loading={isLoading}
-                        onRow={(element: any) => ({
-                            onClick: () => {
-                                console.log(element)
-                                handleRowClick(element)
-                            },
-                        })}
-                        rowKey="id"
-                    />
-                </div>
-                <div className={styles.linkContainer}>
-                    <Button onClick={() => router.push(`/`)} className={styles.link} type="link">НАЗАД</Button>
+                    <div className={styles.linkContainer}>
+                        <Button onClick={() => router.push(`/`)} className={styles.link} type="link">НАЗАД</Button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };

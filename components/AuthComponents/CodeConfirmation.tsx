@@ -42,8 +42,13 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
                     </div>
                     <p className={styles.text}>Введите код отправленный на почту {email}</p>
                     <div className={styles.input}>
-                        <Input onChange={handleInputChange} status={error ? 'error' : undefined} value={!error? code : ''} placeholder={!error? "Код подтверждения с Email" : error} required/>
+                        <Input onChange={handleInputChange} status={error ? 'error' : undefined} value={!error? code : ''} placeholder={"Код подтверждения с Email"} required/>
                     </div>
+                    {error&& (
+                        <div className={styles.error}>
+                            {error}
+                        </div>
+                    )}
                 </Form.Item>
                 <div className={styles.btnBlue}>
                     <Buttons onClick={() => {
