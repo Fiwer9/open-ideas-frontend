@@ -1,0 +1,28 @@
+@import "../../../styles/variable.scss";
+
+.logout {
+  cursor: pointer;
+  fill: #1890FF;
+}
+
+
+.link {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font: {
+    family: "RobotoMedium", sans-serif;
+    size: 20px;
+  }
+  color: $color-violet;
+}
+
+.linkContainer {
+  display: flex;
+  align-items: center;
+  margin: {
+    top: 48px;
+    bottom: 32px;
+  }
+}
+

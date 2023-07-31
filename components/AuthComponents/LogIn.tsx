@@ -42,8 +42,13 @@ export const LogIn = () => {
                         <InputLabel title={'Войдите при помощи почты'} />
                     </div>
                     <div className={styles.input}>
-                        <Input onChange={handleInputChange} status={error ? 'error' : undefined} value={!error? email : ''} placeholder={!error? "Напишите свою почту" : error} required/>
+                        <Input onChange={handleInputChange} status={error ? 'error' : undefined} value={!error? email : ''} placeholder={"Напишите свою почту"} required/>
                     </div>
+                    {error&& (
+                        <div className={styles.error}>
+                            {error}
+                        </div>
+                    )}
                 </Form.Item>
                 <div className={styles.btnBlue}>
                     <Buttons onClick={() => {

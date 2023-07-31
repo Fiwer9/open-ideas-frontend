@@ -87,6 +87,11 @@ $color-pink: #FF185D;
   }
 }
 
+.error {
+  margin-top: 8px;
+  color: #e83333;
+}
+
 .btnBlue {
   border: 1px solid $color-blue;
   display: inline-block;

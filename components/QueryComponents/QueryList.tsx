@@ -17,6 +17,7 @@ import {
 } from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
+import {LogOut} from "../AuthComponents/LogOut";
 
 export const QueryList = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -278,7 +279,7 @@ export const QueryList = () => {
                     />
                 </div>
                 <div className={styles.linkContainer}>
-                    <Button onClick={() => router.push(`/`)} className={styles.link} type="link">НАЗАД</Button>
+                    <LogOut/>
                 </div>
             </div>
         </div>

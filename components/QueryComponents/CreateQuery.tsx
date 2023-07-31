@@ -13,6 +13,7 @@ import OrganizationsService from "../../services/OrganizationsService";
 import UsersService from "../../services/UsersService";
 import {formatDateToServer, getOrganizationId, getOrganizationName} from "../../utils/utils";
 import {Context} from "../../pages/_app";
+import {LogOut} from "../AuthComponents/LogOut";
 
 export const CreateQuery = () => {
     const [modalActive, setModalActive] = useState(false);
