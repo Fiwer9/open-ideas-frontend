@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Table} from "antd";
+import {Checkbox, Table} from "antd";
 import {InputPattern} from "../InputComponent/Input";
 import {Buttons} from "../ButtonComponent/Button";
 
@@ -171,49 +171,48 @@ export const QueryList = () => {
 
     return (
         <>
-            <LogOut/>
-            <div className={styles.container}>
-                <div className={styles.content}>
-                    <div className={styles.titleContainer}>
-                        <h1 className={styles.title}>Заявки</h1>
-                    </div>
-                    <div className={styles.infContainer}>
-                        <div className={styles.inputContainer}>
-                            <div className={styles.inputNumber}>
-                                <InputPattern placeholder={"Номер заявки"}/>
-                            </div>
-                            <div className={styles.inputSearch}>
-                                <InputPattern placeholder={"Поиск по идеям"}/>
-                            </div>
+        <div className={styles.container}>
+            <div className={styles.content}>
+                <div className={styles.titleContainer}>
+                    <h1 className={styles.title}>Заявки</h1>
+                </div>
+                <div className={styles.infContainer}>
+                    <div className={styles.inputContainer}>
+                        <div className={styles.inputNumber}>
+                            <InputPattern placeholder={"Номер заявки"}/>
                         </div>
-                        <div className={styles.btnContainer}>
-                            <div className={styles.btnBlue}>
-                                <Buttons onClick={() => router.push(`/queries/create`)} text={"Создать заявку"}/>
-                            </div>
-                            <Checkbox className={styles.checkbox} onChange={(e) => setIsArchive(e.target.checked)}>Архив</Checkbox>
+                        <div className={styles.inputSearch}>
+                            <InputPattern placeholder={"Поиск по идеям"}/>
                         </div>
                     </div>
-                    <div className={styles.tableContainer}>
-                        <Table
-                            className={styles.table}
-                            dataSource={isArchive? queriesTableData.filter((query) => query.status === 'rejected')
-                            : queriesTableData.filter((query) => query.status !== 'rejected')}
-                            columns={columns}
-                            loading={isLoading}
-                            onRow={(element: any) => ({
-                                onClick: () => {
-                                    console.log(element)
-                                    handleRowClick(element)
-                                },
-                            })}
-                            rowKey="id"
-                        />
-                    </div>
-                    <div className={styles.linkContainer}>
-                        <Button onClick={() => router.push(`/`)} className={styles.link} type="link">НАЗАД</Button>
+                    <div className={styles.btnContainer}>
+                        <div className={styles.btnBlue}>
+                            <Buttons onClick={() => router.push(`/queries/create`)} text={"Создать заявку"}/>
+                        </div>
+                        <Checkbox className={styles.checkbox} onChange={(e) => setIsArchive(e.target.checked)}>Архив</Checkbox>
                     </div>
                 </div>
+                <div className={styles.tableContainer}>
+                    <Table
+                        className={styles.table}
+                        dataSource={isArchive? queriesTableData.filter((query) => query.status === 'rejected')
+                        : queriesTableData.filter((query) => query.status !== 'rejected')}
+                        columns={columns}
+                        loading={isLoading}
+                        onRow={(element: any) => ({
+                            onClick: () => {
+                                console.log(element)
+                                handleRowClick(element)
+                            },
+                        })}
+                        rowKey="id"
+                    />
+                </div>
+                <div className={styles.linkContainer}>
+                    <LogOut/>
+                </div>
             </div>
+        </div>
         </>
     );
 };

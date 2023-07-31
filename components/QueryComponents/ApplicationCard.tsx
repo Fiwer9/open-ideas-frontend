@@ -24,7 +24,6 @@ import {UserResponse} from "../../models/response/UserResponse";
 import {Context} from "../../pages/_app";
 import dayjs from "dayjs";
 import Image from "next/image";
-import {LogOut} from "../AuthComponents/LogOut";
 
 type ApplicationCardProps = {
     queryId: string;
@@ -216,7 +215,6 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
     }
   return (
       <div>
-          <LogOut/>
           <Card className={styles.card} loading={isLoading}>
               <Form className={styles.form}>
                   <Form.Item className={styles.logo}>
