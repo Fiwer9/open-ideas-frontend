@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Table} from "antd";
+import {Button, Checkbox, Input, Table} from "antd";
 import {InputPattern} from "../InputComponent/Input";
 import {Buttons} from "../ButtonComponent/Button";
 
@@ -60,6 +60,58 @@ export const QueryList = () => {
             initiator_users: [0],
         }
     ])
+
+    const data = queriesTableData;
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchNumber, setSearchNumber] = useState('');
+
+    const filterQuery = async (searchText: any, listOfQuery: QueriesResponse[]) => {
+        if (!searchText) {
+            const data = await QueriesService.getQueriesTableData()
+            return data.data;
+        } else {
+            return listOfQuery.filter(({ name }) =>
+                name.toLowerCase().includes(searchText.toLowerCase())
+            );
+        }
+    };
+
+    const filterNumber = async (searchNum: any, listOfQuery: QueriesResponse[]) => {
+        if (!searchNum) {
+            const data = await QueriesService.getQueriesTableData()
+            return data.data;
+        } else {
+            return listOfQuery.filter(({id}) =>
+                id.toString().includes(searchNum.toString())
+            );
+        }
+    };
+
+
+    useEffect(() => {
+        setIsLoading(true);
+        const debounce = setTimeout(async () => {
+            const data = await QueriesService.getQueriesTableData();
+            const filteredQuery = filterQuery(searchTerm, data.data);
+            setQueriesTableData(await filteredQuery);
+            setIsLoading(false);
+        }, 300);
+
+        return () => clearTimeout(debounce);
+    }, [searchTerm]);
+
+
+    useEffect(() => {
+        setIsLoading(true);
+        const debounce = setTimeout(async () => {
+            const data = await QueriesService.getQueriesTableData();
+            const filteredQuery = filterNumber(searchNumber, data.data);
+            setQueriesTableData(await filteredQuery);
+            setIsLoading(false);
+        }, 300);
+
+        return () => clearTimeout(debounce);
+    }, [searchNumber]);
 
 
     useEffect(() => {
@@ -167,6 +219,20 @@ export const QueryList = () => {
         // router.push(`/queries/${link}`);
     };
 
+    const getData = () => {
+        if (isArchive) {
+            return queriesTableData.filter((query) => query.status === 'rejected')
+        } else if (!isArchive) {
+            return queriesTableData.filter((query) => query.status !== 'rejected')
+        } else if (searchTerm) {
+            return data.map((item) => item.name)
+        } else if (searchNumber) {
+            return data.map((item) => item.id)
+        } else {
+            return data
+        }
+    }
+
 
     return (
         <div className={styles.container}>
@@ -177,10 +243,16 @@ export const QueryList = () => {
                 <div className={styles.infContainer}>
                     <div className={styles.inputContainer}>
                         <div className={styles.inputNumber}>
-                            <InputPattern placeholder={"Номер заявки"}/>
+                            <Input
+                                placeholder={"Номер заявки"}
+                                onChange={(event: any) => setSearchNumber(event.target.value)}
+                            />
                         </div>
                         <div className={styles.inputSearch}>
-                            <InputPattern placeholder={"Поиск по идеям"}/>
+                            <Input
+                                placeholder={"Поиск по идеям"}
+                                onChange={(event: any) => setSearchTerm(event.target.value)}
+                            />
                         </div>
                     </div>
                     <div className={styles.btnContainer}>
@@ -193,8 +265,7 @@ export const QueryList = () => {
                 <div className={styles.tableContainer}>
                     <Table
                         className={styles.table}
-                        dataSource={isArchive? queriesTableData.filter((query) => query.status === 'rejected')
-                        : queriesTableData.filter((query) => query.status !== 'rejected')}
+                        dataSource={getData()}
                         columns={columns}
                         loading={isLoading}
                         onRow={(element: any) => ({
