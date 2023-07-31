@@ -65,26 +65,51 @@ export const QueryList = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchNumber, setSearchNumber] = useState('');
 
-    const filterQuery = (searchText: any, searchNum: any, listOfQuery: QueriesResponse[]) => {
-        if (searchText) {
+    const filterQuery = async (searchText: any, listOfQuery: QueriesResponse[]) => {
+        if (!searchText) {
+            const data = await QueriesService.getQueriesTableData()
+            return data.data;
+        } else {
             return listOfQuery.filter(({ name }) =>
                 name.toLowerCase().includes(searchText.toLowerCase())
             );
+        }
+    };
+
+    const filterNumber = async (searchNum: any, listOfQuery: QueriesResponse[]) => {
+        if (!searchNum) {
+            const data = await QueriesService.getQueriesTableData()
+            return data.data;
         } else {
-            return listOfQuery.filter(({ id }) =>
+            return listOfQuery.filter(({id}) =>
                 id.toString().includes(searchNum.toString())
             );
         }
     };
 
+
     useEffect(() => {
-        const debounce = setTimeout(() => {
-            const filteredQuery = filterQuery(searchTerm, searchNumber, data);
-            setQueriesTableData(filteredQuery);
+        setIsLoading(true);
+        const debounce = setTimeout(async () => {
+            const filteredQuery = filterQuery(searchTerm, data);
+            setQueriesTableData(await filteredQuery);
+            setIsLoading(false);
         }, 300);
 
         return () => clearTimeout(debounce);
-    }, [searchTerm, searchNumber]);
+    }, [searchTerm]);
+
+
+    useEffect(() => {
+        setIsLoading(true);
+        const debounce = setTimeout(async () => {
+            const filteredQuery = filterNumber(searchNumber, data);
+            setQueriesTableData(await filteredQuery);
+            setIsLoading(false);
+        }, 300);
+
+        return () => clearTimeout(debounce);
+    }, [searchNumber]);
 
 
     useEffect(() => {
@@ -105,7 +130,7 @@ export const QueryList = () => {
         }
 
         fetchData();
-    }, [isArchive, searchNumber, searchTerm])
+    }, [isArchive])
 
     const items = queriesTableData;
     const organiz = organizations;
