@@ -91,7 +91,8 @@ export const QueryList = () => {
     useEffect(() => {
         setIsLoading(true);
         const debounce = setTimeout(async () => {
-            const filteredQuery = filterQuery(searchTerm, data);
+            const data = await QueriesService.getQueriesTableData();
+            const filteredQuery = filterQuery(searchTerm, data.data);
             setQueriesTableData(await filteredQuery);
             setIsLoading(false);
         }, 300);
@@ -103,7 +104,8 @@ export const QueryList = () => {
     useEffect(() => {
         setIsLoading(true);
         const debounce = setTimeout(async () => {
-            const filteredQuery = filterNumber(searchNumber, data);
+            const data = await QueriesService.getQueriesTableData();
+            const filteredQuery = filterNumber(searchNumber, data.data);
             setQueriesTableData(await filteredQuery);
             setIsLoading(false);
         }, 300);
