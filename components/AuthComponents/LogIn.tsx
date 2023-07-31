@@ -46,7 +46,7 @@ export const LogIn = () => {
                     </div>
                     {error&& (
                         <div className={styles.error}>
-                            {error.substring(0, error.length - 1)}
+                            {error.replace('e.', 'e').replace('ы.', 'ы')}
                         </div>
                     )}
                 </Form.Item>
