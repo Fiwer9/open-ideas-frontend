@@ -88,7 +88,6 @@ export const CreateQuery = () => {
 
     return (
         <>
-            <LogOut/>
             <Card loading={isLoading} className={styles.card}>
                 <Form className={styles.form}>
                     <Form.Item className={styles.logo}>
