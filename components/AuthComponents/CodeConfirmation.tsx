@@ -19,7 +19,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
         try {
             const response = await store.confirmEmail(code);
             response&& setError(String(response))
-            !response&& router.push('/queries')
+            !response&& router.push('/auth/registration')
         } catch (error: any) {
             setError(error.response?.data?.message || 'Произошла ошибка');
         }
