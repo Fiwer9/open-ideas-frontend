@@ -12,7 +12,7 @@ export const Registration = () => {
     const [name, setName] = useState<string>('');
     const [organization, setOrganization] = useState<OrganizationsResponse[]>([]);
     const [department, setDepartament] = useState('');
-    const [error, setError] = useState<string | null>(null); // Добавляем состояние для ошибки
+    const [error, setError] = useState<string | null>(null);
 
     const handleInputChange = (evt: any) => {
         setName(evt.target.value);
@@ -76,10 +76,11 @@ export const Registration = () => {
                             text={"Назад"}
                             onClick={() => router.push('/auth/code')}/>
                     </div>
-                    <div className={styles.btnBlue}>
+                    <div className={name && organization && department && !error ? styles.btnBlue : styles.disabledBtn}>
                         <Buttons
-                            type="submit"
                             text={"Завершить"}
+                            props={name && organization && department && !error ? "submit" : "disabled"}
+                            type={"submit"}
                             onClick={() => {
                             if (name && organization && department && !error) {
                                 router.push('/queries')

@@ -11,3 +11,17 @@
   background-color: transparent;
   user-select: none;
 }
+
+.disabledBtn {
+  margin: 0;
+  padding: 6px 15px;
+  border: solid 1px $color-blue;
+  border-radius: 2px;
+  outline: none;
+  font-family: "RobotoLight", sans-serif;
+  color: inherit;
+  background-color: transparent;
+  user-select: none;
+  opacity: 0.5;
+  cursor: none;
+}
