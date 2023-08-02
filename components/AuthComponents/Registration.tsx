@@ -6,9 +6,12 @@ import {Buttons} from "../ButtonComponent/Button";
 
 import styles from './styles/Registration.module.scss';
 import router from "next/router";
+import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 
 export const Registration = () => {
     const [name, setName] = useState<string>('');
+    const [organization, setOrganization] = useState<OrganizationsResponse[]>([]);
+    const [department, setDepartament] = useState('');
     const [error, setError] = useState<string | null>(null); // Добавляем состояние для ошибки
 
     const handleInputChange = (evt: any) => {
@@ -28,35 +31,41 @@ export const Registration = () => {
                         <Input onChange={handleInputChange} placeholder={"Напишите фамилию, имя и отчество"} required/>
                     </div>
                 </Form.Item>
-                <Form.Item className={styles.contentSelect} rules={[{required: true}]}>
+                <Form.Item className={styles.contentSelect} required={true}>
                     <InputLabel className={styles.contentSelectTitle} title={"Выберите свою организацию"}/>
                     <div className={styles.mySelectContainer}>
                         <Select
                             className={styles.select}
-                            style={{ borderRadius: "2px" }}
-                            defaultValue="Название организации"
+                            placeholder={"Название организации"}
                             options={[
                                 { value: 'VolzhskayaHPP', label: 'Волжская ГЭС' },
                                 { value: 'BureyskayaHPP', label: 'Бурейская ГЭС' },
                                 { value: 'VotkinskayaHPP', label: 'Воткинская ГЭС' },
                                 { value: 'ZagorskayaPSPP', label: 'Загорская ГАЭС' },
                             ]}
+                            onChange={(e: any) => {
+                                setOrganization(e)
+                                console.log(organization)
+                            }}
                         />
                     </div>
                 </Form.Item>
-                <Form.Item className={styles.contentSelect} rules={[{required: true}]}>
+                <Form.Item className={styles.contentSelect} required={true}>
                     <InputLabel className={styles.contentSelectTitle} title={"Выберите свой отдел"}/>
                     <div className={styles.mySelectContainer}>
                         <Select
                             className={styles.select}
-                            style={{ borderRadius: "2px" }}
-                            defaultValue="Название отдела"
+                            placeholder={"Название отдела"}
                             options={[
                                 { value: 'IT', label: 'Отдел IT' },
                                 { value: 'economic', label: 'Экономический отдел' },
                                 { value: 'juridical', label: 'Юридический отдел' },
                                 { value: 'safety', label: 'Отдел безопасности' },
                             ]}
+                            onChange={(e: any) => {
+                                setDepartament(e)
+                                console.log(department)
+                            }}
                         />
                     </div>
                 </Form.Item>
@@ -72,7 +81,7 @@ export const Registration = () => {
                             type="submit"
                             text={"Завершить"}
                             onClick={() => {
-                            if (name && !error) {
+                            if (name && organization && department && !error) {
                                 router.push('/queries')
                             }
                         }}/>
