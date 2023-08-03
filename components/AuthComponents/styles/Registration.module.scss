@@ -7,6 +7,24 @@
     max-width: 472px;
     @extend %form;
 
+    @media (max-width: 320px) {
+      max-width: 270px;
+    }
+
+    @media (max-width: 420px) {
+      max-width: 320px;
+    }
+
+    @media (max-width: 470px) {
+      max-width: 370px;
+    }
+
+    .logo {
+      @media (max-width: 470px) {
+        text-align: center;
+      }
+    }
+
     .content {
       margin-top: 30px;
 
