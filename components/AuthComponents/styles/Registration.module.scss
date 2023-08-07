@@ -5,6 +5,7 @@
 
   .form {
     max-width: 472px;
+    padding: 20px 36px;
     @extend %form;
 
     @media (max-width: 320px) {
