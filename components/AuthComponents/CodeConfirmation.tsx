@@ -6,6 +6,8 @@ import {Buttons} from "../ButtonComponent/Button";
 import styles from "./styles/CodeConfirmation.module.scss";
 import router from "next/router";
 import {Context} from "../../pages/_app";
+import UsersService from "../../services/UsersService";
+import {UserResponse} from "../../models/response/UserResponse";
 
 type ConfirmationProps = {
     email: string;
@@ -13,8 +15,10 @@ type ConfirmationProps = {
 
 export const CodeConfirmation = ({ email }: ConfirmationProps) => {
     const [code, setCode] = useState('');
-    const [error, setError] = useState<string | null>(null); // Добавляем состояние для ошибки
+    const [error, setError] = useState<string | null>(null);
+    const [users, setUsers] = useState<UserResponse[]>([]);
     const { store } = useContext(Context);
+
     const confirmEmail = async () => {
         try {
             const response = await store.confirmEmail(code);
@@ -23,6 +27,26 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
         } catch (error: any) {
             setError(error.response?.data?.message || 'Произошла ошибка');
         }
+    };
+
+    const verificationUser = async () => {
+      try {
+          const users: any = await UsersService.getUsers();
+          console.log(users.data);
+          setUsers(users.data);
+
+          users.data.map((user: any) => {
+              if (user.email === email) {
+                  console.log(user.email)
+                  console.log(users.data.email)
+                  router.push('/queries')
+              } else {
+                  router.push('../../')
+              }
+          })
+      } catch (error: any) {
+          setError(error.response?.data?.message || 'Произошла ошибка');
+      }
     };
 
     const handleInputChange = (evt: any) => {
@@ -53,12 +77,13 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
                 <div className={styles.btnBlue}>
                     <Buttons onClick={() => {
                         if (code && !error) {
-                            confirmEmail()
+                            confirmEmail();
+                            verificationUser();
                         }
                     }} type="submit" text={"Подтвердить"}/>
                 </div>
                 <div className={styles.btnRepeatCode}>
-                    <Buttons onClick={() => router.push('../../')}  text={'Отправить код повторно'}/>
+                    <Buttons text={'Отправить код повторно'} onClick={() => router.push('../../')}/>
                 </div>
             </Form>
         </div>
