@@ -23,7 +23,7 @@ export const Registration = () => {
         <div className={styles.container}>
             <Form className={styles.form}>
                 <Form.Item className={styles.logo}>
-                    <Logo />
+                    <Logo width={112} height={32}/>
                 </Form.Item>
                 <Form.Item className={styles.content}>
                     <InputLabel className={styles.title} title={"Введите своё Ф. И. О."}/>
@@ -74,11 +74,11 @@ export const Registration = () => {
                         <Buttons
                             type="submit"
                             text={"Назад"}
-                            onClick={() => router.push('/auth/code')}/>
+                            onClick={() => router.push('../../')}/>
                     </div>
                     <div className={name && organization && department && !error ? styles.btnBlue : styles.disabledBtn}>
                         <Buttons
-                            text={"Завершить"}
+                            text={"Зарегистрироваться"}
                             props={name && organization && department && !error ? "submit" : "disabled"}
                             type={"submit"}
                             onClick={() => {
