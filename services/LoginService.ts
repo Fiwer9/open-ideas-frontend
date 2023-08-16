@@ -15,4 +15,8 @@ export default class AuthService {
     static async logout() {
         return $api.post<AuthResponse>('/auth/logout/')
     }
+
+    static async putRegistration(name: string, department: number) {
+        return $api.put<AuthResponse>(`/auth/register/`, {name, department})
+    }
 }

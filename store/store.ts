@@ -84,6 +84,14 @@ export default class Store {
         }
     }
 
+    async putRegistration(name: string, department: number) {
+        try {
+            const response = await AuthService.putRegistration(name, department);
+            console.log(response);
+        } catch (e: any) {
+            return e.response.data.detail
+        }
+    }
 
     async logout() {
         try {
