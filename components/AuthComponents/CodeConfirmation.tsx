@@ -6,8 +6,7 @@ import {Buttons} from "../ButtonComponent/Button";
 import styles from "./styles/CodeConfirmation.module.scss";
 import router from "next/router";
 import {Context} from "../../pages/_app";
-import UsersService from "../../services/UsersService";
-import {UserResponse} from "../../models/response/UserResponse";
+import AuthService from "../../services/LoginService";
 
 type ConfirmationProps = {
     email: string;
@@ -16,14 +15,12 @@ type ConfirmationProps = {
 export const CodeConfirmation = ({ email }: ConfirmationProps) => {
     const [code, setCode] = useState('');
     const [error, setError] = useState<string | null>(null);
-    const [users, setUsers] = useState<UserResponse[]>([]);
     const { store } = useContext(Context);
 
     const confirmEmail = async () => {
         try {
             const response = await store.confirmEmail(code);
             response&& setError(String(response))
-            !response&& router.push('/auth/registration')
         } catch (error: any) {
             setError(error.response?.data?.message || 'Произошла ошибка');
         }
@@ -31,19 +28,13 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
 
     const verificationUser = async () => {
       try {
-          const users: any = await UsersService.getUsers();
+          const users = await AuthService.confirmEmail(code);
           console.log(users.data);
-          setUsers(users.data);
-
-          users.data.map((user: any) => {
-              if (user.email === email) {
-                  console.log(user.email)
-                  console.log(users.data.email)
-                  router.push('/queries')
-              } else {
-                  router.push('../../')
-              }
-          })
+          if (!users.data.is_verified) {
+              router.push('/auth/registration')
+          } else {
+              router.push('/queries')
+          }
       } catch (error: any) {
           setError(error.response?.data?.message || 'Произошла ошибка');
       }

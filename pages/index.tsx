@@ -14,11 +14,11 @@ export const Context = createContext<State>({
 })
 
 export default function Index() {
-    useEffect(() => {
-        if(sessionStorage.getItem('user_id')) {
-            router.push('/queries')
-        }
-    }, [])
+    // useEffect(() => {
+    //     if(sessionStorage.getItem('user_id')) {
+    //         router.push('/queries')
+    //     }
+    // }, [])
     return (
         <div>
             <LogIn />
