@@ -29,8 +29,6 @@ export const Registration = () => {
             try {
                 const organizations = await OrganizationsService.getOrganizations()
                 const departments = await OrganizationsService.getDepartments()
-                console.log(organizations.data)
-                console.log(departments.data)
                 setAllOrganizations(organizations.data)
                 setAllDepartments(departments.data)
             } catch (error) {
@@ -57,7 +55,6 @@ export const Registration = () => {
             }
         }
         optionsDep = []
-        console.log(orgId)
 
     }, [organization])
 
@@ -70,7 +67,6 @@ export const Registration = () => {
         value: org.name,
         label: org.name
     }));
-    console.log(optionsOrg)
 
     const handleSubmitButton = async () => {
         try {
@@ -109,7 +105,6 @@ export const Registration = () => {
                             options={optionsOrg}
                             onChange={(e: any) => {
                                 setOrganization(e)
-                                console.log(organization)
                             }}
                         />
                     </div>
@@ -125,7 +120,6 @@ export const Registration = () => {
                                 options={optionsDep}
                                 onChange={(e: any) => {
                                     setDepartment(e)
-                                    console.log(department)
                                 }}
                             />
                         </div>

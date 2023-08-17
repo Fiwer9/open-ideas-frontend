@@ -23,7 +23,6 @@ export default class Store {
     async sendCode(email: string) {
         try {
             const response = await AuthService.sendCode(email);
-            console.log(response);
             sessionStorage.setItem('email', response.data.email);
             this.setAuth(false);
             this.setUser(response.data.user);
@@ -37,7 +36,6 @@ export default class Store {
         try {
             const response = await QueriesService.postQuery(date, name, description, initiative_direction, status,
                 implementation_effect, organization, initiator_users);
-            console.log(response);
         } catch (e: any) {
             console.log(e.response?.data?.message);
         }
@@ -47,8 +45,7 @@ export default class Store {
                      implementation_effect: string, organization: number, initiator_users: [number], id: number) {
         try {
             const response = await QueriesService.patchQuery(date, name, description, initiative_direction, status,
-                implementation_effect, organization, initiator_users, id);
-            console.log(response);
+                implementation_effect, organization, initiator_users, id);;
         } catch (e: any) {
             console.log(e.response?.data?.message);
         }
@@ -57,7 +54,6 @@ export default class Store {
     async sendComment(comment: string, query: number, user: number) {
         try {
             const response = await CommentService.sendComment(comment, query, user);
-            console.log(response);
         } catch (e: any) {
             console.log(e.response?.data?.message);
         }
@@ -74,7 +70,6 @@ export default class Store {
     async confirmEmail(code: string) {
         try {
             const response = await AuthService.confirmEmail(code);
-            console.log(response);
             const user = {user_id: response.data.user_id}
             sessionStorage.setItem('user_id', user.user_id)
             this.setAuth(true);
@@ -87,7 +82,6 @@ export default class Store {
     async putRegistration(name: string, department: number) {
         try {
             const response = await AuthService.putRegistration(name, department);
-            console.log(response);
         } catch (e: any) {
             return e.response.data.detail
         }
@@ -96,7 +90,6 @@ export default class Store {
     async logout() {
         try {
             const response = await AuthService.logout();
-            console.log(response)
             sessionStorage.removeItem('user_id');
             this.setAuth(false);
             this.setUser({} as IUser);

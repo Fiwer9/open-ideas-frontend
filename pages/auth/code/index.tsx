@@ -5,7 +5,6 @@ import {useRouter} from "next/router";
 
 export default function Index() {
     const router = useRouter();
-    console.log(router.query)
     const { email } = router.query;
     let emailCurrent = Array.isArray(email) ? email[0] : email;
     emailCurrent = emailCurrent || "";
