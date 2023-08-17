@@ -6,6 +6,7 @@ import {Buttons} from "../ButtonComponent/Button";
 import styles from "./styles/CodeConfirmation.module.scss";
 import router from "next/router";
 import {Context} from "../../pages/_app";
+import AuthService from "../../services/LoginService";
 
 type ConfirmationProps = {
     email: string;
@@ -13,16 +14,30 @@ type ConfirmationProps = {
 
 export const CodeConfirmation = ({ email }: ConfirmationProps) => {
     const [code, setCode] = useState('');
-    const [error, setError] = useState<string | null>(null); // Добавляем состояние для ошибки
+    const [error, setError] = useState<string | null>(null);
     const { store } = useContext(Context);
+
     const confirmEmail = async () => {
         try {
             const response = await store.confirmEmail(code);
             response&& setError(String(response))
-            !response&& router.push('/auth/registration')
         } catch (error: any) {
             setError(error.response?.data?.message || 'Произошла ошибка');
         }
+    };
+
+    const verificationUser = async () => {
+      try {
+          const users = await AuthService.confirmEmail(code);
+          console.log(users.data);
+          if (!users.data.is_verified) {
+              router.push('/auth/registration')
+          } else {
+              router.push('/queries')
+          }
+      } catch (error: any) {
+          setError(error.response?.data?.message || 'Произошла ошибка');
+      }
     };
 
     const handleInputChange = (evt: any) => {
@@ -53,12 +68,13 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
                 <div className={styles.btnBlue}>
                     <Buttons onClick={() => {
                         if (code && !error) {
-                            confirmEmail()
+                            confirmEmail();
+                            verificationUser();
                         }
                     }} type="submit" text={"Подтвердить"}/>
                 </div>
                 <div className={styles.btnRepeatCode}>
-                    <Buttons onClick={() => router.push('../../')}  text={'Отправить код повторно'}/>
+                    <Buttons text={'Отправить код повторно'} onClick={() => router.push('../../')}/>
                 </div>
             </Form>
         </div>

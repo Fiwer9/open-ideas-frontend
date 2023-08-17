@@ -7,4 +7,5 @@ export interface AuthResponse {
     id: string;
     sessionid: string;
     _csrftoken: string;
+    is_verified: boolean;
 }
