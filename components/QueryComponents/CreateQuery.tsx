@@ -108,7 +108,7 @@ export const CreateQuery = () => {
                         <div className={styles.label}>
                             <InputLabel title={"Организация"}/>
                         </div>
-                        <Input value={getOrganizationName(getOrganization(), organization)[0]} disabled={true} />
+                        <Input value={getOrganizationName(getOrganization(), organization)} disabled={true} />
                     </Form.Item>
                     <Form.Item className={styles.formItems}>
                         <div className={styles.label}>

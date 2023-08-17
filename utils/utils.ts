@@ -1,9 +1,9 @@
 export function getOrganizationName(text: number, organizations: any) {
-    return organizations.map((organization: any) => {
-        if (organization.id === text) {
-            return organization.name
+    for (let org of organizations) {
+        if (org.id === text) {
+            return org.name
         }
-    })
+    }
 }
 
 export function getOrganizationId(text: number, organizations: any) {
