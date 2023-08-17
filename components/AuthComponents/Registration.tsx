@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Form, Input, Select} from "antd";
 import {InputLabel} from "../InputLabelComponent/InputLabel";
 import {Logo} from "../PicturesComponents/Logo";
@@ -7,17 +7,81 @@ import {Buttons} from "../ButtonComponent/Button";
 import styles from './styles/Registration.module.scss';
 import router from "next/router";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
+import OrganizationsService from "../../services/OrganizationsService";
+import {IDepartment} from "../../models/IDepartment";
+import {Context} from "../../pages/_app";
 
 export const Registration = () => {
+    const { store } = useContext(Context);
     const [name, setName] = useState<string>('');
-    const [organization, setOrganization] = useState<OrganizationsResponse[]>([]);
-    const [department, setDepartament] = useState('');
+    const [organization, setOrganization] = useState<string>('');
+    const [department, setDepartment] = useState('');
+    const [allDepartments, setAllDepartments] = useState<IDepartment[]>([])
     const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [orgId, setOrgId] = useState<number>(0)
+
+    const [allOrganizations, setAllOrganizations] = useState<OrganizationsResponse[]>([])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true)
+            try {
+                const organizations = await OrganizationsService.getOrganizations()
+                const departments = await OrganizationsService.getDepartments()
+                setAllOrganizations(organizations.data)
+                setAllDepartments(departments.data)
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
+        fetchData();
+    }, [])
+
+    let optionsDep = allDepartments
+        .filter(department => department.organization === orgId)
+        .map(department => ({
+            value: department.name,
+            label: department.name
+        }));
+
+    useEffect(() => {
+        for (let org of allOrganizations) {
+            if (org.name === organization) {
+                setOrgId(org.id)
+            }
+        }
+        optionsDep = []
+
+    }, [organization])
 
     const handleInputChange = (evt: any) => {
         setName(evt.target.value);
         setError(null)
     };
+
+    const optionsOrg = allOrganizations.map(org => ({
+        value: org.name,
+        label: org.name
+    }));
+
+    const handleSubmitButton = async () => {
+        try {
+            let departmentId = 0;
+            for (let dep of allDepartments) {
+                if(dep.name === department) {
+                    departmentId = dep.id
+                }
+            }
+            const response = await store.putRegistration(name, departmentId)
+            router.push('/queries')
+        } catch (error: any) {
+
+        }
+    }
 
     return (
         <div className={styles.container}>
@@ -35,47 +99,40 @@ export const Registration = () => {
                     <InputLabel className={styles.contentSelectTitle} title={"Выберите свою организацию"}/>
                     <div className={styles.mySelectContainer}>
                         <Select
+                            loading={isLoading}
                             className={styles.select}
                             placeholder={"Название организации"}
-                            options={[
-                                { value: 'VolzhskayaHPP', label: 'Волжская ГЭС' },
-                                { value: 'BureyskayaHPP', label: 'Бурейская ГЭС' },
-                                { value: 'VotkinskayaHPP', label: 'Воткинская ГЭС' },
-                                { value: 'ZagorskayaPSPP', label: 'Загорская ГАЭС' },
-                            ]}
+                            options={optionsOrg}
                             onChange={(e: any) => {
                                 setOrganization(e)
-                                console.log(organization)
                             }}
                         />
                     </div>
                 </Form.Item>
-                <Form.Item className={styles.contentSelect} required={true}>
-                    <InputLabel className={styles.contentSelectTitle} title={"Выберите свой отдел"}/>
-                    <div className={styles.mySelectContainer}>
-                        <Select
-                            className={styles.select}
-                            placeholder={"Название отдела"}
-                            options={[
-                                { value: 'IT', label: 'Отдел IT' },
-                                { value: 'economic', label: 'Экономический отдел' },
-                                { value: 'juridical', label: 'Юридический отдел' },
-                                { value: 'safety', label: 'Отдел безопасности' },
-                            ]}
-                            onChange={(e: any) => {
-                                setDepartament(e)
-                                console.log(department)
-                            }}
-                        />
-                    </div>
-                </Form.Item>
+                {organization && (
+                    <Form.Item className={styles.contentSelect} required={true}>
+                        <InputLabel className={styles.contentSelectTitle} title={"Выберите свой отдел"}/>
+                        <div className={styles.mySelectContainer}>
+                            <Select
+                                loading={isLoading}
+                                className={styles.select}
+                                placeholder={"Название отдела"}
+                                options={optionsDep}
+                                onChange={(e: any) => {
+                                    setDepartment(e)
+                                }}
+                            />
+                        </div>
+                    </Form.Item>
+                )}
                 <div className={styles.containerBtn}>
-                    <div className={styles.btnWhite}>
-                        <Buttons
-                            type="submit"
-                            text={"Назад"}
-                            onClick={() => router.push('../../')}/>
-                    </div>
+                    {/*<div className={styles.btnWhite}>*/}
+                    {/*    <Buttons*/}
+                    {/*        type="submit"*/}
+                    {/*        text={"Назад"}*/}
+                    {/*        // onClick={() => router.push('../../')}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
                     <div className={name && organization && department && !error ? styles.btnBlue : styles.disabledBtn}>
                         <Buttons
                             text={"Зарегистрироваться"}
@@ -83,7 +140,7 @@ export const Registration = () => {
                             type={"submit"}
                             onClick={() => {
                             if (name && organization && department && !error) {
-                                router.push('/queries')
+                                handleSubmitButton()
                             }
                         }}/>
                     </div>

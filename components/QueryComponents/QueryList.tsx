@@ -204,7 +204,6 @@ export const QueryList = () => {
         queriesTableData.forEach((query) => {
             if (queryId.id === query.id) {
                 query.expert_users.forEach((user) => {
-                    console.log(user, Number(sessionStorage.getItem('user_id')));
                     if (user === Number(sessionStorage.getItem('user_id'))) {
                         isExpert = true;
                     }
@@ -271,7 +270,6 @@ export const QueryList = () => {
                         loading={isLoading}
                         onRow={(element: any) => ({
                             onClick: () => {
-                                console.log(element)
                                 handleRowClick(element)
                             },
                         })}

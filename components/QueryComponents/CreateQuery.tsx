@@ -133,7 +133,6 @@ export const CreateQuery = () => {
                                 ]}
                                 onChange={(e: any) => {
                                     setDirection(e)
-                                    console.log(direction)
                                 }}
                             />
                         </div>
@@ -153,7 +152,6 @@ export const CreateQuery = () => {
                         <textarea className={styles.textAreaCustom} placeholder={"Напишите ожидаемый эффект от доработки"}
                                   onChange={(e) => {
                                       setEffect(e.target.value)
-                                      console.log(effect)
                                   }} value={effect || ''} required={true}/>
                     </Form.Item>
                     <div className={styles.containerBtn}>

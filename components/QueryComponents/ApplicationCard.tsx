@@ -64,7 +64,6 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
                 const users = await UsersService.getUsers()
                 setDataComment(comments.data)
                 setUsers(users.data)
-                console.log(applicationData)
                 for (let user of users.data) {
                     if (user.id === Number(sessionStorage.getItem('user_id'))){
                         for (let query of user.likes) {
@@ -80,7 +79,6 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
                 setIsLoading(false)
             }
         }
-        console.log(queryId)
         queryId ? fetchData() : router.push('/queries')
 
     }, [queryId])
@@ -173,7 +171,6 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
         try {
             const likes = getAllUserLikes()
             likes.push(Number(queryId))
-            console.log(likes)
             await store.patchLike(id, likes);
             const users = await UsersService.getUsers()
             setUsers(users.data)
@@ -189,7 +186,6 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
             if(index > -1) {
                 likes.splice(index, 1)
             }
-            console.log(likes)
             await store.patchLike(id, likes);
             const users = await UsersService.getUsers()
             setUsers(users.data)
@@ -304,7 +300,6 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
                             <div className={styles.checkboxContainer}>
                                 <Radio.Group onChange={(e) => {
                                     setStatus(e.target.value)
-                                    console.log(e)
                                 }} value={status}>
                                     <Radio className={styles.checkbox} value={'rejected'}> Отклонено</Radio>
                                     <Radio className={styles.checkbox} value={'accepted'}>Одобрено для реализации</Radio>
