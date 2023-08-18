@@ -70,10 +70,12 @@ export default class Store {
     async confirmEmail(code: string) {
         try {
             const response = await AuthService.confirmEmail(code);
+            console.log(response)
             const user = {user_id: response.data.user_id}
             sessionStorage.setItem('user_id', user.user_id)
             this.setAuth(true);
             this.setUser(response.data.user);
+            return response.data
         } catch (e: any) {
             return e.response.data.detail
         }
