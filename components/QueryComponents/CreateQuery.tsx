@@ -179,7 +179,7 @@ export const CreateQuery = () => {
                     const currentDate = new Date();
                     const formattedEndDate = formatDateToServer(currentDate, '-');
                     idea&& description&& direction&& effect&& postQuery(formattedEndDate, idea, description, direction, 'check', effect,
-                        getOrganizationId(getOrganization(), organization)[0], [users.id])
+                        getOrganizationId(getOrganization(), organization), [users.id])
                     idea&& description&& direction&& effect&& router.push('/queries')
                     closeModal()
                 }}
