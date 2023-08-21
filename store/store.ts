@@ -74,6 +74,7 @@ export default class Store {
             sessionStorage.setItem('user_id', user.user_id)
             this.setAuth(true);
             this.setUser(response.data.user);
+            return response.data
         } catch (e: any) {
             return e.response.data.detail
         }
