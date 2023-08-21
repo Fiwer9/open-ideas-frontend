@@ -12,6 +12,7 @@ export const LogOut = () => {
     const handleLogout = () => {
         try {
             store.logout();
+
             router.push('/')
         } catch (error: any) {
             console.log(error.response?.data?.message);
