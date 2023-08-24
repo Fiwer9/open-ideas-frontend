@@ -1,8 +1,7 @@
 import React, {useContext, useState} from "react";
-import {Form, Input} from "antd";
+import {Button, Form, Input} from "antd";
 import {InputLabel} from "../InputLabelComponent/InputLabel";
 import {Logo} from "../PicturesComponents/Logo";
-import {Buttons} from "../ButtonComponent/Button";
 import router from "next/router";
 
 import styles from './styles/LogIn.module.scss';
@@ -12,9 +11,12 @@ export const LogIn = () => {
     const [email, setEmail] = useState<string>('');
     const [error, setError] = useState<string | null>(null); // Добавляем состояние для ошибки
     const { store } = useContext(Context);
+    const [loading, setLoading] = useState(false);
+
 
     const sendCode = async () => {
         try {
+            setLoading(true)
             const response = await store.sendCode(email);
             response&& setError(String(response))
             !response&& router.push({
@@ -23,6 +25,8 @@ export const LogIn = () => {
             });
         } catch (error: any) {
             setError(error.response?.data?.message || 'Произошла ошибка');
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -51,11 +55,13 @@ export const LogIn = () => {
                     )}
                 </Form.Item>
                 <div className={styles.btnBlue}>
-                    <Buttons onClick={() => {
+                    <Button type="primary" loading={loading} onClick={() => {
                         if (email && !error) {
                             sendCode();
                         }
-                    }} type="submit" text={'Продолжить'} />
+                    }}>
+                        Продолжить
+                    </Button>
                 </div>
             </Form>
         </div>
