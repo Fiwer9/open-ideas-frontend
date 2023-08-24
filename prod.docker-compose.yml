@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: local.Dockerfile
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/rusgidro-ideas-backend
+    command: python manage.py runserver 0.0.0.0:8000 --insecure
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+  db:
+    image: postgres:15.1
+    volumes:
+      - /database-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=rusgidro-ideas-backend
+      - POSTGRES_USER=user_db_rusgidro
+      - POSTGRES_PASSWORD=Res56RGpy93hFd
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+  react:
+    build:
+      context: .
+      dockerfile: front.Dockerfile
+    restart: unless-stopped
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    ports:
+      - "80:80"
+    restart: unless-stopped
