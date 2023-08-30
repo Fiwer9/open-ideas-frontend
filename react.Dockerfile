@@ -2,7 +2,7 @@ FROM node:20-alpine
 
 WORKDIR /next-app
 
-COPY ../rusgidro-ideas-frontend .
+COPY . .
 
 RUN yarn install
 #CMD ["yarn", "run", "build"]
@@ -14,4 +14,4 @@ EXPOSE 3000
 # The node user is provided in the Node.js Alpine base image
 USER node
 
-CMD ["yarn", "start"]
+CMD ["yarn", "run", "start"]
