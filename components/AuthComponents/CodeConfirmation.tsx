@@ -71,7 +71,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
                         if (code && !error) {
                             confirmEmail();
                         }
-                    }} type="primary">
+                    }} type="primary" htmlType='submit'>
                         Подтвердить
                     </Button>
                 </div>

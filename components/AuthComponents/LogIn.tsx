@@ -55,7 +55,7 @@ export const LogIn = () => {
                     )}
                 </Form.Item>
                 <div className={styles.btnBlue}>
-                    <Button type="primary" loading={loading} onClick={() => {
+                    <Button type="primary" htmlType='submit' loading={loading} onClick={() => {
                         if (email && !error) {
                             sendCode();
                         }
