@@ -2,7 +2,6 @@ import React, {useContext, useState} from "react";
 import {Button, Form, Input} from "antd";
 import {InputLabel} from "../InputLabelComponent/InputLabel";
 import {Logo} from "../PicturesComponents/Logo";
-import {Buttons} from "../ButtonComponent/Button";
 import styles from "./styles/CodeConfirmation.module.scss";
 import router from "next/router";
 import {Context} from "../../pages/_app";
@@ -77,7 +76,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
                     </Button>
                 </div>
                 <div className={styles.btnRepeatCode}>
-                    <Buttons text={'Отправить код повторно'} onClick={() => router.push('../../')}/>
+                    <Button type='link' onClick={() => router.push('../../')}>Отправить код повторно </Button>
                 </div>
             </Form>
         </div>
