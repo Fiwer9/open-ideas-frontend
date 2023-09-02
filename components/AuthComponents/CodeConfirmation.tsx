@@ -1,8 +1,7 @@
 import React, {useContext, useState} from "react";
-import {Form, Input} from "antd";
+import {Button, Form, Input} from "antd";
 import {InputLabel} from "../InputLabelComponent/InputLabel";
 import {Logo} from "../PicturesComponents/Logo";
-import {Buttons} from "../ButtonComponent/Button";
 import styles from "./styles/CodeConfirmation.module.scss";
 import router from "next/router";
 import {Context} from "../../pages/_app";
@@ -15,6 +14,8 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
     const [code, setCode] = useState('');
     const [error, setError] = useState<string | null>(null);
     const { store } = useContext(Context)
+    const [loading, setLoading] = useState(false);
+
 
     const isVerified = (response: any) => {
         if (!response.is_verified) {
@@ -26,6 +27,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
 
     const confirmEmail = async () => {
         try {
+            setLoading(true)
             const response = await store.confirmEmail(code);
             if (typeof response === 'string') {
                 setError(response);
@@ -34,6 +36,8 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
             }
         } catch (error: any) {
             setError(error.response?.data?.message || 'Произошла ошибка');
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -63,14 +67,16 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
                     )}
                 </Form.Item>
                 <div className={styles.btnBlue}>
-                    <Buttons onClick={() => {
+                    <Button loading={loading} onClick={() => {
                         if (code && !error) {
                             confirmEmail();
                         }
-                    }} type="submit" text={"Подтвердить"}/>
+                    }} type="primary" htmlType='submit'>
+                        Подтвердить
+                    </Button>
                 </div>
                 <div className={styles.btnRepeatCode}>
-                    <Buttons text={'Отправить код повторно'} onClick={() => router.push('../../')}/>
+                    <Button type='link' onClick={() => router.push('../../')}>Отправить код повторно </Button>
                 </div>
             </Form>
         </div>

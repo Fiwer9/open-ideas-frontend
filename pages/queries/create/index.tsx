@@ -1,9 +1,14 @@
 import React from "react";
-// @ts-ignore
 import {CreateQuery} from "../../../components/QueryComponents/CreateQuery";
+import {useAuthenticatedUser} from "../../../hooks/useNotRegister";
 
 export default function Index() {
+    const isAuthenticated = useAuthenticatedUser();
     return (
-        <CreateQuery />
+        <div>
+            {isAuthenticated && (
+                <CreateQuery />
+            )}
+        </div>
     )
 }

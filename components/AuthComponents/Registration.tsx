@@ -79,7 +79,7 @@ export const Registration = () => {
             const response = await store.putRegistration(name, departmentId)
             router.push('/queries')
         } catch (error: any) {
-
+            console.error(error.response.data.message)
         }
     }
 
