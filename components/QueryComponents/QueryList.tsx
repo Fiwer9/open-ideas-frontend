@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Input, Table} from "antd";
-import {InputPattern} from "../InputComponent/Input";
+import {Breadcrumb,  Checkbox, Input, Table} from "antd";
 import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/QueryList.module.scss";
@@ -12,12 +11,12 @@ import OrganizationsService from "../../services/OrganizationsService";
 import {
     getDirectionTranslation,
     getDirectionTranslationOnEng,
-    getOrganizationName,
     getStatusTranslation
 } from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
 import {LogOut} from "../AuthComponents/LogOut";
+import {Slider} from "../SliderComponents/SliderComponents";
 
 export const QueryList = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -138,7 +137,7 @@ export const QueryList = () => {
     const items = queriesTableData;
     const organiz = organizations;
     const direct = [...new Set(items.map((item) => getDirectionTranslation(item.initiative_direction)))];
-    const org = [...new Set(organiz.map((item) => item.name))];
+    // const org = [...new Set(organiz.map((item) => item.name))];
     const status = [...new Set(items.map((item) => getStatusTranslation(item.status)))];
 
     const columns = [
@@ -171,19 +170,19 @@ export const QueryList = () => {
             })),
             onFilter: (value: any, record: any) => record.initiative_direction.includes(getDirectionTranslationOnEng(value)),
         },
-        {
-            title: 'Организация',
-            dataIndex: 'organization',
-            key: 'organization',
-            render: (text: number) => getOrganizationName(text, organizations),
-            width: "16%",
-            filters: org.map((organization) => ({
-                text: organization,
-                value: organization,
-            })),
-            onFilter: (value: any, record: any) => getOrganizationName(record.organization, organizations).includes(value),
-
-        },
+        // {
+        //     title: 'Организация',
+        //     dataIndex: 'organization',
+        //     key: 'organization',
+        //     render: (text: number) => getOrganizationName(text, organizations),
+        //     width: "16%",
+        //     filters: org.map((organization) => ({
+        //         text: organization,
+        //         value: organization,
+        //     })),
+        //     onFilter: (value: any, record: any) => getOrganizationName(record.organization, organizations).includes(value),
+        //
+        // },
         {
             title: 'Статус заявки',
             dataIndex: 'status',
@@ -236,9 +235,19 @@ export const QueryList = () => {
 
     return (
         <div className={styles.container}>
+            <Slider />
             <div className={styles.content}>
+                <Breadcrumb style={{ margin: '16px 0', position: 'absolute', top: '12.5px', left: '24px' }}>
+                    <Breadcrumb.Item>Панель администратора</Breadcrumb.Item>
+                    <Breadcrumb.Item>Таблица инициатив</Breadcrumb.Item>
+                </Breadcrumb>
+                <div className={styles.tabsContainer}>
+                    {/*<div className={styles.tabs}>*/}
+                    {/*    return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />;*/}
+                    {/*</div>*/}
+                </div>
                 <div className={styles.titleContainer}>
-                    <h1 className={styles.title}>Заявки</h1>
+                    <h1 className={styles.title}>Инициативы</h1>
                 </div>
                 <div className={styles.infContainer}>
                     <div className={styles.inputContainer}>

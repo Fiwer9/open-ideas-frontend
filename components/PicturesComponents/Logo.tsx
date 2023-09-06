@@ -1,11 +1,26 @@
 import React from "react";
 import Image from "next/image";
-import logo from '../../public/img/Logo2.0.svg';
+import logo from '../../public/img/logo.svg';
 
 import styles from './styles/Logo.module.scss';
 
-export const Logo = ({width} : any, {height} : any) => {
+interface LogoProps {
+    width: number;
+    height: number;
+    min?: boolean;
+}
+
+export const Logo = ({ width, height, min }: LogoProps) => {
     return (
-        <Image width={width} height={height} src={logo} alt="RusGidro" className={styles.logo}/>
+        <div className={styles.logoContainer}>
+            {min ? (
+                <Image width={width} height={height} src={logo} alt="Открытые идеи" className={styles.logoMin}/>
+            ) : (
+                <>
+                    <Image width={width} height={height} src={logo} alt="Открытые идеи" className={styles.logo}/>
+                    <h1>ОТКРЫТЫЕ ИДЕИ</h1>
+                </>
+            )}
+        </div>
     );
 };
