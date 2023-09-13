@@ -6,7 +6,7 @@ import { Menu } from 'antd';
 import {
     BarChartOutlined,
     BulbOutlined, ReconciliationOutlined,
-    UserOutlined,
+    UserOutlined, SettingOutlined,
 } from '@ant-design/icons';
 import { ArrowBack } from './ArrowBack';
 import { ArrowNext } from './ArrowNext';
@@ -33,6 +33,7 @@ const items = [
     getItem('Пользователи', '2', <UserOutlined />),
     getItem('Организации и отделы', '3', <ReconciliationOutlined />),
     getItem('Аналитика', 'sub1', <BarChartOutlined />, [getItem('Графики', '4'), getItem('Таблицы', '5')]),
+    getItem('Настройки', '6', <SettingOutlined />)
 
 ];
 
@@ -48,7 +49,7 @@ export const Slider = () => {
                 width={256}
                 style={{
                     background: colorBgContainer,
-                    position: 'relative', // Добавьте абсолютное позиционирование
+                    position: 'relative',
                 }}
                 trigger={null}
                 collapsible
@@ -61,7 +62,7 @@ export const Slider = () => {
                     </div>
                 ) : (
                     <div className={styles.logo}>
-                        <Logo width={50} height={50} min={collapsed} />
+                        <Logo width={193} height={50} min={collapsed} />
                     </div>
                 )}
 
@@ -78,9 +79,9 @@ export const Slider = () => {
                     style={{
                         width: 24,
                         height: 24,
-                        position: 'absolute', // Абсолютное позиционирование для кнопки
-                        top: 37, // Расположение кнопки вверху
-                        right: -12, // Расположение кнопки справа
+                        position: 'absolute', 
+                        top: 37,
+                        right: -12,
                     }}
                 />
             </Sider>

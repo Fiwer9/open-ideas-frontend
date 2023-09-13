@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Breadcrumb,  Checkbox, Input, Table} from "antd";
+import {Breadcrumb,  Button,  Checkbox, Input, Table, Tag} from "antd";
 import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/QueryList.module.scss";
@@ -17,6 +17,14 @@ import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
 import {LogOut} from "../AuthComponents/LogOut";
 import {Slider} from "../SliderComponents/SliderComponents";
+import {FilterOutlined} from '@ant-design/icons';
+const { CheckableTag } = Tag;
+
+const tagsData = ['Инициативы', 'Панель администратора'];
+
+const locale = {
+    emptyText: 'Нет идей',
+}
 
 export const QueryList = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -232,6 +240,15 @@ export const QueryList = () => {
         }
     }
 
+    const [selectedTags, setSelectedTags] = useState<string[]>(['Панель администратора']);
+
+    const handleChange = (tag: string, checked: boolean) => {
+        const nextSelectedTags = checked
+        ? [tag]
+        : selectedTags.filter((t) => t !== tag);
+        setSelectedTags(nextSelectedTags);
+    };
+
 
     return (
         <div className={styles.container}>
@@ -242,9 +259,18 @@ export const QueryList = () => {
                     <Breadcrumb.Item>Таблица инициатив</Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={styles.tabsContainer}>
-                    {/*<div className={styles.tabs}>*/}
-                    {/*    return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />;*/}
-                    {/*</div>*/}
+                    <div className={styles.tabs}>
+                    {tagsData.map((tag) => (
+                        <CheckableTag
+                            key={tag}
+                            checked={selectedTags.includes(tag)}
+                            onChange={(checked) => handleChange(tag, checked)}
+                            style={{background: selectedTags.includes(tag)? 'var(--geek-blue-1, #F0F5FF)' : 'none'}}
+                        >
+                            <p style={{color: selectedTags.includes(tag)? '#2F54EB' : '#434343'}}>{tag}</p>
+                        </CheckableTag>
+                        ))}
+                    </div>
                 </div>
                 <div className={styles.titleContainer}>
                     <h1 className={styles.title}>Инициативы</h1>
@@ -253,7 +279,7 @@ export const QueryList = () => {
                     <div className={styles.inputContainer}>
                         <div className={styles.inputNumber}>
                             <Input
-                                placeholder={"Номер заявки"}
+                                placeholder={"Номер"}
                                 onChange={(event: any) => setSearchNumber(event.target.value)}
                             />
                         </div>
@@ -265,8 +291,8 @@ export const QueryList = () => {
                         </div>
                     </div>
                     <div className={styles.btnContainer}>
-                        <div className={styles.btnBlue}>
-                            <Buttons onClick={() => router.push(`/queries/create`)} text={"Создать заявку"}/>
+                        <div className={styles.filter}>
+                            <Button icon={<FilterOutlined />}>Фильтры</Button>
                         </div>
                         <Checkbox className={styles.checkbox} onChange={(e) => setIsArchive(e.target.checked)}>Архив</Checkbox>
                     </div>
@@ -283,11 +309,12 @@ export const QueryList = () => {
                             },
                         })}
                         rowKey="id"
+                        locale={locale}
                     />
                 </div>
-                <div className={styles.linkContainer}>
+                {/* <div className={styles.linkContainer}>
                     <LogOut/>
-                </div>
+                </div> */}
             </div>
         </div>
     );

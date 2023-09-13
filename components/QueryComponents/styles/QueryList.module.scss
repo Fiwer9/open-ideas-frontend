@@ -15,12 +15,19 @@
   padding: 90px 70px;
 
   .tabsContainer {
-    margin: 0 auto;
+    margin: 20px 0 30px;
     .tabs {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 50px;
+
+      p {
+        font-size: 23px;
+        line-height: 20px;
+        color: #434343;
+        margin: 10px;
+      }
     }
   }
 
@@ -75,7 +82,10 @@
         padding-bottom: 5px;
         padding-left: 10px;
         border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
       }
+
+
     }
 
     @media (max-width: 720px) {
@@ -156,6 +166,8 @@
             font-size: 14px;
             white-space: nowrap;
           }
+
+
 
           .checkbox {
             max-width: 88px;
