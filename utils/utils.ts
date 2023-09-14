@@ -14,6 +14,27 @@ export function getOrganizationId(text: number, organizations: any) {
     }
 }
 
+export function getStatusClassName(styles: any, status: string) {
+    switch (status) {
+        case 'registered':
+            return styles.statusRegistered;
+        case 'check':
+            return styles.statusCheck;
+        case 'analysis':
+            return styles.statusAnalysis;
+        case 'accepted':
+            return styles.statusAccepted;
+        case 'implementation':
+            return styles.statusImplementation;
+        case 'rejected':
+            return styles.statusRejected;
+        case 'done':
+            return styles.statusDone;
+        default:
+            return '';
+    }
+}
+
 export function formatDateToServer(date: any, separator='.') {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');

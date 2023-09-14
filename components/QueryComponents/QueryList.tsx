@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Input, Table} from "antd";
-import {InputPattern} from "../InputComponent/Input";
+import {Checkbox, Input, Table} from "antd";
 import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/QueryList.module.scss";
@@ -12,7 +11,7 @@ import OrganizationsService from "../../services/OrganizationsService";
 import {
     getDirectionTranslation,
     getDirectionTranslationOnEng,
-    getOrganizationName,
+    getOrganizationName, getStatusClassName,
     getStatusTranslation
 } from "../../utils/utils";
 import UsersService from "../../services/UsersService";
@@ -188,7 +187,13 @@ export const QueryList = () => {
             title: 'Статус заявки',
             dataIndex: 'status',
             key: 'status',
-            render: (text: string) => getStatusTranslation(text),
+            render: (text: string) =>(
+                <>
+                    {
+                        <span className={`${getStatusClassName(styles, text)}`}>{getStatusTranslation(text)}</span>
+                    }
+                </>
+            ),
             width: "16%",
             filters: status.map((status) => ({
                     text: status,
@@ -265,7 +270,7 @@ export const QueryList = () => {
                 <div className={styles.tableContainer}>
                     <Table
                         className={styles.table}
-                        dataSource={getData()}
+                        dataSource={getData() as any}
                         columns={columns}
                         loading={isLoading}
                         onRow={(element: any) => ({
