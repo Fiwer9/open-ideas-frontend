@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {Breadcrumb,  Button,  Checkbox, Input, Table, Tag} from "antd";
-import {Buttons} from "../ButtonComponent/Button";
 
 import styles from "./styles/QueryList.module.scss";
 import router from "next/router";
@@ -15,7 +14,6 @@ import {
 } from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
-import {LogOut} from "../AuthComponents/LogOut";
 import {Slider} from "../SliderComponents/SliderComponents";
 import {FilterOutlined} from '@ant-design/icons';
 const { CheckableTag } = Tag;
@@ -23,7 +21,7 @@ const { CheckableTag } = Tag;
 const tagsData = ['Инициативы', 'Панель администратора'];
 
 const locale = {
-    emptyText: 'Нет идей',
+    emptyText: 'Тут ещё нет идей',
 }
 
 export const QueryList = () => {
@@ -245,7 +243,7 @@ export const QueryList = () => {
     const handleChange = (tag: string, checked: boolean) => {
         const nextSelectedTags = checked
         ? [tag]
-        : selectedTags.filter((t) => t !== tag);
+        : selectedTags.filter((t) => t === tag);
         setSelectedTags(nextSelectedTags);
     };
 
@@ -254,10 +252,17 @@ export const QueryList = () => {
         <div className={styles.container}>
             <Slider />
             <div className={styles.content}>
-                <Breadcrumb style={{ margin: '16px 0', position: 'absolute', top: '12.5px', left: '24px' }}>
-                    <Breadcrumb.Item>Панель администратора</Breadcrumb.Item>
-                    <Breadcrumb.Item>Таблица инициатив</Breadcrumb.Item>
-                </Breadcrumb>
+                <div className={styles.header}>
+                    <Breadcrumb style={{ position: 'absolute', top: '12.5px', left: '24px', fontSize: '11px' }}>
+                        <Breadcrumb.Item>Панель администратора</Breadcrumb.Item>
+                        <Breadcrumb.Item>Таблица инициатив</Breadcrumb.Item>
+                    </Breadcrumb>
+                    <div className={styles.account}>
+                        <Button type={"text"} style={{padding: '0'}}>Иванов Иван Иванович</Button> <span>|</span>
+                        <Button type={"text"} style={{color: '#808192', padding: '0'}}>Aratrum</Button>  <span>|</span>
+                        <Button type={"text"} style={{padding: '0'}}>Отдел</Button>
+                    </div>
+                </div>
                 <div className={styles.tabsContainer}>
                     <div className={styles.tabs}>
                     {tagsData.map((tag) => (
@@ -300,7 +305,7 @@ export const QueryList = () => {
                 <div className={styles.tableContainer}>
                     <Table
                         className={styles.table}
-                        dataSource={getData()}
+                        dataSource={getData() as any}
                         columns={columns}
                         loading={isLoading}
                         onRow={(element: any) => ({
@@ -312,9 +317,9 @@ export const QueryList = () => {
                         locale={locale}
                     />
                 </div>
-                {/* <div className={styles.linkContainer}>
-                    <LogOut/>
-                </div> */}
+                {/*<div className={styles.linkContainer}>*/}
+                {/*    <LogOut/>*/}
+                {/*</div>*/}
             </div>
         </div>
     );

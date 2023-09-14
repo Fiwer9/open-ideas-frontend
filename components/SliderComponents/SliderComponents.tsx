@@ -79,9 +79,10 @@ export const Slider = () => {
                     style={{
                         width: 24,
                         height: 24,
-                        position: 'absolute', 
+                        position: 'absolute',
                         top: 37,
                         right: -12,
+                        zIndex: 12,
                     }}
                 />
             </Sider>
