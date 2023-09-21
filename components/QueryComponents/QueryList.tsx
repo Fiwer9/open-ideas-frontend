@@ -10,6 +10,7 @@ import OrganizationsService from "../../services/OrganizationsService";
 import {
     getDirectionTranslation,
     getDirectionTranslationOnEng,
+    getOrganizationName, getStatusClassName,
     getStatusTranslation
 } from "../../utils/utils";
 import UsersService from "../../services/UsersService";
@@ -193,7 +194,13 @@ export const QueryList = () => {
             title: 'Статус заявки',
             dataIndex: 'status',
             key: 'status',
-            render: (text: string) => getStatusTranslation(text),
+            render: (text: string) =>(
+                <>
+                    {
+                        <span className={`${getStatusClassName(styles, text)}`}>{getStatusTranslation(text)}</span>
+                    }
+                </>
+            ),
             width: "16%",
             filters: status.map((status) => ({
                     text: status,
@@ -314,7 +321,6 @@ export const QueryList = () => {
                             },
                         })}
                         rowKey="id"
-                        locale={locale}
                     />
                 </div>
                 {/*<div className={styles.linkContainer}>*/}
