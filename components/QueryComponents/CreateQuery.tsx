@@ -91,7 +91,7 @@ export const CreateQuery = () => {
             <Card loading={isLoading} className={styles.card}>
                 <Form className={styles.form}>
                     <Form.Item className={styles.logo}>
-                        <Logo />
+                        <Logo width={50} height={50}/>
                     </Form.Item>
                     <Form.Item className={styles.content}>
                         <div className={styles.title}>
