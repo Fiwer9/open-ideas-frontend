@@ -253,14 +253,14 @@ export const QueryList = () => {
             <Slider />
             <div className={styles.content}>
                 <div className={styles.header}>
-                    <Breadcrumb style={{ position: 'absolute', top: '12.5px', left: '24px', fontSize: '11px' }}>
+                    <Breadcrumb className={styles.breadcrumb}>
                         <Breadcrumb.Item>Панель администратора</Breadcrumb.Item>
                         <Breadcrumb.Item>Таблица инициатив</Breadcrumb.Item>
                     </Breadcrumb>
                     <div className={styles.account}>
-                        <Button type={"text"} style={{padding: '0'}}>Иванов Иван Иванович</Button> <span>|</span>
-                        <Button type={"text"} style={{color: '#808192', padding: '0'}}>Aratrum</Button>  <span>|</span>
-                        <Button type={"text"} style={{padding: '0'}}>Отдел</Button>
+                        <Button type={"text"} className={styles.buttonTop}>Иванов Иван Иванович</Button> <span>|</span>
+                        <Button type={"text"} className={styles.aratrum}>Aratrum</Button>  <span>|</span>
+                        <Button type={"text"} className={styles.buttonTop}>Отдел</Button>
                     </div>
                 </div>
                 <div className={styles.tabsContainer}>

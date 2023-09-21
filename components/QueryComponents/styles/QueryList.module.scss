@@ -18,6 +18,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .breadcrumb {
+      position: absolute;
+      top: 12.5px;
+      left: 24px;
+      font-size: 11px;
+    }
   }
 
   .account {
@@ -29,6 +36,15 @@
     align-items: center;
     gap: 8px;
     height: 15px;
+
+    .buttonTop {
+      padding: 0;
+    }
+
+    .aratrum {
+      color: #808192;
+      padding: 0;
+    }
 
     span {
       font-size: 11px;

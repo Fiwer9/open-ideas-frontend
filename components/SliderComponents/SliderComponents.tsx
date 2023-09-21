@@ -75,6 +75,7 @@ export const Slider = () => {
                     type="text"
                     icon={collapsed ? <ArrowBack /> : <ArrowNext />}
                     onClick={() => setCollapsed(!collapsed)}
+                    className={styles.button}
                     style={{
                         width: 24,
                         height: 24,
