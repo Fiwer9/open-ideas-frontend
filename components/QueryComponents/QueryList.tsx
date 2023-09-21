@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Input, Table} from "antd";
-import {InputPattern} from "../InputComponent/Input";
-import {Buttons} from "../ButtonComponent/Button";
+import {Breadcrumb,  Button,  Checkbox, Input, Table, Tag} from "antd";
 
 import styles from "./styles/QueryList.module.scss";
 import router from "next/router";
@@ -12,12 +10,19 @@ import OrganizationsService from "../../services/OrganizationsService";
 import {
     getDirectionTranslation,
     getDirectionTranslationOnEng,
-    getOrganizationName,
     getStatusTranslation
 } from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
-import {LogOut} from "../AuthComponents/LogOut";
+import {Slider} from "../SliderComponents/SliderComponents";
+import {FilterOutlined} from '@ant-design/icons';
+const { CheckableTag } = Tag;
+
+const tagsData = ['Инициативы', 'Панель администратора'];
+
+const locale = {
+    emptyText: 'Тут ещё нет идей',
+}
 
 export const QueryList = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -138,7 +143,7 @@ export const QueryList = () => {
     const items = queriesTableData;
     const organiz = organizations;
     const direct = [...new Set(items.map((item) => getDirectionTranslation(item.initiative_direction)))];
-    const org = [...new Set(organiz.map((item) => item.name))];
+    // const org = [...new Set(organiz.map((item) => item.name))];
     const status = [...new Set(items.map((item) => getStatusTranslation(item.status)))];
 
     const columns = [
@@ -171,19 +176,19 @@ export const QueryList = () => {
             })),
             onFilter: (value: any, record: any) => record.initiative_direction.includes(getDirectionTranslationOnEng(value)),
         },
-        {
-            title: 'Организация',
-            dataIndex: 'organization',
-            key: 'organization',
-            render: (text: number) => getOrganizationName(text, organizations),
-            width: "16%",
-            filters: org.map((organization) => ({
-                text: organization,
-                value: organization,
-            })),
-            onFilter: (value: any, record: any) => getOrganizationName(record.organization, organizations).includes(value),
-
-        },
+        // {
+        //     title: 'Организация',
+        //     dataIndex: 'organization',
+        //     key: 'organization',
+        //     render: (text: number) => getOrganizationName(text, organizations),
+        //     width: "16%",
+        //     filters: org.map((organization) => ({
+        //         text: organization,
+        //         value: organization,
+        //     })),
+        //     onFilter: (value: any, record: any) => getOrganizationName(record.organization, organizations).includes(value),
+        //
+        // },
         {
             title: 'Статус заявки',
             dataIndex: 'status',
@@ -233,18 +238,53 @@ export const QueryList = () => {
         }
     }
 
+    const [selectedTags, setSelectedTags] = useState<string[]>(['Панель администратора']);
+
+    const handleChange = (tag: string, checked: boolean) => {
+        const nextSelectedTags = checked
+        ? [tag]
+        : selectedTags.filter((t) => t === tag);
+        setSelectedTags(nextSelectedTags);
+    };
+
 
     return (
         <div className={styles.container}>
+            <Slider />
             <div className={styles.content}>
+                <div className={styles.header}>
+                    <Breadcrumb className={styles.breadcrumb}>
+                        <Breadcrumb.Item>Панель администратора</Breadcrumb.Item>
+                        <Breadcrumb.Item>Таблица инициатив</Breadcrumb.Item>
+                    </Breadcrumb>
+                    <div className={styles.account}>
+                        <Button type={"text"} className={styles.buttonTop}>Иванов Иван Иванович</Button> <span>|</span>
+                        <Button type={"text"} className={styles.aratrum}>Aratrum</Button>  <span>|</span>
+                        <Button type={"text"} className={styles.buttonTop}>Отдел</Button>
+                    </div>
+                </div>
+                <div className={styles.tabsContainer}>
+                    <div className={styles.tabs}>
+                    {tagsData.map((tag) => (
+                        <CheckableTag
+                            key={tag}
+                            checked={selectedTags.includes(tag)}
+                            onChange={(checked) => handleChange(tag, checked)}
+                            style={{background: selectedTags.includes(tag)? 'var(--geek-blue-1, #F0F5FF)' : 'none'}}
+                        >
+                            <p style={{color: selectedTags.includes(tag)? '#2F54EB' : '#434343'}}>{tag}</p>
+                        </CheckableTag>
+                        ))}
+                    </div>
+                </div>
                 <div className={styles.titleContainer}>
-                    <h1 className={styles.title}>Заявки</h1>
+                    <h1 className={styles.title}>Инициативы</h1>
                 </div>
                 <div className={styles.infContainer}>
                     <div className={styles.inputContainer}>
                         <div className={styles.inputNumber}>
                             <Input
-                                placeholder={"Номер заявки"}
+                                placeholder={"Номер"}
                                 onChange={(event: any) => setSearchNumber(event.target.value)}
                             />
                         </div>
@@ -256,8 +296,8 @@ export const QueryList = () => {
                         </div>
                     </div>
                     <div className={styles.btnContainer}>
-                        <div className={styles.btnBlue}>
-                            <Buttons onClick={() => router.push(`/queries/create`)} text={"Создать заявку"}/>
+                        <div className={styles.filter}>
+                            <Button icon={<FilterOutlined />}>Фильтры</Button>
                         </div>
                         <Checkbox className={styles.checkbox} onChange={(e) => setIsArchive(e.target.checked)}>Архив</Checkbox>
                     </div>
@@ -265,7 +305,7 @@ export const QueryList = () => {
                 <div className={styles.tableContainer}>
                     <Table
                         className={styles.table}
-                        dataSource={getData()}
+                        dataSource={getData() as any}
                         columns={columns}
                         loading={isLoading}
                         onRow={(element: any) => ({
@@ -274,11 +314,12 @@ export const QueryList = () => {
                             },
                         })}
                         rowKey="id"
+                        locale={locale}
                     />
                 </div>
-                <div className={styles.linkContainer}>
-                    <LogOut/>
-                </div>
+                {/*<div className={styles.linkContainer}>*/}
+                {/*    <LogOut/>*/}
+                {/*</div>*/}
             </div>
         </div>
     );
