@@ -44,12 +44,11 @@ export const Slider = () => {
     } = theme.useToken();
 
     return (
-        <Layout style={{borderRight: '1px solid #F0F0F0', maxHeight: '100%'}}>
-            <Sider
+        <Layout className={styles.layout}>
+            <Sider className={styles.sider}
                 width={256}
                 style={{
-                    background: colorBgContainer,
-                    position: 'relative',
+                    background: colorBgContainer
                 }}
                 trigger={null}
                 collapsible
