@@ -3,10 +3,13 @@
 $color-blue: #1890FF;
 $color-white: #fff;
 $color-gray: #D9D9D9;
+$color-gray-43: #434343;
 $color-black-gray: #00000066;
 $color-violet: #2400FF;
 $color-black: #000;
+$color-black-22: #222;
 $color-pink: #FF185D;
+$color-red: #FF4D4F;
 
 %container {
   z-index: -1;
@@ -120,6 +123,7 @@ $color-pink: #FF185D;
   background-color: $color-blue;
   color: $color-white;
   border-radius: 2px;
+  cursor: pointer;
 }
 
 .btnWhite {
@@ -127,4 +131,15 @@ $color-pink: #FF185D;
   display: inline-block;
   border: 1px solid $color-gray;
   border-radius: 2px;
+  cursor: pointer;
+}
+
+.btnRed {
+  border: 1px solid $color-red;
+  display: inline-block;
+  background-color: $color-white;
+  color: $color-red;
+  border-radius: 2px;
+  margin-left: 20px;
+  cursor: pointer;
 }
