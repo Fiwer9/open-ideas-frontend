@@ -128,3 +128,31 @@ $color-pink: #FF185D;
   border: 1px solid $color-gray;
   border-radius: 2px;
 }
+
+.statusCheck {
+  color: #4b7271;
+}
+
+.statusRegistered {
+  color: #790298;
+}
+
+.statusAnalysis{
+  color: #1890FF;
+}
+
+.statusAccepted{
+  color: #6c57e0;
+}
+
+.statusImplementation{
+  color: #D09B11D9;
+}
+
+.statusRejected{
+  color: #EC0B4E;
+}
+
+.statusDone{
+  color: #00A71B;
+}

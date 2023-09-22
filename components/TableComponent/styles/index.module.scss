@@ -1,0 +1,13 @@
+.tableContainer {
+  margin-top: 17px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex: 1;
+
+  .table {
+    table {
+      border: 1px solid rgba(0, 0, 0, 0.20);
+      border-radius: 0;
+    }
+  }
+}
