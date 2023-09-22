@@ -5,7 +5,7 @@ import {Form} from "antd";
 
 import styles from "./styles/Modal.module.scss";
 
-const Modal = ({ active, setActive, text, textBtnWhite, textBtnBlue, onClickWhite, onClickBlue }: any) => {
+const Modal = ({ active, setActive, text1, text2, textBtn1, textBtn2, onClick1, onClick2, classNameBtn1,  classNameBtn2}: any) => {
     return (
         <>
             {active ?
@@ -16,14 +16,15 @@ const Modal = ({ active, setActive, text, textBtnWhite, textBtnBlue, onClickWhit
                               <Logo width={126.82} height={36} />
                           </Form.Item>
                           <Form.Item className={styles.modelText}>
-                              <p className={textBtnBlue === 'Отправить'? styles.text : styles.textCancel}>{text}</p>
+                              <p className={textBtn2 === 'Отправить'? styles.text : styles.textCancel}>{text1}</p>
+                              <p className={styles.text2}>{text2}</p>
                           </Form.Item>
                           <div className={styles.btnContainer}>
-                              <div className={styles.btnWhite}>
-                                  <Buttons text={textBtnWhite} onClick={onClickWhite}/>
+                              <div className={classNameBtn1}>
+                                  <Buttons className={styles.btnModal} text={textBtn1} onClick={onClick1}/>
                               </div>
-                              <div className={styles.btnBlue}>
-                                  <Buttons text={textBtnBlue} onClick={onClickBlue}/>
+                              <div className={classNameBtn2}>
+                                  <Buttons className={styles.btnModal} text={textBtn2} onClick={onClick2}/>
                               </div>
                           </div>
                       </Form>

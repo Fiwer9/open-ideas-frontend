@@ -3,7 +3,7 @@
 .modal {
   @extend %container;
   z-index: 1;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba($color-black, 0.2);
 }
 
 .active {
@@ -37,7 +37,8 @@
       margin: 0;
       line-height: 22px;
       font: {
-        family: 'RobotoRegular', sans-serif;
+        family: 'RobotoMedium', sans-serif;
+        weight: 600;
         size: 20px;
       };
 
@@ -45,11 +46,24 @@
         font-size: 16px;
       }
     }
+
+    .text2 {
+      margin: 0;
+      margin-top: 20px;
+      font: {
+        family: RobotoRegular, sans-serif;
+        weight: 400;
+        size: 16px;
+      };
+      color: rgba($color-gray-43, 0.8);
+    }
+
     .textCancel {
       margin: 0;
       line-height: 22px;
       font: {
-        family: 'RobotoRegular', sans-serif;
+        family: 'RobotoMedium', sans-serif;
+        weight: 600;
         size: 20px;
       };
     }
@@ -58,6 +72,5 @@
   .btnContainer {
     display: flex;
     justify-content: space-between;
-    margin: 36px 0 24px;
   }
 }
