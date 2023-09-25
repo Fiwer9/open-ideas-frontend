@@ -157,6 +157,35 @@
     overflow-x: auto;
     overflow-y: hidden;
     flex: 1;
+
+
+    .statusCheck {
+      color: #4b7271;
+    }
+
+    .statusRegistered {
+      color: #790298;
+    }
+
+    .statusAnalysis{
+      color: #1890FF;
+    }
+
+    .statusAccepted{
+      color: #6c57e0;
+    }
+
+    .statusImplementation{
+      color: #D09B11D9;
+    }
+
+    .statusRejected{
+      color: #EC0B4E;
+    }
+
+    .statusDone{
+      color: #00A71B;
+    }
   }
 
     @media (max-width: 720px) {
