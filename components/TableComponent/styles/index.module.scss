@@ -1,7 +1,9 @@
 .tableContainer {
   margin-top: 17px;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: {
+    x: auto;
+    y: hidden;
+  }
   flex: 1;
 
   .table {

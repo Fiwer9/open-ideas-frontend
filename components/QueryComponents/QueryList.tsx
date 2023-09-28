@@ -133,15 +133,28 @@ export const QueryList = () => {
         setIsArchive(checked);
     };
 
+    const breadcrumb_items = [
+        {
+            title: 'Панель администратора',
+        },
+        {
+            title: 'Таблица инициатив'
+        }
+    ]
+
     return (
         <div className={styles.container}>
             <Slider />
             <div className={styles.content}>
-                <Header />
+                <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'} breadcrumb_items={breadcrumb_items}/>
                 <Tabs />
                 <MainText text={'Инициативы'}/>
                 <Filter onSearchTermChange={handleSearchTermChange}
                         onSearchNumberChange={handleSearchNumberChange}
+                        placeholderNum={'Номер'}
+                        placeholderQuery={'Поиск по идеям'}
+                        filterText={'Фильтры'}
+                        checkboxText={'Архив'}
                         onToggleArchive={handleToggleArchive} />
                 <DataTable
                   data={getData()}

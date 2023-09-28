@@ -8,9 +8,11 @@
   }
 
   .checkbox {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 10px;
+    padding: {
+      top: 5px;
+      bottom: 5px;
+      left: 10px;
+    }
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 2px;
   }
