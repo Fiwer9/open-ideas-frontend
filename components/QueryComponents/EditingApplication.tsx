@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./styles/EditingApplication.module.scss";
 import { Slider } from "../SliderComponents/SliderComponents";
-import { Form, Input, Select } from "antd";
+import {Button, Form, Input, Select} from "antd";
 import TextArea from "antd/lib/input/TextArea";
 
 
@@ -145,7 +145,8 @@ export const EditingApplication = () => {
           </div>
 
           <div className={styles.btnContainer}>
-            <button className={`${styles.btnDefault} ${styles.btnFooter}`}>Сохранить изменения</button>
+            <Button className={`${styles.btnDefault} ${styles.btnFooter}`}>
+              <span>Сохранить изменения</span></Button>
           </div>
         </div>
       </div>
