@@ -98,7 +98,7 @@ export const AdminApplicationCard = () => {
             </div>
           </div>
           <div className={styles.btnContainer}>
-            <button className={`${styles.btnBlue} ${styles.btnFooter}`}>Редактировать данные инициативы</button>
+            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => router.push('/queries/editingApplication')}>Редактировать данные инициативы</button>
             <button className={`${styles.btnRed} ${styles.btnFooter}`}
                     onClick={() => {
                       setModalActive(true);

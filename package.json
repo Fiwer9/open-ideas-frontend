@@ -1,5 +1,5 @@
 {
-  "name": "rusgidro-ideas-frontend",
+  "name": "open-ideas",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -32,11 +32,11 @@
     "react-dom": "18.2.0",
     "react-redux": "^8.1.0",
     "react-router-dom": "^6.10.0",
-    "sass": "^1.62.1",
     "typescript": "5.0.4",
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
-    "@types/js-cookie": "^3.0.3"
+    "@types/js-cookie": "^3.0.3",
+    "sass": "^1.68.0"
   }
 }
