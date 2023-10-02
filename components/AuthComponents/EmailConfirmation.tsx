@@ -10,7 +10,7 @@ export const EmailConfirmation = () => {
         <div className={styles.container}>
             <Form className={styles.form}>
                 <Form.Item className={styles.logo}>
-                    <Logo />
+                    <Logo width={50} height={50}/>
                 </Form.Item>
                 <Form.Item className={styles.content}>
                     <div className={styles.inputlabel}>

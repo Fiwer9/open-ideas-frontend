@@ -1,3 +1,5 @@
+import {QueriesResponse} from "../models/response/QueriesResponse";
+
 export function getOrganizationName(text: number, organizations: any) {
     for (let org of organizations) {
         if (org.id === text) {
@@ -11,6 +13,27 @@ export function getOrganizationId(text: number, organizations: any) {
         if (org.id === text) {
             return org.id
         }
+    }
+}
+
+export function getStatusClassName(styles: any, status: string) {
+    switch (status) {
+        case 'registered':
+            return styles.statusRegistered;
+        case 'check':
+            return styles.statusCheck;
+        case 'analysis':
+            return styles.statusAnalysis;
+        case 'accepted':
+            return styles.statusAccepted;
+        case 'implementation':
+            return styles.statusImplementation;
+        case 'rejected':
+            return styles.statusRejected;
+        case 'done':
+            return styles.statusDone;
+        default:
+            return '';
     }
 }
 
@@ -69,5 +92,35 @@ export const getDirectionTranslationOnEng = (direction: string) => {
             return "workspace";
         default:
             return "";
+    }
+}
+
+
+
+export const checkExpert = (queryId: any, data: QueriesResponse[]) => {
+    let isExpert = false;
+
+    data.forEach((query) => {
+        if (queryId.id === query.id) {
+            query.expert_users.forEach((user) => {
+                if (user === Number(sessionStorage.getItem('user_id'))) {
+                    isExpert = true;
+                }
+            });
+        }
+    });
+
+    return isExpert;
+}
+
+export const fetchData = async (setIsLoading: any, setData: any, getData: any) => {
+    setIsLoading(true)
+    try {
+        const data = await getData()
+        setData(data.data);
+    } catch (error) {
+        console.error(error);
+    } finally {
+        setIsLoading(false)
     }
 }

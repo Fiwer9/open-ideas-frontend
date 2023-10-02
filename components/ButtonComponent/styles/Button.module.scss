@@ -2,10 +2,14 @@
 
 .btn {
   margin: 0;
-  padding: 6px 15px;
+  padding: 8px 16px;
   border: none;
   outline: none;
-  font-family: "RobotoLight", sans-serif;
+  font: {
+    family: "RobotoLight", sans-serif;
+    weight: 400;
+    size: 16px;
+  };
   cursor: pointer;
   color: inherit;
   background-color: transparent;
@@ -14,7 +18,7 @@
 
 .disabledBtn {
   margin: 0;
-  padding: 6px 15px;
+  padding: 8px 16px;
   border: solid 1px $color-blue;
   border-radius: 2px;
   outline: none;

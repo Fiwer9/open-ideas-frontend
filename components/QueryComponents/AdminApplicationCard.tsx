@@ -4,9 +4,18 @@ import { HeartOutlined } from "@ant-design/icons";
 import { Col, Select } from "antd";
 import avatar from "../../public/img/AvatarAratrum.svg";
 import Image from "next/image";
+import router from "next/router";
+import Modal from "../ModalsComponents/Modal";
+import React, { useState } from "react";
 
 
 export const AdminApplicationCard = () => {
+  const [modalActive, setModalActive] = useState(false);
+
+  const closeModal = () => {
+    setModalActive(false);
+  };
+
   return (
     <>
       <div className={styles.container}>
@@ -88,10 +97,25 @@ export const AdminApplicationCard = () => {
           </div>
           <div className={styles.btnContainer}>
             <button className={`${styles.btnBlue} ${styles.btnFooter}`}>Редактировать данные инициативы</button>
-            <button className={`${styles.btnRed} ${styles.btnFooter}`}>Удалить инициативу</button>
+            <button className={`${styles.btnRed} ${styles.btnFooter}`}
+                    onClick={() => {
+                      setModalActive(true);
+                    }}>Удалить инициативу</button>
           </div>
         </div>
       </div>
+
+      <Modal
+        className={styles.models} active={modalActive} setActive={setModalActive}
+        text1={"Удалить инициативу?"}
+        text2={"Восстановить будет невозможно"}
+        classNameBtn1={styles.btnBlue}
+        textBtn1={"Назад"}
+        classNameBtn2={styles.btnRed}
+        textBtn2={"Удалить инициативу"}
+        onClick1={closeModal}
+        onClick2={() => router.push('/queries')}
+      />
     </>
   );
 };

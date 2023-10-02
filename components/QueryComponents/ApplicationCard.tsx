@@ -13,7 +13,7 @@ import {QueriesResponse} from "../../models/response/QueriesResponse";
 import {
     formatDateToServer,
     getDirectionTranslation,
-    getOrganizationName,
+    getOrganizationName, getStatusClassName,
     getStatusTranslation
 } from "../../utils/utils";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
@@ -83,26 +83,7 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
 
     }, [queryId])
 
-    function getStatusClassName(status: string) {
-        switch (status) {
-            case 'registered':
-                return styles.statusRegistered;
-            case 'check':
-                return styles.statusCheck;
-            case 'analysis':
-                return styles.statusAnalysis;
-            case 'accepted':
-                return styles.statusAccepted;
-            case 'implementation':
-                return styles.statusImplementation;
-            case 'rejected':
-                return styles.statusRejected;
-            case 'done':
-                return styles.statusDone;
-            default:
-                return '';
-        }
-    }
+
 
     function getUserName(userId: number) {
         return users.map((user: any) => {
@@ -233,7 +214,7 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
                                   )}
                                   <p className={styles.numberLikes}>{getLikes()}</p>
                               </div>
-                              <p className={`${styles.statusQuery} ${getStatusClassName(applicationData.status)}`}>{getStatusTranslation(applicationData.status)}</p>
+                              <p className={`${styles.statusQuery} ${getStatusClassName(styles, applicationData.status)}`}>{getStatusTranslation(applicationData.status)}</p>
                           </div>
                       </div>
                   </Form.Item>
