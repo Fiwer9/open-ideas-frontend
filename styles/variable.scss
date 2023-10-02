@@ -149,19 +149,45 @@ $color-red-error: #e83333;
   cursor: pointer;
 }
 
-.btnDefault {
-  border: 1px solid $color-gray;
-  display: inline-block;
-  background-color: $color-white-gray;
-  color: rgba($color-black, 0.4);
-  border-radius: 2px;
-  cursor: pointer;
-}
-
 .select {
   .ant-select-selector {
-    border-color: red !important;
+    background-color: #BFBFBF !important;
+    color: $color-white;
+    border: none !important;
     border-radius: 10px;
-    background-color: $color-gray-select !important;
+    display: flex;
+    align-items: center;
   }
+
+  .ant-select-arrow {
+    color: white !important;
+  }
+}
+
+.statusCheck {
+  color: #4b7271;
+}
+
+.statusRegistered {
+  color: #790298;
+}
+
+.statusAnalysis{
+  color: #1890FF;
+}
+
+.statusAccepted{
+  color: #6c57e0;
+}
+
+.statusImplementation{
+  color: #D09B11D9;
+}
+
+.statusRejected{
+  color: #EC0B4E;
+}
+
+.statusDone{
+  color: #00A71B;
 }

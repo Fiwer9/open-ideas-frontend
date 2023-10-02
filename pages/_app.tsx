@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app'
 import Store from "../store/store";
 import {createContext} from "react";
+import '../styles/variable.scss';
 
 interface State {
     store: Store,
