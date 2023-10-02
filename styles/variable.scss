@@ -144,6 +144,21 @@ $color-red: #FF4D4F;
   cursor: pointer;
 }
 
+.select {
+  .ant-select-selector {
+    background-color: #BFBFBF !important;
+    color: $color-white;
+    border: none !important;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .ant-select-arrow {
+    color: white !important;
+  }
+}
+
 .statusCheck {
   color: #4b7271;
 }

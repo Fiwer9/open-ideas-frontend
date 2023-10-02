@@ -27,15 +27,13 @@ export const AdminApplicationCard = () => {
                 <p className={styles.nameInitiative}>Инициатива №1</p>
                 <div className={styles.btnHeader}>
                   <div className={styles.likesContainer}>
-                    <button className={styles.btnLike}>
-                      <HeartOutlined />
-                    </button>
+                    <HeartOutlined width={20} height={20} />
                     <p className={styles.numberLikes}>123</p>
                   </div>
 
                   <Select
-                    className={styles.select}
-                    style={{color: '#BFBFBF'}}
+                    className='select'
+                    style={{width: 175}}
                     defaultValue="В процессе"
                     options={[
                       { value: 'value1', label: 'В процессе' },

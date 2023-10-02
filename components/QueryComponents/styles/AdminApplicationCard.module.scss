@@ -36,16 +36,13 @@
       .btnHeader {
         display: flex;
         flex-direction: row;
-
-        .select {
-          height: 40px;
-          min-width: 155px;
-        }
+        align-items: center;
 
         .likesContainer {
           display: flex;
           flex-direction: row;
           margin-right: 30px;
+          align-items: center;
 
           .numberLikes {
             font: {
@@ -53,16 +50,7 @@
               weight: 400;
               size: 14px;
             };
-          }
-
-          .btnLike {
-            margin-right: 18px;
-            padding: 0;
-            border: none;
-            font: inherit;
-            color: inherit;
-            background-color: transparent;
-            cursor: pointer;
+            margin-left: 30px;
           }
         }
       }
