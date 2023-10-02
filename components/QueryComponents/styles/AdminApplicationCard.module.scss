@@ -36,30 +36,21 @@
       .btnHeader {
         display: flex;
         flex-direction: row;
+        align-items: center;
 
         .likesContainer {
           display: flex;
           flex-direction: row;
           margin-right: 30px;
+          align-items: center;
 
           .numberLikes {
-            margin: 0;
-            margin-top: 9px;
             font: {
               family: RobotoRegular, sans-serif;
               weight: 400;
               size: 14px;
             };
-          }
-
-          .btnLike {
-            margin-right: 18px;
-            padding: 0;
-            border: none;
-            font: inherit;
-            color: inherit;
-            background-color: transparent;
-            cursor: pointer;
+            margin-left: 30px;
           }
         }
       }
