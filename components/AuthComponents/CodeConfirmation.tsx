@@ -50,7 +50,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
         <div className={styles.container}>
             <Form className={styles.form}>
                 <Form.Item className={styles.logo}>
-                    <Logo width={50} height={50}/>
+                    <Logo width={112} height={32}/>
                 </Form.Item>
                 <Form.Item className={styles.content}>
                     <div className={styles.title}>
