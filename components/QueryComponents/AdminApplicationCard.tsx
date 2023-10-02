@@ -25,8 +25,8 @@ export const AdminApplicationCard = () => {
                   </div>
 
                   <Select
-                    className={styles.select}
-                    style={{color: '#BFBFBF'}}
+                    className='select'
+                    style={{width: 175}}
                     defaultValue="В процессе"
                     options={[
                       { value: 'value1', label: 'В процессе' },

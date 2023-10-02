@@ -143,3 +143,18 @@ $color-red: #FF4D4F;
   margin-left: 20px;
   cursor: pointer;
 }
+
+.select {
+  .ant-select-selector {
+    height: 40px !important;
+    background-color: #BFBFBF !important;
+    color: $color-white;
+    border: none !important;
+    border-radius: 10px;
+  }
+
+  .ant-select-arrow {
+    padding-top: 7px;
+    color: white !important;
+  }
+}
