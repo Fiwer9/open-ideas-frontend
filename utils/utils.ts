@@ -1,3 +1,5 @@
+import {QueriesResponse} from "../models/response/QueriesResponse";
+
 export function getOrganizationName(text: number, organizations: any) {
     for (let org of organizations) {
         if (org.id === text) {
@@ -90,5 +92,35 @@ export const getDirectionTranslationOnEng = (direction: string) => {
             return "workspace";
         default:
             return "";
+    }
+}
+
+
+
+export const checkExpert = (queryId: any, data: QueriesResponse[]) => {
+    let isExpert = false;
+
+    data.forEach((query) => {
+        if (queryId.id === query.id) {
+            query.expert_users.forEach((user) => {
+                if (user === Number(sessionStorage.getItem('user_id'))) {
+                    isExpert = true;
+                }
+            });
+        }
+    });
+
+    return isExpert;
+}
+
+export const fetchData = async (setIsLoading: any, setData: any, getData: any) => {
+    setIsLoading(true)
+    try {
+        const data = await getData()
+        setData(data.data);
+    } catch (error) {
+        console.error(error);
+    } finally {
+        setIsLoading(false)
     }
 }

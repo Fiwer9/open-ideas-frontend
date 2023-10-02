@@ -1,0 +1,18 @@
+.infContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 17px;
+  gap: 7px;
+
+  @media (max-width: 720px) {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  @media (max-width: 420px) {
+    justify-content: center;
+    align-items: center;
+  }
+}
+

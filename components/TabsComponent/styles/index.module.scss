@@ -1,0 +1,16 @@
+.tabsContainer {
+  margin: 20px 0 30px;
+  .tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+
+    p {
+      font-size: 23px;
+      line-height: 20px;
+      color: #434343;
+      margin: 10px;
+    }
+  }
+}
