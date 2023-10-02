@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Form, Select, Card, Input} from "antd";
 import { InputLabel } from "../InputLabelComponent/InputLabel";
-import { Logo } from "../PicturesComponents/Logo";
+// import { Logo } from "../PicturesComponents/Logo";
 import { Buttons } from "../ButtonComponent/Button";
 
 import styles from "./styles/CreateQuery.module.scss";
@@ -13,7 +13,6 @@ import OrganizationsService from "../../services/OrganizationsService";
 import UsersService from "../../services/UsersService";
 import {formatDateToServer, getOrganizationId, getOrganizationName} from "../../utils/utils";
 import {Context} from "../../pages/_app";
-import {LogOut} from "../AuthComponents/LogOut";
 
 export const CreateQuery = () => {
     const [modalActive, setModalActive] = useState(false);
@@ -91,7 +90,7 @@ export const CreateQuery = () => {
             <Card loading={isLoading} className={styles.card}>
                 <Form className={styles.form}>
                     <Form.Item className={styles.logo}>
-                        <Logo width={50} height={50}/>
+                        {/*<Logo />*/}
                     </Form.Item>
                     <Form.Item className={styles.content}>
                         <div className={styles.title}>
@@ -162,7 +161,7 @@ export const CreateQuery = () => {
                         </div>
                         <div className={styles.btnBlue}>
                             <Buttons text={"Отправить"} onClick={() => {
-                                setModalActive(true);
+                              setModalActive(true);
                             }}/>
                         </div>
                     </div>
@@ -172,10 +171,12 @@ export const CreateQuery = () => {
             <Modal
                 className={styles.models} active={modalActive} setActive={setModalActive}
                 text={"Вы уверены, что хотите зарегистрировать заявку и внесли все необходимые данные? После регистрации внесение изменений невозможно"}
-                textBtnWhite={"Назад"}
-                textBtnBlue={"Отправить"}
-                onClickWhite={closeModal}
-                onClickBlue={() => {
+                classNameBtn1={styles.btnWhite}
+                textBtn1={"Назад"}
+                classNameBtn2={styles.btnBlue}
+                textBtn2={"Отправить"}
+                onClick1={closeModal}
+                onClick2={() => {
                     const currentDate = new Date();
                     const formattedEndDate = formatDateToServer(currentDate, '-');
                     idea&& description&& direction&& effect&& postQuery(formattedEndDate, idea, description, direction, 'check', effect,
@@ -187,10 +188,12 @@ export const CreateQuery = () => {
             <Modal
                 className={styles.models} active={secondModalActive} setActive={setSecondModalActive}
                 text={"Вы уверены, что хотите отменить создание заявки? При отмене заявки ранее внесенная информация не будет сохранена"}
-                textBtnWhite={"Назад"}
-                textBtnBlue={"Выйти"}
-                onClickWhite={closeModal}
-                onClickBlue={() => router.push('/queries')}
+                classNameBtn1={styles.btnWhite}
+                textBtn1={"Назад"}
+                classNameBtn2={styles.btnBlue}
+                textBtn2={"Выйти"}
+                onClick1={closeModal}
+                onClick2={() => router.push('/queries')}
             />
         </>
     );
