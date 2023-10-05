@@ -7,6 +7,8 @@ import Image from "next/image";
 import router from "next/router";
 import Modal from "../ModalsComponents/Modal";
 import React, { useState } from "react";
+import { Header } from "../HeaderComponents/Header";
+import { Tabs } from "../TabsComponent/Tabs";
 
 
 export const AdminApplicationCard = () => {
@@ -21,6 +23,8 @@ export const AdminApplicationCard = () => {
       <div className={styles.container}>
         <Slider/>
         <div className={styles.content}>
+          <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          <Tabs />
           <div>
             <div>
               <div className={styles.headerContainer}>

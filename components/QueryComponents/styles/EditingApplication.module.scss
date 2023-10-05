@@ -7,17 +7,16 @@
 
   .content {
     position: relative;
-    margin: {
-      top: 76px;
-      left: 70px;
-    };
     width: 100%;
     display: flex;
     justify-content: center;
     height: 100%;
     flex-direction: column;
+    padding: 50px 70px;
 
     .contentContainer {
+      margin-top: 46px;
+
       .textHeader {
         margin: 0;
         font: {

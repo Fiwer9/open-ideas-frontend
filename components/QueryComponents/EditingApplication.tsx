@@ -3,14 +3,19 @@ import styles from "./styles/EditingApplication.module.scss";
 import { Slider } from "../SliderComponents/SliderComponents";
 import {Button, Form, Input, Select} from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import { Header } from "../HeaderComponents/Header";
+import { Tabs } from "../TabsComponent/Tabs";
 
 
 export const EditingApplication = () => {
+
   return (
     <>
       <div className={styles.container}>
         <Slider />
         <div className={styles.content}>
+          <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          <Tabs />
           <div className={styles.contentContainer}>
             <p className={styles.textHeader}>Редактирование инициативы</p>
 

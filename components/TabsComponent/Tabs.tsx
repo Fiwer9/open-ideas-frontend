@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import styles from "./styles/index.module.scss";
+import styles from "./styles/Tabs.module.scss";
 import {Tag} from "antd";
 
 const { CheckableTag } = Tag;

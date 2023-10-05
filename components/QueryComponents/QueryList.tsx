@@ -12,11 +12,11 @@ import {
     getStatusTranslation
 } from "../../utils/utils";
 import {Slider} from "../SliderComponents/SliderComponents";
-import {Header} from "../HeaderComponents";
-import {Tabs} from "../TabsComponent";
+import {Header} from "../HeaderComponents/Header";
+import {Tabs} from "../TabsComponent/Tabs";
 import {MainText} from "../MainTextComponent";
 import {Filter} from "../FilterComponents";
-import {DataTable} from "../TableComponent";
+import {DataTable} from "../TableComponent/Table";
 import {useSearchNum} from "../../hooks/useSearchNum";
 import {useSearchQuery} from "../../hooks/useSearchQuery";
 
@@ -133,20 +133,11 @@ export const QueryList = () => {
         setIsArchive(checked);
     };
 
-    const breadcrumb_items = [
-        {
-            title: 'Панель администратора',
-        },
-        {
-            title: 'Таблица инициатив'
-        }
-    ]
-
     return (
         <div className={styles.container}>
             <Slider />
             <div className={styles.content}>
-                <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'} breadcrumb_items={breadcrumb_items}/>
+                <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
                 <Tabs />
                 <MainText text={'Инициативы'}/>
                 <Filter onSearchTermChange={handleSearchTermChange}
