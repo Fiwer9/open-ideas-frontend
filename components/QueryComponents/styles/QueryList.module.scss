@@ -1,25 +1,21 @@
 @import "../../../styles/variable.scss";
 
 .container {
-  display: flex;
-  justify-content: space-between;
-  height: 100%;
-}
-.content {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  height: 100%;
-  flex-direction: column;
-  padding: 50px 70px;
+  @include container;
+
+  .content {
+   @include content;
+
+    .infContainer {
+      @include infContainerTable;
+    }
 
 
-
-  @media (max-width: 720px) {
-    padding: 16px;
-  }
-  @media (max-width: 420px) {
-    margin: 0;
+    @media (max-width: 720px) {
+      padding: 16px;
+    }
+    @media (max-width: 420px) {
+      margin: 0;
+    }
   }
 }

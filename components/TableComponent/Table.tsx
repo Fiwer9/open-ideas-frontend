@@ -12,6 +12,7 @@ interface DataTable {
   isLoading: boolean;
   onRowClick: any;
 }
+
 export const DataTable = ({ data, columns, isLoading, onRowClick }: DataTable) => {
   return (
     <div className={styles.tableContainer}>
@@ -27,6 +28,7 @@ export const DataTable = ({ data, columns, isLoading, onRowClick }: DataTable) =
         })}
         rowKey="id"
         locale={locale}
+        bordered
       />
     </div>
 

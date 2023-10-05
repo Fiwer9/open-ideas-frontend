@@ -16,6 +16,40 @@ $color-pink: #FF185D;
 $color-red: #FF4D4F;
 $color-red-error: #e83333;
 
+@mixin container {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+}
+
+@mixin content {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  flex-direction: column;
+  padding: 50px 70px;
+}
+
+@mixin infContainerTable {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 17px;
+  gap: 7px;
+
+  @media (max-width: 720px) {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  @media (max-width: 420px) {
+    justify-content: center;
+    align-items: center;
+  }
+}
+
 %container {
   z-index: -1;
   width: 100%;
