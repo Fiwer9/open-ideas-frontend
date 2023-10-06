@@ -157,6 +157,11 @@ $color-red-error: #e83333;
 }
 
 .btnBlue {
+  font: {
+    family: RobotoLight, sans-serif;
+    weight: 400;
+    size: 16px;
+  };
   border: 1px solid $color-blue;
   display: inline-block;
   background-color: $color-blue;

@@ -1,0 +1,68 @@
+@import "../../../styles/variable.scss";
+
+.container {
+  @include container;
+
+  .content {
+    @include content;
+
+    .userContainer {
+      display: flex;
+      margin-top: 40px;
+
+      .infUser {
+        margin-left: 70px;
+
+        .nameUser {
+          margin: 0;
+          font: {
+            family: RobotoRegular, sans-serif;
+            weight: 600;
+            size: 32px;
+          };
+        }
+
+        .column {
+          display: flex;
+          margin-top: 20px;
+
+          .row {
+            .rowField {
+              margin: 0;
+              margin-top: 20px;
+              font: {
+                family: RobotoRegular, sans-serif;
+                weight: 600;
+                size: 20px;
+              };
+              color: rgba($color-gray-43, 0.8);
+            }
+
+            .rowInf {
+              margin: 0;
+              margin-left: 70px;
+              margin-top: 20px;
+              font: {
+                family: RobotoRegular, sans-serif;
+                weight: 600;
+                size: 20px;
+              };
+              color: $color-black-22;
+            }
+
+            .orgUser {
+              margin-top: 50px;
+            }
+          }
+        }
+
+        .btnFooter {
+          margin-top: 50px;
+          height: 35px;
+          border-radius: 1px;
+          background-color: $color-blue;
+        }
+      }
+    }
+  }
+}
