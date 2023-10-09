@@ -7,16 +7,12 @@
 
   .content {
     position: relative;
-    margin: {
-      top: 30px;
-      left: 70px;
-      right: 70px;
-    };
     width: 100%;
     display: flex;
     justify-content: center;
     height: 100%;
     flex-direction: column;
+    padding: 50px 70px;
 
     .headerContainer {
       margin: 0;

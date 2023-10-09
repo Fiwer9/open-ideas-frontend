@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./styles/index.module.scss";
+import styles from "./styles/Table.module.scss";
 import {Table} from "antd";
 
 const locale = {
