@@ -1,18 +1,10 @@
 @import "../../../styles/variable.scss";
 
 .container {
-  display: flex;
-  justify-content: space-between;
-  height: 100%;
+  @include container;
 
   .content {
-    position: relative;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    height: 100%;
-    flex-direction: column;
-    padding: 50px 70px;
+    @include content;
 
     .contentContainer {
       margin-top: 46px;
