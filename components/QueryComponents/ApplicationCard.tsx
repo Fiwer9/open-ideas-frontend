@@ -4,7 +4,7 @@ import {HeartFilled, HeartOutlined} from "@ant-design/icons";
 import {Row, Col} from "antd";
 import {Logo} from "../PicturesComponents/Logo";
 import {Buttons} from "../ButtonComponent/Button";
-import avatar from "../../public/img/avatar.jpg"
+import avatar from "../../public/img/AvatarAratrum.svg"
 import styles from "./styles/ApplicationCard.module.scss";
 import router from "next/router";
 import QueriesService from "../../services/QueriesService";

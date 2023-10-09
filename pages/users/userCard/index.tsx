@@ -1,12 +1,12 @@
 import React from "react";
-import { UsersList } from "../../components/UsersComponents/UsersList";
+import { UserCard } from "../../../components/UsersComponents/UserCard";
 
 
 export default function Index() {
 
   return (
     <div>
-      <UsersList />
+      <UserCard />
     </div>
   );
 }
