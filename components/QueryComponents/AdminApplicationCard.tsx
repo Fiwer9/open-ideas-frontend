@@ -110,7 +110,7 @@ export const AdminApplicationCard = () => {
       </div>
 
       <Modal
-        className={styles.models} active={modalActive} setActive={setModalActive}
+        active={modalActive} setActive={setModalActive}
         text1={"Удалить инициативу?"}
         text2={"Восстановить будет невозможно"}
         classNameBtn1={styles.btnBlue}
@@ -119,6 +119,7 @@ export const AdminApplicationCard = () => {
         textBtn2={"Удалить инициативу"}
         onClick1={closeModal}
         onClick2={() => router.push('/queries')}
+        modelTextClass={styles.modelText}
       />
     </>
   );
