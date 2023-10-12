@@ -15,11 +15,7 @@
 
         .nameUser {
           margin: 0;
-          font: {
-            family: RobotoRegular, sans-serif;
-            weight: 600;
-            size: 32px;
-          };
+          @include pageTitle;
         }
 
         .column {

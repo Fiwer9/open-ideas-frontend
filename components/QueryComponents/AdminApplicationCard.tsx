@@ -36,7 +36,7 @@ export const AdminApplicationCard = () => {
                   </div>
 
                   <Select
-                    className='select'
+                    className='selectInitiative'
                     style={{width: 175}}
                     defaultValue="В процессе"
                     options={[

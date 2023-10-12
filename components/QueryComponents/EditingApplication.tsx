@@ -32,9 +32,7 @@ export const EditingApplication = () => {
                   message: 'Введите название инициативы'
                 }]}
               >
-                <Input
-                  className={`${styles.formField} ${styles.inp}`}
-                />
+                <Input className={styles.inp} />
               </Form.Item>
               <Form.Item
                 className={styles.formItem}
@@ -76,7 +74,8 @@ export const EditingApplication = () => {
                 }]}
               >
                 <Select
-                  className={`${styles.formField} ${styles.inp}`}
+                  className='select'
+                  style={{height: 40}}
                   defaultValue="Направление инициативы"
                   options={[
                     { value: 'value1', label: 'Технические процессы' },
@@ -96,7 +95,8 @@ export const EditingApplication = () => {
                 }]}
               >
                 <Select
-                  className={`${styles.formField} ${styles.inp}`}
+                  className='select'
+                  style={{height: 40}}
                   defaultValue="Организация"
                   options={[
                     { value: 'value1', label: 'LamArt' },
@@ -116,7 +116,8 @@ export const EditingApplication = () => {
                 }]}
               >
                 <Select
-                  className={`${styles.formField} ${styles.inp}`}
+                  className='select'
+                  style={{height: 40}}
                   defaultValue="Отдел"
                   options={[
                     { value: 'value1', label: 'IT отдел' },
@@ -136,7 +137,8 @@ export const EditingApplication = () => {
                 }]}
               >
                 <Select
-                  className={`${styles.formField} ${styles.inp}`}
+                  className='select'
+                  style={{height: 40}}
                   defaultValue="Назначенный эксперт"
                   options={[
                     { value: 'value1', label: 'Иванов Олег' },
@@ -150,7 +152,7 @@ export const EditingApplication = () => {
           </div>
 
           <div className={styles.btnContainer}>
-            <Button className={`${styles.btnDefault} ${styles.btnFooter}`}>
+            <Button className={styles.btnFooter}>
               <span>Сохранить изменения</span></Button>
           </div>
         </div>

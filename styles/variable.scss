@@ -29,7 +29,11 @@ $color-red-error: #e83333;
   justify-content: center;
   height: 100%;
   flex-direction: column;
-  padding: 50px 70px;
+  padding: {
+    top: 50px;
+    left: 70px;
+    right: 45px;
+  };
 }
 
 @mixin infContainerTable {
@@ -48,6 +52,27 @@ $color-red-error: #e83333;
     justify-content: center;
     align-items: center;
   }
+}
+
+@mixin pageTitle {
+  font: {
+    family: Poppins, sans-serif;
+    weight: 600;
+    size: 32px;
+  };
+}
+
+@mixin inputForm {
+  height: 40px;
+  border-radius: 2px;
+}
+
+@mixin inputLabelForm {
+  font: {
+    family: Poppins, sans-serif;
+    weight: 400;
+    size: 14px;
+  };
 }
 
 %container {
@@ -105,10 +130,6 @@ $color-red-error: #e83333;
   border-radius: 2px;
   padding: 16px;
   margin: 0;
-}
-
-.logoContainerMin {
-
 }
 
 .logoContainer {
@@ -190,6 +211,12 @@ $color-red-error: #e83333;
 
 .select {
   .ant-select-selector {
+    border-radius: 2px;
+  }
+}
+
+.selectInitiative {
+  .ant-select-selector {
     background-color: #BFBFBF !important;
     color: $color-white;
     border: none !important;
@@ -200,6 +227,28 @@ $color-red-error: #e83333;
 
   .ant-select-arrow {
     color: white !important;
+  }
+}
+
+.checkbox {
+  padding: {
+    top: 8px;
+    bottom: 8px;
+    left: 10px;
+  }
+  font: {
+    family: RobotoRegular, sans-serif;
+    weight: 400;
+    size: 14px;
+  };
+
+  .ant-checkbox-inner {
+    border-radius: 2px;
+    border-color: rgba($color-black, 0.6);
+  }
+
+  span {
+    color: $color-gray-43;
   }
 }
 

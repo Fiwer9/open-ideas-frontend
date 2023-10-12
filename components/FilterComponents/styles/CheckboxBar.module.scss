@@ -1,20 +1,26 @@
 @import "../../../styles/variable";
 
-.btnContainer {
+.checkboxContainer {
   display: flex;
-  gap: 8px;
   align-items: center;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 
-  button {
-    border-radius: 2px;
-    height: 40px;
+  .hintText {
+    margin: 0;
+    font: {
+      family: RobotoLight, sans-serif;
+      weight: 400;
+      size: 14px;
+    };
+    color: #7E7E7E;
   }
 
   @media (max-width: 720px) {
     flex-direction: row;
-        gap: 24px;
-        align-items: center;
-        margin-top: 8px;
+    gap: 24px;
+    align-items: center;
+    margin-top: 8px;
   }
 
   @media (max-width: 420px) {
