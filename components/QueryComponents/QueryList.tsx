@@ -21,11 +21,15 @@ import {useSearchQuery} from "../../hooks/useSearchQuery";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
+import {UserResponse} from "../../models/response/UserResponse";
+import UsersService from "../../services/UsersService";
 
 
 export const QueryList = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedTags, setSelectedTags] = useState<string[]>(['Инициативы']);
     const [isArchive, setIsArchive] = useState(false)
+    const [isExpert, setIsExpert] = useState(false)
     const [queriesTableData, setQueriesTableData] = useState<QueriesResponse[]>([
         {
             id: 1,
@@ -44,12 +48,26 @@ export const QueryList = () => {
     const data = queriesTableData;
     const [searchTerm, setSearchTerm] = useState('');
     const [searchNumber, setSearchNumber] = useState('');
+    const [user, setUser] = useState<UserResponse>()
 
     useSearchNum(searchNumber, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
     useSearchQuery(searchTerm, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
     useEffect(() => {
-        fetchData(setIsLoading, setQueriesTableData, QueriesService.getQueriesTableData);
+        fetchData(setQueriesTableData, QueriesService.getQueriesTableData, setIsLoading);
+        fetchData(setUser, UsersService.getCurrentUser, Number(sessionStorage.getItem('user_id')));
     }, [isArchive])
+
+
+    useEffect(() => {
+        checkExpertUser();
+    }, [user]);
+
+    const checkExpertUser = () => {
+        user && user.groups.forEach((group) => {
+            setIsExpert(group.name === 'Expert');
+        });
+    };
+
 
     const items = queriesTableData;
     const direct = [...new Set(items.map((item) => getDirectionTranslation(item.initiative_direction)))];
@@ -107,7 +125,7 @@ export const QueryList = () => {
     ];
 
     const handleRowClick = (queryId: any) => {
-        router.push(checkExpert(queryId, queriesTableData)? `/queries/expert?queryId=${queryId.id}` : `/queries/application?queryId=${queryId.id}`);
+        router.push(checkExpert(queryId, queriesTableData) && selectedTags[0] != 'Инициативы' ? `/queries/adminApplication?isExpert=true` : `/queries/application?queryId=${queryId.id}`);
     };
 
     const getData = () => {
@@ -128,6 +146,13 @@ export const QueryList = () => {
         setSearchTerm(searchText);
     };
 
+    const handleChangeTag = (tag: string, checked: boolean) => {
+        const nextSelectedTags = checked
+          ? [tag]
+          : selectedTags.filter((t) => t === tag);
+        setSelectedTags(nextSelectedTags);
+    };
+
     const handleSearchNumberChange = (searchNum: any) => {
         setSearchNumber(searchNum);
     };
@@ -141,7 +166,7 @@ export const QueryList = () => {
             <Slider />
             <div className={styles.content}>
                 <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
-                <Tabs />
+                <Tabs selectedTags={selectedTags} handleChange={handleChangeTag} isExpert={isExpert} />
                 <MainText text={'Инициативы'}/>
                 <div className={styles.infContainer}>
                     <SearchBar onSearchTermChange={handleSearchTermChange}

@@ -1,13 +1,31 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styles from "./styles/EditingApplication.module.scss";
 import { Slider } from "../SliderComponents/SliderComponents";
 import {Button, Form, Input, Select} from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
-
+import {useRouter} from "next/router";
 
 export const EditingApplication = () => {
+  const router = useRouter()
+  const [isExpert, setIsExpert] = useState(false);
+
+  useEffect(() => {
+    const { isExpert } = router.query;
+
+    if (isExpert === "true") {
+      setIsExpert(true);
+    }
+  }, [router.query]);
+  const [selectedTags, setSelectedTags] = useState<string[]>(['Панель администратора']);
+
+  const handleChangeTag = (tag: string, checked: boolean) => {
+    const nextSelectedTags = checked
+      ? [tag]
+      : selectedTags.filter((t) => t === tag);
+    setSelectedTags(nextSelectedTags);
+  };
 
   return (
     <>
@@ -15,7 +33,7 @@ export const EditingApplication = () => {
         <Slider />
         <div className={styles.content}>
           <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
-          <Tabs />
+          <Tabs selectedTags={selectedTags} handleChange={handleChangeTag} isExpert={isExpert} />
           <div className={styles.contentContainer}>
             <p className={styles.textHeader}>Редактирование инициативы</p>
 
@@ -150,7 +168,7 @@ export const EditingApplication = () => {
           </div>
 
           <div className={styles.btnContainer}>
-            <Button className={`${styles.btnDefault} ${styles.btnFooter}`}>
+            <Button className={`${styles.btnDefault} ${styles.btnFooter}`} onClick={() => window.history.back()}>
               <span>Сохранить изменения</span></Button>
           </div>
         </div>

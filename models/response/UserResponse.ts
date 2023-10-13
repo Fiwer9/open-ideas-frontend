@@ -1,6 +1,12 @@
 import {IDepartment} from "../IDepartment";
 import {QueriesResponse} from "./QueriesResponse";
 
+interface IGroup {
+    id: number;
+    name: string;
+    permissions: number[];
+}
+
 export interface UserResponse {
     id: number;
     password: string;
@@ -15,7 +21,7 @@ export interface UserResponse {
     name: string;
     email: string;
     department: IDepartment;
-    groups: [];
+    groups: IGroup[];
     user_permissions: [];
     likes: QueriesResponse[];
 }
