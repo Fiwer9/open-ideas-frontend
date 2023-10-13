@@ -30,7 +30,7 @@ export const UserEditing = () => {
                   name={"name"}
                   rules={[{
                     required: true,
-                    message: 'Введите своё Ф. И. О.',
+                    message: 'Введите Ф. И. О. пользователя',
                   }]}
                 >
                   <Input className={styles.inp} />
@@ -41,7 +41,7 @@ export const UserEditing = () => {
                   name={"email"}
                   rules={[{
                     required: true,
-                    message: 'Введите свою почту',
+                    message: 'Введите почту пользователя',
                   }]}
                 >
                   <Input className={styles.inp} />
@@ -49,7 +49,7 @@ export const UserEditing = () => {
                 <Form.Item
                   className={styles.formItem}
                   label={"Назначить эксперта на инициативы"}
-                  name={"email"}
+                  name={"initiatives"}
                 >
                   <Select
                     className='select'
@@ -143,9 +143,11 @@ export const UserEditing = () => {
                   name={'group'}
                 >
                   <Select
+                    mode="multiple"
+                    allowClear
                     className='select'
                     style={{height: 40}}
-                    defaultValue="User1, User2"
+                    defaultValue="User1"
                     options={[
                       { value: 'value1', label: 'User1' },
                       { value: 'value2', label: 'User2' },
