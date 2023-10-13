@@ -94,7 +94,7 @@ export const CreateQuery = () => {
                     </Form.Item>
                     <Form.Item className={styles.content}>
                         <div className={styles.title}>
-                            <InputLabel title={"Создание заявки"} label2={styles.label2}/>
+                            <InputLabel title={"Создание инициативы"} label2={styles.label2}/>
                         </div>
                     </Form.Item>
                     <Form.Item className={styles.formItems}>
@@ -170,7 +170,7 @@ export const CreateQuery = () => {
 
             <Modal
                 active={modalActive} setActive={setModalActive}
-                text1={"Вы уверены, что хотите зарегистрировать заявку и внесли все необходимые данные? После регистрации внесение изменений невозможно"}
+                text1={"Вы уверены, что хотите зарегистрировать инициативу и внесли все необходимые данные? После регистрации внесение изменений невозможно"}
                 classNameBtn1={styles.btnWhite}
                 textBtn1={"Назад"}
                 classNameBtn2={styles.btnBlue}
@@ -188,7 +188,7 @@ export const CreateQuery = () => {
             />
             <Modal
                 active={secondModalActive} setActive={setSecondModalActive}
-                text1={"Вы уверены, что хотите отменить создание заявки? При отмене заявки ранее внесенная информация не будет сохранена"}
+                text1={"Вы уверены, что хотите отменить создание инициативы? При отмене заявки ранее внесенная информация не будет сохранена"}
                 classNameBtn1={styles.btnWhite}
                 textBtn1={"Назад"}
                 classNameBtn2={styles.btnBlue}
