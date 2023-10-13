@@ -4,7 +4,7 @@ import styles from "./styles/QueryList.module.scss";
 import {QueriesResponse} from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 import {
-    checkExpert, fetchData,
+    fetchData,
     getDirectionTranslation,
     getDirectionTranslationOnEng,
     getStatusClassName,
@@ -105,7 +105,7 @@ export const QueryList = () => {
     ];
 
     const handleRowClick = (queryId: any) => {
-        router.push(checkExpert(queryId, queriesTableData) && localStorage.getItem('selectedTag') != 'Инициативы' ? `/queries/adminApplication` : `/queries/application?queryId=${queryId.id}`);
+        router.push(localStorage.getItem('selectedTag') != 'Инициативы' ? `/queries/adminApplication` : `/queries/application?queryId=${queryId.id}`);
     };
 
     useEffect(() => {
