@@ -5,7 +5,7 @@ import { Col, Select } from "antd";
 import avatar from "../../public/img/AvatarAratrum.svg";
 import Image from "next/image";
 import Modal from "../ModalsComponents/Modal";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
 import { useRouter } from "next/router";
@@ -14,24 +14,8 @@ import { useRouter } from "next/router";
 export const AdminApplicationCard = () => {
   const router = useRouter();
   const [modalActive, setModalActive] = useState(false);
-  const [isExpert, setIsExpert] = useState(false);
 
-  useEffect(() => {
-    const { isExpert } = router.query;
 
-    if (isExpert === "true") {
-      setIsExpert(true);
-    }
-  }, [router.query]);
-
-  const [selectedTags, setSelectedTags] = useState<string[]>(['Панель администратора']);
-
-  const handleChangeTag = (tag: string, checked: boolean) => {
-    const nextSelectedTags = checked
-      ? [tag]
-      : selectedTags.filter((t) => t === tag);
-    setSelectedTags(nextSelectedTags);
-  };
 
   const closeModal = () => {
     setModalActive(false);
@@ -43,7 +27,7 @@ export const AdminApplicationCard = () => {
         <Slider/>
         <div className={styles.content}>
           <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
-          <Tabs selectedTags={selectedTags} handleChange={handleChangeTag} isExpert={isExpert} />
+          <Tabs />
           <div>
             <div>
               <div className={styles.headerContainer}>
@@ -119,7 +103,7 @@ export const AdminApplicationCard = () => {
             </div>
           </div>
           <div className={styles.btnContainer}>
-            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => router.push(`/queries/editingApplication?isExpert=${isExpert}`)}>Редактировать данные инициативы</button>
+            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => router.push(`/queries/editingApplication`)}>Редактировать данные инициативы</button>
             <button className={`${styles.btnRed} ${styles.btnFooter}`}
                     onClick={() => {
                       setModalActive(true);

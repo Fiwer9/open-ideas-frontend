@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 
 import styles from "./styles/QueryList.module.scss";
-import router from "next/router";
 import {QueriesResponse} from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 import {
@@ -21,15 +20,13 @@ import {useSearchQuery} from "../../hooks/useSearchQuery";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
-import {UserResponse} from "../../models/response/UserResponse";
-import UsersService from "../../services/UsersService";
+import { useRouter } from "next/router";
 
 
 export const QueryList = () => {
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedTags, setSelectedTags] = useState<string[]>(['Инициативы']);
     const [isArchive, setIsArchive] = useState(false)
-    const [isExpert, setIsExpert] = useState(false)
     const [queriesTableData, setQueriesTableData] = useState<QueriesResponse[]>([
         {
             id: 1,
@@ -48,26 +45,10 @@ export const QueryList = () => {
     const data = queriesTableData;
     const [searchTerm, setSearchTerm] = useState('');
     const [searchNumber, setSearchNumber] = useState('');
-    const [user, setUser] = useState<UserResponse>()
 
     useSearchNum(searchNumber, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
     useSearchQuery(searchTerm, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
-    useEffect(() => {
-        fetchData(setQueriesTableData, QueriesService.getQueriesTableData, setIsLoading);
-        fetchData(setUser, UsersService.getCurrentUser, Number(sessionStorage.getItem('user_id')));
-    }, [isArchive])
-
-
-    useEffect(() => {
-        checkExpertUser();
-    }, [user]);
-
-    const checkExpertUser = () => {
-        user && user.groups.forEach((group) => {
-            setIsExpert(group.name === 'Expert');
-        });
-    };
-
+    const [selectedTag, setSelectedTag] = useState(localStorage.getItem('selectedTag') ? localStorage.getItem('selectedTag') : 'Инициативы')
 
     const items = queriesTableData;
     const direct = [...new Set(items.map((item) => getDirectionTranslation(item.initiative_direction)))];
@@ -125,8 +106,13 @@ export const QueryList = () => {
     ];
 
     const handleRowClick = (queryId: any) => {
-        router.push(checkExpert(queryId, queriesTableData) && selectedTags[0] != 'Инициативы' ? `/queries/adminApplication?isExpert=true` : `/queries/application?queryId=${queryId.id}`);
+        router.push(checkExpert(queryId, queriesTableData) && selectedTag != 'Инициативы' ? `/queries/adminApplication` : `/queries/application?queryId=${queryId.id}`);
     };
+
+    useEffect(() => {
+        fetchData(setQueriesTableData, QueriesService.getQueriesTableData, setIsLoading);
+        setSelectedTag(localStorage.getItem('selectedTag'))
+    }, [isArchive, handleRowClick])
 
     const getData = () => {
         if (isArchive) {
@@ -146,12 +132,6 @@ export const QueryList = () => {
         setSearchTerm(searchText);
     };
 
-    const handleChangeTag = (tag: string, checked: boolean) => {
-        const nextSelectedTags = checked
-          ? [tag]
-          : selectedTags.filter((t) => t === tag);
-        setSelectedTags(nextSelectedTags);
-    };
 
     const handleSearchNumberChange = (searchNum: any) => {
         setSearchNumber(searchNum);
@@ -166,7 +146,7 @@ export const QueryList = () => {
             <Slider />
             <div className={styles.content}>
                 <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
-                <Tabs selectedTags={selectedTags} handleChange={handleChangeTag} isExpert={isExpert} />
+                <Tabs />
                 <MainText text={'Инициативы'}/>
                 <div className={styles.infContainer}>
                     <SearchBar onSearchTermChange={handleSearchTermChange}
