@@ -48,7 +48,6 @@ export const QueryList = () => {
 
     useSearchNum(searchNumber, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
     useSearchQuery(searchTerm, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
-    const [selectedTag, setSelectedTag] = useState(localStorage.getItem('selectedTag') ? localStorage.getItem('selectedTag') : 'Инициативы')
 
     const items = queriesTableData;
     const direct = [...new Set(items.map((item) => getDirectionTranslation(item.initiative_direction)))];
@@ -106,13 +105,13 @@ export const QueryList = () => {
     ];
 
     const handleRowClick = (queryId: any) => {
-        router.push(checkExpert(queryId, queriesTableData) && selectedTag != 'Инициативы' ? `/queries/adminApplication` : `/queries/application?queryId=${queryId.id}`);
+        router.push(checkExpert(queryId, queriesTableData) && localStorage.getItem('selectedTag') != 'Инициативы' ? `/queries/adminApplication` : `/queries/application?queryId=${queryId.id}`);
     };
 
     useEffect(() => {
         fetchData(setQueriesTableData, QueriesService.getQueriesTableData, setIsLoading);
-        setSelectedTag(localStorage.getItem('selectedTag'))
-    }, [isArchive, handleRowClick])
+    }, [isArchive])
+
 
     const getData = () => {
         if (isArchive) {
