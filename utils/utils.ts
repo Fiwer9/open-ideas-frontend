@@ -124,3 +124,18 @@ export const fetchData = async (setData: any, getData: any, arg? : any, setIsLoa
         setIsLoading && setIsLoading(false)
     }
 }
+
+export const getRouteTranslation = (route: string) => {
+    switch (route) {
+        case "queries":
+            return "Таблица инициатив";
+        case "create":
+            return "editingApplication";
+        case "editingApplication":
+            return "Редактирование инициативы";
+        case "adminApplication":
+            return "Инициатива";
+        default:
+            return "";
+    }
+}

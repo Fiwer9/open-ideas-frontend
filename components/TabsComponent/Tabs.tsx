@@ -4,12 +4,15 @@ import { Tag } from "antd";
 import { fetchData } from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import { UserResponse } from "../../models/response/UserResponse";
+import router from "next/router";
+import Cookies from "js-cookie";
 const { CheckableTag } = Tag;
+
 
 const tagsData = ['Инициативы', 'Панель администратора'];
 
 export const Tabs = () => {
-  const [isExpert, setIsExpert] = useState(false);
+  const [isStaff, setIsStaff] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>(['Инициативы']);
   const [user, setUser] = useState<UserResponse>();
 
@@ -22,9 +25,7 @@ export const Tabs = () => {
   }, [user]);
 
   const checkExpertUser = () => {
-    user && user.groups.forEach((group) => {
-      setIsExpert(group.name === 'Expert');
-    });
+    user && user.is_staff && setIsStaff(user.is_staff);
   };
 
   const handleChangeTag = (tag: string, checked: boolean) => {
@@ -32,11 +33,12 @@ export const Tabs = () => {
       ? [tag]
       : selectedTags.filter((t) => t === tag);
     setSelectedTags(nextSelectedTags);
-    localStorage.setItem('selectedTag', tag);
+    Cookies.set('selectedTag', tag);
+    router.push(router.asPath)
   };
 
   useEffect(() => {
-    const savedSelectedTag = localStorage.getItem('selectedTag');
+    const savedSelectedTag = Cookies.get('selectedTag');
     if (savedSelectedTag) {
       setSelectedTags([savedSelectedTag]);
     }
@@ -46,7 +48,7 @@ export const Tabs = () => {
     <div className={styles.tabsContainer}>
       <div className={styles.tabs}>
         {tagsData.map((tag) => {
-          const isAdministratorTagDisabled = tag === 'Панель администратора' && !isExpert;
+          const isAdministratorTagDisabled = tag === 'Панель администратора' && !isStaff;
 
           return (
             <CheckableTag
