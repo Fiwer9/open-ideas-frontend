@@ -11,11 +11,7 @@
 
       .textHeader {
         margin: 0;
-        font: {
-          family: RobotoMedium, sans-serif;
-          weight: 600;
-          size: 32px;
-        };
+        @include pageTitle;
       }
 
       .formContainer {
@@ -27,14 +23,14 @@
         }
 
         .formItem {
-          display: flex;
-          flex-direction: column;
-
-          .formField {
-          }
+          @include inputLabelForm;
 
           .inp {
-            height: 40px;
+            @include inputForm;
+          }
+
+          .formField {
+            border-radius: 2px;
           }
         }
       }
@@ -52,9 +48,7 @@
 
       .btnFooter {
         height: 40px;
-        display: flex;
-        align-items: center;
-        padding: 8px 16px;
+        border-radius: 2px;
         font: {
           family: RobotoRegular, sans-serif;
           weight: 400;

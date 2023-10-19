@@ -14,11 +14,7 @@
 
       .nameInitiative {
         margin: 0;
-        font: {
-          family: RobotoMedium, sans-serif;
-          weight: 600;
-          size: 32px;
-        };
+        @include pageTitle;
       }
 
       .btnHeader {
