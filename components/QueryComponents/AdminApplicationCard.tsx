@@ -5,17 +5,58 @@ import { Col, Select } from "antd";
 import avatar from "../../public/img/AvatarAratrum.svg";
 import Image from "next/image";
 import Modal from "../ModalsComponents/Modal";
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
 import { useRouter } from "next/router";
+import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
+import {UserResponse} from "../../models/response/UserResponse";
+import {Context} from "../../pages/_app";
+import {QueriesResponse} from "../../models/response/QueriesResponse";
+import QueriesService from "../../services/QueriesService";
+import OrganizationsService from "../../services/OrganizationsService";
+import UsersService from "../../services/UsersService";
+import {fetchData, getDirectionTranslation, getLikes, getOrganizationName} from "../../utils/utils";
+import Cookies from "js-cookie";
 
 
-export const AdminApplicationCard = () => {
+interface AdminApplicationCardProps {
+  queryId: string;
+}
+
+export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
   const router = useRouter();
   const [modalActive, setModalActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
+  const [users, setUsers] = useState<UserResponse[]>([])
+  const { store } = useContext(Context);
+  const [status, setStatus] = useState('')
+  const [isLiked, setIsLiked] = useState(false)
+  const [applicationData, setApplicationData] = useState<QueriesResponse>({
+    name: '',
+    initiator_users: [0],
+    implementation_effect: '',
+    initiative_direction: '',
+    organization: 0,
+    expert_users: [],
+    status: '',
+    description: '',
+    date: '',
+    id: 0
+  })
 
+  useEffect(() => {
 
+    function begin() {
+      fetchData(setIsLoading, setApplicationData, QueriesService.getQueriesTableDataById, queryId)
+      fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizations)
+      fetchData(setIsLoading, setUsers, UsersService.getUsers)
+    }
+
+    queryId ? begin() : router.push('/queries')
+
+  }, [queryId])
 
   const closeModal = () => {
     setModalActive(false);
@@ -26,16 +67,16 @@ export const AdminApplicationCard = () => {
       <div className={styles.container}>
         <Slider/>
         <div className={styles.content}>
-          <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
           <Tabs />
           <div>
             <div>
               <div className={styles.headerContainer}>
-                <p className={styles.nameInitiative}>Инициатива №1</p>
+                <p className={styles.nameInitiative}>{applicationData.name}</p>
                 <div className={styles.btnHeader}>
                   <div className={styles.likesContainer}>
                     <HeartOutlined width={20} height={20} />
-                    <p className={styles.numberLikes}>123</p>
+                    <p className={styles.numberLikes}>{getLikes(users, queryId)}</p>
                   </div>
 
                   <Select
@@ -66,11 +107,11 @@ export const AdminApplicationCard = () => {
               </div>
               <div className={styles.row}>
                 <p className={styles.rowInf}>Иванов Виктор Анатольевич</p>
-                <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
-                <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
-                <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
-                <p className={styles.rowInf}>Рабочее пространство</p>
-                <p className={styles.rowInf}>Волжская ГЭС</p>
+                <p className={styles.rowInf}>{applicationData.name}</p>
+                <p className={styles.rowInf}>{applicationData.description}</p>
+                <p className={styles.rowInf}>{applicationData.implementation_effect}</p>
+                <p className={styles.rowInf}>{getDirectionTranslation(applicationData.initiative_direction)}</p>
+                <p className={styles.rowInf}>{getOrganizationName(applicationData.organization, organization)}</p>
                 <p className={styles.rowInf}>Отдел</p>
                 <p className={styles.rowInf}>Иванов Олег</p>
               </div>

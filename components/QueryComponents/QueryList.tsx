@@ -22,12 +22,18 @@ import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import UsersService from "../../services/UsersService";
+import {UserResponse} from "../../models/response/UserResponse";
+import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
+import OrganizationsService from "../../services/OrganizationsService";
 
 
 export const QueryList = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [isArchive, setIsArchive] = useState(false)
+    const [user, setUser] = useState<UserResponse>()
+    const [organization, setOrganization] = useState<OrganizationsResponse>()
     const [queriesTableData, setQueriesTableData] = useState<QueriesResponse[]>([
         {
             id: 1,
@@ -106,12 +112,20 @@ export const QueryList = () => {
     ];
 
     const handleRowClick = (queryId: any) => {
-        router.push(Cookies.get('selectedTag') != 'Инициативы' ? `/queries/adminApplication` : `/queries/application?queryId=${queryId.id}`);
+        router.push(Cookies.get('selectedTag') != 'Инициативы' ? `/queries/adminApplication?queryId=${queryId.id}` : `/queries/application?queryId=${queryId.id}`);
     };
 
     useEffect(() => {
-        fetchData(setQueriesTableData, QueriesService.getQueriesTableData, setIsLoading);
+        fetchData(setIsLoading, setQueriesTableData, QueriesService.getQueriesTableData);
+        fetchData(setIsLoading, setUser, UsersService.getCurrentUser, sessionStorage.getItem('user_id'))
     }, [isArchive])
+
+    useEffect(() => {
+        user && fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizationsById, user?.department.organization)
+        user && Cookies.set('department', user?.department.name)
+        user && Cookies.set('user_name', user?.name)
+        organization && Cookies.set('organization', organization.name)
+    }, [user]);
 
 
     const getData = () => {
@@ -132,7 +146,6 @@ export const QueryList = () => {
         setSearchTerm(searchText);
     };
 
-
     const handleSearchNumberChange = (searchNum: any) => {
         setSearchNumber(searchNum);
     };
@@ -145,7 +158,7 @@ export const QueryList = () => {
         <div className={styles.container}>
             <Slider />
             <div className={styles.content}>
-                <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+                <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
                 <Tabs />
                 <MainText text={'Инициативы'}/>
                 <div className={styles.infContainer}>

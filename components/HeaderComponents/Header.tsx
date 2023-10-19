@@ -4,9 +4,9 @@ import {AccountBlock} from "./blocks/AccountBlock";
 import styles from "./styles/Header.module.scss";
 
 interface HeaderProps {
-  user_name: string;
-  organization: string;
-  department: string;
+  user_name?: string;
+  organization?: string;
+  department?: string;
 }
 
 

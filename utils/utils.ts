@@ -1,4 +1,5 @@
 import {QueriesResponse} from "../models/response/QueriesResponse";
+import {UserResponse} from "../models/response/UserResponse";
 
 export function getOrganizationName(text: number, organizations: any) {
     for (let org of organizations) {
@@ -113,8 +114,8 @@ export const checkExpert = (queryId: any, data: QueriesResponse[]) => {
     return isExpert;
 }
 
-export const fetchData = async (setData: any, getData: any, arg? : any, setIsLoading?: any) => {
-    setIsLoading && setIsLoading(true)
+export const fetchData = async (setIsLoading: any, setData: any, getData: any,  arg? : any) => {
+    setIsLoading(true)
     try {
         const data = arg? await getData(arg) : await getData()
         setData(data.data);
@@ -138,4 +139,30 @@ export const getRouteTranslation = (route: string) => {
         default:
             return "";
     }
+}
+
+const getAllUserLikes = (users: UserResponse[]) => {
+    const res = []
+    for (let user of users) {
+        if (user.id === Number(sessionStorage.getItem('user_id'))) {
+            for (let query of user.likes) {
+                res.push(query.id)
+            }
+        }
+    }
+    return res
+}
+
+
+export function getLikes(users: UserResponse[], queryId: string) {
+    let like = 0;
+    for (let user of users) {
+        for (let query of user.likes) {
+            if (query.id === Number(queryId)) {
+                like += 1;
+
+            }
+        }
+    }
+    return like;
 }

@@ -15,9 +15,10 @@ export const Tabs = () => {
   const [isStaff, setIsStaff] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>(['Инициативы']);
   const [user, setUser] = useState<UserResponse>();
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    fetchData(setUser, UsersService.getCurrentUser, Number(sessionStorage.getItem('user_id')));
+    fetchData(setIsLoading, setUser, UsersService.getCurrentUser, Number(sessionStorage.getItem('user_id')));
   }, []);
 
   useEffect(() => {
