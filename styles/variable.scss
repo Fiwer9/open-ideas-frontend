@@ -262,6 +262,12 @@ $color-red-error: #e83333;
   margin-bottom: 10px;
 }
 
+.uploadFile {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-top: 20px;
+}
+
 .upload {
   display: flex;
   flex-direction: column-reverse;
