@@ -6,6 +6,7 @@ import { MainText } from "../MainTextComponent";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import { Table } from "antd";
+import { FilterOutlined } from "@ant-design/icons";
 import router from "next/router";
 
 import styles from "./styles/UsersList.module.scss";
@@ -83,7 +84,7 @@ export const UsersList = () => {
           <div className={styles.infContainer}>
             <SearchBar placeholderNum={'Номер'}
                        placeholderQuery={'Поиск по идеям'}/>
-            <FilterBar filterText={'Фильтры'}/>
+            <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
           </div>
           <Table
             className={styles.table}

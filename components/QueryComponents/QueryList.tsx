@@ -21,6 +21,7 @@ import {useSearchQuery} from "../../hooks/useSearchQuery";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
+import { FilterOutlined } from "@ant-design/icons";
 
 
 export const QueryList = () => {
@@ -148,7 +149,7 @@ export const QueryList = () => {
                                onSearchNumberChange={handleSearchNumberChange}
                                placeholderNum={'Номер'}
                                placeholderQuery={'Поиск по идеям'}/>
-                    <FilterBar filterText={'Фильтры'}/>
+                    <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
                     <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
                 </div>
                 <DataTable
