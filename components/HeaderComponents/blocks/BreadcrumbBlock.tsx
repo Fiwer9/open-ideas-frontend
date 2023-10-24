@@ -6,15 +6,13 @@ import Link from "next/link";
 import {getRouteTranslation} from "../../../utils/utils";
 import Cookies from 'js-cookie';
 
-interface BreadcrumbBlockProps {
-  items: any;
-}
+
 
 export const BreadcrumbBlock = () => {
   const router = useRouter();
   const pathSegments = router.asPath.split("/").filter(Boolean);
   const [children, setChildren] = useState(<div></div>)
-  const selectedTag = Cookies.get('selectedTag');
+  const selectedTag = Cookies.get('selectedTag') || 'Инициативы';
 
   const breadcrumbItems = [
     {
@@ -26,6 +24,7 @@ export const BreadcrumbBlock = () => {
       link: `/${pathSegments.slice(0, index + 1).join("/")}`,
     })),
   ];
+
   useEffect(() => {
     setChildren(
       <Breadcrumb className={styles.breadcrumb}>
@@ -36,7 +35,7 @@ export const BreadcrumbBlock = () => {
         ))}
       </Breadcrumb>
     )
-  }, [selectedTag]);
+  }, [selectedTag, Cookies.get('queryName')]);
 
   return (
     children

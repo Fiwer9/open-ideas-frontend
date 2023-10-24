@@ -1,5 +1,8 @@
 import {QueriesResponse} from "../models/response/QueriesResponse";
 import {UserResponse} from "../models/response/UserResponse";
+import dayjs from "dayjs";
+import 'dayjs/locale/ru';
+import Cookies from "js-cookie";
 
 export function getOrganizationName(text: number, organizations: any) {
     for (let org of organizations) {
@@ -38,6 +41,18 @@ export function getStatusClassName(styles: any, status: string) {
     }
 }
 
+export function formatDate(date: string) {
+    const currentDate = date.split('T')
+    return dayjs(currentDate[0], 'YYYY-MM-DD').format('DD.MM.YYYY')
+}
+
+export function formatDateRu(date: string) {
+    dayjs.locale('ru');
+    const currentDate = date.split('T')
+    return dayjs(currentDate[0]).format('DD MMMM YYYY г. в HH:mm');
+}
+
+
 export function formatDateToServer(date: any, separator='.') {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -65,7 +80,7 @@ export const getStatusTranslation = (status: string) => {
         case "registered":
             return "Зарегистрирована";
         case "check":
-            return "На рассмотрении";
+            return "В процессе";
         case "analysis":
             return "Анализируется экспертом";
         case "accepted":
@@ -75,7 +90,7 @@ export const getStatusTranslation = (status: string) => {
         case "rejected":
             return "Отклонена";
         case "done":
-            return "Реализована";
+            return "Выполнена";
         default:
             return "";
     }
@@ -131,15 +146,25 @@ export const getRouteTranslation = (route: string) => {
         case "queries":
             return "Таблица инициатив";
         case "create":
-            return "editingApplication";
+            return "Создание инициативы";
         case "editingApplication":
             return "Редактирование инициативы";
-        case "adminApplication":
-            return "Инициатива";
+        case `adminApplication?queryId=${Cookies.get('queryId')}`:
+            return Cookies.get('queryName');
         default:
             return "";
     }
 }
+
+
+export function getUserName(userId: number, users: UserResponse[]) {
+    return users.map((user: any) => {
+        if (user.id === userId) {
+            return user.name
+        }
+    })
+}
+
 
 const getAllUserLikes = (users: UserResponse[]) => {
     const res = []

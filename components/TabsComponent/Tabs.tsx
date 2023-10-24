@@ -35,7 +35,7 @@ export const Tabs = () => {
       : selectedTags.filter((t) => t === tag);
     setSelectedTags(nextSelectedTags);
     Cookies.set('selectedTag', tag);
-    router.push(router.asPath)
+    tag !== selectedTags[0]  && router.push('/queries')
   };
 
   useEffect(() => {

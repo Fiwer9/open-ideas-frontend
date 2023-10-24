@@ -16,8 +16,17 @@ import {QueriesResponse} from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 import OrganizationsService from "../../services/OrganizationsService";
 import UsersService from "../../services/UsersService";
-import {fetchData, getDirectionTranslation, getLikes, getOrganizationName} from "../../utils/utils";
+import {
+  fetchData,
+  formatDate, formatDateRu, formatDateToServer,
+  getDirectionTranslation,
+  getLikes,
+  getOrganizationName, getStatusTranslation,
+  getUserName
+} from "../../utils/utils";
 import Cookies from "js-cookie";
+import {CommentResponse} from "../../models/response/CommentResponse";
+import CommentService from "../../services/CommentService";
 
 
 interface AdminApplicationCardProps {
@@ -25,14 +34,16 @@ interface AdminApplicationCardProps {
 }
 
 export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
+  Cookies.set('queryId', queryId)
   const router = useRouter();
   const [modalActive, setModalActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
   const [users, setUsers] = useState<UserResponse[]>([])
+  const [user, setUser] = useState<UserResponse>()
   const { store } = useContext(Context);
+  const [dataComment, setDataComment] = useState<CommentResponse[]>([])
   const [status, setStatus] = useState('')
-  const [isLiked, setIsLiked] = useState(false)
   const [applicationData, setApplicationData] = useState<QueriesResponse>({
     name: '',
     initiator_users: [0],
@@ -50,8 +61,11 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
 
     function begin() {
       fetchData(setIsLoading, setApplicationData, QueriesService.getQueriesTableDataById, queryId)
+      const translateStatus = getStatusTranslation(applicationData.status)
+      setStatus(translateStatus)
       fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizations)
       fetchData(setIsLoading, setUsers, UsersService.getUsers)
+      fetchData(setIsLoading, setDataComment, CommentService.getComments)
     }
 
     queryId ? begin() : router.push('/queries')
@@ -61,6 +75,74 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
   const closeModal = () => {
     setModalActive(false);
   };
+
+  useEffect(() => {
+    getAuthor(applicationData.initiator_users)
+    Cookies.set('queryName', applicationData.name)
+  }, [applicationData]);
+
+  function getAuthor(users_id: [number]) {
+    for (let id of users_id) {
+      for (let user of users) {
+        if (id === user.id) {
+          setUser(user)
+        }
+      }
+    }
+  }
+
+  function getExpert(users_id: any) {
+    const expert = []
+    for (let id of users_id) {
+      for (let user of users) {
+        if (id === user.id) {
+          expert.push(user.name)
+        }
+      }
+    }
+    return expert
+  }
+
+  const checkExpert = (comment_user: number) => {
+    let isExpert = false;
+
+    applicationData.expert_users.forEach((user) => {
+      if (user === comment_user) {
+        isExpert = true;
+      }
+    });
+
+    return isExpert;
+  }
+
+  const data = {
+    user_name: user?.name,
+    query_name: applicationData.name,
+    description: applicationData.description,
+    effect: applicationData.implementation_effect,
+    direction: getDirectionTranslation(applicationData.initiative_direction),
+    organization: getOrganizationName(applicationData.organization, organization),
+    department: user?.department.name,
+    expert: getExpert(applicationData.expert_users),
+    status: getStatusTranslation(applicationData.status)
+  }
+
+  useEffect(() => {
+    setStatus(getStatusTranslation(applicationData.status))
+  }, [applicationData]);
+
+  const patchQuery = async (status: string) => {
+    try {
+      const currentDate = new Date();
+      const date = formatDateToServer(currentDate, '-')
+      await store.patchQuery(date, applicationData.name, applicationData.description,
+        applicationData.initiative_direction, status, applicationData.implementation_effect,
+        applicationData.organization, applicationData.initiator_users, Number(queryId));
+    } catch (error: any) {
+      console.log(error.response?.data?.message);
+    }
+  }
+
 
   return (
     <>
@@ -80,18 +162,20 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                   </div>
 
                   <Select
+                    key={status}
                     className='select'
                     style={{width: 175}}
-                    defaultValue="В процессе"
+                    defaultValue={status}
                     options={[
-                      { value: 'value1', label: 'В процессе' },
-                      { value: 'value2', label: 'Отклонена' },
-                      { value: 'value3', label: 'Выполнена' },
+                      { value: 'check', label: 'В процессе' },
+                      { value: 'rejected', label: 'Отклонена' },
+                      { value: 'done', label: 'Выполнена' },
                     ]}
+                    onChange={(value, option) => patchQuery(value)}
                   />
                 </div>
               </div>
-              <p className={styles.data}>Дата создания 25 ноября 2022 г. в 15:25</p>
+              <p className={styles.data}>Дата создания {formatDateRu(applicationData.date)}</p>
             </div>
 
             <Col className={styles.column}>
@@ -106,42 +190,35 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                 <p className={styles.rowText}>Назначенный эксперт:</p>
               </div>
               <div className={styles.row}>
-                <p className={styles.rowInf}>Иванов Виктор Анатольевич</p>
-                <p className={styles.rowInf}>{applicationData.name}</p>
-                <p className={styles.rowInf}>{applicationData.description}</p>
-                <p className={styles.rowInf}>{applicationData.implementation_effect}</p>
-                <p className={styles.rowInf}>{getDirectionTranslation(applicationData.initiative_direction)}</p>
-                <p className={styles.rowInf}>{getOrganizationName(applicationData.organization, organization)}</p>
-                <p className={styles.rowInf}>Отдел</p>
-                <p className={styles.rowInf}>Иванов Олег</p>
+                <p className={styles.rowInf}>{data.user_name}</p>
+                <p className={styles.rowInf}>{data.query_name}</p>
+                <p className={styles.rowInf}>{data.description}</p>
+                <p className={styles.rowInf}>{data.effect}</p>
+                <p className={styles.rowInf}>{data.direction}</p>
+                <p className={styles.rowInf}>{data.organization}</p>
+                <p className={styles.rowInf}>{data.department}</p>
+                <p className={styles.rowInf}>{data.expert}</p>
               </div>
             </Col>
 
             <div className={styles.commentContainer}>
               <p className={styles.comment}>Комментарии:</p>
             </div>
-            <div className={styles.avatarContainer}>
-              <div className={styles.avatar}>
-                <div className={styles.userImg}>
-                  <Image src={avatar} alt={"Avatar"}/>
+            {dataComment .filter((comment) => comment.query === Number(queryId))
+              .map((comment, index) => (
+                <div className={styles.avatarContainer}>
+                  <div className={styles.avatar}>
+                    <div className={styles.userImg}>
+                      <Image src={avatar} alt={"Avatar"}/>
+                    </div>
+                    <div className={styles.infComment}>
+                      <p className={styles.name}>{`${getUserName(comment.user, users)} ${checkExpert(comment.user)? '(Эксперт)' : '(Пользователь)'}`}</p>
+                      <p className={styles.date}>{formatDate(comment.created_at)}</p>
+                      <p className={styles.commentText}>{comment.comment_text}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className={styles.infComment}>
-                  <p className={styles.name}>Иванов Олег (Эксперт)</p>
-                  <p className={styles.date}>19.04.2023</p>
-                  <p className={styles.commentText}>Согласен с данной идеей!</p>
-                </div>
-              </div>
-              <div className={styles.avatar}>
-                <div className={styles.userImg}>
-                  <Image src={avatar} alt={"Avatar"}/>
-                </div>
-                <div className={styles.infComment}>
-                  <p className={styles.name}>Иванов Олег</p>
-                  <p className={styles.date}>19.04.2023</p>
-                  <p className={styles.commentText}>Согласен с данной идеей!</p>
-                </div>
-              </div>
-            </div>
+              ))}
           </div>
           <div className={styles.btnContainer}>
             <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => router.push(`/queries/editingApplication`)}>Редактировать данные инициативы</button>

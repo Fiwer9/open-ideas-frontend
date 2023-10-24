@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Card, Form, Radio} from "antd";
+import {Card, Form} from "antd";
 import {HeartFilled, HeartOutlined} from "@ant-design/icons";
 import {Row, Col} from "antd";
 import {Logo} from "../PicturesComponents/Logo";
@@ -11,10 +11,11 @@ import QueriesService from "../../services/QueriesService";
 import OrganizationsService from "../../services/OrganizationsService";
 import {QueriesResponse} from "../../models/response/QueriesResponse";
 import {
-    formatDateToServer,
+    formatDate,
     getDirectionTranslation,
     getOrganizationName, getStatusClassName,
-    getStatusTranslation
+    getStatusTranslation,
+    getUserName
 } from "../../utils/utils";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import CommentService from "../../services/CommentService";
@@ -22,7 +23,6 @@ import {CommentResponse} from "../../models/response/CommentResponse";
 import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
 import {Context} from "../../pages/_app";
-import dayjs from "dayjs";
 import Image from "next/image";
 
 type ApplicationCardProps = {
@@ -30,14 +30,13 @@ type ApplicationCardProps = {
     user_status: string;
 };
 
-export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) => {
+export const ApplicationCard = ({ queryId}: ApplicationCardProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
     const [commentValue, setCommentValue] = useState('');
     const [dataComment, setDataComment] = useState<CommentResponse[]>([])
     const [users, setUsers] = useState<UserResponse[]>([])
     const { store } = useContext(Context);
-    const [status, setStatus] = useState('')
     const [isLiked, setIsLiked] = useState(false)
     const [applicationData, setApplicationData] = useState<QueriesResponse>({
         name: '',
@@ -83,20 +82,6 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
 
     }, [queryId])
 
-
-
-    function getUserName(userId: number) {
-        return users.map((user: any) => {
-            if (user.id === userId) {
-                return user.name
-            }
-        })
-    }
-
-    function formatDate(date: string) {
-        const currentDate = date.split('T')
-        return dayjs(currentDate[0], 'YYYY-MM-DD').format('DD.MM.YYYY')
-    }
 
     function getLikes() {
         let like = 0;
@@ -175,18 +160,6 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
         }
     }
 
-    const patchQuery = async (status: string) => {
-        try {
-            const currentDate = new Date();
-            const date = formatDateToServer(currentDate, '-')
-            await store.patchQuery(date, applicationData.name, applicationData.description,
-                applicationData.initiative_direction, status, applicationData.implementation_effect,
-                applicationData.organization, applicationData.initiator_users, Number(queryId));
-        } catch (error: any) {
-            console.log(error.response?.data?.message);
-        }
-    }
-
     if (!queryId) {
         return null;
     }
@@ -252,7 +225,7 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
                                   </div>
                                   <div className={styles.user}>
                                       <div className={styles.userName}>
-                                          <p className={styles.name}>{getUserName(comment.user)}</p>
+                                          <p className={styles.name}>{getUserName(comment.user, users)}</p>
                                           <p className={styles.status}>{checkExpert(comment.user)? '(Эксперт)' : '(Пользователь)'}</p>
                                       </div>
                                       <p className={styles.data}>{formatDate(comment.created_at)}</p>
@@ -275,47 +248,17 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
                           />
                       </div>
                   </Form.Item>
-                  {user_status? (
-                    <div className={styles.footerContainerChild}>
-                        <div className={styles.buttonsContainer}>
-                            <div className={styles.checkboxContainer}>
-                                <Radio.Group onChange={(e) => {
-                                    setStatus(e.target.value)
-                                }} value={status}>
-                                    <Radio className={styles.checkbox} value={'rejected'}> Отклонено</Radio>
-                                    <Radio className={styles.checkbox} value={'accepted'}>Одобрено для реализации</Radio>
-                                </Radio.Group>
-                            </div>
-                        </div>
-                        <div className={styles.submitBtns}>
-                            <div className={styles.btnWhite}>
-                              <Buttons text={"Отменить"} onClick={() => {
-                                  router.push('/queries');
-                              }}/>
-                            </div>
-                            <div className={`${styles.btnBlue} ${styles.btnForm}`}>
-                                <Buttons onClick={() => {
-                                    commentValue&& sendComment(commentValue);
-                                    status&& patchQuery(status)
-                                    router.push('/queries')}}
-                                         text={"Отправить"}/>
-                            </div>
-                        </div>
-                  </div>
-                      ) : (
-                      <div className={styles.footerContainer}>
-                          <div className={styles.btnWhite}>
-                              <Buttons onClick={() => router.push("/queries")} text={"Отменить"} />
-                          </div>
-                          <div className={`${styles.btnBlue} ${styles.btnForm}`}>
-                              <Buttons text={"Отправить"} type='submit' onClick={() => {
-                                  router.push('/queries');
-                                  commentValue&& sendComment(commentValue);
-                              }}/>
-                          </div>
+                  <div className={styles.footerContainer}>
+                      <div className={styles.btnWhite}>
+                          <Buttons onClick={() => router.push("/queries")} text={"Отменить"} />
                       </div>
-                      )}
-
+                      <div className={`${styles.btnBlue} ${styles.btnForm}`}>
+                          <Buttons text={"Отправить"} type='submit' onClick={() => {
+                              router.push('/queries');
+                              commentValue&& sendComment(commentValue);
+                          }}/>
+                      </div>
+                  </div>
               </Form>
           </Card>
       </div>
