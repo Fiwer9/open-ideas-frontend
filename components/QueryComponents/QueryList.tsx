@@ -22,6 +22,7 @@ import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import { FilterOutlined } from "@ant-design/icons";
 
 
 export const QueryList = () => {
@@ -153,7 +154,7 @@ export const QueryList = () => {
                                onSearchNumberChange={handleSearchNumberChange}
                                placeholderNum={'Номер'}
                                placeholderQuery={'Поиск по идеям'}/>
-                    <FilterBar filterText={'Фильтры'}/>
+                    <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
                     <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
                 </div>
                 <DataTable

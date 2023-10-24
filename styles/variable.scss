@@ -254,6 +254,29 @@ $color-red-error: #e83333;
   }
 }
 
+.ant-upload-list-item-name {
+  color: $color-blue;
+}
+
+.ant-upload-list-item {
+  margin-bottom: 10px;
+}
+
+.uploadFile {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-top: 20px;
+}
+
+.upload {
+  display: flex;
+  flex-direction: column-reverse;
+
+  .uploadBtn {
+    border-radius: 2px;
+  }
+}
+
 .statusCheck {
   color: #4b7271;
 }

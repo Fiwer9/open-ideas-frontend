@@ -14,24 +14,34 @@
         @include pageTitle;
       }
 
-      .formContainer {
-        margin-top: 50px;
-        width: 553px;
+      .inpContainer {
+        display: flex;
 
-        .formItem:not(:first-child) {
-          margin-top: 30px;
+        .formContainer {
+          margin-top: 50px;
+          width: 553px;
+
+          .formItem:not(:first-child) {
+            margin-top: 30px;
+          }
+
+          .formItem {
+            @include inputLabelForm;
+
+            .inp {
+              @include inputForm;
+            }
+
+            .formField {
+              border-radius: 2px;
+            }
+          }
         }
 
-        .formItem {
-          @include inputLabelForm;
-
-          .inp {
-            @include inputForm;
-          }
-
-          .formField {
-            border-radius: 2px;
-          }
+        .files {
+          width: 553px;
+          margin-top: 50px;
+          margin-left: 200px;
         }
       }
     }
