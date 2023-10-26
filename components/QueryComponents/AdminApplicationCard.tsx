@@ -1,21 +1,54 @@
 import { Slider } from "../SliderComponents/SliderComponents";
 import styles from "./styles/AdminApplicationCard.module.scss";
 import { HeartOutlined } from "@ant-design/icons";
-import { Col, Select } from "antd";
+import { Col, Select, Upload } from "antd";
 import avatar from "../../public/img/AvatarAratrum.svg";
 import Image from "next/image";
-import router from "next/router";
 import Modal from "../ModalsComponents/Modal";
-import React, { useState } from "react";
+import React, {useState} from "react";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
+import { useRouter } from "next/router";
+import type { UploadProps } from 'antd';
+
 
 
 export const AdminApplicationCard = () => {
+  const router = useRouter();
   const [modalActive, setModalActive] = useState(false);
+
+
 
   const closeModal = () => {
     setModalActive(false);
+  };
+
+  const props: UploadProps = {
+    defaultFileList: [
+      {
+        uid: '1',
+        name: 'xxx.png',
+        status: 'done',
+        url: '',
+      },
+      {
+        uid: '2',
+        name: 'xxx.png',
+        status: 'done',
+        url: '',
+      },
+      {
+        uid: '3',
+        name: 'xxx.png',
+        status: 'done',
+        url: '',
+      },
+    ],
+    showUploadList: {
+      showDownloadIcon: true,
+      downloadIcon: 'Скачать',
+      showRemoveIcon: false,
+    },
   };
 
   return (
@@ -71,6 +104,12 @@ export const AdminApplicationCard = () => {
                 <p className={styles.rowInf}>Отдел</p>
                 <p className={styles.rowInf}>Иванов Олег</p>
               </div>
+              <div className={styles.row}>
+                <div className={styles.files}>
+                  <p className={styles.rowText}>Прикреплённые файлы:</p>
+                  <Upload {...props} className='uploadFile'></Upload>
+                </div>
+              </div>
             </Col>
 
             <div className={styles.commentContainer}>
@@ -100,7 +139,7 @@ export const AdminApplicationCard = () => {
             </div>
           </div>
           <div className={styles.btnContainer}>
-            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => router.push('/queries/editingApplication')}>Редактировать данные инициативы</button>
+            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => router.push(`/queries/editingApplication`)}>Редактировать данные инициативы</button>
             <button className={`${styles.btnRed} ${styles.btnFooter}`}
                     onClick={() => {
                       setModalActive(true);
@@ -110,7 +149,7 @@ export const AdminApplicationCard = () => {
       </div>
 
       <Modal
-        className={styles.models} active={modalActive} setActive={setModalActive}
+        active={modalActive} setActive={setModalActive}
         text1={"Удалить инициативу?"}
         text2={"Восстановить будет невозможно"}
         classNameBtn1={styles.btnBlue}
@@ -119,6 +158,7 @@ export const AdminApplicationCard = () => {
         textBtn2={"Удалить инициативу"}
         onClick1={closeModal}
         onClick2={() => router.push('/queries')}
+        modelTextClass={styles.modelText}
       />
     </>
   );

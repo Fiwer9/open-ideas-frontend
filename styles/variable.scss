@@ -179,7 +179,7 @@ $color-red-error: #e83333;
 
 .btnBlue {
   font: {
-    family: RobotoLight, sans-serif;
+    family: RobotoRegular, sans-serif;
     weight: 400;
     size: 16px;
   };
@@ -264,6 +264,12 @@ $color-red-error: #e83333;
 
 .ant-upload-list-item {
   margin-bottom: 10px;
+}
+
+.uploadFile {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-top: 20px;
 }
 
 .upload {
