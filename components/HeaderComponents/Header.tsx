@@ -9,19 +9,11 @@ interface HeaderProps {
   department: string;
 }
 
-const breadcrumb_items = [
-  {
-    title: 'Панель администратора',
-  },
-  {
-    title: 'Таблица инициатив'
-  }
-]
 
 export const Header = (props: HeaderProps) => {
   return (
     <div className={styles.header}>
-      <BreadcrumbBlock items={breadcrumb_items}/>
+      <BreadcrumbBlock />
       <AccountBlock user_name={props.user_name} organization={props.organization} department={props.department}/>
     </div>
   )

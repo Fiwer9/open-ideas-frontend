@@ -113,14 +113,29 @@ export const checkExpert = (queryId: any, data: QueriesResponse[]) => {
     return isExpert;
 }
 
-export const fetchData = async (setIsLoading: any, setData: any, getData: any) => {
-    setIsLoading(true)
+export const fetchData = async (setData: any, getData: any, arg? : any, setIsLoading?: any) => {
+    setIsLoading && setIsLoading(true)
     try {
-        const data = await getData()
+        const data = arg? await getData(arg) : await getData()
         setData(data.data);
     } catch (error) {
         console.error(error);
     } finally {
-        setIsLoading(false)
+        setIsLoading && setIsLoading(false)
+    }
+}
+
+export const getRouteTranslation = (route: string) => {
+    switch (route) {
+        case "queries":
+            return "Таблица инициатив";
+        case "create":
+            return "editingApplication";
+        case "editingApplication":
+            return "Редактирование инициативы";
+        case "adminApplication":
+            return "Инициатива";
+        default:
+            return "";
     }
 }

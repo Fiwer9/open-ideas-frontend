@@ -91,10 +91,12 @@ export const CreateQuery = () => {
             <Card loading={isLoading} className={styles.card}>
                 <Form className={styles.form}>
                     <Form.Item className={styles.logo}>
-                        <Logo width={112} height={32}/>
+                        <Logo width={112.73} height={32}/>
                     </Form.Item>
                     <Form.Item className={styles.content}>
-                      <p className={styles.title}>Создание заявки</p>
+                        <div className={styles.title}>
+                            <InputLabel title={"Создание инициативы"} label2={styles.label2}/>
+                        </div>
                     </Form.Item>
                     <Form.Item className={styles.formItems}>
                         <div className={styles.label}>
@@ -183,8 +185,8 @@ export const CreateQuery = () => {
             </Card>
 
             <Modal
-                className={styles.models} active={modalActive} setActive={setModalActive}
-                text={"Вы уверены, что хотите зарегистрировать заявку и внесли все необходимые данные? После регистрации внесение изменений невозможно"}
+                active={modalActive} setActive={setModalActive}
+                text1={"Вы уверены, что хотите зарегистрировать инициативу и внесли все необходимые данные? После регистрации внесение изменений невозможно"}
                 classNameBtn1={styles.btnWhite}
                 textBtn1={"Назад"}
                 classNameBtn2={styles.btnBlue}
@@ -198,16 +200,18 @@ export const CreateQuery = () => {
                     idea&& description&& direction&& effect&& router.push('/queries')
                     closeModal()
                 }}
+                modelTextClass={styles.modelText}
             />
             <Modal
-                className={styles.models} active={secondModalActive} setActive={setSecondModalActive}
-                text={"Вы уверены, что хотите отменить создание заявки? При отмене заявки ранее внесенная информация не будет сохранена"}
+                active={secondModalActive} setActive={setSecondModalActive}
+                text1={"Вы уверены, что хотите отменить создание инициативы? При отмене заявки ранее внесенная информация не будет сохранена"}
                 classNameBtn1={styles.btnWhite}
                 textBtn1={"Назад"}
                 classNameBtn2={styles.btnBlue}
                 textBtn2={"Выйти"}
                 onClick1={closeModal}
                 onClick2={() => router.push('/queries')}
+                modelTextClass={styles.modelText}
             />
         </>
     );
