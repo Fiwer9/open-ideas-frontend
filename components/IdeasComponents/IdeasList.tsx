@@ -9,6 +9,7 @@ import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import router from "next/router";
 import { Table } from "antd";
+import { Logo } from "../PicturesComponents/Logo";
 
 export const IdeasList = () => {
   const columns: any = [
@@ -75,7 +76,14 @@ export const IdeasList = () => {
     <div className={styles.container}>
       <div className={styles.content}>
         <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
-        <Tabs />
+        <div className={styles.header}>
+          <div className={styles.logoHeader}>
+            <Logo width={190} height={53} />
+          </div>
+          <div className={styles.tabs}>
+            <Tabs />
+          </div>
+        </div>
         <MainText text={'Инициативы'}/>
         <div className={styles.infContainer}>
           <SearchBar

@@ -6,6 +6,22 @@
   .content {
     @include content;
 
+    .header {
+      display: flex;
+      align-items: center;
+
+      .logoHeader {
+        margin-top: 50px;
+        position: absolute;
+        top: 12.5px;
+        left: 24px;
+      }
+
+      .tabs {
+        margin-left: 550px;
+      }
+    }
+
     .infContainer {
       @include infContainerTable;
     }
