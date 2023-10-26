@@ -91,10 +91,10 @@ export const CreateQuery = () => {
             <Card loading={isLoading} className={styles.card}>
                 <Form className={styles.form}>
                     <Form.Item className={styles.logo}>
-                        <Logo width={112} height={32}/>
+                        <Logo width={130} height={40}/>
                     </Form.Item>
                     <Form.Item className={styles.content}>
-                      <p className={styles.title}>Создание заявки</p>
+                      <p className={styles.title}>Создание инициативы</p>
                     </Form.Item>
                     <Form.Item className={styles.formItems}>
                         <div className={styles.label}>
