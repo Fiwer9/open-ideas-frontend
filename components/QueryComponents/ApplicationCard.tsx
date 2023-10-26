@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Card, Form, Radio} from "antd";
-import {HeartFilled, HeartOutlined} from "@ant-design/icons";
+import { Card, Form, Radio, Upload } from "antd";
+import { DownloadOutlined, HeartFilled, HeartOutlined } from "@ant-design/icons";
 import {Row, Col} from "antd";
 import {Logo} from "../PicturesComponents/Logo";
 import {Buttons} from "../ButtonComponent/Button";
@@ -24,6 +24,7 @@ import {UserResponse} from "../../models/response/UserResponse";
 import {Context} from "../../pages/_app";
 import dayjs from "dayjs";
 import Image from "next/image";
+import type { UploadProps } from 'antd';
 
 type ApplicationCardProps = {
     queryId: string;
@@ -190,6 +191,35 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
     if (!queryId) {
         return null;
     }
+
+    const props: UploadProps = {
+        defaultFileList: [
+            {
+                uid: '1',
+                name: 'xxx.png',
+                status: 'done',
+                url: '',
+            },
+            {
+                uid: '2',
+                name: 'xxx.png',
+                status: 'done',
+                url: '',
+            },
+            {
+                uid: '3',
+                name: 'xxx.png',
+                status: 'done',
+                url: '',
+            },
+        ],
+        showUploadList: {
+            showDownloadIcon: true,
+            downloadIcon: <DownloadOutlined />,
+            showRemoveIcon: false,
+        },
+    };
+
   return (
       <div>
           <Card className={styles.card} loading={isLoading}>
@@ -238,6 +268,12 @@ export const ApplicationCard = ({ queryId, user_status }: ApplicationCardProps) 
                       <Row className={styles.row}>
                           <p className={styles.rowText}>Организация:</p>
                           <p className={styles.rowInf}>{getOrganizationName(applicationData.organization, organization)}</p>
+                      </Row>
+                      <Row className={styles.row}>
+                          <div className={styles.files}>
+                              <p className={styles.rowText}>Прикреплённые файлы:</p>
+                              <Upload {...props} className='uploadFile'></Upload>
+                          </div>
                       </Row>
                       <Row className={styles.row}>
                           <p className={`${styles.rowText} ${styles.comments}`}>Комментарии:</p>

@@ -107,7 +107,7 @@ $color-red-error: #e83333;
   border-width: 1px;
   border-style: solid;
   border-color: $color-gray;
-  border-radius: 6px;
+  border-radius: 2px;
   transition: all 0.2s;
 }
 
@@ -254,6 +254,10 @@ $color-red-error: #e83333;
   }
 }
 
+.ant-btn {
+  border-radius: 2px;
+}
+
 .ant-upload-list-item-name {
   color: $color-blue;
 }
@@ -266,8 +270,22 @@ $color-red-error: #e83333;
   display: flex;
   flex-direction: column-reverse;
 
-  .uploadBtn {
-    border-radius: 2px;
+  .ant-upload-list-item {
+    padding: 20px 10px;
+    border: 1px solid $color-gray;
+  }
+}
+
+.uploadFile {
+  display: flex;
+
+  .ant-upload-list {
+    display: flex;
+    margin-top: 8px;
+  }
+
+  .ant-upload-list-item {
+    margin-right: 15px;
   }
 }
 

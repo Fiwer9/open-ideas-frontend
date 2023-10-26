@@ -164,7 +164,7 @@ export const EditingApplication = () => {
                     multiple
                     className='upload'
                   >
-                    <Button className='uploadBtn' icon={<UploadOutlined />}>Загрузить</Button>
+                    <Button icon={<UploadOutlined />}>Загрузить</Button>
                   </Upload>
                 </Form.Item>
               </div>
