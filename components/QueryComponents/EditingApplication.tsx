@@ -7,9 +7,7 @@ import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
 import { UploadOutlined } from "@ant-design/icons";
 
-
 export const EditingApplication = () => {
-
   return (
     <>
       <div className={styles.container}>
@@ -172,7 +170,7 @@ export const EditingApplication = () => {
           </Form>
 
           <div className={styles.btnContainer}>
-            <Button className={styles.btnFooter}>
+            <Button className={`${styles.btnDefault} ${styles.btnFooter}`} onClick={() => window.history.back()}>
               <span>Сохранить изменения</span></Button>
           </div>
         </div>

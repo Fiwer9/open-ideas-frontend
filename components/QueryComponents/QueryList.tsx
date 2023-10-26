@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from "react";
 
 import styles from "./styles/QueryList.module.scss";
-import router from "next/router";
 import {QueriesResponse} from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 import {
-    checkExpert, fetchData,
+    fetchData,
     getDirectionTranslation,
     getDirectionTranslationOnEng,
     getStatusClassName,
@@ -21,10 +20,13 @@ import {useSearchQuery} from "../../hooks/useSearchQuery";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 import { FilterOutlined } from "@ant-design/icons";
 
 
 export const QueryList = () => {
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [isArchive, setIsArchive] = useState(false)
     const [queriesTableData, setQueriesTableData] = useState<QueriesResponse[]>([
@@ -48,9 +50,6 @@ export const QueryList = () => {
 
     useSearchNum(searchNumber, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
     useSearchQuery(searchTerm, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
-    useEffect(() => {
-        fetchData(setIsLoading, setQueriesTableData, QueriesService.getQueriesTableData);
-    }, [isArchive])
 
     const items = queriesTableData;
     const direct = [...new Set(items.map((item) => getDirectionTranslation(item.initiative_direction)))];
@@ -108,8 +107,13 @@ export const QueryList = () => {
     ];
 
     const handleRowClick = (queryId: any) => {
-        router.push(checkExpert(queryId, queriesTableData)? `/queries/expert?queryId=${queryId.id}` : `/queries/application?queryId=${queryId.id}`);
+        router.push(Cookies.get('selectedTag') != 'Инициативы' ? `/queries/adminApplication` : `/queries/application?queryId=${queryId.id}`);
     };
+
+    useEffect(() => {
+        fetchData(setQueriesTableData, QueriesService.getQueriesTableData, setIsLoading);
+    }, [isArchive])
+
 
     const getData = () => {
         if (isArchive) {
@@ -128,6 +132,7 @@ export const QueryList = () => {
     const handleSearchTermChange = (searchText: any) => {
         setSearchTerm(searchText);
     };
+
 
     const handleSearchNumberChange = (searchNum: any) => {
         setSearchNumber(searchNum);

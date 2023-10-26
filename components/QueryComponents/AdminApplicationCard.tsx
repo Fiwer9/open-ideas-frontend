@@ -4,16 +4,20 @@ import { HeartOutlined } from "@ant-design/icons";
 import { Col, Select, Upload } from "antd";
 import avatar from "../../public/img/AvatarAratrum.svg";
 import Image from "next/image";
-import router from "next/router";
 import Modal from "../ModalsComponents/Modal";
-import React, { useState } from "react";
+import React, {useState} from "react";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
+import { useRouter } from "next/router";
 import type { UploadProps } from 'antd';
 
 
+
 export const AdminApplicationCard = () => {
+  const router = useRouter();
   const [modalActive, setModalActive] = useState(false);
+
+
 
   const closeModal = () => {
     setModalActive(false);
@@ -135,7 +139,7 @@ export const AdminApplicationCard = () => {
             </div>
           </div>
           <div className={styles.btnContainer}>
-            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => router.push('/queries/editingApplication')}>Редактировать данные инициативы</button>
+            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => router.push(`/queries/editingApplication`)}>Редактировать данные инициативы</button>
             <button className={`${styles.btnRed} ${styles.btnFooter}`}
                     onClick={() => {
                       setModalActive(true);
