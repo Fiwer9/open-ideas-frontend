@@ -1,6 +1,6 @@
 import { Slider } from "../SliderComponents/SliderComponents";
 import styles from "./styles/AdminApplicationCard.module.scss";
-import { HeartOutlined } from "@ant-design/icons";
+import { DownloadOutlined, HeartOutlined } from "@ant-design/icons";
 import { Col, Select, Upload } from "antd";
 import avatar from "../../public/img/AvatarAratrum.svg";
 import Image from "next/image";
@@ -46,7 +46,7 @@ export const AdminApplicationCard = () => {
     ],
     showUploadList: {
       showDownloadIcon: true,
-      downloadIcon: 'Скачать',
+      downloadIcon: <DownloadOutlined />,
       showRemoveIcon: false,
     },
   };
