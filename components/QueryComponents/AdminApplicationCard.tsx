@@ -18,7 +18,7 @@ import OrganizationsService from "../../services/OrganizationsService";
 import UsersService from "../../services/UsersService";
 import {
   fetchData,
-  formatDate, formatDateRu, formatDateToServer,
+  formatDate, formatDateRu, formatDateToServer, getAuthor,
   getDirectionTranslation,
   getLikes,
   getOrganizationName, getStatusTranslation,
@@ -77,19 +77,10 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
   };
 
   useEffect(() => {
-    getAuthor(applicationData.initiator_users)
+    getAuthor(applicationData.initiator_users, users, setUser)
     Cookies.set('queryName', applicationData.name)
   }, [applicationData]);
 
-  function getAuthor(users_id: [number]) {
-    for (let id of users_id) {
-      for (let user of users) {
-        if (id === user.id) {
-          setUser(user)
-        }
-      }
-    }
-  }
 
   function getExpert(users_id: any) {
     const expert = []
@@ -100,7 +91,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
         }
       }
     }
-    return expert
+    return expert? expert : 'Не назначено'
   }
 
   const checkExpert = (comment_user: number) => {
@@ -164,12 +155,16 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                   <Select
                     key={status}
                     className='select'
-                    style={{width: 175}}
+                    style={{maxWidth: 600}}
                     defaultValue={status}
                     options={[
+                      { value: 'registered', label: 'Зарегистрирована' },
                       { value: 'check', label: 'В процессе' },
-                      { value: 'rejected', label: 'Отклонена' },
+                      { value: 'analysis', label: 'Анализируется экспертом' },
+                      { value: 'accepted', label: 'На рассмотрении у руководства' },
+                      { value: 'implementation', label: 'Принята к реализации' },
                       { value: 'done', label: 'Выполнена' },
+                      { value: 'rejected', label: 'Отклонена' },
                     ]}
                     onChange={(value, option) => patchQuery(value)}
                   />
@@ -197,7 +192,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                 <p className={styles.rowInf}>{data.direction}</p>
                 <p className={styles.rowInf}>{data.organization}</p>
                 <p className={styles.rowInf}>{data.department}</p>
-                <p className={styles.rowInf}>{data.expert}</p>
+                <p className={styles.rowInf}>{data.expert || 'Не назначено'}</p>
               </div>
             </Col>
 
@@ -221,7 +216,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
               ))}
           </div>
           <div className={styles.btnContainer}>
-            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => router.push(`/queries/editingApplication`)}>Редактировать данные инициативы</button>
+            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => router.push(`/queries/editingApplication?queryId=${queryId}`)}>Редактировать данные инициативы</button>
             <button className={`${styles.btnRed} ${styles.btnFooter}`}
                     onClick={() => {
                       setModalActive(true);

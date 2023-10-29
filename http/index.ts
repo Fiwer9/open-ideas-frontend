@@ -1,7 +1,6 @@
 import axios from 'axios';
-import Cookies from "universal-cookie";
+import Cookies from "js-cookie";
 
-const cookies = new Cookies();
 
 export const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -19,7 +18,7 @@ const $api = axios.create({
 })
 
 $api.interceptors.request.use((config) => {
-        config.headers['X-CSRFToken'] =  `${cookies.get('csrftoken')}`;
+        config.headers['X-CSRFToken'] =  `${Cookies.get('csrftoken')}`;
         return config;
 })
 

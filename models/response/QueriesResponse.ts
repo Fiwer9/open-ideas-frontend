@@ -8,5 +8,5 @@ export interface QueriesResponse {
     implementation_effect: string;
     organization: number;
     initiator_users: [number];
-    expert_users: [];
+    expert_users: number[];
 }

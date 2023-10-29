@@ -1,154 +1,271 @@
-import React from "react";
+import React, {ChangeEvent, useContext, useEffect, useState} from "react";
 import styles from "./styles/EditingApplication.module.scss";
 import { Slider } from "../SliderComponents/SliderComponents";
 import {Button, Form, Input, Select} from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
+import Cookies from "js-cookie";
+import {
+  fetchData, formatDateToServer,
+  getAuthor,
+  getDirectionTranslation,
+  getOrganizationName,
+  getStatusTranslation
+} from "../../utils/utils";
+import QueriesService from "../../services/QueriesService";
+import OrganizationsService from "../../services/OrganizationsService";
+import UsersService from "../../services/UsersService";
+import CommentService from "../../services/CommentService";
+import {useRouter} from "next/router";
+import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
+import {UserResponse} from "../../models/response/UserResponse";
+import {Context} from "../../pages/_app";
+import {CommentResponse} from "../../models/response/CommentResponse";
+import {QueriesResponse} from "../../models/response/QueriesResponse";
+import {IDepartment} from "../../models/IDepartment";
 
-export const EditingApplication = () => {
+interface EditingApplicationProps {
+  queryId: string;
+}
+export const EditingApplication = ({queryId}: EditingApplicationProps) => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
+  const [users, setUsers] = useState<UserResponse[]>([])
+  const [departments, setDepartments] = useState<IDepartment[]>([])
+  const [user, setUser] = useState<UserResponse>()
+  const [applicationData, setApplicationData] = useState<QueriesResponse>({
+    name: '',
+    initiator_users: [0],
+    implementation_effect: '',
+    initiative_direction: '',
+    organization: 0,
+    expert_users: [],
+    status: '',
+    description: '',
+    date: '',
+    id: 0
+  })
+  const [organizationSelect, setOrganizationSelect] = useState(0)
+  const [applicationName, setApplicationName] = useState('')
+  const [applicationDescription, setApplicationDescription] = useState('')
+  const [applicationEffect, setApplicationEffect] = useState('')
+  const [applicationDirection, setApplicationDirection] = useState('')
+  const { store } = useContext(Context)
+  const [departmentsSelect, setDepartmentsSelect] = useState<number | undefined>(0)
+  const [expertSelect, setExpertSelect] = useState<number[]>([])
+  function getExpert(users_id: any) {
+    const expert = []
+    for (let id of users_id) {
+      for (let user of users) {
+        if (id === user.id) {
+          expert.push(user.name)
+        }
+      }
+    }
+    return expert
+  }
+
+  useEffect(() => {
+
+    function begin() {
+      fetchData(setIsLoading, setApplicationData, QueriesService.getQueriesTableDataById, queryId)
+      fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizations)
+      fetchData(setIsLoading, setUsers, UsersService.getUsers)
+      fetchData(setIsLoading, setDepartments, OrganizationsService.getDepartments)
+    }
+
+    queryId ? begin() : router.push('/queries')
+
+  }, [queryId])
+
+  useEffect(() => {
+    getAuthor(applicationData.initiator_users, users, setUser)
+    setOrganizationSelect(applicationData.organization)
+    setApplicationName(applicationData.name)
+    setApplicationDescription(applicationData.description)
+    setApplicationEffect(applicationData.implementation_effect)
+    setApplicationDirection(applicationData.initiative_direction)
+    setDepartmentsSelect(user?.department.id)
+    setExpertSelect(applicationData.expert_users)
+  }, [applicationData, user]);
+
+  function handleChangeApplicationVar(event: ChangeEvent<any>, setData: React.SetStateAction<any>): void {
+      setData(event.target.value)
+    }
+
+  function handleChangeApplicationSelect(event: ChangeEvent<any>, setData: React.SetStateAction<any>): void {
+    console.log(event)
+    setData(event)
+  }
+
+  function handleSaveChanges() {
+    const currentDate = new Date();
+    const date = formatDateToServer(currentDate, '-')
+    console.log(
+      applicationName, applicationDescription, applicationDirection, applicationData.status, applicationEffect,
+      organizationSelect, applicationData.initiator_users, Number(queryId), expertSelect
+    )
+    store.patchQuery(date, applicationName, applicationDescription, applicationDirection, applicationData.status, applicationEffect,
+      organizationSelect, applicationData.initiator_users, Number(queryId), expertSelect)
+    window.history.back()
+  }
+
   return (
     <>
       <div className={styles.container}>
         <Slider />
         <div className={styles.content}>
-          <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
           <Tabs />
           <div className={styles.contentContainer}>
             <p className={styles.textHeader}>Редактирование инициативы</p>
-
-            <Form
-              layout="vertical"
-              className={styles.formContainer}
-            >
-              <Form.Item
-                className={styles.formItem}
-                label={"Инициатива (Идея)"}
-                name={"initiative"}
-                rules={[{
-                  required: true,
-                  message: 'Введите название инициативы'
-                }]}
+            {applicationData.name && user?.department.name && applicationData.expert_users && (
+              <Form
+                layout="vertical"
+                className={styles.formContainer}
+                initialValues={{
+                  initiative: applicationName,
+                  description: applicationDescription,
+                  modification: applicationEffect,
+                  direction: getDirectionTranslation(applicationData.initiative_direction),
+                  organization: getOrganizationName(applicationData.organization, organization),
+                  department: user?.department.name,
+                  expert: applicationData.expert_users ? applicationData.expert_users : 'Не назначено',
+                }}
               >
-                <Input
-                  className={`${styles.formField} ${styles.inp}`}
-                />
-              </Form.Item>
-              <Form.Item
-                className={styles.formItem}
-                label={'Описание инициативы'}
-                name={'description'}
-                rules={[{
-                  required: true,
-                  message: 'Введите описание инициативы'
-                }]}
-              >
-                <TextArea
-                  className={styles.formField}
-                  rows={5}
-                  required
-                />
-              </Form.Item>
-              <Form.Item
-                className={styles.formItem}
-                label={'Эффект от доработки'}
-                name={'modification'}
-                rules={[{
-                  required: true,
-                  message: 'Введите эффект от доработки'
-                }]}
-              >
-                <TextArea
-                  className={styles.formField}
-                  rows={5}
-                  required
-                />
-              </Form.Item>
-              <Form.Item
-                className={styles.formItem}
-                label={'Направление'}
-                name={'direction'}
-                rules={[{
-                  required: true,
-                  message: 'Выберете направление инициативы'
-                }]}
-              >
-                <Select
-                  className={`${styles.formField} ${styles.inp}`}
-                  defaultValue="Направление инициативы"
-                  options={[
-                    { value: 'value1', label: 'Технические процессы' },
-                    { value: 'value2', label: 'IT процессы' },
-                    { value: 'value3', label: 'Рабочие процессы' },
-                  ]}
-                  aria-required={true}
-                />
-              </Form.Item>
-              <Form.Item
-                className={styles.formItem}
-                label={'Организация'}
-                name={'organization'}
-                rules={[{
-                  required: true,
-                  message: 'Выберете организацию'
-                }]}
-              >
-                <Select
-                  className={`${styles.formField} ${styles.inp}`}
-                  defaultValue="Организация"
-                  options={[
-                    { value: 'value1', label: 'LamArt' },
-                    { value: 'value2', label: 'Aratrum' },
-                    { value: 'value3', label: 'Газпром' },
-                  ]}
-                  aria-required={true}
-                />
-              </Form.Item>
-              <Form.Item
-                className={styles.formItem}
-                label={'Отдел'}
-                name={'department'}
-                rules={[{
-                  required: true,
-                  message: 'Выберете отдел'
-                }]}
-              >
-                <Select
-                  className={`${styles.formField} ${styles.inp}`}
-                  defaultValue="Отдел"
-                  options={[
-                    { value: 'value1', label: 'IT отдел' },
-                    { value: 'value2', label: 'Юридический отдел' },
-                    { value: 'value3', label: 'Экономический отдел' },
-                  ]}
-                  aria-required={true}
-                />
-              </Form.Item>
-              <Form.Item
-                className={styles.formItem}
-                label={'Назначенный эксперт'}
-                name={'expert'}
-                rules={[{
-                  required: true,
-                  message: 'Выберете эксперта'
-                }]}
-              >
-                <Select
-                  className={`${styles.formField} ${styles.inp}`}
-                  defaultValue="Назначенный эксперт"
-                  options={[
-                    { value: 'value1', label: 'Иванов Олег' },
-                    { value: 'value2', label: 'Иванов Иван' },
-                    { value: 'value3', label: 'Иванов Дмитрий' },
-                  ]}
-                  aria-required={true}
-                />
-              </Form.Item>
-            </Form>
+                <Form.Item
+                  className={styles.formItem}
+                  label={"Инициатива (Идея)"}
+                  name={"initiative"}
+                  rules={[{
+                    required: true,
+                    message: 'Введите название инициативы'
+                  }]}
+                >
+                  <Input
+                    className={`${styles.formField} ${styles.inp}`}
+                    onChange={(evt) => handleChangeApplicationVar(evt, setApplicationName)}
+                  />
+                </Form.Item>
+                <Form.Item
+                  className={styles.formItem}
+                  label={'Описание инициативы'}
+                  name={'description'}
+                  rules={[{
+                    required: true,
+                    message: 'Введите описание инициативы'
+                  }]}
+                >
+                  <TextArea
+                    className={styles.formField}
+                    rows={5}
+                    onChange={(e) => handleChangeApplicationVar(e, setApplicationDescription)}
+                    required
+                  />
+                </Form.Item>
+                <Form.Item
+                  className={styles.formItem}
+                  label={'Эффект от доработки'}
+                  name={'modification'}
+                  rules={[{
+                    required: true,
+                    message: 'Введите эффект от доработки'
+                  }]}
+                >
+                  <TextArea
+                    className={styles.formField}
+                    rows={5}
+                    onChange={(e) => handleChangeApplicationVar(e, setApplicationEffect)}
+                    required
+                  />
+                </Form.Item>
+                <Form.Item
+                  className={styles.formItem}
+                  label={'Направление'}
+                  name={'direction'}
+                  rules={[{
+                    required: true,
+                    message: 'Выберете направление инициативы'
+                  }]}
+                >
+                  <Select
+                    className={`${styles.formField} ${styles.inp}`}
+                    options={[
+                      { value: 'tech_process', label: 'Технологические процессы' },
+                      { value: 'business_process', label: 'Бизнес-процессы' },
+                      { value: 'work_safety', label: 'Охрана труда' },
+                      { value: 'workspace', label: 'Рабочее пространство' }
+                    ]}
+                    onChange={(e) => handleChangeApplicationSelect(e, setApplicationDirection)}
+                    aria-required={true}
+                  />
+                </Form.Item>
+                <Form.Item
+                  className={styles.formItem}
+                  label={'Организация'}
+                  name={'organization'}
+                  rules={[{
+                    required: true,
+                    message: 'Выберете организацию'
+                  }]}
+                >
+                  <Select
+                    className={`${styles.formField} ${styles.inp}`}
+                    options={organization.map(org => ({
+                      value: org.id,
+                      label: org.name
+                    }))}
+                    aria-required={true}
+                    onChange={(e) => handleChangeApplicationSelect(e, setOrganizationSelect)}
+                  />
+                </Form.Item>
+                <Form.Item
+                  className={styles.formItem}
+                  label={'Отдел'}
+                  name={'department'}
+                  rules={[{
+                    required: true,
+                    message: 'Выберете отдел'
+                  }]}
+                >
+                  <Select
+                    className={`${styles.formField} ${styles.inp}`}
+                    options={departments.filter(dep => dep.organization === organizationSelect).map(dep => ({
+                      value: dep.id,
+                      label: dep.name
+                    }))}
+                    onChange={(e) => handleChangeApplicationSelect(e, setDepartmentsSelect)}
+                    aria-required={true}
+                  />
+                </Form.Item>
+                <Form.Item
+                  className={styles.formItem}
+                  label={'Назначенный эксперт'}
+                  name={'expert'}
+                  rules={[{
+                    required: true,
+                    message: 'Выберете эксперта'
+                  }]}
+                >
+                  <Select
+                    className={`${styles.formField} ${styles.inp}`}
+                    options={users.map(user => ({
+                      value: user.id,
+                      label: user.name
+                    }))}
+                    aria-required={true}
+                    mode={"multiple"}
+                    onChange={(e) => handleChangeApplicationSelect(e, setExpertSelect)}
+                  />
+                </Form.Item>
+              </Form>
+            )}
           </div>
 
           <div className={styles.btnContainer}>
-            <Button className={`${styles.btnDefault} ${styles.btnFooter}`} onClick={() => window.history.back()}>
+            <Button className={`${styles.btnDefault} ${styles.btnFooter}`} onClick={() => handleSaveChanges()}>
               <span>Сохранить изменения</span></Button>
           </div>
         </div>

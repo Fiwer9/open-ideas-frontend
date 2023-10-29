@@ -42,10 +42,11 @@ export default class Store {
     }
 
     async patchQuery(date: string, name: string, description: string, initiative_direction: string, status: string,
-                     implementation_effect: string, organization: number, initiator_users: [number], id: number) {
+                     implementation_effect: string, organization: number, initiator_users: [number], id: number, expertUsers?: number[]) {
         try {
-            const response = await QueriesService.patchQuery(date, name, description, initiative_direction, status,
-                implementation_effect, organization, initiator_users, id);;
+            const response = expertUsers ? await QueriesService.patchQuery(date, name, description, initiative_direction, status,
+                implementation_effect, organization, initiator_users, id, expertUsers) : await QueriesService.patchQuery(date, name, description, initiative_direction, status,
+              implementation_effect, organization, initiator_users, id)
         } catch (e: any) {
             console.log(e.response?.data?.message);
         }

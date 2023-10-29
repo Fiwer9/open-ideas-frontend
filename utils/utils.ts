@@ -49,7 +49,7 @@ export function formatDate(date: string) {
 export function formatDateRu(date: string) {
     dayjs.locale('ru');
     const currentDate = date.split('T')
-    return dayjs(currentDate[0]).format('DD MMMM YYYY г. в HH:mm');
+    return dayjs(currentDate[0]).format('DD MMMM YYYY г.');
 }
 
 
@@ -190,4 +190,14 @@ export function getLikes(users: UserResponse[], queryId: string) {
         }
     }
     return like;
+}
+
+export function getAuthor(users_id: [number], users: UserResponse[], setUser: any) {
+    for (let id of users_id) {
+        for (let user of users) {
+            if (id === user.id) {
+                setUser(user)
+            }
+        }
+    }
 }
