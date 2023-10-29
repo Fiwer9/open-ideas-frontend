@@ -99,15 +99,10 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
         <div className={styles.content}>
           <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
           <Tabs />
-          <Form
-            layout="vertical"
-            className={styles.contentContainer}
-          >
-            <p className={styles.textHeader}>Редактирование инициативы</p>
             {applicationData.name && user?.department.name && applicationData.expert_users && (
               <Form
                 layout="vertical"
-                className={styles.formContainer}
+                className={styles.contentContainer}
                 initialValues={{
                   initiative: applicationName,
                   description: applicationDescription,
@@ -118,129 +113,133 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                   expert: applicationData.expert_users ? applicationData.expert_users : 'Не назначено',
                 }}
               >
-                <Form.Item
-                  className={styles.formItem}
-                  label={"Инициатива (Идея)"}
-                  name={"initiative"}
-                  rules={[{
-                    required: true,
-                    message: 'Введите название инициативы'
-                  }]}
-                >
-                  <Input
-                    className={`${styles.formField} ${styles.inp}`}
-                    onChange={(evt) => handleChangeApplicationVar(evt, setApplicationName)}
-                  />
-                </Form.Item>
-                <Form.Item
-                  className={styles.formItem}
-                  label={'Описание инициативы'}
-                  name={'description'}
-                  rules={[{
-                    required: true,
-                    message: 'Введите описание инициативы'
-                  }]}
-                >
-                  <TextArea
-                    className={styles.formField}
-                    rows={5}
-                    onChange={(e) => handleChangeApplicationVar(e, setApplicationDescription)}
-                    required
-                  />
-                </Form.Item>
-                <Form.Item
-                  className={styles.formItem}
-                  label={'Эффект от доработки'}
-                  name={'modification'}
-                  rules={[{
-                    required: true,
-                    message: 'Введите эффект от доработки'
-                  }]}
-                >
-                  <TextArea
-                    className={styles.formField}
-                    rows={5}
-                    onChange={(e) => handleChangeApplicationVar(e, setApplicationEffect)}
-                    required
-                  />
-                </Form.Item>
-                <Form.Item
-                  className={styles.formItem}
-                  label={'Направление'}
-                  name={'direction'}
-                  rules={[{
-                    required: true,
-                    message: 'Выберете направление инициативы'
-                  }]}
-                >
-                  <Select
-                    className={`${styles.formField} ${styles.inp}`}
-                    options={[
-                      { value: 'tech_process', label: 'Технологические процессы' },
-                      { value: 'business_process', label: 'Бизнес-процессы' },
-                      { value: 'work_safety', label: 'Охрана труда' },
-                      { value: 'workspace', label: 'Рабочее пространство' }
-                    ]}
-                    onChange={(e) => handleChangeApplicationSelect(e, setApplicationDirection)}
-                    aria-required={true}
-                  />
-                </Form.Item>
-                <Form.Item
-                  className={styles.formItem}
-                  label={'Организация'}
-                  name={'organization'}
-                  rules={[{
-                    required: true,
-                    message: 'Выберете организацию'
-                  }]}
-                >
-                  <Select
-                    className={`${styles.formField} ${styles.inp}`}
-                    options={organization.map(org => ({
-                      value: org.id,
-                      label: org.name
-                    }))}
-                    aria-required={true}
-                    disabled
-                  />
-                </Form.Item>
-                <Form.Item
-                  className={styles.formItem}
-                  label={'Отдел'}
-                  name={'department'}
-                  rules={[{
-                    required: true,
-                    message: 'Выберете отдел'
-                  }]}
-                >
-                  <Select
-                    className={`${styles.formField} ${styles.inp}`}
-                    options={departments.filter(dep => dep.organization === applicationData.organization).map(dep => ({
-                      value: dep.id,
-                      label: dep.name
-                    }))}
-                    aria-required={true}
-                    disabled
-                  />
-                </Form.Item>
-                <Form.Item
-                  className={styles.formItem}
-                  label={'Назначенный эксперт'}
-                  name={'expert'}
-                  rules={[{
-                    message: 'Выберете эксперта'
-                  }]}
-                >
-                  <Select
-                    className={`${styles.formField} ${styles.inp}`}
-                    options={users.map(user => ({
-                      value: user.id,
-                      label: user.name
-                    }))}
-                    aria-required={true}
-                    onChange={(e) => handleChangeApplicationSelect([e], setExpertSelect)}
-                  />
-                </Form.Item>
+                <p className={styles.textHeader}>Редактирование инициативы</p>
+                <div className={styles.inpContainer}>
+                  <div className={styles.formContainer}>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={"Инициатива (Идея)"}
+                      name={"initiative"}
+                      rules={[{
+                        required: true,
+                        message: 'Введите название инициативы'
+                      }]}
+                    >
+                      <Input
+                        className={`${styles.formField} ${styles.inp}`}
+                        onChange={(evt) => handleChangeApplicationVar(evt, setApplicationName)}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Описание инициативы'}
+                      name={'description'}
+                      rules={[{
+                        required: true,
+                        message: 'Введите описание инициативы'
+                      }]}
+                    >
+                      <TextArea
+                        className={styles.formField}
+                        rows={5}
+                        onChange={(e) => handleChangeApplicationVar(e, setApplicationDescription)}
+                        required
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Эффект от доработки'}
+                      name={'modification'}
+                      rules={[{
+                        required: true,
+                        message: 'Введите эффект от доработки'
+                      }]}
+                    >
+                      <TextArea
+                        className={styles.formField}
+                        rows={5}
+                        onChange={(e) => handleChangeApplicationVar(e, setApplicationEffect)}
+                        required
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Направление'}
+                      name={'direction'}
+                      rules={[{
+                        required: true,
+                        message: 'Выберете направление инициативы'
+                      }]}
+                    >
+                      <Select
+                        className={`${styles.formField} ${styles.inp}`}
+                        options={[
+                          { value: 'tech_process', label: 'Технологические процессы' },
+                          { value: 'business_process', label: 'Бизнес-процессы' },
+                          { value: 'work_safety', label: 'Охрана труда' },
+                          { value: 'workspace', label: 'Рабочее пространство' }
+                        ]}
+                        onChange={(e) => handleChangeApplicationSelect(e, setApplicationDirection)}
+                        aria-required={true}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Организация'}
+                      name={'organization'}
+                      rules={[{
+                        required: true,
+                        message: 'Выберете организацию'
+                      }]}
+                    >
+                      <Select
+                        className={`${styles.formField} ${styles.inp}`}
+                        options={organization.map(org => ({
+                          value: org.id,
+                          label: org.name
+                        }))}
+                        aria-required={true}
+                        disabled
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Отдел'}
+                      name={'department'}
+                      rules={[{
+                        required: true,
+                        message: 'Выберете отдел'
+                      }]}
+                    >
+                      <Select
+                        className={`${styles.formField} ${styles.inp}`}
+                        options={departments.filter(dep => dep.organization === applicationData.organization).map(dep => ({
+                          value: dep.id,
+                          label: dep.name
+                        }))}
+                        aria-required={true}
+                        disabled
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Назначенный эксперт'}
+                      name={'expert'}
+                      rules={[{
+                        message: 'Выберете эксперта'
+                      }]}
+                    >
+                      <Select
+                        className={`${styles.formField} ${styles.inp}`}
+                        options={users.map(user => ({
+                          value: user.id,
+                          label: user.name
+                        }))}
+                        aria-required={true}
+                        onChange={(e) => handleChangeApplicationSelect([e], setExpertSelect)}
+                      />
+                    </Form.Item>
+                  </div>
                 <div className={styles.files}>
                   <Form.Item
                     className={styles.formItem}
@@ -257,7 +256,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                     </Upload>
                   </Form.Item>
               </div>
-            </div>
+                </div>
           </Form>
             )}
 
