@@ -134,6 +134,11 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
     }
   }
 
+  function handleDeleteIdea() {
+    router.push('/queries')
+    store.deleteQuery(Number(queryId))
+  }
+
 
   return (
     <>
@@ -166,7 +171,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                       { value: 'done', label: 'Выполнена' },
                       { value: 'rejected', label: 'Отклонена' },
                     ]}
-                    onChange={(value, option) => patchQuery(value)}
+                    onChange={(value) => patchQuery(value)}
                   />
                 </div>
               </div>
@@ -174,7 +179,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
             </div>
 
             <Col className={styles.column}>
-              <div className={styles.row}>
+              <div className={styles.row} key={0}>
                 <p className={styles.rowText}>Получено от:</p>
                 <p className={styles.rowText}>Инициатива (Идея):</p>
                 <p className={styles.rowText}>Описание инициативы:</p>
@@ -184,7 +189,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                 <p className={styles.rowText}>Отдел:</p>
                 <p className={styles.rowText}>Назначенный эксперт:</p>
               </div>
-              <div className={styles.row}>
+              <div className={styles.row} key={1}>
                 <p className={styles.rowInf}>{data.user_name}</p>
                 <p className={styles.rowInf}>{data.query_name}</p>
                 <p className={styles.rowInf}>{data.description}</p>
@@ -200,7 +205,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
               <p className={styles.comment}>Комментарии:</p>
             </div>
             {dataComment .filter((comment) => comment.query === Number(queryId))
-              .map((comment, index) => (
+              .map((comment) => (
                 <div className={styles.avatarContainer}>
                   <div className={styles.avatar}>
                     <div className={styles.userImg}>
@@ -234,7 +239,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
         classNameBtn2={styles.btnRed}
         textBtn2={"Удалить инициативу"}
         onClick1={closeModal}
-        onClick2={() => router.push('/queries')}
+        onClick2={handleDeleteIdea}
       />
     </>
   );

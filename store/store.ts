@@ -34,7 +34,7 @@ export default class Store {
     async postQuery(date: string, name: string, description: string, initiative_direction: string, status: string,
                     implementation_effect: string, organization: number, initiator_users: [number]){
         try {
-            const response = await QueriesService.postQuery(date, name, description, initiative_direction, status,
+            await QueriesService.postQuery(date, name, description, initiative_direction, status,
                 implementation_effect, organization, initiator_users);
         } catch (e: any) {
             console.log(e.response?.data?.message);
@@ -44,7 +44,7 @@ export default class Store {
     async patchQuery(date: string, name: string, description: string, initiative_direction: string, status: string,
                      implementation_effect: string, organization: number, initiator_users: [number], id: number, expertUsers?: number[]) {
         try {
-            const response = expertUsers ? await QueriesService.patchQuery(date, name, description, initiative_direction, status,
+            expertUsers ? await QueriesService.patchQuery(date, name, description, initiative_direction, status,
                 implementation_effect, organization, initiator_users, id, expertUsers) : await QueriesService.patchQuery(date, name, description, initiative_direction, status,
               implementation_effect, organization, initiator_users, id)
         } catch (e: any) {
@@ -52,9 +52,17 @@ export default class Store {
         }
     }
 
+    async deleteQuery(id: number) {
+        try {
+            await QueriesService.deleteQuery(id)
+        } catch (e: any) {
+            console.log(e.response?.data?.message);
+        }
+    }
+
     async sendComment(comment: string, query: number, user: number) {
         try {
-            const response = await CommentService.sendComment(comment, query, user);
+            await CommentService.sendComment(comment, query, user);
         } catch (e: any) {
             console.log(e.response?.data?.message);
         }
@@ -62,7 +70,7 @@ export default class Store {
 
     async patchLike(id: number, data: any) {
         try {
-            const response = await LikesService.patchLike(id, data);
+            await LikesService.patchLike(id, data);
         } catch (e: any) {
             console.log(e.response?.data?.message);
         }
@@ -83,7 +91,7 @@ export default class Store {
 
     async putRegistration(name: string, department: number) {
         try {
-            const response = await AuthService.putRegistration(name, department);
+            await AuthService.putRegistration(name, department);
         } catch (e: any) {
             return e.response.data.detail
         }
@@ -91,7 +99,7 @@ export default class Store {
 
     async logout() {
         try {
-            const response = await AuthService.logout();
+            await AuthService.logout();
             sessionStorage.removeItem('user_id');
             this.setAuth(false);
             this.setUser({} as IUser);

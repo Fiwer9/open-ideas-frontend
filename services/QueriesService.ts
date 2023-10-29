@@ -17,10 +17,14 @@ export default class QueriesService {
     }
 
     static async patchQuery(date: string, name: string, description: string, initiative_direction: string, status: string,
-                           implementation_effect: string, organization: number, initiator_users: [number], id: number, expertUsers? : number[]):Promise<AxiosResponse> {
-        return expertUsers ?  $api.patch(`/queries/queries/${id}/`, {date, name, description, initiative_direction, status,
-            implementation_effect, organization, initiator_users, expertUsers})
+                           implementation_effect: string, organization: number, initiator_users: [number], id: number, expert_users? : number[]):Promise<AxiosResponse> {
+        return expert_users ?  $api.patch(`/queries/queries/${id}/`, {date, name, description, initiative_direction, status,
+            implementation_effect, organization, initiator_users, expert_users})
           : $api.patch(`/queries/queries/${id}/`, {date, name, description, initiative_direction, status,
-            implementation_effect, organization, initiator_users});
+            implementation_effect, organization, initiator_users, });
+    }
+
+    static async deleteQuery(id: number):Promise<AxiosResponse> {
+        return $api.delete(`/queries/queries/${id}/`);
     }
 }

@@ -10,18 +10,15 @@ import {
   fetchData, formatDateToServer,
   getAuthor,
   getDirectionTranslation,
-  getOrganizationName,
-  getStatusTranslation
+  getOrganizationName
 } from "../../utils/utils";
 import QueriesService from "../../services/QueriesService";
 import OrganizationsService from "../../services/OrganizationsService";
 import UsersService from "../../services/UsersService";
-import CommentService from "../../services/CommentService";
 import {useRouter} from "next/router";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import {UserResponse} from "../../models/response/UserResponse";
 import {Context} from "../../pages/_app";
-import {CommentResponse} from "../../models/response/CommentResponse";
 import {QueriesResponse} from "../../models/response/QueriesResponse";
 import {IDepartment} from "../../models/IDepartment";
 
@@ -47,25 +44,12 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
     date: '',
     id: 0
   })
-  const [organizationSelect, setOrganizationSelect] = useState(0)
   const [applicationName, setApplicationName] = useState('')
   const [applicationDescription, setApplicationDescription] = useState('')
   const [applicationEffect, setApplicationEffect] = useState('')
   const [applicationDirection, setApplicationDirection] = useState('')
   const { store } = useContext(Context)
-  const [departmentsSelect, setDepartmentsSelect] = useState<number | undefined>(0)
   const [expertSelect, setExpertSelect] = useState<number[]>([])
-  function getExpert(users_id: any) {
-    const expert = []
-    for (let id of users_id) {
-      for (let user of users) {
-        if (id === user.id) {
-          expert.push(user.name)
-        }
-      }
-    }
-    return expert
-  }
 
   useEffect(() => {
 
@@ -82,12 +66,10 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
 
   useEffect(() => {
     getAuthor(applicationData.initiator_users, users, setUser)
-    setOrganizationSelect(applicationData.organization)
     setApplicationName(applicationData.name)
     setApplicationDescription(applicationData.description)
     setApplicationEffect(applicationData.implementation_effect)
     setApplicationDirection(applicationData.initiative_direction)
-    setDepartmentsSelect(user?.department.id)
     setExpertSelect(applicationData.expert_users)
   }, [applicationData, user]);
 
@@ -95,7 +77,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
       setData(event.target.value)
     }
 
-  function handleChangeApplicationSelect(event: ChangeEvent<any>, setData: React.SetStateAction<any>): void {
+  function handleChangeApplicationSelect(event: any[], setData: React.SetStateAction<any>): void {
     console.log(event)
     setData(event)
   }
@@ -103,12 +85,8 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
   function handleSaveChanges() {
     const currentDate = new Date();
     const date = formatDateToServer(currentDate, '-')
-    console.log(
-      applicationName, applicationDescription, applicationDirection, applicationData.status, applicationEffect,
-      organizationSelect, applicationData.initiator_users, Number(queryId), expertSelect
-    )
     store.patchQuery(date, applicationName, applicationDescription, applicationDirection, applicationData.status, applicationEffect,
-      organizationSelect, applicationData.initiator_users, Number(queryId), expertSelect)
+      applicationData.organization, applicationData.initiator_users, Number(queryId), expertSelect)
     window.history.back()
   }
 
@@ -218,7 +196,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                       label: org.name
                     }))}
                     aria-required={true}
-                    onChange={(e) => handleChangeApplicationSelect(e, setOrganizationSelect)}
+                    disabled
                   />
                 </Form.Item>
                 <Form.Item
@@ -232,12 +210,12 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                 >
                   <Select
                     className={`${styles.formField} ${styles.inp}`}
-                    options={departments.filter(dep => dep.organization === organizationSelect).map(dep => ({
+                    options={departments.filter(dep => dep.organization === applicationData.organization).map(dep => ({
                       value: dep.id,
                       label: dep.name
                     }))}
-                    onChange={(e) => handleChangeApplicationSelect(e, setDepartmentsSelect)}
                     aria-required={true}
+                    disabled
                   />
                 </Form.Item>
                 <Form.Item
@@ -245,7 +223,6 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                   label={'Назначенный эксперт'}
                   name={'expert'}
                   rules={[{
-                    required: true,
                     message: 'Выберете эксперта'
                   }]}
                 >
@@ -256,8 +233,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                       label: user.name
                     }))}
                     aria-required={true}
-                    mode={"multiple"}
-                    onChange={(e) => handleChangeApplicationSelect(e, setExpertSelect)}
+                    onChange={(e) => handleChangeApplicationSelect([e], setExpertSelect)}
                   />
                 </Form.Item>
               </Form>

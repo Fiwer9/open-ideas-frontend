@@ -151,6 +151,8 @@ export const getRouteTranslation = (route: string) => {
             return "Редактирование инициативы";
         case `adminApplication?queryId=${Cookies.get('queryId')}`:
             return Cookies.get('queryName');
+        case `editingApplication?queryId=${Cookies.get('queryId')}`:
+            return `${Cookies.get('queryName')} (Редактирование)`;
         default:
             return "";
     }
@@ -158,11 +160,11 @@ export const getRouteTranslation = (route: string) => {
 
 
 export function getUserName(userId: number, users: UserResponse[]) {
-    return users.map((user: any) => {
-        if (user.id === userId) {
-            return user.name
-        }
-    })
+    const user = users.find((user) => user.id === userId);
+    if (user) {
+        return user.name;
+    }
+    return "Аноним";
 }
 
 
