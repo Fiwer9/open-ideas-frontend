@@ -11,31 +11,37 @@
 
       .textHeader {
         margin: 0;
-        font: {
-          family: RobotoMedium, sans-serif;
-          weight: 600;
-          size: 32px;
-        };
+        @include pageTitle;
       }
 
-      .formContainer {
-        margin-top: 50px;
-        width: 553px;
+      .inpContainer {
+        display: flex;
 
-        .formItem:not(:first-child) {
-          margin-top: 30px;
+        .formContainer {
+          margin-top: 50px;
+          width: 553px;
+
+          .formItem:not(:first-child) {
+            margin-top: 30px;
+          }
+
+          .formItem {
+            @include inputLabelForm;
+
+            .inp {
+              @include inputForm;
+            }
+
+            .formField {
+              border-radius: 2px;
+            }
+          }
         }
 
-        .formItem {
-          display: flex;
-          flex-direction: column;
-
-          .formField {
-          }
-
-          .inp {
-            height: 40px;
-          }
+        .files {
+          width: 553px;
+          margin-top: 50px;
+          margin-left: 200px;
         }
       }
     }
@@ -52,9 +58,7 @@
 
       .btnFooter {
         height: 40px;
-        display: flex;
-        align-items: center;
-        padding: 8px 16px;
+        border-radius: 2px;
         font: {
           family: RobotoRegular, sans-serif;
           weight: 400;

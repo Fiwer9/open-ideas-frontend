@@ -1,0 +1,50 @@
+@import "../../../styles/variable.scss";
+
+.container {
+  @include container;
+
+  .content {
+    @include content;
+
+    .header {
+      display: flex;
+      align-items: center;
+
+      .logoHeader {
+        margin-top: 50px;
+        position: absolute;
+        top: 12.5px;
+        left: 24px;
+      }
+
+      .tabs {
+        margin-left: 550px;
+      }
+    }
+
+    .infContainer {
+      @include infContainerTable;
+    }
+
+    .table {
+      margin-top: 17px;
+      overflow: {
+        x: auto;
+        y: hidden;
+      }
+      flex: 1;
+      table {
+        border: 1px solid rgba(0, 0, 0, 0.20);
+        border-radius: 0;
+      }
+    }
+
+
+    @media (max-width: 720px) {
+      padding: 16px;
+    }
+    @media (max-width: 420px) {
+      margin: 0;
+    }
+  }
+}

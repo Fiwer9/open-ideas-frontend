@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useContext, useEffect, useState} from "react";
 import styles from "./styles/EditingApplication.module.scss";
 import { Slider } from "../SliderComponents/SliderComponents";
-import {Button, Form, Input, Select} from "antd";
+import { Button, Form, Input, Select, Upload } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
@@ -21,6 +21,7 @@ import {UserResponse} from "../../models/response/UserResponse";
 import {Context} from "../../pages/_app";
 import {QueriesResponse} from "../../models/response/QueriesResponse";
 import {IDepartment} from "../../models/IDepartment";
+import { UploadOutlined } from "@ant-design/icons";
 
 interface EditingApplicationProps {
   queryId: string;
@@ -90,6 +91,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
     window.history.back()
   }
 
+
   return (
     <>
       <div className={styles.container}>
@@ -97,7 +99,10 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
         <div className={styles.content}>
           <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
           <Tabs />
-          <div className={styles.contentContainer}>
+          <Form
+            layout="vertical"
+            className={styles.contentContainer}
+          >
             <p className={styles.textHeader}>Редактирование инициативы</p>
             {applicationData.name && user?.department.name && applicationData.expert_users && (
               <Form
@@ -236,9 +241,25 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                     onChange={(e) => handleChangeApplicationSelect([e], setExpertSelect)}
                   />
                 </Form.Item>
-              </Form>
+                <div className={styles.files}>
+                  <Form.Item
+                    className={styles.formItem}
+                    label={'Дополнительные файлы'}
+                    name={'file'}
+                  >
+                    <Upload
+                      maxCount={5}
+                      accept=".webm, .pdf, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
+                      multiple
+                      className='upload'
+                    >
+                      <Button icon={<UploadOutlined />}>Загрузить</Button>
+                    </Upload>
+                  </Form.Item>
+              </div>
+            </div>
+          </Form>
             )}
-          </div>
 
           <div className={styles.btnContainer}>
             <Button className={`${styles.btnDefault} ${styles.btnFooter}`} onClick={() => handleSaveChanges()}>

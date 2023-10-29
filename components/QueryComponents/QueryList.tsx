@@ -26,6 +26,7 @@ import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import OrganizationsService from "../../services/OrganizationsService";
+import { FilterOutlined } from "@ant-design/icons";
 
 
 export const QueryList = () => {
@@ -166,7 +167,7 @@ export const QueryList = () => {
                                onSearchNumberChange={handleSearchNumberChange}
                                placeholderNum={'Номер'}
                                placeholderQuery={'Поиск по идеям'}/>
-                    <FilterBar filterText={'Фильтры'}/>
+                    <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
                     <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
                 </div>
                 <DataTable

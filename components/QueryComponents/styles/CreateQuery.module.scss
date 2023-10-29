@@ -23,8 +23,17 @@
       margin: 0;
 
       .title {
-        font-size: 32px;
+        margin: 0;
+        font: {
+          family: RobotoMedium, sans-serif;
+          weight: 500;
+          size: 27px;
+        };
         text-align: center;
+
+        .label2 {
+          font-size: 32px;
+        }
       }
       @media (max-width: 420px) {
         .title {
@@ -40,6 +49,15 @@
       .label {
         text-align: left;
         margin-bottom: 8px;
+      }
+
+      .inp {
+        height: 40px;
+        border-radius: 2px;
+      }
+
+      .uploadBtn {
+        border-radius: 2px;
       }
     }
 

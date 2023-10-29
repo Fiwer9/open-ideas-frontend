@@ -1,7 +1,7 @@
 import { Slider } from "../SliderComponents/SliderComponents";
 import styles from "./styles/AdminApplicationCard.module.scss";
-import { HeartOutlined } from "@ant-design/icons";
-import { Col, Select } from "antd";
+import { DownloadOutlined, HeartOutlined } from "@ant-design/icons";
+import { Col, Select, Upload } from "antd";
 import avatar from "../../public/img/AvatarAratrum.svg";
 import Image from "next/image";
 import Modal from "../ModalsComponents/Modal";
@@ -27,6 +27,7 @@ import {
 import Cookies from "js-cookie";
 import {CommentResponse} from "../../models/response/CommentResponse";
 import CommentService from "../../services/CommentService";
+import type { UploadProps } from 'antd';
 
 
 interface AdminApplicationCardProps {
@@ -139,6 +140,33 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
     store.deleteQuery(Number(queryId))
   }
 
+  const props: UploadProps = {
+    defaultFileList: [
+      {
+        uid: '1',
+        name: 'xxx.png',
+        status: 'done',
+        url: '',
+      },
+      {
+        uid: '2',
+        name: 'xxx.png',
+        status: 'done',
+        url: '',
+      },
+      {
+        uid: '3',
+        name: 'xxx.png',
+        status: 'done',
+        url: '',
+      },
+    ],
+    showUploadList: {
+      showDownloadIcon: true,
+      downloadIcon: <DownloadOutlined />,
+      showRemoveIcon: false,
+    },
+  };
 
   return (
     <>
@@ -158,10 +186,9 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                   </div>
 
                   <Select
-                    key={status}
-                    className='select'
+                    className='selectInitiative'
                     style={{maxWidth: 600}}
-                    defaultValue={status}
+                    defaultValue="В процессе"
                     options={[
                       { value: 'registered', label: 'Зарегистрирована' },
                       { value: 'check', label: 'В процессе' },
@@ -199,6 +226,12 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                 <p className={styles.rowInf}>{data.department}</p>
                 <p className={styles.rowInf}>{data.expert || 'Не назначено'}</p>
               </div>
+              <div className={styles.row}>
+                <div className={styles.files}>
+                  <p className={styles.rowText}>Прикреплённые файлы:</p>
+                  <Upload {...props} className='uploadFile'></Upload>
+                </div>
+              </div>
             </Col>
 
             <div className={styles.commentContainer}>
@@ -231,7 +264,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
       </div>
 
       <Modal
-        className={styles.models} active={modalActive} setActive={setModalActive}
+        active={modalActive} setActive={setModalActive}
         text1={"Удалить инициативу?"}
         text2={"Восстановить будет невозможно"}
         classNameBtn1={styles.btnBlue}
@@ -240,6 +273,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
         textBtn2={"Удалить инициативу"}
         onClick1={closeModal}
         onClick2={handleDeleteIdea}
+        modelTextClass={styles.modelText}
       />
     </>
   );

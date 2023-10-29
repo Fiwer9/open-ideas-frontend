@@ -29,7 +29,11 @@ $color-red-error: #e83333;
   justify-content: center;
   height: 100%;
   flex-direction: column;
-  padding: 50px 70px;
+  padding: {
+    top: 50px;
+    left: 70px;
+    right: 45px;
+  };
 }
 
 @mixin infContainerTable {
@@ -48,6 +52,27 @@ $color-red-error: #e83333;
     justify-content: center;
     align-items: center;
   }
+}
+
+@mixin pageTitle {
+  font: {
+    family: Poppins, sans-serif;
+    weight: 600;
+    size: 32px;
+  };
+}
+
+@mixin inputForm {
+  height: 40px;
+  border-radius: 2px;
+}
+
+@mixin inputLabelForm {
+  font: {
+    family: Poppins, sans-serif;
+    weight: 400;
+    size: 14px;
+  };
 }
 
 %container {
@@ -82,7 +107,7 @@ $color-red-error: #e83333;
   border-width: 1px;
   border-style: solid;
   border-color: $color-gray;
-  border-radius: 6px;
+  border-radius: 2px;
   transition: all 0.2s;
 }
 
@@ -105,10 +130,6 @@ $color-red-error: #e83333;
   border-radius: 2px;
   padding: 16px;
   margin: 0;
-}
-
-.logoContainerMin {
-
 }
 
 .logoContainer {
@@ -158,7 +179,7 @@ $color-red-error: #e83333;
 
 .btnBlue {
   font: {
-    family: RobotoLight, sans-serif;
+    family: RobotoRegular, sans-serif;
     weight: 400;
     size: 16px;
   };
@@ -189,6 +210,14 @@ $color-red-error: #e83333;
 }
 
 .select {
+  margin-top: 5px;
+
+  .ant-select-selector {
+    border-radius: 2px;
+  }
+}
+
+.selectInitiative {
   .ant-select-selector {
     background-color: #BFBFBF !important;
     color: $color-white;
@@ -200,6 +229,74 @@ $color-red-error: #e83333;
 
   .ant-select-arrow {
     color: white !important;
+  }
+}
+
+.checkbox {
+  padding: {
+    top: 8px;
+    bottom: 8px;
+    left: 10px;
+  }
+  font: {
+    family: RobotoRegular, sans-serif;
+    weight: 400;
+    size: 14px;
+  };
+
+  .ant-checkbox-inner {
+    border-radius: 2px;
+    border-color: rgba($color-black, 0.6);
+  }
+
+  span {
+    color: $color-gray-43;
+  }
+}
+
+.ant-btn {
+  border-radius: 2px;
+}
+
+.ant-upload-list-item-name {
+  color: $color-blue;
+}
+
+.ant-upload-list-item {
+  margin-bottom: 10px;
+}
+
+.uploadFile {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-top: 20px;
+
+  .ant-upload-list-item {
+    padding: 20px 10px;
+    border: 1px solid $color-gray;
+  }
+}
+
+.upload {
+  display: flex;
+  flex-direction: column-reverse;
+
+  .ant-upload-list-item {
+    padding: 20px 10px;
+    border: 1px solid $color-gray;
+  }
+}
+
+.uploadFile {
+  display: flex;
+
+  .ant-upload-list {
+    display: flex;
+    margin-top: 8px;
+  }
+
+  .ant-upload-list-item {
+    margin-right: 15px;
   }
 }
 

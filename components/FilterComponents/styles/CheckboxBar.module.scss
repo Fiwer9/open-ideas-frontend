@@ -1,0 +1,71 @@
+@import "../../../styles/variable";
+
+.checkboxContainerHint {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 10px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+
+  .checkboxHint {
+    .ant-checkbox-inner {
+      width: 24px;
+      height: 24px;
+      border-radius: 2px;
+      border-color: rgba($color-black, 0.6);
+    }
+  }
+
+  .hintText {
+    margin: 0;
+    margin-top: 5px;
+    font: {
+      family: RobotoLight, sans-serif;
+      weight: 400;
+      size: 14px;
+    };
+    color: #7E7E7E;
+  }
+
+  @media (max-width: 720px) {
+    flex-direction: row;
+    gap: 24px;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 420px) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    gap: 16px;
+  }
+}
+
+.checkboxContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 720px) {
+    flex-direction: row;
+    gap: 24px;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 420px) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    gap: 16px;
+  }
+}
+
