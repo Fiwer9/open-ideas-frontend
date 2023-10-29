@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Form, Select, Card, Input} from "antd";
+import { Form, Select, Card, Input, Upload, Button } from "antd";
 import { InputLabel } from "../InputLabelComponent/InputLabel";
 import { Logo } from "../PicturesComponents/Logo";
 import { Buttons } from "../ButtonComponent/Button";
@@ -13,6 +13,7 @@ import OrganizationsService from "../../services/OrganizationsService";
 import UsersService from "../../services/UsersService";
 import {formatDateToServer, getOrganizationId, getOrganizationName} from "../../utils/utils";
 import {Context} from "../../pages/_app";
+import { UploadOutlined } from "@ant-design/icons";
 
 export const CreateQuery = () => {
     const [modalActive, setModalActive] = useState(false);
@@ -101,19 +102,19 @@ export const CreateQuery = () => {
                         <div className={styles.label}>
                             <InputLabel title={"Ф. И. О."} />
                         </div>
-                        <Input value={users.name} disabled={true}/>
+                        <Input className={styles.inp} value={users.name} disabled={true}/>
                     </Form.Item>
                     <Form.Item className={styles.formItems}>
                         <div className={styles.label}>
                             <InputLabel title={"Организация"}/>
                         </div>
-                        <Input value={getOrganizationName(getOrganization(), organization)} disabled={true} />
+                        <Input className={styles.inp} value={getOrganizationName(getOrganization(), organization)} disabled={true} />
                     </Form.Item>
                     <Form.Item className={styles.formItems}>
                         <div className={styles.label}>
                             <InputLabel title={"Инициатива (Идея)"}/>
                         </div>
-                        <Input placeholder={"Напишите название инициативы "} onChange={((e: any) => {
+                        <Input className={styles.inp} placeholder={"Напишите название инициативы "} onChange={((e: any) => {
                             setIdea(e.target.value)
                         })} value={idea} required/>
                     </Form.Item>
@@ -123,6 +124,8 @@ export const CreateQuery = () => {
                         </div>
                         <div className={styles.mySelectContainer}>
                             <Select
+                                className='select'
+                                style={{height: 40}}
                                 placeholder="Направление инициативы"
                                 options={[
                                     { value: 'tech_process', label: 'Технологические процессы' },
@@ -152,6 +155,19 @@ export const CreateQuery = () => {
                                   onChange={(e) => {
                                       setEffect(e.target.value)
                                   }} value={effect || ''} required={true}/>
+                    </Form.Item>
+                    <Form.Item className={styles.formItems}>
+                      <div className={styles.label}>
+                        <InputLabel title={"Загрузка дополнительных файлов"}/>
+                      </div>
+                      <Upload
+                        maxCount={5}
+                        accept=".pdf, .webm, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
+                        multiple
+                        className='upload'
+                      >
+                        <Button className={styles.uploadBtn} icon={<UploadOutlined />}>Загрузить</Button>
+                      </Upload>
                     </Form.Item>
                     <div className={styles.containerBtn}>
                         <div className={styles.btnWhite}>
