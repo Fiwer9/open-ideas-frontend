@@ -5,7 +5,7 @@ import {Form} from "antd";
 
 import styles from "./styles/Modal.module.scss";
 
-const Modal = ({ active, setActive, text1, text2, textBtn1, textBtn2, onClick1, onClick2, classNameBtn1,  classNameBtn2}: any) => {
+const Modal = ({ active, setActive, text1, text2, textBtn1, textBtn2, onClick1, onClick2, classNameBtn1,  classNameBtn2, layout, stylesContentModal}: any) => {
     return (
         <>
             {active ?
@@ -15,10 +15,13 @@ const Modal = ({ active, setActive, text1, text2, textBtn1, textBtn2, onClick1, 
                           <Form.Item className={styles.logo}>
                               <Logo width={126.82} height={36} />
                           </Form.Item>
-                          <Form.Item className={styles.modelText}>
+                          <Form.Item className={`${styles.modelText} ${stylesContentModal}`}>
                               <p className={textBtn2 === 'Отправить'? styles.text : styles.textCancel}>{text1}</p>
                               <p className={styles.text2}>{text2}</p>
                           </Form.Item>
+                          <div className={styles.modelContent}>
+                              {layout}
+                          </div>
                           <div className={styles.btnContainer}>
                               <div className={classNameBtn1}>
                                   <Buttons className={styles.btnModal} text={textBtn1} onClick={onClick1}/>
