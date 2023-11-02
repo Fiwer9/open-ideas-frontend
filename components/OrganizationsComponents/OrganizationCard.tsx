@@ -1,0 +1,31 @@
+import { Slider } from "../SliderComponents/SliderComponents";
+import { Header } from "../HeaderComponents/Header";
+import { Tabs } from "../TabsComponent/Tabs";
+import { MainText } from "../MainTextComponent";
+import { Col } from "antd";
+
+import styles from "./styles/OrganizationCard.module.scss";
+
+export const OrganizationCard = () => {
+  return (
+    <>
+      <div className={styles.container}>
+        <Slider/>
+        <div className={styles.content}>
+          <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          <Tabs />
+          <MainText text={'Aratreum'}/>
+
+          <Col className={styles.column}>
+            <div className={styles.row}>
+              <p className={styles.rowText}>Отделы</p>
+            </div>
+            <div className={styles.row}>
+              <p className={styles.rowInf}>Отдел 1, Отдел 2</p>
+            </div>
+          </Col>
+        </div>
+      </div>
+    </>
+  );
+};

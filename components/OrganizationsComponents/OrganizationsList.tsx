@@ -94,6 +94,11 @@ export const OrganizationsList = () => {
             dataSource={dataSource}
             rowKey="id"
             bordered
+            onRow={() => ({
+              onClick: () => {
+                router.push('/organizations/orgCard');
+              },
+            })}
           />
         </div>
       </div>
