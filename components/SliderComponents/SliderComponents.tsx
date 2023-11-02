@@ -1,91 +1,76 @@
 import React, { useState } from 'react';
 import { Button, Layout, theme } from 'antd';
 const { Sider } = Layout;
-import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import {
-    BarChartOutlined,
-    BulbOutlined, ReconciliationOutlined,
-    UserOutlined, SettingOutlined,
+  BarChartOutlined,
+  BulbOutlined, ReconciliationOutlined,
+  UserOutlined, SettingOutlined,
 } from '@ant-design/icons';
 import { ArrowBack } from './ArrowBack';
 import { ArrowNext } from './ArrowNext';
 import {Logo} from "../PicturesComponents/Logo";
 import styles from "./styles/sider.module.scss"
-type MenuItem = Required<MenuProps>['items'][number];
-
-function getItem(
-    label: React.ReactNode,
-    key: React.Key,
-    icon?: React.ReactNode,
-    children?: MenuItem[],
-): MenuItem {
-    return {
-        key,
-        icon,
-        children,
-        label,
-    } as MenuItem;
-}
-
-const items = [
-    getItem('Инициативы', '1', <BulbOutlined />),
-    getItem('Пользователи', '2', <UserOutlined />),
-    getItem('Организации и отделы', '3', <ReconciliationOutlined />),
-    getItem('Аналитика', 'sub1', <BarChartOutlined />, [getItem('Графики', '4'), getItem('Таблицы', '5')]),
-    getItem('Настройки', '6', <SettingOutlined />)
-
-];
+import router from "next/router";
+import SubMenu from "antd/lib/menu/SubMenu";
 
 export const Slider = () => {
-    const [collapsed, setCollapsed] = useState(false);
-    const {
-        token: { colorBgContainer },
-    } = theme.useToken();
+  const [collapsed, setCollapsed] = useState(false);
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
 
-    return (
-        <Layout className={styles.layout}>
-            <Sider className={styles.sider}
-                width={256}
-                style={{
-                    background: colorBgContainer
-                }}
-                trigger={null}
-                collapsible
-                collapsed={collapsed}
-                collapsedWidth={94}
-            >
-                {collapsed? (
-                    <div className={styles.logoMin}>
-                        <Logo width={50} height={50} min={collapsed} />
-                    </div>
-                ) : (
-                    <div className={styles.logo}>
-                        <Logo width={193} height={50} min={collapsed} />
-                    </div>
-                )}
+  return (
+    <Layout className={styles.layout}>
+      <Sider className={styles.sider}
+             width={256}
+             style={{
+               background: colorBgContainer
+             }}
+             trigger={null}
+             collapsible
+             collapsed={collapsed}
+             collapsedWidth={94}
+      >
+        {collapsed? (
+          <div className={styles.logoMin}>
+            <Logo width={50} height={50} min={collapsed} />
+          </div>
+        ) : (
+          <div className={styles.logo}>
+            <Logo width={193} height={50} min={collapsed} />
+          </div>
+        )}
 
-                <Menu
-                    mode="inline"
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
-                    items={items}
-                />
-                <Button
-                    type="text"
-                    icon={collapsed ? <ArrowBack /> : <ArrowNext />}
-                    onClick={() => setCollapsed(!collapsed)}
-                    className={styles.button}
-                    style={{
-                        width: 24,
-                        height: 24,
-                        position: 'absolute',
-                        top: 37,
-                        right: -12,
-                        zIndex: 12,
-                    }}
-                />
-            </Sider>
-        </Layout>
-    );
+        <Menu
+          mode="inline"
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['sub1']}
+        >
+          <Menu.Item key={'1'} icon={<BulbOutlined />} onClick={() => router.push('/queries')}>Инициативы</Menu.Item>
+          <Menu.Item key={'2'} icon={<UserOutlined />} onClick={() => router.push('/users')}>Пользователи</Menu.Item>
+          <Menu.Item key={'3'} icon={<ReconciliationOutlined />} onClick={() => router.push('/organizations')}>Организации и отделы</Menu.Item>
+          <SubMenu key={'sub1'} icon={<BarChartOutlined />} title={'Аналитика'}>
+            <Menu.Item key={'4'}>Графики</Menu.Item>
+            <Menu.Item key={'5'}>Таблицы</Menu.Item>
+          </SubMenu>
+          <Menu.Item key={'6'} icon={<SettingOutlined />}>Настройки</Menu.Item>
+        </Menu>
+        <Button
+          type="text"
+          icon={collapsed ? <ArrowBack /> : <ArrowNext />}
+          onClick={() => setCollapsed(!collapsed)}
+          className={styles.button}
+          style={{
+            width: 24,
+            height: 24,
+            position: 'absolute',
+            top: 37,
+            right: -12,
+            zIndex: 12,
+          }}
+        />
+      </Sider>
+    </Layout>
+  );
 };

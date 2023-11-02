@@ -5,6 +5,7 @@
 
   .content {
     @include content;
+    margin-bottom: 50px;
 
     .contentContainer {
       margin: 0;
