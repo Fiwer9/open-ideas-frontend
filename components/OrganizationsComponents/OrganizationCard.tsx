@@ -27,10 +27,12 @@ function ContentModal() {
 
 export const OrganizationCard = () => {
   const [modalActive, setModalActive] = useState(false);
+  const [secondModalActive, setSecondModalActive] = useState(false);
   const layout = <ContentModal />;
 
   const closeModal = () => {
     setModalActive(false);
+    setSecondModalActive(false);
   };
 
   return (
@@ -52,8 +54,8 @@ export const OrganizationCard = () => {
           </Col>
 
           <div className={styles.btnContainer}>
-            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => { setModalActive(true) }}>Редактировать данные инициативы</button>
-            <button className={`${styles.btnRed} ${styles.btnFooter}`}>Удалить инициативу</button>
+            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => { setModalActive(true) }}>Редактировать данные организации</button>
+            <button className={`${styles.btnRed} ${styles.btnFooter}`} onClick={() => { setSecondModalActive(true) }}>Удалить организацию</button>
           </div>
         </div>
       </div>
@@ -69,6 +71,19 @@ export const OrganizationCard = () => {
         onClick2={() => router.push('/organizations/orgCard')}
         stylesContentModal={styles.contentModal}
         layout={layout}
+      />
+
+      <Modal
+        active={secondModalActive} setActive={setSecondModalActive}
+        text1={"Удалить организацию?"}
+        text2={"Восстановить будет невозможно"}
+        classNameBtn1={styles.btnWhite}
+        textBtn1={"Назад"}
+        classNameBtn2={styles.btnRed}
+        textBtn2={"Удалить организацию"}
+        onClick1={closeModal}
+        onClick2={() => router.push('/organizations')}
+        stylesContentModal={styles.contentModalDel}
       />
     </>
   );
