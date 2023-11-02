@@ -1,5 +1,13 @@
 @import "../../../styles/variable.scss";
 
+.contentMod {
+  margin-bottom: 30px;
+
+  .inp {
+    @include inputForm
+  }
+}
+
 .container {
   @include container;
 
@@ -48,4 +56,8 @@
       }
     }
   }
+}
+
+.contentModal {
+  margin: 0;
 }

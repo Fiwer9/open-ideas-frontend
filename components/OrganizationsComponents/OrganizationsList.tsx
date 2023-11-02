@@ -83,9 +83,7 @@ export const OrganizationsList = () => {
             <SearchBar
               placeholderNum={'Номер'}
               placeholderQuery={'Поиск по организация'}/>
-            <FilterBar icon={<PlusCircleOutlined />} filterText={'Добавить организацию'} onClick={() => {
-              setModalActive(true);
-            }} />
+            <FilterBar icon={<PlusCircleOutlined />} filterText={'Добавить организацию'} onClick={() => { setModalActive(true) }} />
             <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
           </div>
           <Table
