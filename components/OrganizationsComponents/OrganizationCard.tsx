@@ -24,6 +24,11 @@ export const OrganizationCard = () => {
               <p className={styles.rowInf}>Отдел 1, Отдел 2</p>
             </div>
           </Col>
+
+          <div className={styles.btnContainer}>
+            <button className={`${styles.btnBlue} ${styles.btnFooter}`}>Редактировать данные инициативы</button>
+            <button className={`${styles.btnRed} ${styles.btnFooter}`}>Удалить инициативу</button>
+          </div>
         </div>
       </div>
     </>
