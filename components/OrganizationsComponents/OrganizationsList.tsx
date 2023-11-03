@@ -21,7 +21,7 @@ function ContentModal() {
               <Input placeholder={"Напишите название отдела"} className={styles.inp}/>
             </Form.Item>
             <Form.Item>
-              <FilterBar icon={<PlusCircleOutlined />} filterText={'Добавить организацию'}/>
+              <FilterBar icon={<PlusCircleOutlined />} filterText={'Добавить отдел'}/>
             </Form.Item>
           </div>;
 }
