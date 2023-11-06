@@ -158,7 +158,7 @@ export const AdminApplicationCard = () => {
         textBtn2={"Удалить инициативу"}
         onClick1={closeModal}
         onClick2={() => router.push('/queries')}
-        modelTextClass={styles.modelText}
+        stylesContentModal={styles.contentModal}
       />
     </>
   );

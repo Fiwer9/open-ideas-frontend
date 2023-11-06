@@ -7,6 +7,7 @@ import avatar from "../../public/img/AvatarAratrum.svg";
 
 import styles from "./styles/UserCard.module.scss";
 import { Button, Col } from "antd";
+import router from "next/router";
 
 
 export const UserCard = () => {
@@ -40,7 +41,7 @@ export const UserCard = () => {
                 </div>
               </Col>
 
-              <Button className={styles.btnFooter} type="primary">
+              <Button className={styles.btnFooter} type="primary" onClick={() => router.push('/users/editingUser')}>
                 <span>Редактировать профиль</span>
               </Button>
             </div>
