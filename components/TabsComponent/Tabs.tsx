@@ -18,7 +18,7 @@ export const Tabs = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    fetchData(setIsLoading, setUser, UsersService.getCurrentUser, Number(sessionStorage.getItem('user_id')));
+    fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, Number(sessionStorage.getItem('user_id')));
   }, []);
 
   useEffect(() => {

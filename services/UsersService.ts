@@ -10,4 +10,8 @@ export default class UsersService {
     static async getCurrentUser(id: number):Promise<AxiosResponse<UserResponse>> {
         return $api.get(`/users/users/${id}`)
     }
+
+    static async getCurrentUpdateUser(id: number):Promise<AxiosResponse<UserResponse>> {
+        return $api.get(`/users/update/${id}`)
+    }
 }
