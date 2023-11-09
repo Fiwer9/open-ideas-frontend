@@ -105,6 +105,10 @@ export const UserEditing = () => {
                     aria-required={true}
                   />
                 </Form.Item>
+                <div className={styles.btnContainer}>
+                  <Button className={styles.btnFooter}>
+                    <span>Сохранить изменения</span></Button>
+                </div>
               </div>
             </div>
 
@@ -129,6 +133,12 @@ export const UserEditing = () => {
                     <CheckboxBar
                       checkboxText={'Статус суперпользователя'}
                       hintText={'Указывает, что пользователь имеет все права без явного их назначения'}
+                    />
+                  </Form.Item>
+                  <Form.Item className={styles.checkboxItem}>
+                    <CheckboxBar
+                      checkboxText={'Верифицированный'}
+                      hintText={'Указывает, что пользователь закончил регистрацию'}
                     />
                   </Form.Item>
                 </div>
@@ -159,11 +169,6 @@ export const UserEditing = () => {
               </div>
             </div>
           </Form>
-
-          <div className={styles.btnContainer}>
-            <Button className={styles.btnFooter}>
-              <span>Сохранить изменения</span></Button>
-          </div>
         </div>
       </div>
     </>

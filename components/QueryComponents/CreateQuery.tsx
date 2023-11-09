@@ -200,7 +200,7 @@ export const CreateQuery = () => {
                     idea&& description&& direction&& effect&& router.push('/queries')
                     closeModal()
                 }}
-                modelTextClass={styles.modelText}
+                stylesContentModal={styles.contentModal}
             />
             <Modal
                 active={secondModalActive} setActive={setSecondModalActive}
@@ -211,7 +211,7 @@ export const CreateQuery = () => {
                 textBtn2={"Выйти"}
                 onClick1={closeModal}
                 onClick2={() => router.push('/queries')}
-                modelTextClass={styles.modelText}
+                stylesContentModal={styles.contentModal}
             />
         </>
     );

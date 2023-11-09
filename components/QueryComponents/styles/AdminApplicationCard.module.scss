@@ -149,21 +149,14 @@
   }
 
   .btnContainer {
-    position: sticky;
-    bottom: 0;
-    margin-top: 25px;
-    padding: 20px 20px;
-    box-shadow: 1px 20px 40px 0 #0000001A;
-    background-color: $color-white;
-    border-radius: 8px;
+    @include btnContainer;
 
     .btnFooter {
-      padding: 8px 16px;
-      font: {
-        family: RobotoRegular, sans-serif;
-        weight: 400;
-        size: 16px;
-      };
+      @include btnFooter;
     }
   }
+}
+
+.contentModal {
+  margin: 25px 40px 40px 0;
 }

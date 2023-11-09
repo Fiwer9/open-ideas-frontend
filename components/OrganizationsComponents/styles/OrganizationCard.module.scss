@@ -1,0 +1,67 @@
+@import "../../../styles/variable.scss";
+
+.contentMod {
+  margin-bottom: 30px;
+
+  .inp {
+    @include inputForm
+  }
+}
+
+.container {
+  @include container;
+
+  .content {
+    @include content;
+
+    .column {
+      display: flex;
+      flex-direction: row;
+
+      .row {
+        .rowText {
+          margin: 0;
+          margin-top: 30px;
+          font: {
+            family: RobotoRegular, sans-serif;
+            weight: 600;
+            size: 20px;
+          };
+          color: rgba($color-gray-43, 0.8);
+        }
+
+        .rowInf {
+          margin: 0;
+          margin: {
+            top: 30px;
+            left: 262px;
+          };
+          font: {
+            family: RobotoRegular, sans-serif;
+            weight: 600;
+            size: 20px;
+          };
+          color: $color-black-22;
+        }
+      }
+    }
+
+    .btnContainer {
+      position: fixed;
+      bottom: 0;
+      margin-bottom: 40px;
+
+      .btnFooter {
+        @include btnFooter;
+      }
+    }
+  }
+}
+
+.contentModal {
+  margin: 0;
+}
+
+.contentModalDel {
+  margin: 25px 40px 40px 0;
+}

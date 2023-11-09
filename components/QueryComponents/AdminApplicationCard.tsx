@@ -202,7 +202,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                   />
                 </div>
               </div>
-              <p className={styles.data}>Дата создания {formatDateRu(applicationData.date)}</p>
+              <p className={styles.data}>Дата создания 25 ноября 2022 г. в 15:25</p>
             </div>
 
             <Col className={styles.column}>
@@ -273,7 +273,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
         textBtn2={"Удалить инициативу"}
         onClick1={closeModal}
         onClick2={handleDeleteIdea}
-        modelTextClass={styles.modelText}
+        stylesContentModal={styles.contentModal}
       />
     </>
   );
