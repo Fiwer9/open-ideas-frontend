@@ -79,7 +79,7 @@ export const ApplicationCard = ({ queryId}: ApplicationCardProps) => {
                 setIsLoading(false)
             }
         }
-        queryId ? fetchData() : router.push('/queries')
+        fetchData()
 
     }, [queryId])
 

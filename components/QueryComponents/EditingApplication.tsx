@@ -61,7 +61,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
       fetchData(setIsLoading, setDepartments, OrganizationsService.getDepartments)
     }
 
-    queryId ? begin() : router.push('/queries')
+    begin()
 
   }, [queryId])
 

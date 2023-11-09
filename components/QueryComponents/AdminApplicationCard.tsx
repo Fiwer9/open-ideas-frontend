@@ -69,7 +69,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
       fetchData(setIsLoading, setDataComment, CommentService.getComments)
     }
 
-    queryId ? begin() : router.push('/queries')
+    begin()
 
   }, [queryId])
 
@@ -187,7 +187,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
 
                   <Select
                     className='selectInitiative'
-                    style={{maxWidth: 600}}
+                    style={{width: 250}}
                     defaultValue="В процессе"
                     options={[
                       { value: 'registered', label: 'Зарегистрирована' },
