@@ -80,7 +80,7 @@ export const getStatusTranslation = (status: string) => {
         case "registered":
             return "Зарегистрирована";
         case "check":
-            return "В процессе";
+            return "На рассмотрении";
         case "analysis":
             return "Анализируется экспертом";
         case "accepted":

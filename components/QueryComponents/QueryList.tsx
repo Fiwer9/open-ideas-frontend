@@ -120,9 +120,16 @@ export const QueryList = () => {
     };
 
     useEffect(() => {
-        fetchData(setIsLoading, setQueriesTableData, QueriesService.getQueriesTableData);
-        fetchData(setIsLoading, setUser, UsersService.getCurrentUser, sessionStorage.getItem('user_id'))
-    }, [isArchive])
+        const delay = 2000;
+        const fetchDataWithDelay = async () => {
+            await new Promise(resolve => setTimeout(resolve, delay));
+            fetchData(setIsLoading, setQueriesTableData, QueriesService.getQueriesTableData);
+        };
+
+        fetchDataWithDelay();
+        fetchData(setIsLoading, setUser, UsersService.getCurrentUser, sessionStorage.getItem('user_id'));
+    }, [isArchive]);
+
 
     useEffect(() => {
         user && fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizationsById, user?.department.organization)
@@ -181,7 +188,7 @@ export const QueryList = () => {
         <div className={styles.container}>
             <Slider />
             <div className={styles.content}>
-                <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+                <Header user_name={user?.name} organization={organization && organization.name} department={user?.department.name}/>
                 <Tabs />
                 <MainText text={'Инициативы'}/>
                 <div className={styles.infContainer}>
@@ -203,7 +210,7 @@ export const QueryList = () => {
         ) : (
         <div className={styles.containerIdeas}>
             <div className={styles.contentIdeas}>
-                <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+                <Header user_name={user?.name} organization={organization && organization.name} department={user?.department.name}/>
                 <div className={styles.header}>
                     <div className={styles.logoHeader}>
                         <Logo width={190} height={53} />
