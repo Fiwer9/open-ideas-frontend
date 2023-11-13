@@ -120,13 +120,14 @@ export const QueryList = () => {
     };
 
     useEffect(() => {
-        const delay = 2000;
+        const delay = 3000;
         const fetchDataWithDelay = async () => {
             await new Promise(resolve => setTimeout(resolve, delay));
             fetchData(setIsLoading, setQueriesTableData, QueriesService.getQueriesTableData);
         };
-
+        setIsLoading(true)
         fetchDataWithDelay();
+        setIsLoading(false)
         fetchData(setIsLoading, setUser, UsersService.getCurrentUser, sessionStorage.getItem('user_id'));
     }, [isArchive]);
 
