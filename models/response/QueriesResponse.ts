@@ -4,7 +4,7 @@ export interface QueriesResponse {
     name: string;
     description: string;
     initiative_direction: string;
-    status: string;
+    status: 'registered' | 'check' | 'analysis' | 'accepted' | 'implementation' |'rejected' | 'done' | '';
     implementation_effect: string;
     organization: number;
     initiator_users: [number];

@@ -25,6 +25,10 @@ export const Tabs = () => {
     checkExpertUser();
   }, [user]);
 
+  useEffect(() => {
+    Cookies.set('selectedTags', selectedTags[0]);
+  }, [selectedTags]);
+
   const checkExpertUser = () => {
     user && user.is_staff && setIsStaff(user.is_staff);
   };
