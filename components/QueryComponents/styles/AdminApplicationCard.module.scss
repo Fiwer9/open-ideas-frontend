@@ -57,7 +57,12 @@
     flex-direction: row;
 
     .row {
+      display: flex;
+      flex-direction: row;
+      width: 793px;
+
       .rowText {
+        flex: 0 0 40%;
         margin: 0;
         margin-top: 30px;
         font: {
@@ -72,7 +77,6 @@
         margin: 0;
         margin: {
           top: 30px;
-          left: 91px;
         };
         font: {
           family: RobotoRegular, sans-serif;
@@ -81,10 +85,23 @@
         };
         color: $color-black-22;
       }
+    }
 
+    .rows {
       .files {
         margin-left: 150px;
         width: 580px;
+      }
+
+      .rowTexts {
+        margin: 0;
+        margin-top: 30px;
+        font: {
+          family: RobotoRegular, sans-serif;
+          weight: 600;
+          size: 20px;
+        };
+        color: rgba($color-gray-43, 0.8);
       }
     }
   }
