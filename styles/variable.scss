@@ -319,6 +319,18 @@ $color-red-error: #e83333;
   }
 }
 
+.inputNumber {
+  margin-left: 102px;
+  width: 200px;
+  height: 40px;
+  margin-top: 30px;
+  border-radius: 2px;
+
+  .ant-input-number-input {
+    line-height: 2em;
+  }
+}
+
 .statusCheck {
   color: #4b7271;
 }
