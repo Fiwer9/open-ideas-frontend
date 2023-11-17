@@ -54,6 +54,14 @@
       .select {
         margin-top: 16px;
         border-radius: 2px;
+
+        div {
+          span {
+            input {
+              white-space: normal;
+            }
+          }
+        }
       }
     }
 

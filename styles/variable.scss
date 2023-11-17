@@ -346,3 +346,10 @@ $color-red-error: #e83333;
 .statusDone{
   color: #00A71B;
 }
+
+
+.ant-dropdown-menu-title-content {
+  span {
+    white-space: normal !important;
+  }
+}
