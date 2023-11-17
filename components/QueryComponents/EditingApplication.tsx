@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useContext, useEffect, useState} from "react";
 import styles from "./styles/EditingApplication.module.scss";
 import { Slider } from "../SliderComponents/SliderComponents";
-import { Button, Form, Input, Select, Upload } from "antd";
+import {Button, Form, Input, Select, Upload} from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
@@ -15,7 +15,6 @@ import {
 import QueriesService from "../../services/QueriesService";
 import OrganizationsService from "../../services/OrganizationsService";
 import UsersService from "../../services/UsersService";
-import {useRouter} from "next/router";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import {UserResponse} from "../../models/response/UserResponse";
 import {Context} from "../../pages/_app";
@@ -27,7 +26,6 @@ interface EditingApplicationProps {
   queryId: string;
 }
 export const EditingApplication = ({queryId}: EditingApplicationProps) => {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
   const [users, setUsers] = useState<UserResponse[]>([])
@@ -230,13 +228,21 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                       }]}
                     >
                       <Select
+                        showSearch
+                        filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                        filterSort={(optionA, optionB) =>
+                          (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                        }
                         className={`${styles.formField} ${styles.inp}`}
-                        options={users.map(user => ({
-                          value: user.id,
-                          label: user.name
-                        }))}
+                        options={[
+                          { value: null, label: "-" },
+                          ...users.map(user => ({
+                            value: user.id,
+                            label: user.name
+                          }))
+                        ]}
                         aria-required={true}
-                        onChange={(e) => handleChangeApplicationSelect([e], setExpertSelect)}
+                        onChange={(e) => e ? handleChangeApplicationSelect([e], setExpertSelect) : handleChangeApplicationSelect([], setExpertSelect)}
                       />
                     </Form.Item>
                   </div>

@@ -188,10 +188,10 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                   <Select
                     className='selectInitiative'
                     style={{width: 250}}
-                    defaultValue="В процессе"
+                    defaultValue="На рассмотрении"
                     options={[
                       { value: 'registered', label: 'Зарегистрирована' },
-                      { value: 'check', label: 'В процессе' },
+                      { value: 'check', label: 'На рассмотрении' },
                       { value: 'analysis', label: 'Анализируется экспертом' },
                       { value: 'accepted', label: 'На рассмотрении у руководства' },
                       { value: 'implementation', label: 'Принята к реализации' },
@@ -202,7 +202,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                   />
                 </div>
               </div>
-              <p className={styles.data}>Дата создания 25 ноября 2022 г. в 15:25</p>
+              <p className={styles.data}>{`Дата создания ${formatDateRu(applicationData.date)}`}</p>
             </div>
 
             <Col className={styles.column}>

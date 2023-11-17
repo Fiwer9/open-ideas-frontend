@@ -8,6 +8,8 @@ import QueriesService from "../services/QueriesService";
 export default class Store {
     user = {} as IUser;
     isAuth = false;
+    queryId = 0;
+
     constructor() {
         makeAutoObservable(this);
     }
@@ -56,7 +58,7 @@ export default class Store {
         try {
             await QueriesService.deleteQuery(id)
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.error(e.response?.data?.message);
         }
     }
 
@@ -64,7 +66,7 @@ export default class Store {
         try {
             await CommentService.sendComment(comment, query, user);
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.error(e.response?.data?.message);
         }
     }
 
