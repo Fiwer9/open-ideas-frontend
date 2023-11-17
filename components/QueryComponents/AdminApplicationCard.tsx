@@ -84,29 +84,43 @@ export const AdminApplicationCard = () => {
             </div>
 
             <Col className={styles.column}>
-              <div className={styles.row}>
-                <p className={styles.rowText}>Получено от:</p>
-                <p className={styles.rowText}>Инициатива (Идея):</p>
-                <p className={styles.rowText}>Описание инициативы:</p>
-                <p className={styles.rowText}>Эффект от доработки:</p>
-                <p className={styles.rowText}>Направление:</p>
-                <p className={styles.rowText}>Организация:</p>
-                <p className={styles.rowText}>Отдел:</p>
-                <p className={styles.rowText}>Назначенный эксперт:</p>
+              <div>
+                <div className={styles.row}>
+                  <p className={styles.rowText}>Получено от:</p>
+                  <p className={styles.rowInf}>Иванов Виктор Анатольевич</p>
+                </div>
+                <div className={styles.row}>
+                  <p className={styles.rowText}>Инициатива (Идея):</p>
+                  <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
+                </div>
+                <div className={styles.row}>
+                  <p className={styles.rowText}>Описание инициативы:</p>
+                  <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
+                </div>
+                <div className={styles.row}>
+                  <p className={styles.rowText}>Эффект от доработки:</p>
+                  <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
+                </div>
+                <div className={styles.row}>
+                  <p className={styles.rowText}>Направление:</p>
+                  <p className={styles.rowInf}>Рабочее пространство</p>
+                </div>
+                <div className={styles.row}>
+                  <p className={styles.rowText}>Организация:</p>
+                  <p className={styles.rowInf}>Волжская ГЭС</p>
+                </div>
+                <div className={styles.row}>
+                  <p className={styles.rowText}>Отдел:</p>
+                  <p className={styles.rowInf}>Отдел</p>
+                </div>
+                <div className={styles.row}>
+                  <p className={styles.rowText}>Назначенный эксперт:</p>
+                  <p className={styles.rowInf}>Иванов Олег</p>
+                </div>
               </div>
-              <div className={styles.row}>
-                <p className={styles.rowInf}>Иванов Виктор Анатольевич</p>
-                <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
-                <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
-                <p className={styles.rowInf}>Сделать так, чтобы не дуло в кабинете 303</p>
-                <p className={styles.rowInf}>Рабочее пространство</p>
-                <p className={styles.rowInf}>Волжская ГЭС</p>
-                <p className={styles.rowInf}>Отдел</p>
-                <p className={styles.rowInf}>Иванов Олег</p>
-              </div>
-              <div className={styles.row}>
+              <div className={styles.rows}>
                 <div className={styles.files}>
-                  <p className={styles.rowText}>Прикреплённые файлы:</p>
+                  <p className={styles.rowTexts}>Прикреплённые файлы:</p>
                   <Upload {...props} className='uploadFile'></Upload>
                 </div>
               </div>
