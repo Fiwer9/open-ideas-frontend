@@ -171,7 +171,7 @@ export const CreateQuery = () => {
                     </Form.Item>
                     <div className={styles.containerBtn}>
                         <div className={styles.btnWhite}>
-                            <Buttons text={"Отменить"} onClick={() => {
+                            <Buttons text={"Назад"} onClick={() => {
                                 setSecondModalActive(true);
                             }}/>
                         </div>

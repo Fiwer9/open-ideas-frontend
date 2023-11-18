@@ -20,15 +20,24 @@ import {useSearchQuery} from "../../hooks/useSearchQuery";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import { FilterOutlined } from "@ant-design/icons";
+import UsersService from "../../services/UsersService";
+import {UserResponse} from "../../models/response/UserResponse";
+import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
+import OrganizationsService from "../../services/OrganizationsService";
+import {FilterOutlined, PlusCircleOutlined} from "@ant-design/icons";
+import {Logo} from "../PicturesComponents/Logo";
+import {Table} from "antd";
 
 
 export const QueryList = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [isExpert, setIsExpert] = useState(false);
     const [isArchive, setIsArchive] = useState(false)
+    const [user, setUser] = useState<UserResponse>()
+    const [organization, setOrganization] = useState<OrganizationsResponse>()
     const [queriesTableData, setQueriesTableData] = useState<QueriesResponse[]>([
         {
             id: 1,
@@ -107,19 +116,41 @@ export const QueryList = () => {
     ];
 
     const handleRowClick = (queryId: any) => {
-        router.push(Cookies.get('selectedTag') != 'Инициативы' ? `/queries/adminApplication` : `/queries/application?queryId=${queryId.id}`);
+        router.push(`/queries/adminApplication?queryId=${queryId.id}`);
     };
 
     useEffect(() => {
-        fetchData(setQueriesTableData, QueriesService.getQueriesTableData, setIsLoading);
-    }, [isArchive])
+        const delay = 3000;
+        const fetchDataWithDelay = async () => {
+            await new Promise(resolve => setTimeout(resolve, delay));
+            fetchData(setIsLoading, setQueriesTableData, QueriesService.getQueriesTableData);
+        };
+        setIsLoading(true)
+        fetchDataWithDelay();
+        setIsLoading(false)
+        fetchData(setIsLoading, setUser, UsersService.getCurrentUser, sessionStorage.getItem('user_id'));
+    }, [isArchive]);
+
+
+    useEffect(() => {
+        user && fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizationsById, user?.department.organization)
+        user && Cookies.set('department', user?.department.name)
+        user && Cookies.set('user_name', user?.name)
+        organization && Cookies.set('organization', organization.name)
+    }, [user]);
 
 
     const getData = () => {
+        if (isExpert && isArchive) {
+            return queriesTableData.filter((query) => query.expert_users.includes(Number(sessionStorage.getItem('user_id'))) && query.status === 'rejected' || query.status === 'registered')
+        }
+        if (isExpert) {
+            return queriesTableData.filter((query) => query.expert_users.includes(Number(sessionStorage.getItem('user_id'))))
+        }
         if (isArchive) {
-            return queriesTableData.filter((query) => query.status === 'rejected')
+            return queriesTableData.filter((query) => query.status === 'rejected' || query.status === 'registered')
         } else if (!isArchive) {
-            return queriesTableData.filter((query) => query.status !== 'rejected')
+            return queriesTableData.filter((query) => query.status !== 'rejected' && query.status !== 'registered')
         } else if (searchTerm) {
             return data.map((item) => item.name)
         } else if (searchNumber) {
@@ -133,7 +164,6 @@ export const QueryList = () => {
         setSearchTerm(searchText);
     };
 
-
     const handleSearchNumberChange = (searchNum: any) => {
         setSearchNumber(searchNum);
     };
@@ -142,11 +172,24 @@ export const QueryList = () => {
         setIsArchive(checked);
     };
 
+    const handleToggleExpert = (checked: any) => {
+        setIsExpert(checked);
+    };
+
+    const handleRowClickIdea = (queryId: any) => {
+        router.push(`/queries/application?queryId=${queryId.id}`);
+    }
+
+    const handleCreateQuery = () => {
+        router.push('/queries/create');
+    }
+
     return (
+      Cookies.get('selectedTag') === 'Панель администратора' ? (
         <div className={styles.container}>
             <Slider />
             <div className={styles.content}>
-                <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+                <Header user_name={user?.name} organization={organization && organization.name} department={user?.department.name}/>
                 <Tabs />
                 <MainText text={'Инициативы'}/>
                 <div className={styles.infContainer}>
@@ -165,5 +208,37 @@ export const QueryList = () => {
                 />
             </div>
         </div>
+        ) : (
+        <div className={styles.containerIdeas}>
+            <div className={styles.contentIdeas}>
+                <Header user_name={user?.name} organization={organization && organization.name} department={user?.department.name}/>
+                <div className={styles.header}>
+                    <div className={styles.logoHeader}>
+                        <Logo width={190} height={53} />
+                    </div>
+                    <div className={styles.tabs}>
+                        <Tabs />
+                    </div>
+                </div>
+                <MainText text={'Инициативы'}/>
+                <div className={styles.infContainer}>
+                    <SearchBar
+                      onSearchTermChange={handleSearchTermChange}
+                      onSearchNumberChange={handleSearchNumberChange}
+                      placeholderNum={'Номер'}
+                      placeholderQuery={'Поиск по идеям'}/>
+                    <FilterBar icon={<PlusCircleOutlined />} filterText={'Создать идею'} onClick={handleCreateQuery}/>
+                    <CheckboxBar onToggleArchive={handleToggleExpert} checkboxText={'Я эксперт'}/>
+                    <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
+                </div>
+                <DataTable
+                  columns={columns}
+                  data={getData()}
+                  onRowClick={handleRowClickIdea}
+                  isLoading={isLoading}
+                />
+            </div>
+        </div>
+      )
     );
 };

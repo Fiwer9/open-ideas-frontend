@@ -7,6 +7,9 @@ export default class OrganizationsService {
     static async getOrganizations():Promise<AxiosResponse<OrganizationsResponse[]>> {
         return $api.get('/organizations/organizations/');
     }
+    static async getOrganizationsById(id: number):Promise<AxiosResponse<OrganizationsResponse[]>> {
+        return $api.get(`/organizations/organizations/${id}`);
+    }
 
     static async getDepartments():Promise<AxiosResponse<IDepartment[]>> {
         return $api.get('/organizations/departments/')

@@ -1,4 +1,8 @@
 import {QueriesResponse} from "../models/response/QueriesResponse";
+import {UserResponse} from "../models/response/UserResponse";
+import dayjs from "dayjs";
+import 'dayjs/locale/ru';
+import Cookies from "js-cookie";
 
 export function getOrganizationName(text: number, organizations: any) {
     for (let org of organizations) {
@@ -37,6 +41,18 @@ export function getStatusClassName(styles: any, status: string) {
     }
 }
 
+export function formatDate(date: string) {
+    const currentDate = date.split('T')
+    return dayjs(currentDate[0], 'YYYY-MM-DD').format('DD.MM.YYYY')
+}
+
+export function formatDateRu(date: string) {
+    dayjs.locale('ru');
+    const currentDate = date.split('T')
+    return dayjs(currentDate[0]).format('DD MMMM YYYY г.');
+}
+
+
 export function formatDateToServer(date: any, separator='.') {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -74,7 +90,7 @@ export const getStatusTranslation = (status: string) => {
         case "rejected":
             return "Отклонена";
         case "done":
-            return "Реализована";
+            return "Выполнена";
         default:
             return "";
     }
@@ -113,8 +129,8 @@ export const checkExpert = (queryId: any, data: QueriesResponse[]) => {
     return isExpert;
 }
 
-export const fetchData = async (setData: any, getData: any, arg? : any, setIsLoading?: any) => {
-    setIsLoading && setIsLoading(true)
+export const fetchData = async (setIsLoading: any, setData: any, getData: any,  arg? : any) => {
+    setIsLoading(true)
     try {
         const data = arg? await getData(arg) : await getData()
         setData(data.data);
@@ -130,12 +146,60 @@ export const getRouteTranslation = (route: string) => {
         case "queries":
             return "Таблица инициатив";
         case "create":
-            return "editingApplication";
+            return "Создание инициативы";
         case "editingApplication":
             return "Редактирование инициативы";
-        case "adminApplication":
-            return "Инициатива";
+        case `adminApplication?queryId=${Cookies.get('queryId')}`:
+            return Cookies.get('queryName');
+        case `editingApplication?queryId=${Cookies.get('queryId')}`:
+            return `${Cookies.get('queryName')} (Редактирование)`;
         default:
             return "";
+    }
+}
+
+
+export function getUserName(userId: number, users: UserResponse[]) {
+    const user = users.find((user) => user.id === userId);
+    if (user) {
+        return user.name;
+    }
+    return "Аноним";
+}
+
+
+const getAllUserLikes = (users: UserResponse[]) => {
+    const res = []
+    for (let user of users) {
+        if (user.id === Number(sessionStorage.getItem('user_id'))) {
+            for (let query of user.likes) {
+                res.push(query.id)
+            }
+        }
+    }
+    return res
+}
+
+
+export function getLikes(users: UserResponse[], queryId: string) {
+    let like = 0;
+    for (let user of users) {
+        for (let query of user.likes) {
+            if (query.id === Number(queryId)) {
+                like += 1;
+
+            }
+        }
+    }
+    return like;
+}
+
+export function getAuthor(users_id: [number], users: UserResponse[], setUser: any) {
+    for (let id of users_id) {
+        for (let user of users) {
+            if (id === user.id) {
+                setUser(user)
+            }
+        }
     }
 }

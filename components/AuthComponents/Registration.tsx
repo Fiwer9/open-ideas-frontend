@@ -99,6 +99,11 @@ export const Registration = () => {
                     <InputLabel className={styles.contentSelectTitle} title={"Выберите свою организацию"}/>
                     <div className={styles.mySelectContainer}>
                         <Select
+                          showSearch
+                          filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                          filterSort={(optionA, optionB) =>
+                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                          }
                             loading={isLoading}
                             className={styles.select}
                             placeholder={"Название организации"}
@@ -114,6 +119,11 @@ export const Registration = () => {
                         <InputLabel className={styles.contentSelectTitle} title={"Выберите свой отдел"}/>
                         <div className={styles.mySelectContainer}>
                             <Select
+                              showSearch
+                              filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                              filterSort={(optionA, optionB) =>
+                                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                              }
                                 loading={isLoading}
                                 className={styles.select}
                                 placeholder={"Название отдела"}

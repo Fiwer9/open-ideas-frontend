@@ -3,9 +3,9 @@ import styles from "../styles/Account.module.scss";
 import {Button} from "antd";
 
 interface AccountBlockProps {
-  user_name: string;
-  department: string;
-  organization: string;
+  user_name?: string;
+  department?: string;
+  organization?: string;
 }
 
 export const AccountBlock = (props: AccountBlockProps) => {

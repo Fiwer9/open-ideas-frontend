@@ -15,14 +15,19 @@ export const Tabs = () => {
   const [isStaff, setIsStaff] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>(['Инициативы']);
   const [user, setUser] = useState<UserResponse>();
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    fetchData(setUser, UsersService.getCurrentUser, Number(sessionStorage.getItem('user_id')));
+    fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, Number(sessionStorage.getItem('user_id')));
   }, []);
 
   useEffect(() => {
     checkExpertUser();
   }, [user]);
+
+  useEffect(() => {
+    Cookies.set('selectedTags', selectedTags[0]);
+  }, [selectedTags]);
 
   const checkExpertUser = () => {
     user && user.is_staff && setIsStaff(user.is_staff);
@@ -34,7 +39,7 @@ export const Tabs = () => {
       : selectedTags.filter((t) => t === tag);
     setSelectedTags(nextSelectedTags);
     Cookies.set('selectedTag', tag);
-    router.push(router.asPath)
+    tag !== selectedTags[0]  && router.push('/queries')
   };
 
   useEffect(() => {
