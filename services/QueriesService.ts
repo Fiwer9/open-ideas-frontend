@@ -6,7 +6,7 @@ export default class QueriesService {
     static async getQueriesTableData():Promise<AxiosResponse<QueriesResponse[]>> {
         return $api.get(`/queries/queries/`);
     }
-    static async getQueriesTableDataById(id= ''):Promise<AxiosResponse<QueriesResponse>> {
+    static async getQueriesTableDataById(id: string):Promise<AxiosResponse<QueriesResponse>> {
         return $api.get(`/queries/queries/${id}/`);
     }
 

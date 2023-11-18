@@ -286,7 +286,7 @@ export const ApplicationCard = ({ queryId}: ApplicationCardProps) => {
                   </Form.Item>
                   <div className={styles.footerContainer}>
                       <div className={styles.btnWhite}>
-                          <Buttons onClick={() => router.push("/queries")} text={"Отменить"} />
+                          <Buttons onClick={() => router.push("/queries")} text={"Назад"} />
                       </div>
                       <div className={`${styles.btnBlue} ${styles.btnForm}`}>
                           <Buttons text={"Отправить"} type='submit' onClick={() => {
