@@ -153,6 +153,8 @@ export const getRouteTranslation = (route: string) => {
             return Cookies.get('queryName');
         case `editingApplication?queryId=${Cookies.get('queryId')}`:
             return `${Cookies.get('queryName')} (Редактирование)`;
+        case "users":
+            return "Таблица пользователей";
         default:
             return "";
     }

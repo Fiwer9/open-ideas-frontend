@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import {QueriesResponse} from "../models/response/QueriesResponse";
 
-export const useSearchQuery = (searchNum: any, lisOfQuery: QueriesResponse[], getData: any, setIsLoading: any, setData: any) => {
+export const useSearchQuery = (searchNum: any, lisOfQuery: any, getData: any, setIsLoading: any, setData: any) => {
 
   useEffect(() => {
     const filterQuery = async (searchText: any, listOfQuery: QueriesResponse[], getData: any) => {

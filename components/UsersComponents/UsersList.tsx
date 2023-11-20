@@ -1,18 +1,33 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Slider } from "../SliderComponents/SliderComponents";
 import { Tabs } from "../TabsComponent/Tabs";
 import { Header } from "../HeaderComponents/Header";
 import { MainText } from "../MainTextComponent";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
-import { Table } from "antd";
 import { FilterOutlined } from "@ant-design/icons";
 import router from "next/router";
 
 import styles from "./styles/UsersList.module.scss";
+import {DataTable} from "../TableComponent/Table";
+import {fetchData, getOrganizationName} from "../../utils/utils";
+import UsersService from "../../services/UsersService";
+import {UsersUpdateResponse} from "../../models/response/UsersUpdateResponse";
+import OrganizationsService from "../../services/OrganizationsService";
+import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
+import {useSearchNum} from "../../hooks/useSearchNum";
+import {useSearchQuery} from "../../hooks/useSearchQuery";
 
 
 export const UsersList = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [usersData, setUsersData] = useState<UsersUpdateResponse[]>([])
+  const [organizations, setOrganizations] = useState<OrganizationsResponse[]>([])
+  const emails = [...new Set(usersData.map((user) => user.email))];
+  const names = [...new Set(usersData.map((user) => user.name))];
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchNumber, setSearchNumber] = useState('');
+  const organizationsFilter = [...new Set(organizations.map((organization) => organization.name))];
   const columns: any = [
     {
       title: 'Номер',
@@ -28,50 +43,68 @@ export const UsersList = () => {
       dataIndex: 'name',
       key: 'name',
       width: "50%",
-      filters: [],
+      filters: names.map((name) => ({
+        text: name,
+        value: name,
+      })),
     },
     {
       title: 'Почта',
       dataIndex: 'email',
       key: 'email',
       width: "20%",
-      filters: [],
+      filters: emails.map((email) => ({
+        text: email,
+        value: email,
+      })),
     },
     {
       title: 'Организация',
       dataIndex: 'organization',
       key: 'organization',
       width: "20%",
-      filters: [],
+      filters: organizationsFilter.map((organization) => ({
+        text: organization,
+        value: organization,
+      })),
     },
   ];
 
-  const dataSource = [
-    {
-      id: '1',
-      name: 'Иванов Иван Иванович',
-      email: 'example@mail.ru',
-      organization: 'Aratrum',
-    },
-    {
-      id: '2',
-      name: 'Иванов Иван Иванович',
-      email: 'example@mail.ru',
-      organization: 'Aratrum',
-    },
-    {
-      id: '3',
-      name: 'Иванов Иван Иванович',
-      email: 'example@mail.ru',
-      organization: 'Aratrum',
-    },
-    {
-      id: '4',
-      name: 'Иванов Иван Иванович',
-      email: 'example@mail.ru',
-      organization: 'Aratrum',
-    },
-  ];
+  useEffect(() => {
+    const delay = 3000;
+    const fetchDataWithDelay = async () => {
+      await new Promise(resolve => setTimeout(resolve, delay));
+      fetchData(setIsLoading, setUsersData, UsersService.getUsersUpdate);
+      fetchData(setIsLoading, setOrganizations, OrganizationsService.getOrganizations);
+    };
+    setIsLoading(true)
+    fetchDataWithDelay();
+    setIsLoading(false)
+  }, []);
+
+  const getData = () => {
+    for (let user of usersData) {
+      user.organization = getOrganizationName(user.department.organization, organizations);
+    }
+
+    return usersData;
+  }
+
+  const handleRowClick = (queryId: any) => {
+    router.push('/users/userCard')
+  };
+
+  const handleSearchTermChange = (searchText: any) => {
+    setSearchTerm(searchText);
+  };
+
+  const handleSearchNumberChange = (searchNum: any) => {
+    setSearchNumber(searchNum);
+  };
+
+  useSearchNum(searchNumber, usersData, UsersService.getUsersUpdate, setIsLoading, setUsersData)
+  useSearchQuery(searchTerm, usersData, UsersService.getUsersUpdate, setIsLoading, setUsersData)
+
 
   return (
     <>
@@ -82,21 +115,18 @@ export const UsersList = () => {
           <Tabs />
           <MainText text={'Пользователи'}/>
           <div className={styles.infContainer}>
-            <SearchBar placeholderNum={'Номер'}
-                       placeholderQuery={'Поиск по идеям'}/>
+            <SearchBar
+              onSearchTermChange={handleSearchTermChange}
+              onSearchNumberChange={handleSearchNumberChange}
+              placeholderNum={'Номер'}
+              placeholderQuery={'Поиск по идеям'}/>
             <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
           </div>
-          <Table
-            className={styles.table}
+          <DataTable
+            data={getData()}
             columns={columns}
-            dataSource={dataSource}
-            onRow={() => ({
-              onClick: () => {
-                router.push('/users/userCard');
-              },
-            })}
-            rowKey="id"
-            bordered
+            isLoading={isLoading}
+            onRowClick={handleRowClick}
           />
         </div>
       </div>
