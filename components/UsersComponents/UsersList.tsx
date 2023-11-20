@@ -10,7 +10,7 @@ import router from "next/router";
 
 import styles from "./styles/UsersList.module.scss";
 import {DataTable} from "../TableComponent/Table";
-import {fetchData, getOrganizationName} from "../../utils/utils";
+import {fetchData, getDirectionTranslationOnEng, getOrganizationName} from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {UsersUpdateResponse} from "../../models/response/UsersUpdateResponse";
 import OrganizationsService from "../../services/OrganizationsService";
@@ -47,6 +47,7 @@ export const UsersList = () => {
         text: name,
         value: name,
       })),
+      onFilter: (value: any, record: any) => record.name.includes(value),
     },
     {
       title: 'Почта',
@@ -57,6 +58,7 @@ export const UsersList = () => {
         text: email,
         value: email,
       })),
+      onFilter: (value: any, record: any) => record.email.includes(value),
     },
     {
       title: 'Организация',
@@ -67,6 +69,7 @@ export const UsersList = () => {
         text: organization,
         value: organization,
       })),
+      onFilter: (value: any, record: any) => record.organization.includes(value),
     },
   ];
 
@@ -119,7 +122,7 @@ export const UsersList = () => {
               onSearchTermChange={handleSearchTermChange}
               onSearchNumberChange={handleSearchNumberChange}
               placeholderNum={'Номер'}
-              placeholderQuery={'Поиск по идеям'}/>
+              placeholderQuery={'Поиск по пользователям'}/>
             <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
           </div>
           <DataTable
