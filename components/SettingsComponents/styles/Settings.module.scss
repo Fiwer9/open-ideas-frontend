@@ -1,5 +1,29 @@
 @import "../../../styles/variable.scss";
 
+.contentSwitch {
+  margin-top: 30px;
+
+  .switchRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .textSwitch {
+      margin: 0;
+      font: {
+        family: Poppins, sans-serif;
+        weight: 400;
+        size: 16px;
+      };
+      color: $color-gray-43;
+    }
+  }
+
+  .text {
+    margin-top: 18px;
+  }
+}
+
 .container {
   @include container;
 
@@ -11,11 +35,12 @@
 
       .column {
         .row {
+          width: 682px;
           display: flex;
           flex-direction: row;
+          justify-content: space-between;
 
           .rowText {
-            width: 380px;
             margin: 0;
             margin-top: 30px;
             font: {
@@ -24,6 +49,13 @@
               size: 20px;
             };
             color: rgba($color-gray-43, 0.8);
+          }
+
+          .tag {
+            margin: {
+              top: 32px;
+              left: 50px;
+            }
           }
         }
       }
