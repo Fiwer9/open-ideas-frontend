@@ -17,6 +17,7 @@ import OrganizationsService from "../../services/OrganizationsService";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import {useSearchNum} from "../../hooks/useSearchNum";
 import {useSearchQuery} from "../../hooks/useSearchQuery";
+import Cookies from "js-cookie";
 
 
 export const UsersList = () => {
@@ -114,7 +115,7 @@ export const UsersList = () => {
       <div className={styles.container}>
         <Slider/>
         <div className={styles.content}>
-          <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
           <Tabs />
           <MainText text={'Пользователи'}/>
           <div className={styles.infContainer}>
