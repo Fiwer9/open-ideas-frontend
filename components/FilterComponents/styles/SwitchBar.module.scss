@@ -1,0 +1,56 @@
+@import "../../../styles/variable";
+
+.switchContainerHint {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+
+  .switchContainer {
+    margin: 0;
+    display: flex;
+    padding-top: 8px;
+
+    .switch {
+      margin: 0;
+      margin-left: 8px;
+      font: {
+        family: Poppins, sans-serif;
+        weight: 400;
+        size: 16px;
+      };
+      color: $color-gray-43;
+    }
+  }
+
+  .hintText {
+    margin: 0;
+    margin-top: 18px;
+    font: {
+      family: RobotoLight, sans-serif;
+      weight: 400;
+      size: 14px;
+    };
+    color: #7E7E7E;
+  }
+
+  @media (max-width: 720px) {
+    flex-direction: row;
+    gap: 24px;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 420px) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    gap: 16px;
+  }
+}
+
