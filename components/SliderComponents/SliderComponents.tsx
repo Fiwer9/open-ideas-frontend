@@ -52,7 +52,7 @@ export const Slider = () => {
           <Menu.Item key={'3'} icon={<ReconciliationOutlined />} onClick={() => router.push('/organizations')}>Организации и отделы</Menu.Item>
           <Menu.Item key={'3'} icon={<PullRequestOutlined />}>Направления</Menu.Item>
           <SubMenu key={'sub1'} icon={<BarChartOutlined />} title={'Аналитика'}>
-            <Menu.Item key={'4'}>Графики</Menu.Item>
+            <Menu.Item key={'4'} onClick={() => router.push('/charts')}>Графики</Menu.Item>
             <Menu.Item key={'5'}>Таблицы</Menu.Item>
           </SubMenu>
           <Menu.Item key={'6'} icon={<SettingOutlined />}>Настройки</Menu.Item>

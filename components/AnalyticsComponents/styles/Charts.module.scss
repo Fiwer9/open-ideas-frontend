@@ -1,0 +1,70 @@
+@import "../../../styles/variable.scss";
+
+.container {
+  @include container;
+
+  .content {
+    @include content;
+
+    .contentStatic {
+      .headerContent {
+        display: flex;
+        justify-content: space-between;
+
+        .statisticContent {
+          display: flex;
+
+          .statusItem:not(:last-child) {
+            margin-right: 20px;
+          }
+        }
+
+        .calendar {
+          .labelCalendar {
+            margin-bottom: 0;
+            font: {
+              family: Poppins, sans-serif;
+              weight: 500;
+              size: 14px;
+            };
+            color: rgba($color-black, 0.4);
+          }
+
+          .dropdown {
+            margin: 0;
+            margin-top: 5px;
+            font: {
+              family: Poppins, sans-serif;
+              weight: 500;
+              size: 16px;
+            };
+          }
+        }
+
+        .headerItem {
+          font: {
+            family: Poppins, sans-serif;
+            weight: 700;
+            size: 14px;
+          };
+          color: $color-gray-26;
+        }
+      }
+
+      .statisticsCard {
+        display: flex;
+        margin-top: 34px;
+        margin-bottom: 30px;
+
+        .statisticsCardItem {
+          margin-right: 100px;
+        }
+      }
+
+      .lineCharts {
+        width: 1529px;
+        height: 387px;
+      }
+    }
+  }
+}
