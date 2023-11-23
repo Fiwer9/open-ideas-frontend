@@ -56,6 +56,7 @@ export const Slider = () => {
             <Menu.Item key={'6'}>Таблицы</Menu.Item>
           </SubMenu>
           <Menu.Item key={'7'} icon={<SettingOutlined />}>Настройки</Menu.Item>
+          <Menu.Item key={'6'} icon={<SettingOutlined />} onClick={() => router.push('/settings')}>Настройки</Menu.Item>
         </Menu>
         <Button
           type="text"
