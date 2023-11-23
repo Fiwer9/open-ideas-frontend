@@ -50,11 +50,12 @@ export const Slider = () => {
           <Menu.Item key={'1'} icon={<BulbOutlined />} onClick={() => router.push('/queries')}>Инициативы</Menu.Item>
           <Menu.Item key={'2'} icon={<UserOutlined />} onClick={() => router.push('/users')}>Пользователи</Menu.Item>
           <Menu.Item key={'3'} icon={<ReconciliationOutlined />} onClick={() => router.push('/organizations')}>Организации и отделы</Menu.Item>
-          <Menu.Item key={'3'} icon={<PullRequestOutlined />}>Направления</Menu.Item>
+          <Menu.Item key={'4'} icon={<PullRequestOutlined />}>Направления</Menu.Item>
           <SubMenu key={'sub1'} icon={<BarChartOutlined />} title={'Аналитика'}>
-            <Menu.Item key={'4'}>Графики</Menu.Item>
-            <Menu.Item key={'5'}>Таблицы</Menu.Item>
+            <Menu.Item key={'5'}>Графики</Menu.Item>
+            <Menu.Item key={'6'}>Таблицы</Menu.Item>
           </SubMenu>
+          <Menu.Item key={'7'} icon={<SettingOutlined />}>Настройки</Menu.Item>
           <Menu.Item key={'6'} icon={<SettingOutlined />} onClick={() => router.push('/settings')}>Настройки</Menu.Item>
         </Menu>
         <Button
