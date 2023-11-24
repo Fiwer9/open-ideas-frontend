@@ -8,7 +8,6 @@ import QueriesService from "../services/QueriesService";
 export default class Store {
     user = {} as IUser;
     isAuth = false;
-    queryId = 0;
 
     constructor() {
         makeAutoObservable(this);

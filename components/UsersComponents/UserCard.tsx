@@ -25,9 +25,16 @@ export const UserCard = ({userId} : UserCardProps) => {
   const [organizations, setOrganizations] = useState<OrganizationsResponse[]>();
 
   useEffect(() => {
-    fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, userId);
+    userId && fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, userId);
     fetchData(setIsLoading, setOrganizations, OrganizationsService.getOrganizations);
-  }, []);
+  }, [userId]);
+
+  const data = {
+    user_name: user?.name,
+    email: user?.email,
+    organization: organizations && getOrganizationName(user?.department.organization, organizations),
+    department: user?.department.name,
+  }
 
   useEffect(() => {
     user && Cookies.set('userName', user.name)
@@ -43,7 +50,7 @@ export const UserCard = ({userId} : UserCardProps) => {
             <Image src={avatar} alt={'Аватар'} width={190} height={190}/>
 
             <div className={styles.infUser}>
-              <p className={styles.nameUser}>{user?.name}</p>
+              <p className={styles.nameUser}>{data.user_name}</p>
 
               <Col className={styles.column}>
                 <div className={styles.row}>
@@ -54,14 +61,14 @@ export const UserCard = ({userId} : UserCardProps) => {
                 </div>
 
                 <div className={styles.row}>
-                  <p className={styles.rowInf}>{user?.email}</p>
+                  <p className={styles.rowInf}>{data.email}</p>
                   <p className={styles.rowInf}>№1, №123, №98453</p>
-                  <p className={`${styles.rowInf} ${styles.orgUser}`}>{organizations && getOrganizationName(user?.department.organization, organizations)}</p>
-                  <p className={styles.rowInf}>{user?.department.name}</p>
+                  <p className={`${styles.rowInf} ${styles.orgUser}`}>{data.organization}</p>
+                  <p className={styles.rowInf}>{data.department}</p>
                 </div>
               </Col>
 
-              <Button className={styles.btnFooter} type="primary" onClick={() => router.push('/users/editingUser')}>
+              <Button className={styles.btnFooter} type="primary" onClick={() => router.push(`/users/editingUser?userId=${userId}`)}>
                 <span>Редактировать профиль</span>
               </Button>
             </div>

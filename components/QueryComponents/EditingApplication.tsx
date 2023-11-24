@@ -53,7 +53,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
   useEffect(() => {
 
     function begin() {
-      fetchData(setIsLoading, setApplicationData, QueriesService.getQueriesTableDataById, queryId)
+      queryId && fetchData(setIsLoading, setApplicationData, QueriesService.getQueriesTableDataById, queryId)
       fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizations)
       fetchData(setIsLoading, setUsers, UsersService.getUsers)
       fetchData(setIsLoading, setDepartments, OrganizationsService.getDepartments)
