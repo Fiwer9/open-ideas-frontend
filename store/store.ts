@@ -4,6 +4,7 @@ import AuthService from "../services/LoginService";
 import CommentService from "../services/CommentService";
 import LikesService from "../services/LikesService";
 import QueriesService from "../services/QueriesService";
+import UsersService from "../services/UsersService";
 
 export default class Store {
     user = {} as IUser;
@@ -48,6 +49,14 @@ export default class Store {
             expertUsers ? await QueriesService.patchQuery(date, name, description, initiative_direction, status,
                 implementation_effect, organization, initiator_users, id, expertUsers) : await QueriesService.patchQuery(date, name, description, initiative_direction, status,
               implementation_effect, organization, initiator_users, id)
+        } catch (e: any) {
+            console.log(e.response?.data?.message);
+        }
+    }
+
+    async putUserUpdate(name: string, email: string, is_verified: boolean, is_active: boolean, is_staff: boolean, is_superuser: boolean, id: number) {
+        try {
+            await UsersService.putUserUpdate(name, email, is_verified, is_staff, is_superuser, id, is_active)
         } catch (e: any) {
             console.log(e.response?.data?.message);
         }

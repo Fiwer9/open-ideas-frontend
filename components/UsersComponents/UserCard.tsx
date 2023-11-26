@@ -14,6 +14,8 @@ import {fetchData, getOrganizationName} from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import OrganizationsService from "../../services/OrganizationsService";
+import {QueriesResponse} from "../../models/response/QueriesResponse";
+import QueriesService from "../../services/QueriesService";
 
 interface UserCardProps {
   userId: string;
@@ -23,17 +25,23 @@ export const UserCard = ({userId} : UserCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<UserResponse>();
   const [organizations, setOrganizations] = useState<OrganizationsResponse[]>();
-
+  const [queries, setQueries] = useState<QueriesResponse[]>([]);
   useEffect(() => {
     userId && fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, userId);
     fetchData(setIsLoading, setOrganizations, OrganizationsService.getOrganizations);
+    fetchData(setIsLoading, setQueries, QueriesService.getQueriesTableData, userId)
   }, [userId]);
+
+  function getQueries() {
+    return queries.map(query => `№${query.id}`)
+  }
 
   const data = {
     user_name: user?.name,
     email: user?.email,
     organization: organizations && getOrganizationName(user?.department.organization, organizations),
     department: user?.department.name,
+    expert_queries: queries ? getQueries().toString().replaceAll(',', ', ') : ''
   }
 
   useEffect(() => {
@@ -62,7 +70,7 @@ export const UserCard = ({userId} : UserCardProps) => {
 
                 <div className={styles.row}>
                   <p className={styles.rowInf}>{data.email}</p>
-                  <p className={styles.rowInf}>№1, №123, №98453</p>
+                  <p className={styles.rowInf}>{data.expert_queries}</p>
                   <p className={`${styles.rowInf} ${styles.orgUser}`}>{data.organization}</p>
                   <p className={styles.rowInf}>{data.department}</p>
                 </div>

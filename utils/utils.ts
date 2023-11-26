@@ -157,6 +157,8 @@ export const getRouteTranslation = (route: string) => {
             return "Таблица пользователей";
         case `userCard?userId=${Cookies.get('userId')}`:
             return Cookies.get('userName');
+        case `editingUser?userId=${Cookies.get('userId')}`:
+            return `${Cookies.get('userName')} (Редактирование)`;
         default:
             return "";
     }

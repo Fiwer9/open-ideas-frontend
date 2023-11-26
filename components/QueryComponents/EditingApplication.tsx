@@ -77,7 +77,6 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
     }
 
   function handleChangeApplicationSelect(event: any[], setData: React.SetStateAction<any>): void {
-    console.log(event)
     setData(event)
   }
 
