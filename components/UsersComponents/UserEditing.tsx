@@ -8,7 +8,7 @@ import { Button, Form, Input, Select } from "antd";
 import styles from "./styles/UserEditing.module.scss";
 import Cookies from "js-cookie";
 import {UserResponse} from "../../models/response/UserResponse";
-import {fetchData} from "../../utils/utils";
+import {fetchData, getDepartmentName, getOrganizationName} from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import QueriesService from "../../services/QueriesService";
 import {QueriesResponse} from "../../models/response/QueriesResponse";
@@ -24,7 +24,25 @@ interface UserEditingProps {
 export const UserEditing = ({userId}: UserEditingProps) => {
   const { store } = useContext(Context)
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState<UserResponse>();
+  const [user, setUser] = useState<UserResponse>({
+    name: '',
+    id: 0,
+    department: {name: '', id: 0, organization: 0},
+    is_verified: false,
+    is_superuser: false,
+    is_staff: false,
+    is_active: false,
+    groups: [],
+    email: '',
+    date_joined: '',
+    first_name: '',
+    last_login: '',
+    last_name: '',
+    likes: [],
+    user_permissions: [],
+    password: '',
+    username: ''
+  });
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [expertInitiatives, setExpertInitiatives] = useState<string>('')
@@ -40,7 +58,7 @@ export const UserEditing = ({userId}: UserEditingProps) => {
   const [departments, setDepartments] = useState<IDepartment[]>([]);
 
   useEffect(() => {
-    fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, userId);
+    userId ? fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, userId) : window.history.back() // Сделал так чтобы если данные не прогрузились отбрасывало на предыдущую пока так;
     fetchData(setIsLoading, setQueries, QueriesService.getQueriesTableData)
     fetchData(setIsLoading, setOrganizations, OrganizationsService.getOrganizations)
     fetchData(setIsLoading, setDepartments, OrganizationsService.getDepartments)
@@ -99,6 +117,9 @@ export const UserEditing = ({userId}: UserEditingProps) => {
     try {
       store.putUserUpdate(userName, email, isVerified, isActive, isStaff, isSuperUser, Number(userId))
       department && store.putRegistration(userName, department)
+      Cookies.set('department', getDepartmentName(department, departments) as string)
+      Cookies.set('organization', getOrganizationName(organization, organizations))
+      Cookies.set('user_name', userName)
       window.history.back()
     } catch (e) {
       console.error(e)
@@ -112,7 +133,7 @@ export const UserEditing = ({userId}: UserEditingProps) => {
         <div className={styles.content}>
           <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
           <Tabs />
-          {user?.name && (
+          {user.name && (
             <Form
               layout="vertical"
               initialValues={{

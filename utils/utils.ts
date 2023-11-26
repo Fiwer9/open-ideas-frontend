@@ -3,6 +3,15 @@ import {UserResponse} from "../models/response/UserResponse";
 import dayjs from "dayjs";
 import 'dayjs/locale/ru';
 import Cookies from "js-cookie";
+import {IDepartment} from "../models/IDepartment";
+
+export function getDepartmentName(depId: number | undefined, departments: IDepartment[]) {
+    for (let dep of departments) {
+        if (dep.id === depId) {
+            return dep.name;
+        }
+    }
+}
 
 export function getOrganizationName(text: number | undefined, organizations: any) {
     for (let org of organizations) {
