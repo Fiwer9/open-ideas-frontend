@@ -1,10 +1,23 @@
 @import "../../../styles/variable.scss";
 
+.contentDate {
+  .period {
+    margin: 0;
+  }
+
+  .btnContainer {
+    float: right;
+  }
+}
+
 .container {
   @include container;
 
   .content {
     @include content;
+    padding: {
+      right: 65px;
+    };
 
     .contentStatic {
       .headerContent {
@@ -21,23 +34,14 @@
 
         .calendar {
           .labelCalendar {
-            margin-bottom: 0;
+            margin: 0;
+            margin-bottom: 5px;
             font: {
               family: Poppins, sans-serif;
               weight: 500;
               size: 14px;
             };
             color: rgba($color-black, 0.4);
-          }
-
-          .dropdown {
-            margin: 0;
-            margin-top: 5px;
-            font: {
-              family: Poppins, sans-serif;
-              weight: 500;
-              size: 16px;
-            };
           }
         }
 
@@ -57,12 +61,12 @@
         margin-bottom: 30px;
 
         .statisticsCardItem {
-          margin-right: 100px;
+          margin-right: 70px;
         }
       }
 
       .lineCharts {
-        width: 1529px;
+        width: 1470px;
         height: 387px;
       }
     }

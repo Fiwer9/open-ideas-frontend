@@ -4,8 +4,11 @@ import { Tabs } from "../TabsComponent/Tabs";
 import { Header } from "../HeaderComponents/Header";
 import { MainText } from "../MainTextComponent";
 import { StatisticsCard } from "./StatisticsCard";
-import { Dropdown, Space } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+import { Button } from "antd";
+import dayjs from 'dayjs';
+import type { TimeRangePickerProps } from 'antd';
+import { DatePicker } from 'antd';
+const { RangePicker } = DatePicker;
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -61,7 +64,7 @@ export const data = {
       borderWidth: 3,
     },
     {
-      label: 'Отклонены',
+      label: 'Выполнены',
       data: labels.map(() => faker.datatype.number({ min: 10, max: 100 })),
       borderColor: '#66ED7C',
       backgroundColor: '#66ED7C',
@@ -70,17 +73,25 @@ export const data = {
   ],
 };
 
+const rangePresets: TimeRangePickerProps['presets'] = [
+  { label: 'Последние 7 дней', value: [dayjs().add(-7, 'd'), dayjs()] },
+  { label: 'Последние 28 дней', value: [dayjs().add(-28, 'd'), dayjs()] },
+  { label: 'Последние 90 дней', value: [dayjs().add(-90, 'd'), dayjs()] },
+  { label: 'Последние 365 дней', value: [dayjs().add(-365, 'd'), dayjs()] },
+  { label: 'Всё время', value: [dayjs().add(-1825, 'd'), dayjs()] },
+];
+
+function ContentDate() {
+  return <div className={styles.contentDate}>
+    <p className={styles.period}>Продолжительность выбранного периода: 30 дней</p>
+    <div className={styles.btnContainer}>
+      <Button type="link" className={styles.btnDate}>ОТМЕНА</Button>
+      <Button type="link" className={styles.btnDate}>ВЫБРАТЬ</Button>
+    </div>
+  </div>;
+}
+
 export const Charts = () => {
-  const items = [
-    {
-      label: '1',
-      key: '0',
-    },
-    {
-      label: '2',
-      key: '1',
-    },
-  ];
 
   return (
     <>
@@ -96,14 +107,10 @@ export const Charts = () => {
               <p className={`${styles.numberInitiatives} ${styles.headerItem}`}>Количество инициатив : 100</p>
               <div className={styles.calendar}>
                 <p className={styles.labelCalendar}>С 1 янв. 2023 г. по сегодняш..</p>
-                <Dropdown menu={{ items }} trigger={['click']}>
-                  <a onClick={(e) => e.preventDefault()}>
-                    <Space>
-                      <p className={styles.dropdown}>С момента публикации</p>
-                      <DownOutlined />
-                    </Space>
-                  </a>
-                </Dropdown>
+                <RangePicker
+                  presets={rangePresets}
+                  renderExtraFooter={() => ContentDate()}
+                />
               </div>
             </div>
 
