@@ -4,9 +4,7 @@ import styles from "./styles/QueryList.module.scss";
 import {QueriesResponse} from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 import {
-    fetchData,
-    getDirectionTranslation,
-    getDirectionTranslationOnEng,
+    fetchData, getDirectionName,
     getStatusClassName,
     getStatusTranslation
 } from "../../utils/utils";
@@ -20,7 +18,7 @@ import {useSearchQuery} from "../../hooks/useSearchQuery";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
@@ -28,30 +26,19 @@ import {OrganizationsResponse} from "../../models/response/OrganizationsResponse
 import OrganizationsService from "../../services/OrganizationsService";
 import {FilterOutlined, PlusCircleOutlined} from "@ant-design/icons";
 import {Logo} from "../PicturesComponents/Logo";
-import {Table} from "antd";
+import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
+import FetchQueries from "../../hooks/fetches/FetchQueries/FetchQueries";
 
 
 export const QueryList = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [isExpert, setIsExpert] = useState(false);
+    const [directions, setDirections] = FetchDirections.useGetDirections();
     const [isArchive, setIsArchive] = useState(false)
     const [user, setUser] = useState<UserResponse>()
     const [organization, setOrganization] = useState<OrganizationsResponse>()
-    const [queriesTableData, setQueriesTableData] = useState<QueriesResponse[]>([
-        {
-            id: 1,
-            date: "",
-            status: "",
-            description: '',
-            organization: 0,
-            expert_users: [],
-            implementation_effect: '',
-            initiative_direction: '',
-            name: '',
-            initiator_users: [0],
-        }
-    ])
+    const [queriesTableData, setQueriesTableData] = FetchQueries.useGetQueries()
 
     const data = queriesTableData;
     const [searchTerm, setSearchTerm] = useState('');
@@ -61,7 +48,7 @@ export const QueryList = () => {
     useSearchQuery(searchTerm, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
 
     const items = queriesTableData;
-    const direct = [...new Set(items.map((item) => getDirectionTranslation(item.initiative_direction)))];
+    const direct = [...new Set(directions.map((item) => item.name))];
     const status = [...new Set(items.map((item) => getStatusTranslation(item.status)))];
 
     const columns = [
@@ -87,13 +74,13 @@ export const QueryList = () => {
             title: 'Направление',
             dataIndex: 'initiative_direction',
             key: 'initiative_direction',
-            render: (text: string) => getDirectionTranslation(text),
             width: "15%",
+            render: (directionId: number) => getDirectionName(directionId, directions),
             filters: direct.map((direction) => ({
                 text: direction,
                 value: direction,
             })),
-            onFilter: (value: any, record: any) => record.initiative_direction.includes(getDirectionTranslationOnEng(value)),
+            onFilter: (value: any, record: any) => record.name.includes(value),
         },
         {
             title: 'Статус заявки',
@@ -116,18 +103,11 @@ export const QueryList = () => {
     ];
 
     const handleRowClick = (queryId: any) => {
+        Cookies.set('queryId', queryId.id)
         router.push(`/queries/adminApplication?queryId=${queryId.id}`);
     };
 
     useEffect(() => {
-        const delay = 3000;
-        const fetchDataWithDelay = async () => {
-            await new Promise(resolve => setTimeout(resolve, delay));
-            fetchData(setIsLoading, setQueriesTableData, QueriesService.getQueriesTableData);
-        };
-        setIsLoading(true)
-        fetchDataWithDelay();
-        setIsLoading(false)
         fetchData(setIsLoading, setUser, UsersService.getCurrentUser, sessionStorage.getItem('user_id'));
     }, [isArchive]);
 
@@ -136,8 +116,11 @@ export const QueryList = () => {
         user && fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizationsById, user?.department.organization)
         user && Cookies.set('department', user?.department.name)
         user && Cookies.set('user_name', user?.name)
-        organization && Cookies.set('organization', organization.name)
     }, [user]);
+
+    useEffect(() => {
+        organization && Cookies.set('organization', organization.name)
+    }, [organization]);
 
 
     const getData = () => {
@@ -177,6 +160,7 @@ export const QueryList = () => {
     };
 
     const handleRowClickIdea = (queryId: any) => {
+        Cookies.set('queryId', queryId.id)
         router.push(`/queries/application?queryId=${queryId.id}`);
     }
 

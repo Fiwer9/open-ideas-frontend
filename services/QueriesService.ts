@@ -16,7 +16,7 @@ export default class QueriesService {
             implementation_effect, organization, initiator_users});
     }
 
-    static async patchQuery(date: string, name: string, description: string, initiative_direction: string, status: string,
+    static async patchQuery(date: string, name: string, description: string, initiative_direction: number, status: string,
                            implementation_effect: string, organization: number, initiator_users: [number], id: number, expert_users? : number[]):Promise<AxiosResponse> {
         return expert_users ?  $api.patch(`/queries/queries/${id}/`, {date, name, description, initiative_direction, status,
             implementation_effect, organization, initiator_users, expert_users})

@@ -43,7 +43,7 @@ export default class Store {
         }
     }
 
-    async patchQuery(date: string, name: string, description: string, initiative_direction: string, status: string,
+    async patchQuery(date: string, name: string, description: string, initiative_direction: number, status: string,
                      implementation_effect: string, organization: number, initiator_users: [number], id: number, expertUsers?: number[]) {
         try {
             expertUsers ? await QueriesService.patchQuery(date, name, description, initiative_direction, status,

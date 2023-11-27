@@ -9,25 +9,21 @@ import React, {useContext, useEffect, useState} from "react";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
 import { useRouter } from "next/router";
-import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import {UserResponse} from "../../models/response/UserResponse";
 import {Context} from "../../pages/_app";
-import {QueriesResponse} from "../../models/response/QueriesResponse";
-import QueriesService from "../../services/QueriesService";
-import OrganizationsService from "../../services/OrganizationsService";
-import UsersService from "../../services/UsersService";
 import {
-  fetchData,
-  formatDate, formatDateRu, formatDateToServer, getAuthor,
-  getDirectionTranslation,
+  formatDate, formatDateRu, formatDateToServer, getAuthor, getDirectionName,
   getLikes,
-  getOrganizationName, getStatusTranslation,
+  getOrganizationName, getStatusClassName, getStatusTranslation,
   getUserName
 } from "../../utils/utils";
 import Cookies from "js-cookie";
-import {CommentResponse} from "../../models/response/CommentResponse";
-import CommentService from "../../services/CommentService";
 import type { UploadProps } from 'antd';
+import FetchQueries from "../../hooks/fetches/FetchQueries/FetchQueries";
+import {FetchUsers} from "../../hooks/fetches/FetchUsers/FetchUsers";
+import FetchOrganizations from "../../hooks/fetches/FetchOrganizations/FetchOrganizations";
+import FetchComments from "../../hooks/fetches/FetchComments/FetchComments";
+import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
 
 
 interface AdminApplicationCardProps {
@@ -35,38 +31,24 @@ interface AdminApplicationCardProps {
 }
 
 export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
-  Cookies.set('queryId', queryId)
+
   const router = useRouter();
   const [modalActive, setModalActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
-  const [users, setUsers] = useState<UserResponse[]>([])
+  const [organization, setOrganization] = FetchOrganizations.useGetOrganizations()
+  const [users, setUsers] = FetchUsers.useGetUsers();
   const [user, setUser] = useState<UserResponse>()
   const { store } = useContext(Context);
-  const [dataComment, setDataComment] = useState<CommentResponse[]>([])
+  const [dataComment, setDataComment] = FetchComments.useGetComments();
+  const [directions, setDirections] = FetchDirections.useGetDirections();
   const [status, setStatus] = useState('')
-  const [applicationData, setApplicationData] = useState<QueriesResponse>({
-    name: '',
-    initiator_users: [0],
-    implementation_effect: '',
-    initiative_direction: '',
-    organization: 0,
-    expert_users: [],
-    status: '',
-    description: '',
-    date: '',
-    id: 0
-  })
+  const [applicationData, setApplicationData] = FetchQueries.useGetQueriesById(queryId? queryId : Cookies.get('queryId'))
 
   useEffect(() => {
 
     function begin() {
-      fetchData(setIsLoading, setApplicationData, QueriesService.getQueriesTableDataById, queryId)
       const translateStatus = getStatusTranslation(applicationData.status)
       setStatus(translateStatus)
-      fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizations)
-      fetchData(setIsLoading, setUsers, UsersService.getUsers)
-      fetchData(setIsLoading, setDataComment, CommentService.getComments)
     }
 
     begin()
@@ -112,7 +94,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
     query_name: applicationData.name,
     description: applicationData.description,
     effect: applicationData.implementation_effect,
-    direction: getDirectionTranslation(applicationData.initiative_direction),
+    direction: getDirectionName(applicationData.initiative_direction, directions),
     organization: getOrganizationName(applicationData.organization, organization),
     department: user?.department.name,
     expert: getExpert(applicationData.expert_users),
@@ -184,22 +166,23 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                     <HeartOutlined width={20} height={20} />
                     <p className={styles.numberLikes}>{getLikes(users, queryId)}</p>
                   </div>
-
-                  <Select
-                    className='selectInitiative'
-                    style={{width: 250}}
-                    defaultValue="На рассмотрении"
-                    options={[
-                      { value: 'registered', label: 'Зарегистрирована' },
-                      { value: 'check', label: 'На рассмотрении' },
-                      { value: 'analysis', label: 'Анализируется экспертом' },
-                      { value: 'accepted', label: 'На рассмотрении у руководства' },
-                      { value: 'implementation', label: 'Принята к реализации' },
-                      { value: 'done', label: 'Выполнена' },
-                      { value: 'rejected', label: 'Отклонена' },
-                    ]}
-                    onChange={(value) => patchQuery(value)}
-                  />
+                  {applicationData.status && (
+                    <Select
+                      className={`selectInitiative ${getStatusClassName(styles, applicationData.status)}`}
+                      style={{width: 250}}
+                      defaultValue={applicationData.status}
+                      options={[
+                        { value: 'registered', label: 'Зарегистрирована' },
+                        { value: 'check', label: 'На рассмотрении' },
+                        { value: 'analysis', label: 'Анализируется экспертом' },
+                        { value: 'accepted', label: 'На рассмотрении у руководства' },
+                        { value: 'implementation', label: 'Принята к реализации' },
+                        { value: 'done', label: 'Выполнена' },
+                        { value: 'rejected', label: 'Отклонена' },
+                      ]}
+                      onChange={(value) => patchQuery(value)}
+                    />
+                  )}
                 </div>
               </div>
               <p className={styles.data}>{`Дата создания ${formatDateRu(applicationData.date)}`}</p>
