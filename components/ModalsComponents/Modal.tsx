@@ -19,9 +19,9 @@ const Modal = ({ active, setActive, text1, text2, textBtn1, textBtn2, onClick1, 
                               <p className={textBtn2 === 'Отправить'? styles.text : styles.textCancel}>{text1}</p>
                               <p className={styles.text2}>{text2}</p>
                           </Form.Item>
-                          <div className={styles.modelContent}>
+                          <Form.Item className={styles.modelContent}>
                               {layout}
-                          </div>
+                          </Form.Item>
                           <div className={styles.btnContainer}>
                               <div className={classNameBtn1}>
                                   <Buttons className={styles.btnModal} text={textBtn1} onClick={onClick1}/>
