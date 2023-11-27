@@ -10,13 +10,14 @@ import router from "next/router";
 
 import styles from "./styles/UsersList.module.scss";
 import {DataTable} from "../TableComponent/Table";
-import {fetchData, getOrganizationName} from "../../utils/utils";
+import {fetchData, getDirectionTranslationOnEng, getOrganizationName} from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {UsersUpdateResponse} from "../../models/response/UsersUpdateResponse";
 import OrganizationsService from "../../services/OrganizationsService";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import {useSearchNum} from "../../hooks/useSearchNum";
 import {useSearchQuery} from "../../hooks/useSearchQuery";
+import Cookies from "js-cookie";
 
 
 export const UsersList = () => {
@@ -47,6 +48,7 @@ export const UsersList = () => {
         text: name,
         value: name,
       })),
+      onFilter: (value: any, record: any) => record.name.includes(value),
     },
     {
       title: 'Почта',
@@ -57,6 +59,7 @@ export const UsersList = () => {
         text: email,
         value: email,
       })),
+      onFilter: (value: any, record: any) => record.email.includes(value),
     },
     {
       title: 'Организация',
@@ -67,6 +70,7 @@ export const UsersList = () => {
         text: organization,
         value: organization,
       })),
+      onFilter: (value: any, record: any) => record.organization.includes(value),
     },
   ];
 
@@ -112,7 +116,7 @@ export const UsersList = () => {
       <div className={styles.container}>
         <Slider/>
         <div className={styles.content}>
-          <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
           <Tabs />
           <MainText text={'Пользователи'}/>
           <div className={styles.infContainer}>
@@ -120,7 +124,7 @@ export const UsersList = () => {
               onSearchTermChange={handleSearchTermChange}
               onSearchNumberChange={handleSearchNumberChange}
               placeholderNum={'Номер'}
-              placeholderQuery={'Поиск по идеям'}/>
+              placeholderQuery={'Поиск по пользователям'}/>
             <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
           </div>
           <DataTable
