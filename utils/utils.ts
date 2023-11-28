@@ -149,6 +149,8 @@ export const getRouteTranslation = (route: string) => {
             return "Создание инициативы";
         case "editingApplication":
             return "Редактирование инициативы";
+        case 'settings':
+            return 'Настройки'
         case `adminApplication?queryId=${Cookies.get('queryId')}`:
             return Cookies.get('queryName');
         case `editingApplication?queryId=${Cookies.get('queryId')}`:

@@ -8,6 +8,8 @@ import { MainText } from "../MainTextComponent";
 import SwitchBar from "../FilterComponents/blocks/SwitchBar";
 import { PlusOutlined } from '@ant-design/icons';
 import type { InputRef } from 'antd';
+import FetchSettings from "../../hooks/FetchData/FetchSettings/FetchSettings";
+import Cookies from "js-cookie";
 
 
 function SwitchContent() {
@@ -28,7 +30,7 @@ export const Settings = () => {
   const layout = <SwitchContent />
 
   const { token } = theme.useToken();
-  const [tags, setTags] = useState(['mail.ru']);
+  const [tags, setTags] = FetchSettings.useGetDomains();
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [editInputIndex, setEditInputIndex] = useState(-1);
@@ -46,9 +48,9 @@ export const Settings = () => {
     editInputRef.current?.focus();
   }, [editInputValue]);
 
-  const handleClose = (removedTag: string) => {
-    const newTags = tags.filter((tag) => tag !== removedTag);
-    console.log(newTags);
+  const handleClose = (removedTag: number) => {
+    FetchSettings.useRemoveDomains(removedTag)
+    const newTags = tags.filter((tag) => tag.id !== removedTag);
     setTags(newTags);
   };
 
@@ -61,9 +63,15 @@ export const Settings = () => {
   };
 
   const handleInputConfirm = () => {
-    if (inputValue && !tags.includes(inputValue)) {
-      setTags([...tags, inputValue]);
+    let id = 0;
+    for (let tag of tags) {
+      id += 1;
+      if (tag.domain.includes(inputValue)) {
+        return setTags([...tags])
+      }
     }
+    FetchSettings.usePostDomain(inputValue)
+    setTags([...tags, {id: id, domain: inputValue}]);
     setInputVisible(false);
     setInputValue('');
   };
@@ -74,7 +82,7 @@ export const Settings = () => {
 
   const handleEditInputConfirm = () => {
     const newTags = [...tags];
-    newTags[editInputIndex] = editInputValue;
+    newTags[editInputIndex].domain = editInputValue;
     setTags(newTags);
     setEditInputIndex(-1);
     setEditInputValue('');
@@ -100,7 +108,7 @@ export const Settings = () => {
       <div className={styles.container}>
         <Slider/>
         <div className={styles.content}>
-          <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
           <Tabs />
           <MainText text={'Настройки'}/>
           <div className={styles.settingsContainer}>
@@ -113,7 +121,7 @@ export const Settings = () => {
                       return (
                         <Input
                           ref={editInputRef}
-                          key={tag}
+                          key={tag.id}
                           size="small"
                           style={tagInputStyle}
                           value={editInputValue}
@@ -123,29 +131,29 @@ export const Settings = () => {
                         />
                       );
                     }
-                    const isLongTag = tag.length > 20;
+                    const isLongTag = editInputValue.length > 20;
                     const tagElem = (
                       <Tag
-                        key={tag}
+                        key={tag.id}
                         closable={index >= 0}
                         style={{ userSelect: 'none' }}
-                        onClose={() => handleClose(tag)}
+                        onClose={() => handleClose(tag.id)}
                       >
                         <span
                           onDoubleClick={(e) => {
                             if (index !== 0) {
                               setEditInputIndex(index);
-                              setEditInputValue(tag);
+                              setEditInputValue(tag.domain);
                               e.preventDefault();
                             }
                           }}
                         >
-                          {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                          {isLongTag ? `${tag.domain.slice(0, 20)}...` : tag.domain}
                         </span>
                       </Tag>
                     );
                     return isLongTag ? (
-                      <Tooltip title={tag} key={tag}>
+                      <Tooltip title={tag.domain} key={tag.id}>
                         {tagElem}
                       </Tooltip>
                     ) : (
