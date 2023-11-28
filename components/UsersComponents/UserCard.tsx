@@ -26,18 +26,26 @@ export const UserCard = () => {
               <p className={styles.nameUser}>Иванов Иван Иванович</p>
 
               <Col className={styles.column}>
-                <div className={styles.row}>
-                  <p className={styles.rowField}>E-mail:</p>
-                  <p className={styles.rowField}>Эксперт по инициативам:</p>
-                  <p className={`${styles.rowField} ${styles.orgUser}`}>Организация:</p>
-                  <p className={styles.rowField}>Отдел:</p>
-                </div>
+                <div>
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>E-mail:</p>
+                    <p className={styles.rowInf}>example@mail.ru</p>
+                  </div>
 
-                <div className={styles.row}>
-                  <p className={styles.rowInf}>example@mail.ru</p>
-                  <p className={styles.rowInf}>№1, №123, №98453</p>
-                  <p className={`${styles.rowInf} ${styles.orgUser}`}>Aratrum</p>
-                  <p className={styles.rowInf}>IT-отдел</p>
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Эксперт по инициативам:</p>
+                    <p className={styles.rowInf}>№1, №123, №98453</p>
+                  </div>
+
+                  <div className={`${styles.row} ${styles.rowOrg}`}>
+                    <p className={styles.rowText}>Организация:</p>
+                    <p className={styles.rowInf}>Aratrum</p>
+                  </div>
+
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Отдел:</p>
+                    <p className={styles.rowInf}>IT-отдел</p>
+                  </div>
                 </div>
               </Col>
 
