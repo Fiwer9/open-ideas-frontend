@@ -58,7 +58,7 @@ export const UserEditing = ({userId}: UserEditingProps) => {
   const [departments, setDepartments] = useState<IDepartment[]>([]);
 
   useEffect(() => {
-    userId ? fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, userId) : window.history.back() // Сделал так чтобы если данные не прогрузились отбрасывало на предыдущую пока так;
+    fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, userId ? userId : Cookies.get('userId')) // Сделал так чтобы если данные не прогрузились отбрасывало на предыдущую пока так;
     fetchData(setIsLoading, setQueries, QueriesService.getQueriesTableData)
     fetchData(setIsLoading, setOrganizations, OrganizationsService.getOrganizations)
     fetchData(setIsLoading, setDepartments, OrganizationsService.getDepartments)
@@ -139,7 +139,7 @@ export const UserEditing = ({userId}: UserEditingProps) => {
               initialValues={{
                 userName: user.name,
                 email: user.email,
-                organization: user.department.organization,
+                organization: user.department && user.department.organization,
                 department: department,
                 active: user.is_active,
                 personal: user.is_staff,
@@ -206,6 +206,7 @@ export const UserEditing = ({userId}: UserEditingProps) => {
                   >
                     <Select
                       className='select'
+                      disabled={true}
                       style={{height: 40}}
                       options={organizations.map(organization => ({
                         value: organization.id,
@@ -229,9 +230,10 @@ export const UserEditing = ({userId}: UserEditingProps) => {
                   >
                     <Select
                       className='select'
+                      disabled={true}
                       style={{height: 40}}
                       placeholder={'Выберете название отдела'}
-                      options={departments.filter(dep => organization ? dep.organization === organization : dep.organization === user.department.organization).map(department => ({
+                      options={departments.filter(dep => organization ? dep.organization === organization : user.department? dep.organization === user.department.organization : 'Не назначено').map(department => ({
                         value: department.id,
                         label: department.name
                       }))}

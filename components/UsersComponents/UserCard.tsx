@@ -40,8 +40,8 @@ export const UserCard = ({userId} : UserCardProps) => {
   const data = {
     user_name: user?.name,
     email: user?.email,
-    organization: organizations && getOrganizationName(user?.department.organization, organizations),
-    department: user?.department.name,
+    organization: organizations && user?.department ? getOrganizationName(user?.department.organization, organizations) : 'Не назначено',
+    department: user?.department ? user?.department.name : 'Не назначено',
     expert_queries: queries ? getQueries().toString().replaceAll(',', ', ') : ''
   }
 
