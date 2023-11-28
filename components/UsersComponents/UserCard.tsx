@@ -46,18 +46,26 @@ export const UserCard = ({userId} : UserCardProps) => {
               <p className={styles.nameUser}>{user?.name}</p>
 
               <Col className={styles.column}>
-                <div className={styles.row}>
-                  <p className={styles.rowField}>E-mail:</p>
-                  <p className={styles.rowField}>Эксперт по инициативам:</p>
-                  <p className={`${styles.rowField} ${styles.orgUser}`}>Организация:</p>
-                  <p className={styles.rowField}>Отдел:</p>
-                </div>
+                <div>
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>E-mail:</p>
+                    <p className={styles.rowInf}>{user?.email}</p>
+                  </div>
 
-                <div className={styles.row}>
-                  <p className={styles.rowInf}>{user?.email}</p>
-                  <p className={styles.rowInf}>№1, №123, №98453</p>
-                  <p className={`${styles.rowInf} ${styles.orgUser}`}>{organizations && getOrganizationName(user?.department.organization, organizations)}</p>
-                  <p className={styles.rowInf}>{user?.department.name}</p>
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Эксперт по инициативам:</p>
+                    <p className={styles.rowInf}>№1, №123, №98453</p>
+                  </div>
+
+                  <div className={`${styles.row} ${styles.rowOrg}`}>
+                    <p className={styles.rowText}>Организация:</p>
+                    <p className={styles.rowInf}>{organizations && getOrganizationName(user?.department.organization, organizations)}</p>
+                  </div>
+
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Отдел:</p>
+                    <p className={styles.rowInf}>{user?.department.name}</p>
+                  </div>
                 </div>
               </Col>
 
