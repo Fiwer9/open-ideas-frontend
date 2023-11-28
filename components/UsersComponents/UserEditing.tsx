@@ -184,6 +184,7 @@ export const UserEditing = ({userId}: UserEditingProps) => {
                     <Select
                       disabled={true}
                       className='select'
+                      placeholder={'Выберете инициативы'}
                       style={{height: 40}}
                       mode={'multiple'}
                       defaultValue={getQueries()}
@@ -207,6 +208,7 @@ export const UserEditing = ({userId}: UserEditingProps) => {
                     <Select
                       className='select'
                       disabled={true}
+                      placeholder={'Выберете организацию'}
                       style={{height: 40}}
                       options={organizations.map(organization => ({
                         value: organization.id,
@@ -232,7 +234,7 @@ export const UserEditing = ({userId}: UserEditingProps) => {
                       className='select'
                       disabled={true}
                       style={{height: 40}}
-                      placeholder={'Выберете название отдела'}
+                      placeholder={'Выберете отдел'}
                       options={departments.filter(dep => organization ? dep.organization === organization : user.department? dep.organization === user.department.organization : 'Не назначено').map(department => ({
                         value: department.id,
                         label: department.name
@@ -299,6 +301,7 @@ export const UserEditing = ({userId}: UserEditingProps) => {
                     <Select
                       disabled={true}
                       mode="multiple"
+                      placeholder={'Выберете группы'}
                       allowClear
                       className='select'
                       defaultValue={user.groups.map(group => group.name)}
