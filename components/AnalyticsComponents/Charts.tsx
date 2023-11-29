@@ -4,11 +4,7 @@ import { Tabs } from "../TabsComponent/Tabs";
 import { Header } from "../HeaderComponents/Header";
 import { MainText } from "../MainTextComponent";
 import { StatisticsCard } from "./StatisticsCard";
-import { Button } from "antd";
-import dayjs from 'dayjs';
-import type { TimeRangePickerProps } from 'antd';
-import { DatePicker } from 'antd';
-const { RangePicker } = DatePicker;
+import Filter from "../FilterComponents/blocks/Filter";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -73,24 +69,6 @@ export const data = {
   ],
 };
 
-const rangePresets: TimeRangePickerProps['presets'] = [
-  { label: 'Последние 7 дней', value: [dayjs().add(-7, 'd'), dayjs()] },
-  { label: 'Последние 28 дней', value: [dayjs().add(-28, 'd'), dayjs()] },
-  { label: 'Последние 90 дней', value: [dayjs().add(-90, 'd'), dayjs()] },
-  { label: 'Последние 365 дней', value: [dayjs().add(-365, 'd'), dayjs()] },
-  { label: 'Всё время', value: [dayjs().add(-1825, 'd'), dayjs()] },
-];
-
-function ContentDate() {
-  return <div className={styles.contentDate}>
-    <p className={styles.period}>Продолжительность выбранного периода: 30 дней</p>
-    <div className={styles.btnContainer}>
-      <Button type="link" className={styles.btnDate}>ОТМЕНА</Button>
-      <Button type="link" className={styles.btnDate}>ВЫБРАТЬ</Button>
-    </div>
-  </div>;
-}
-
 export const Charts = () => {
 
   return (
@@ -106,11 +84,7 @@ export const Charts = () => {
             <div className={styles.headerContent}>
               <p className={`${styles.numberInitiatives} ${styles.headerItem}`}>Количество инициатив : 100</p>
               <div className={styles.calendar}>
-                <p className={styles.labelCalendar}>С 1 янв. 2023 г. по сегодняш..</p>
-                <RangePicker
-                  presets={rangePresets}
-                  renderExtraFooter={() => ContentDate()}
-                />
+                <Filter />
               </div>
             </div>
 

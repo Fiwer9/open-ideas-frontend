@@ -1,15 +1,5 @@
 @import "../../../styles/variable.scss";
 
-.contentDate {
-  .period {
-    margin: 0;
-  }
-
-  .btnContainer {
-    float: right;
-  }
-}
-
 .container {
   @include container;
 
@@ -33,16 +23,7 @@
         }
 
         .calendar {
-          .labelCalendar {
-            margin: 0;
-            margin-bottom: 5px;
-            font: {
-              family: Poppins, sans-serif;
-              weight: 500;
-              size: 14px;
-            };
-            color: rgba($color-black, 0.4);
-          }
+
         }
 
         .headerItem {
