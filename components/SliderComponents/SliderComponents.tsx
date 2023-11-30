@@ -1,18 +1,33 @@
-import React, { useState } from 'react';
-import { Button, Layout, theme } from 'antd';
-const { Sider } = Layout;
+import React, { useState } from "react";
 import { Menu } from 'antd';
-import {
-  BarChartOutlined,
-  BulbOutlined, ReconciliationOutlined,
-  UserOutlined, SettingOutlined, PullRequestOutlined,
-} from '@ant-design/icons';
 import { ArrowBack } from './ArrowBack';
 import { ArrowNext } from './ArrowNext';
 import {Logo} from "../PicturesComponents/Logo";
-import styles from "./styles/sider.module.scss"
-import router from "next/router";
+import { Button, Layout, theme } from 'antd';
 import SubMenu from "antd/lib/menu/SubMenu";
+import {
+  BarChartOutlined,
+  BulbOutlined,
+  ReconciliationOutlined,
+  UserOutlined,
+  SettingOutlined,
+  PullRequestOutlined,
+} from '@ant-design/icons';
+import router from "next/router";
+const { Sider } = Layout;
+
+import styles from "./styles/sider.module.scss"
+
+
+const menuList = [
+  { url: "/queries", },
+  { url: "/users", },
+  { url: "/organizations", },
+  { url: "/directions", },
+  { url: "/charts", },
+  { url: "/tables", },
+  { url: "/settings", },
+];
 
 export const Slider = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -44,18 +59,25 @@ export const Slider = () => {
 
         <Menu
           mode="inline"
-          defaultSelectedKeys={['1']}
           defaultOpenKeys={['sub1']}
+          onClick={(item) => router.push(item.key)}
+          selectedKeys={menuList
+            .map((el) => el.url)
+            .filter((el) =>
+              el === "/"
+                ? router.asPath === "/"
+                : router.asPath.includes(el)
+            )}
         >
-          <Menu.Item key={'1'} icon={<BulbOutlined />} onClick={() => router.push('/queries')}>Инициативы</Menu.Item>
-          <Menu.Item key={'2'} icon={<UserOutlined />} onClick={() => router.push('/users')}>Пользователи</Menu.Item>
-          <Menu.Item key={'3'} icon={<ReconciliationOutlined />} onClick={() => router.push('/organizations')}>Организации и отделы</Menu.Item>
-          <Menu.Item key={'4'} icon={<PullRequestOutlined />}>Направления</Menu.Item>
-          <SubMenu key={'sub1'} icon={<BarChartOutlined />} title={'Аналитика'}>
-            <Menu.Item key={'5'} onClick={() => router.push('/charts')}>Графики</Menu.Item>
-            <Menu.Item key={'6'}>Таблицы</Menu.Item>
+          <Menu.Item key={'/queries'} icon={<BulbOutlined style={{ fontSize: '120%' }} />}>Инициативы</Menu.Item>
+          <Menu.Item key={'/users'} icon={<UserOutlined style={{ fontSize: '120%' }} />}>Пользователи</Menu.Item>
+          <Menu.Item key={'/organizations'} icon={<ReconciliationOutlined style={{ fontSize: '120%' }} />}>Организации и отделы</Menu.Item>
+          <Menu.Item key={'/directions'} icon={<PullRequestOutlined style={{ fontSize: '120%' }} />}>Направления</Menu.Item>
+          <SubMenu key={'sub1'} icon={<BarChartOutlined style={{ fontSize: '120%' }} />} title={'Аналитика'}>
+            <Menu.Item key={'/charts'}>Графики</Menu.Item>
+            <Menu.Item key={'/tables'}>Таблицы</Menu.Item>
           </SubMenu>
-          <Menu.Item key={'7'} icon={<SettingOutlined />} onClick={() => router.push('/settings')}>Настройки</Menu.Item>
+          <Menu.Item key={'/settings'} icon={<SettingOutlined style={{ fontSize: '120%' }} />}>Настройки</Menu.Item>
         </Menu>
         <Button
           type="text"

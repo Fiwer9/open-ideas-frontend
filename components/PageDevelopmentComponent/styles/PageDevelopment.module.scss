@@ -1,0 +1,24 @@
+@import "../../../styles/variable.scss";
+
+
+.container {
+  @extend %container;
+
+  .page {
+    margin: 0;
+    font: {
+      family: Poppins, sans-serif;
+      size: 70px;
+      weight: 700;
+    };
+    color: $color-blue;
+  }
+
+  .btnPage {
+    margin-top: 12px;
+    margin-left: 50px;
+    font: {
+      size: 30px;
+    };
+  }
+}
