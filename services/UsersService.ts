@@ -13,10 +13,14 @@ export default class UsersService {
     }
 
     static async getCurrentUser(id: number):Promise<AxiosResponse<UserResponse>> {
-        return $api.get(`/users/users/${id}`)
+        return $api.get(`/users/users/${id}/`)
     }
 
     static async getCurrentUpdateUser(id: number):Promise<AxiosResponse<UsersUpdateResponse>> {
-        return $api.get(`/users/update/${id}`)
+        return $api.get(`/users/update/${id}/`)
+    }
+
+    static async putUserUpdate(name: string, email: string, is_verified: boolean, is_staff: boolean, is_superuser: boolean, id: number, is_active: boolean) {
+        return $api.put(`/users/update/${id}/`, {name, email, is_active, is_staff, is_superuser, is_verified})
     }
 }

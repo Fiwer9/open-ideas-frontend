@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import { Menu } from 'antd';
+import {
+  BarChartOutlined,
+  BulbOutlined, ReconciliationOutlined,
+  UserOutlined, SettingOutlined, ProjectOutlined,
+} from '@ant-design/icons';
 import { ArrowBack } from './ArrowBack';
 import { ArrowNext } from './ArrowNext';
 import {Logo} from "../PicturesComponents/Logo";

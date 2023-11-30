@@ -5,8 +5,6 @@ import {QueriesResponse} from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 import {
     fetchData,
-    getDirectionTranslation,
-    getDirectionTranslationOnEng,
     getStatusClassName,
     getStatusTranslation
 } from "../../utils/utils";
@@ -20,7 +18,7 @@ import {useSearchQuery} from "../../hooks/useSearchQuery";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import UsersService from "../../services/UsersService";
 import {UserResponse} from "../../models/response/UserResponse";
@@ -28,7 +26,6 @@ import {OrganizationsResponse} from "../../models/response/OrganizationsResponse
 import OrganizationsService from "../../services/OrganizationsService";
 import {FilterOutlined, PlusCircleOutlined} from "@ant-design/icons";
 import {Logo} from "../PicturesComponents/Logo";
-import {Table} from "antd";
 
 
 export const QueryList = () => {
@@ -61,7 +58,7 @@ export const QueryList = () => {
     useSearchQuery(searchTerm, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
 
     const items = queriesTableData;
-    const direct = [...new Set(items.map((item) => getDirectionTranslation(item.initiative_direction)))];
+    const direct = [...new Set(items.map((item) => item.initiative_direction))];
     const status = [...new Set(items.map((item) => getStatusTranslation(item.status)))];
 
     const columns = [
@@ -87,13 +84,12 @@ export const QueryList = () => {
             title: 'Направление',
             dataIndex: 'initiative_direction',
             key: 'initiative_direction',
-            render: (text: string) => getDirectionTranslation(text),
             width: "15%",
             filters: direct.map((direction) => ({
                 text: direction,
                 value: direction,
             })),
-            onFilter: (value: any, record: any) => record.initiative_direction.includes(getDirectionTranslationOnEng(value)),
+            onFilter: (value: any, record: any) => record.initiative_direction.includes(value),
         },
         {
             title: 'Статус заявки',
