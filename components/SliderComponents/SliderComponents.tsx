@@ -61,13 +61,12 @@ export const Slider = () => {
           mode="inline"
           defaultOpenKeys={['sub1']}
           onClick={(item) => router.push(item.key)}
-          selectedKeys={menuList
+          selectedKeys={typeof window !== 'undefined' ? menuList
             .map((el) => el.url)
             .filter((el) =>
-              el === "/"
-                ? router.asPath === "/"
-                : router.asPath.includes(el)
-            )}
+              el === "/" ? router.asPath === "/" : router.asPath.includes(el))
+            : ['/queries']
+        }
         >
           <Menu.Item key={'/queries'} icon={<BulbOutlined style={{ fontSize: '120%' }} />}>Инициативы</Menu.Item>
           <Menu.Item key={'/users'} icon={<UserOutlined style={{ fontSize: '120%' }} />}>Пользователи</Menu.Item>
