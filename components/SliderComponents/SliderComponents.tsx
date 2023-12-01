@@ -3,21 +3,13 @@ import { Menu } from 'antd';
 import {
   BarChartOutlined,
   BulbOutlined, ReconciliationOutlined,
-  UserOutlined, SettingOutlined, ProjectOutlined,
+  UserOutlined, SettingOutlined, PullRequestOutlined,
 } from '@ant-design/icons';
 import { ArrowBack } from './ArrowBack';
 import { ArrowNext } from './ArrowNext';
 import {Logo} from "../PicturesComponents/Logo";
 import { Button, Layout, theme } from 'antd';
 import SubMenu from "antd/lib/menu/SubMenu";
-import {
-  BarChartOutlined,
-  BulbOutlined,
-  ReconciliationOutlined,
-  UserOutlined,
-  SettingOutlined,
-  PullRequestOutlined,
-} from '@ant-design/icons';
 import router from "next/router";
 const { Sider } = Layout;
 
