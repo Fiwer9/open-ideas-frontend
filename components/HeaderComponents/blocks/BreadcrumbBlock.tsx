@@ -35,7 +35,7 @@ export const BreadcrumbBlock = () => {
         ))}
       </Breadcrumb>
     )
-  }, [selectedTag, Cookies.get('queryName')]);
+  }, [selectedTag, Cookies.get('queryName'), Cookies.get('userName'), Cookies.get('userId')]);
 
   return (
     children

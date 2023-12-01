@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import { Card, Form, Radio, Upload } from "antd";
+import { Card, Form, Upload } from "antd";
 import { DownloadOutlined, HeartFilled, HeartOutlined } from "@ant-design/icons";
 import {Row, Col} from "antd";
 import {Logo} from "../PicturesComponents/Logo";
@@ -56,9 +56,9 @@ export const ApplicationCard = ({ queryId}: ApplicationCardProps) => {
         const fetchData = async () => {
             setIsLoading(true)
             try {
-                const data = await QueriesService.getQueriesTableDataById(queryId)
+                const data = queryId && await QueriesService.getQueriesTableDataById(queryId)
                 const organizations = await OrganizationsService.getOrganizations()
-                setApplicationData(data.data)
+                data && setApplicationData(data.data)
                 setOrganization(organizations.data)
                 const comments = await CommentService.getComments()
                 const users = await UsersService.getUsers()

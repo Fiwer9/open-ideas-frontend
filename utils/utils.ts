@@ -3,8 +3,17 @@ import {UserResponse} from "../models/response/UserResponse";
 import dayjs from "dayjs";
 import 'dayjs/locale/ru';
 import Cookies from "js-cookie";
+import {IDepartment} from "../models/IDepartment";
 
-export function getOrganizationName(text: number, organizations: any) {
+export function getDepartmentName(depId: number | undefined, departments: IDepartment[]) {
+    for (let dep of departments) {
+        if (dep.id === depId) {
+            return dep.name;
+        }
+    }
+}
+
+export function getOrganizationName(text: number | undefined, organizations: any) {
     for (let org of organizations) {
         if (org.id === text) {
             return org.name
@@ -155,6 +164,10 @@ export const getRouteTranslation = (route: string) => {
             return `${Cookies.get('queryName')} (Редактирование)`;
         case "users":
             return "Таблица пользователей";
+        case `userCard?userId=${Cookies.get('userId')}`:
+            return Cookies.get('userName');
+        case `editingUser?userId=${Cookies.get('userId')}`:
+            return `${Cookies.get('userName')} (Редактирование)`;
         default:
             return "";
     }

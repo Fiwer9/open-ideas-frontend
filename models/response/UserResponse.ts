@@ -17,6 +17,7 @@ export interface UserResponse {
     last_name: string;
     is_staff: boolean;
     is_active: boolean;
+    is_verified: boolean;
     date_joined: string;
     name: string;
     email: string;

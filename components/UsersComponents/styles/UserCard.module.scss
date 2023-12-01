@@ -23,7 +23,12 @@
           margin-top: 20px;
 
           .row {
-            .rowField {
+            display: flex;
+            flex-direction: row;
+            width: 793px;
+
+            .rowText {
+              flex: 0 0 40%;
               margin: 0;
               margin-top: 20px;
               font: {
@@ -36,7 +41,6 @@
 
             .rowInf {
               margin: 0;
-              margin-left: 70px;
               margin-top: 20px;
               font: {
                 family: RobotoRegular, sans-serif;
@@ -45,10 +49,10 @@
               };
               color: $color-black-22;
             }
+          }
 
-            .orgUser {
-              margin-top: 50px;
-            }
+          .rowOrg {
+            margin-top: 50px;
           }
         }
 
