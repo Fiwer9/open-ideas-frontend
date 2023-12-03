@@ -4,6 +4,7 @@ import styles from "./styles/QueryList.module.scss";
 import {QueriesResponse} from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 import {
+    checkExpert,
     fetchData,
     getStatusClassName,
     getStatusTranslation
@@ -173,7 +174,8 @@ export const QueryList = () => {
     };
 
     const handleRowClickIdea = (queryId: any) => {
-        router.push(`/queries/application?queryId=${queryId.id}`);
+        const isExpert = checkExpert(queryId, queriesTableData)
+        !isExpert ? router.push(`/queries/application?queryId=${queryId.id}`) : router.push(`/queries/expert?queryId=${queryId.id}`);
     }
 
     const handleCreateQuery = () => {
