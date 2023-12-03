@@ -30,6 +30,7 @@ import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections
 import FetchQueries from "../../hooks/fetches/FetchQueries/FetchQueries";
 
 
+
 export const QueryList = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -81,6 +82,7 @@ export const QueryList = () => {
                 value: direction,
             })),
             onFilter: (value: any, record: any) => record.name.includes(value),
+
         },
         {
             title: 'Статус заявки',

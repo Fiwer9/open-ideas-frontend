@@ -42,6 +42,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
   useEffect(() => {
 
     function begin() {
+      queryId && fetchData(setIsLoading, setApplicationData, QueriesService.getQueriesTableDataById, queryId)
       fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizations)
       fetchData(setIsLoading, setUsers, UsersService.getUsers)
       fetchData(setIsLoading, setDepartments, OrganizationsService.getDepartments)
@@ -65,7 +66,6 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
     }
 
   function handleChangeApplicationSelect(event: any[], setData: React.SetStateAction<any>): void {
-    console.log(event)
     setData(event)
   }
 

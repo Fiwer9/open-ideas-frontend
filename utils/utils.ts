@@ -4,7 +4,15 @@ import dayjs from "dayjs";
 import 'dayjs/locale/ru';
 import Cookies from "js-cookie";
 import {DirectionResponse} from "../models/response/DirectionResponse";
+import {IDepartment} from "../models/IDepartment";
 
+export function getDepartmentName(depId: number | undefined, departments: IDepartment[]) {
+    for (let dep of departments) {
+        if (dep.id === depId) {
+            return dep.name;
+        }
+    }
+}
 export function getOrganizationName(text: number | undefined, organizations: any) {
     for (let org of organizations) {
         if (org.id === text) {
@@ -166,6 +174,8 @@ export const getRouteTranslation = (route: string) => {
             return "Таблица пользователей";
         case `userCard?userId=${Cookies.get('userId')}`:
             return Cookies.get('userName');
+        case `editingUser?userId=${Cookies.get('userId')}`:
+            return `${Cookies.get('userName')} (Редактирование)`;
         default:
             return "";
     }

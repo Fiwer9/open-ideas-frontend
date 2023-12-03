@@ -47,6 +47,7 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
   useEffect(() => {
 
     function begin() {
+      queryId && fetchData(setIsLoading, setApplicationData, QueriesService.getQueriesTableDataById, queryId)
       const translateStatus = getStatusTranslation(applicationData.status)
       setStatus(translateStatus)
     }

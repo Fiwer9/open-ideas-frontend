@@ -14,20 +14,36 @@ import {fetchData, getOrganizationName} from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import OrganizationsService from "../../services/OrganizationsService";
+import {QueriesResponse} from "../../models/response/QueriesResponse";
+import QueriesService from "../../services/QueriesService";
 
 interface UserCardProps {
   userId: string;
 }
 
 export const UserCard = ({userId} : UserCardProps) => {
+  Cookies.set('userId', userId);
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<UserResponse>();
   const [organizations, setOrganizations] = useState<OrganizationsResponse[]>();
-
+  const [queries, setQueries] = useState<QueriesResponse[]>([]);
   useEffect(() => {
-    fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, userId);
+    userId && fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, userId);
     fetchData(setIsLoading, setOrganizations, OrganizationsService.getOrganizations);
-  }, []);
+    fetchData(setIsLoading, setQueries, QueriesService.getQueriesTableData, userId)
+  }, [userId]);
+
+  function getQueries() {
+    return queries.map(query => `№${query.id}`)
+  }
+
+  const data = {
+    user_name: user?.name,
+    email: user?.email,
+    organization: organizations && user?.department ? getOrganizationName(user?.department.organization, organizations) : 'Не назначено',
+    department: user?.department ? user?.department.name : 'Не назначено',
+    expert_queries: queries ? getQueries().toString().replaceAll(',', ', ') : ''
+  }
 
   useEffect(() => {
     user && Cookies.set('userName', user.name)
@@ -43,33 +59,33 @@ export const UserCard = ({userId} : UserCardProps) => {
             <Image src={avatar} alt={'Аватар'} width={190} height={190}/>
 
             <div className={styles.infUser}>
-              <p className={styles.nameUser}>{user?.name}</p>
+              <p className={styles.nameUser}>{data.user_name}</p>
 
               <Col className={styles.column}>
                 <div>
                   <div className={styles.row}>
                     <p className={styles.rowText}>E-mail:</p>
-                    <p className={styles.rowInf}>{user?.email}</p>
+                    <p className={styles.rowInf}>{data.email}</p>
                   </div>
 
                   <div className={styles.row}>
                     <p className={styles.rowText}>Эксперт по инициативам:</p>
-                    <p className={styles.rowInf}>№1, №123, №98453</p>
+                    <p className={styles.rowInf}>{data.expert_queries}</p>
                   </div>
 
                   <div className={`${styles.row} ${styles.rowOrg}`}>
                     <p className={styles.rowText}>Организация:</p>
-                    <p className={styles.rowInf}>{organizations && getOrganizationName(user?.department.organization, organizations)}</p>
+                    <p className={styles.rowInf}>{data.organization}</p>
                   </div>
 
                   <div className={styles.row}>
                     <p className={styles.rowText}>Отдел:</p>
-                    <p className={styles.rowInf}>{user?.department.name}</p>
+                    <p className={styles.rowInf}>{data.department}</p>
                   </div>
                 </div>
               </Col>
 
-              <Button className={styles.btnFooter} type="primary" onClick={() => router.push('/users/editingUser')}>
+              <Button className={styles.btnFooter} type="primary" onClick={() => router.push(`/users/editingUser?userId=${userId}`)}>
                 <span>Редактировать профиль</span>
               </Button>
             </div>
