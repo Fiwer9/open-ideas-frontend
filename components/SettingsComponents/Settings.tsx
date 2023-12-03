@@ -10,6 +10,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import type { InputRef } from 'antd';
 import FetchSettings from "../../hooks/FetchData/FetchSettings/FetchSettings";
 import Cookies from "js-cookie";
+import * as domain from "domain";
 
 
 function SwitchContent() {
@@ -35,6 +36,7 @@ export const Settings = () => {
   const [inputValue, setInputValue] = useState('');
   const [editInputIndex, setEditInputIndex] = useState(-1);
   const [editInputValue, setEditInputValue] = useState('');
+  const [loadedDOM, setLoadedDOM] = useState(false)
   const inputRef = useRef<InputRef>(null);
   const editInputRef = useRef<InputRef>(null);
 
@@ -103,42 +105,47 @@ export const Settings = () => {
     borderRadius: 2,
   };
 
+  useEffect(() => {
+    setLoadedDOM(true);
+  }, [tags]);
+
   return (
     <>
-      <div className={styles.container}>
-        <Slider/>
-        <div className={styles.content}>
-          <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
-          <Tabs />
-          <MainText text={'Настройки'}/>
-          <div className={styles.settingsContainer}>
-            <Col className={styles.column}>
-              <div className={styles.row}>
-                <p className={styles.rowText}>Почта</p>
-                <Space size={[0, 8]} wrap className={styles.tag}>
-                  {tags.map((tag, index) => {
-                    if (editInputIndex === index) {
-                      return (
-                        <Input
-                          ref={editInputRef}
+      {loadedDOM && (
+        <div className={styles.container}>
+          <Slider/>
+          <div className={styles.content}>
+            <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+            <Tabs />
+            <MainText text={'Настройки'}/>
+            <div className={styles.settingsContainer}>
+              <Col className={styles.column}>
+                <div className={styles.row}>
+                  <p className={styles.rowText}>Почта</p>
+                  <Space size={[0, 8]} wrap className={styles.tag}>
+                    {tags.map((tag, index) => {
+                      if (editInputIndex === index) {
+                        return (
+                          <Input
+                            ref={editInputRef}
+                            key={tag.id}
+                            size="small"
+                            style={tagInputStyle}
+                            value={editInputValue}
+                            onChange={handleEditInputChange}
+                            onBlur={handleEditInputConfirm}
+                            onPressEnter={handleEditInputConfirm}
+                          />
+                        );
+                      }
+                      const isLongTag = editInputValue.length > 20;
+                      const tagElem = (
+                        <Tag
                           key={tag.id}
-                          size="small"
-                          style={tagInputStyle}
-                          value={editInputValue}
-                          onChange={handleEditInputChange}
-                          onBlur={handleEditInputConfirm}
-                          onPressEnter={handleEditInputConfirm}
-                        />
-                      );
-                    }
-                    const isLongTag = editInputValue.length > 20;
-                    const tagElem = (
-                      <Tag
-                        key={tag.id}
-                        closable={index >= 0}
-                        style={{ userSelect: 'none' }}
-                        onClose={() => handleClose(tag.id)}
-                      >
+                          closable={index >= 0}
+                          style={{ userSelect: 'none' }}
+                          onClose={() => handleClose(tag.id)}
+                        >
                         <span
                           onDoubleClick={(e) => {
                             if (index !== 0) {
@@ -150,50 +157,51 @@ export const Settings = () => {
                         >
                           {isLongTag ? `${tag.domain.slice(0, 20)}...` : tag.domain}
                         </span>
-                      </Tag>
-                    );
-                    return isLongTag ? (
-                      <Tooltip title={tag.domain} key={tag.id}>
-                        {tagElem}
-                      </Tooltip>
+                        </Tag>
+                      );
+                      return isLongTag ? (
+                        <Tooltip title={tag.domain} key={tag.id}>
+                          {tagElem}
+                        </Tooltip>
+                      ) : (
+                        tagElem
+                      );
+                    })}
+                    {inputVisible ? (
+                      <Input
+                        ref={inputRef}
+                        type="text"
+                        size="small"
+                        style={tagInputStyle}
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onBlur={handleInputConfirm}
+                        onPressEnter={handleInputConfirm}
+                      />
                     ) : (
-                      tagElem
-                    );
-                  })}
-                  {inputVisible ? (
-                    <Input
-                      ref={inputRef}
-                      type="text"
-                      size="small"
-                      style={tagInputStyle}
-                      value={inputValue}
-                      onChange={handleInputChange}
-                      onBlur={handleInputConfirm}
-                      onPressEnter={handleInputConfirm}
-                    />
-                  ) : (
-                    <Tag style={tagPlusStyle} icon={<PlusOutlined />} onClick={showInput}>
-                      Добавить домен
-                    </Tag>
-                  )}
-                </Space>
-              </div>
-            </Col>
+                      <Tag style={tagPlusStyle} icon={<PlusOutlined />} onClick={showInput}>
+                        Добавить домен
+                      </Tag>
+                    )}
+                  </Space>
+                </div>
+              </Col>
 
-            <div className={styles.switchContainer}>
-              <SwitchBar
-                checkboxText={'Анонимные инициативы'}
-                hintText={'Возможность изменять поле Ф. И. О. при создании инициативы'}
-              />
-              <SwitchBar
-                checkboxText={'Прикладывание файлов'}
-                hintText={'Возможность прикладывать файлы при создании инициативы'}
-                layout={layout}
-              />
+              <div className={styles.switchContainer}>
+                <SwitchBar
+                  checkboxText={'Анонимные инициативы'}
+                  hintText={'Возможность изменять поле Ф. И. О. при создании инициативы'}
+                />
+                <SwitchBar
+                  checkboxText={'Прикладывание файлов'}
+                  hintText={'Возможность прикладывать файлы при создании инициативы'}
+                  layout={layout}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
