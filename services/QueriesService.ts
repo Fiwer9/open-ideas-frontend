@@ -10,7 +10,7 @@ export default class QueriesService {
         return $api.get(`/queries/queries/${id}/`);
     }
 
-    static async postQuery(date: string, name: string, description: string, initiative_direction: string, status: string,
+    static async postQuery(date: string, name: string, description: string, initiative_direction: number, status: string,
                            implementation_effect: string, organization: number, initiator_users: [number]):Promise<AxiosResponse> {
         return $api.post(`/queries/queries/`, {date, name, description, initiative_direction, status,
             implementation_effect, organization, initiator_users});

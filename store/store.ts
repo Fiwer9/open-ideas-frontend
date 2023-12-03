@@ -33,7 +33,7 @@ export default class Store {
         }
     }
 
-    async postQuery(date: string, name: string, description: string, initiative_direction: string, status: string,
+    async postQuery(date: string, name: string, description: string, initiative_direction: number, status: string,
                     implementation_effect: string, organization: number, initiator_users: [number]){
         try {
             await QueriesService.postQuery(date, name, description, initiative_direction, status,

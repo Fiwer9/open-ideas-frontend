@@ -95,7 +95,6 @@ export const UsersList = () => {
   }
 
   const handleRowClick = (user: any) => {
-    console.log(user)
     router.push(`/users/userCard?userId=${user.id}`)
   };
 
