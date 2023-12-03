@@ -76,7 +76,7 @@ export const Registration = () => {
                     departmentId = dep.id
                 }
             }
-            const response = await store.putRegistration(name, departmentId)
+            await store.putRegistration(name, departmentId)
             router.push('/queries')
         } catch (error: any) {
             console.error(error.response.data.message)
@@ -136,13 +136,6 @@ export const Registration = () => {
                     </Form.Item>
                 )}
                 <div className={styles.containerBtn}>
-                    {/*<div className={styles.btnWhite}>*/}
-                    {/*    <Buttons*/}
-                    {/*        type="submit"*/}
-                    {/*        text={"Назад"}*/}
-                    {/*        // onClick={() => router.push('../../')}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
                     <div className={name && organization && department && !error ? styles.btnBlue : styles.disabledBtn}>
                         <Buttons
                             text={"Зарегистрироваться"}

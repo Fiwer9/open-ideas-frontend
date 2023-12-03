@@ -29,6 +29,7 @@ export const UsersList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchNumber, setSearchNumber] = useState('');
   const organizationsFilter = [...new Set(organizations.map((organization) => organization.name))];
+  const [domLoaded, setDomLoaded] = useState(false);
   const columns: any = [
     {
       title: 'Номер',
@@ -84,18 +85,17 @@ export const UsersList = () => {
     setIsLoading(true)
     fetchDataWithDelay();
     setIsLoading(false)
+    setDomLoaded(true)
   }, []);
 
-  const getData = () => {
-    for (let user of usersData) {
-      user.organization = getOrganizationName(user.department.organization, organizations);
-    }
-
-    return usersData;
-  }
+  const data = usersData.map((user) => ({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    organization: user.department ? getOrganizationName(user.department.organization, organizations) : 'Не назначено'
+  }))
 
   const handleRowClick = (user: any) => {
-    console.log(user)
     router.push(`/users/userCard?userId=${user.id}`)
   };
 
@@ -110,31 +110,32 @@ export const UsersList = () => {
   useSearchNum(searchNumber, usersData, UsersService.getUsersUpdate, setIsLoading, setUsersData)
   useSearchQuery(searchTerm, usersData, UsersService.getUsersUpdate, setIsLoading, setUsersData)
 
-
   return (
     <>
-      <div className={styles.container}>
-        <Slider/>
-        <div className={styles.content}>
-          <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
-          <Tabs />
-          <MainText text={'Пользователи'}/>
-          <div className={styles.infContainer}>
-            <SearchBar
-              onSearchTermChange={handleSearchTermChange}
-              onSearchNumberChange={handleSearchNumberChange}
-              placeholderNum={'Номер'}
-              placeholderQuery={'Поиск по пользователям'}/>
-            <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
+      {domLoaded && (
+        <div className={styles.container}>
+          <Slider/>
+          <div className={styles.content}>
+            <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+            <Tabs />
+            <MainText text={'Пользователи'}/>
+            <div className={styles.infContainer}>
+              <SearchBar
+                onSearchTermChange={handleSearchTermChange}
+                onSearchNumberChange={handleSearchNumberChange}
+                placeholderNum={'Номер'}
+                placeholderQuery={'Поиск по пользователям'}/>
+              <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
+            </div>
+            <DataTable
+              data={data}
+              columns={columns}
+              isLoading={isLoading}
+              onRowClick={handleRowClick}
+            />
           </div>
-          <DataTable
-            data={getData()}
-            columns={columns}
-            isLoading={isLoading}
-            onRowClick={handleRowClick}
-          />
         </div>
-      </div>
+      )}
     </>
   );
 };
