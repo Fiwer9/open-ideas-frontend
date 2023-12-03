@@ -55,7 +55,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
     function begin() {
       queryId && fetchData(setIsLoading, setApplicationData, QueriesService.getQueriesTableDataById, queryId)
       fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizations)
-      fetchData(setIsLoading, setUsers, UsersService.getUsers)
+      fetchData(setIsLoading, setUsers, UsersService.getUsersUpdate)
       fetchData(setIsLoading, setDepartments, OrganizationsService.getDepartments)
     }
 
@@ -96,7 +96,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
         <div className={styles.content}>
           <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
           <Tabs />
-            {applicationData.name && user?.department.name && applicationData.expert_users && (
+            {applicationData.name && user  && (
               <Form
                 layout="vertical"
                 className={styles.contentContainer}
@@ -235,7 +235,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                         className={`${styles.formField} ${styles.inp}`}
                         options={[
                           { value: null, label: "-" },
-                          ...users.map(user => ({
+                          ...users.filter(user => user.is_active && user.is_verified).map(user => ({
                             value: user.id,
                             label: user.name
                           }))
