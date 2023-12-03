@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import {UserResponse} from "../../models/response/UserResponse";
 import {Context} from "../../pages/_app";
 import {
+  fetchData,
   formatDate, formatDateRu, formatDateToServer, getAuthor, getDirectionName,
   getLikes,
   getOrganizationName, getStatusClassName, getStatusTranslation,
@@ -47,7 +48,6 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
   useEffect(() => {
 
     function begin() {
-      queryId && fetchData(setIsLoading, setApplicationData, QueriesService.getQueriesTableDataById, queryId)
       const translateStatus = getStatusTranslation(applicationData.status)
       setStatus(translateStatus)
     }

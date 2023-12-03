@@ -46,9 +46,7 @@ export const ApplicationCard = ({ queryId}: ApplicationCardProps) => {
         const fetchData = async () => {
             setIsLoading(true)
             try {
-                const data = queryId && await QueriesService.getQueriesTableDataById(queryId)
                 const organizations = await OrganizationsService.getOrganizations()
-                data && setApplicationData(data.data)
                 setOrganization(organizations.data)
                 const comments = await CommentService.getComments()
                 const users = await UsersService.getUsers()
