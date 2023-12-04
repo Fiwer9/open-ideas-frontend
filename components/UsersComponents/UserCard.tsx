@@ -22,6 +22,7 @@ interface UserCardProps {
 }
 
 export const UserCard = ({userId} : UserCardProps) => {
+
   Cookies.set('userId', userId);
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<UserResponse>();

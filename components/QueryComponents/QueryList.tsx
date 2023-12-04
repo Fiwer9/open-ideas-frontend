@@ -5,6 +5,7 @@ import {QueriesResponse} from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 import {
     fetchData, getDirectionName,
+    checkExpert,
     getStatusClassName,
     getStatusTranslation
 } from "../../utils/utils";
@@ -38,8 +39,25 @@ export const QueryList = () => {
     const [directions, setDirections] = FetchDirections.useGetDirections();
     const [isArchive, setIsArchive] = useState(false)
     const [user, setUser] = useState<UserResponse>()
-    const [organization, setOrganization] = useState<OrganizationsResponse>()
-    const [queriesTableData, setQueriesTableData] = FetchQueries.useGetQueries()
+
+    const [organization, setOrganization] = useState<OrganizationsResponse>({
+        name: '',
+        id: 0
+    })
+    const [queriesTableData, setQueriesTableData] = useState<QueriesResponse[]>([
+        {
+            id: 1,
+            date: "",
+            status: "",
+            description: '',
+            organization: 0,
+            expert_users: [],
+            implementation_effect: '',
+            initiative_direction: '',
+            name: '',
+            initiator_users: [0],
+        }
+    ])
 
     const data = queriesTableData;
     const [searchTerm, setSearchTerm] = useState('');
@@ -120,7 +138,7 @@ export const QueryList = () => {
         user && Cookies.set('user_name', user?.name)
     }, [user]);
 
-    useEffect(() => {
+    useEffect(() => 
         organization && Cookies.set('organization', organization.name)
     }, [organization]);
 
@@ -163,7 +181,8 @@ export const QueryList = () => {
 
     const handleRowClickIdea = (queryId: any) => {
         Cookies.set('queryId', queryId.id)
-        router.push(`/queries/application?queryId=${queryId.id}`);
+        const isExpert = checkExpert(queryId, queriesTableData)
+        !isExpert ? router.push(`/queries/application?queryId=${queryId.id}`) : router.push(`/queries/expert?queryId=${queryId.id}`);
     }
 
     const handleCreateQuery = () => {
