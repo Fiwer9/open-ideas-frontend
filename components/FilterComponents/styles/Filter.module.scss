@@ -52,11 +52,13 @@
           fill: #1890FF;
           transform: rotate(-180deg);
           transition: transform 0.2s;
+          cursor: pointer;
         }
 
         .triangleClose {
           transform: rotate(0deg);
           transition: transform 0.2s;
+          cursor: pointer;
         }
       }
     }
