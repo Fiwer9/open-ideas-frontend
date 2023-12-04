@@ -53,7 +53,7 @@ export const QueryList = () => {
             organization: 0,
             expert_users: [],
             implementation_effect: '',
-            initiative_direction: '',
+            initiative_direction: 0,
             name: '',
             initiator_users: [0],
         }
@@ -138,7 +138,7 @@ export const QueryList = () => {
         user && Cookies.set('user_name', user?.name)
     }, [user]);
 
-    useEffect(() => 
+    useEffect(() => {
         organization && Cookies.set('organization', organization.name)
     }, [organization]);
 

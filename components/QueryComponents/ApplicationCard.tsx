@@ -13,7 +13,7 @@ import {
     formatDateToServer,
     getOrganizationName, getStatusClassName,
     getStatusTranslation,
-    getUserName
+    getUserName, formatDate
 } from "../../utils/utils";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import CommentService from "../../services/CommentService";
