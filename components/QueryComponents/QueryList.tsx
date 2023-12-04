@@ -4,8 +4,8 @@ import styles from "./styles/QueryList.module.scss";
 import {QueriesResponse} from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 import {
+    fetchData, getDirectionName,
     checkExpert,
-    fetchData,
     getStatusClassName,
     getStatusTranslation
 } from "../../utils/utils";
@@ -27,14 +27,19 @@ import {OrganizationsResponse} from "../../models/response/OrganizationsResponse
 import OrganizationsService from "../../services/OrganizationsService";
 import {FilterOutlined, PlusCircleOutlined} from "@ant-design/icons";
 import {Logo} from "../PicturesComponents/Logo";
+import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
+import FetchQueries from "../../hooks/fetches/FetchQueries/FetchQueries";
+
 
 
 export const QueryList = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [isExpert, setIsExpert] = useState(false);
+    const [directions, setDirections] = FetchDirections.useGetDirections();
     const [isArchive, setIsArchive] = useState(false)
     const [user, setUser] = useState<UserResponse>()
+
     const [organization, setOrganization] = useState<OrganizationsResponse>({
         name: '',
         id: 0
@@ -48,7 +53,7 @@ export const QueryList = () => {
             organization: 0,
             expert_users: [],
             implementation_effect: '',
-            initiative_direction: '',
+            initiative_direction: 0,
             name: '',
             initiator_users: [0],
         }
@@ -62,7 +67,7 @@ export const QueryList = () => {
     useSearchQuery(searchTerm, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
 
     const items = queriesTableData;
-    const direct = [...new Set(items.map((item) => item.initiative_direction))];
+    const direct = [...new Set(directions.map((item) => item.name))];
     const status = [...new Set(items.map((item) => getStatusTranslation(item.status)))];
 
     const columns = [
@@ -89,11 +94,13 @@ export const QueryList = () => {
             dataIndex: 'initiative_direction',
             key: 'initiative_direction',
             width: "15%",
+            render: (directionId: number) => getDirectionName(directionId, directions),
             filters: direct.map((direction) => ({
                 text: direction,
                 value: direction,
             })),
-            onFilter: (value: any, record: any) => record.initiative_direction.includes(value),
+            onFilter: (value: any, record: any) => record.name.includes(value),
+
         },
         {
             title: 'Статус заявки',
@@ -116,18 +123,11 @@ export const QueryList = () => {
     ];
 
     const handleRowClick = (queryId: any) => {
+        Cookies.set('queryId', queryId.id)
         router.push(`/queries/adminApplication?queryId=${queryId.id}`);
     };
 
     useEffect(() => {
-        const delay = 3000;
-        const fetchDataWithDelay = async () => {
-            await new Promise(resolve => setTimeout(resolve, delay));
-            fetchData(setIsLoading, setQueriesTableData, QueriesService.getQueriesTableData);
-        };
-        setIsLoading(true)
-        fetchDataWithDelay();
-        setIsLoading(false)
         fetchData(setIsLoading, setUser, UsersService.getCurrentUser, sessionStorage.getItem('user_id'));
     }, [isArchive]);
 
@@ -139,7 +139,7 @@ export const QueryList = () => {
     }, [user]);
 
     useEffect(() => {
-        Cookies.set('organization', organization.name)
+        organization && Cookies.set('organization', organization.name)
     }, [organization]);
 
 
@@ -180,6 +180,7 @@ export const QueryList = () => {
     };
 
     const handleRowClickIdea = (queryId: any) => {
+        Cookies.set('queryId', queryId.id)
         const isExpert = checkExpert(queryId, queriesTableData)
         !isExpert ? router.push(`/queries/application?queryId=${queryId.id}`) : router.push(`/queries/expert?queryId=${queryId.id}`);
     }

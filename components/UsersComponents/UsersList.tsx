@@ -10,7 +10,7 @@ import router from "next/router";
 
 import styles from "./styles/UsersList.module.scss";
 import {DataTable} from "../TableComponent/Table";
-import {fetchData, getDirectionTranslationOnEng, getOrganizationName} from "../../utils/utils";
+import {fetchData, getOrganizationName} from "../../utils/utils";
 import UsersService from "../../services/UsersService";
 import {UsersUpdateResponse} from "../../models/response/UsersUpdateResponse";
 import OrganizationsService from "../../services/OrganizationsService";
@@ -94,7 +94,6 @@ export const UsersList = () => {
     email: user.email,
     organization: user.department ? getOrganizationName(user.department.organization, organizations) : 'Не назначено'
   }))
-
   const handleRowClick = (user: any) => {
     router.push(`/users/userCard?userId=${user.id}`)
   };

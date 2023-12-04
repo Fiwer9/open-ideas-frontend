@@ -14,12 +14,14 @@ import UsersService from "../../services/UsersService";
 import {formatDateToServer, getOrganizationId, getOrganizationName} from "../../utils/utils";
 import {Context} from "../../pages/_app";
 import { UploadOutlined } from "@ant-design/icons";
+import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
 
 export const CreateQuery = () => {
     const [modalActive, setModalActive] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [description, setDescription] = useState('')
     const [effect, setEffect] = useState('')
+    const [directions, setDirections] = FetchDirections.useGetDirections()
     const [users, setUsers] = useState<UserResponse>(
         {
             id: 0,
@@ -42,10 +44,10 @@ export const CreateQuery = () => {
             groups: [],
             user_permissions: [],
             likes: [],
-          is_verified: false
+            is_verified: false
         }
     )
-    const [direction, setDirection] = useState('')
+    const [direction, setDirection] = useState(0)
     const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
     const [idea, setIdea] = useState('')
     const [secondModalActive, setSecondModalActive] = useState(false);
@@ -77,7 +79,7 @@ export const CreateQuery = () => {
         return users.department.organization
     }
 
-    const postQuery = async (date: string, name: string, description: string, initiative_direction: string, status: string,
+    const postQuery = async (date: string, name: string, description: string, initiative_direction: number, status: string,
                        implementation_effect: string, organization: number, initiator_users: [number])=> {
         try {
             await store.postQuery(date, name, description, initiative_direction, status,
@@ -128,12 +130,10 @@ export const CreateQuery = () => {
                                 className='select'
                                 style={{height: 40}}
                                 placeholder="Направление инициативы"
-                                options={[
-                                    { value: 'tech_process', label: 'Технологические процессы' },
-                                    { value: 'business_process', label: 'Бизнес-процессы' },
-                                    { value: 'work_safety', label: 'Охрана труда' },
-                                    { value: 'workspace', label: 'Рабочее пространство' },
-                                ]}
+                                options={directions.map((direction) => ({
+                                  value: direction.id,
+                                  label: direction.name
+                                }))}
                                 onChange={(e: any) => {
                                     setDirection(e)
                                 }}

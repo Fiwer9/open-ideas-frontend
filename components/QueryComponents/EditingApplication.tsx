@@ -8,19 +8,18 @@ import { Tabs } from "../TabsComponent/Tabs";
 import Cookies from "js-cookie";
 import {
   fetchData, formatDateToServer,
-  getAuthor,
-  getDirectionTranslation,
+  getAuthor, getDirectionName,
   getOrganizationName
 } from "../../utils/utils";
-import QueriesService from "../../services/QueriesService";
 import OrganizationsService from "../../services/OrganizationsService";
 import UsersService from "../../services/UsersService";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import {UserResponse} from "../../models/response/UserResponse";
 import {Context} from "../../pages/_app";
-import {QueriesResponse} from "../../models/response/QueriesResponse";
 import {IDepartment} from "../../models/IDepartment";
 import { UploadOutlined } from "@ant-design/icons";
+import FetchQueries from "../../hooks/fetches/FetchQueries/FetchQueries";
+import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
 
 interface EditingApplicationProps {
   queryId: string;
@@ -31,29 +30,18 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
   const [users, setUsers] = useState<UserResponse[]>([])
   const [departments, setDepartments] = useState<IDepartment[]>([])
   const [user, setUser] = useState<UserResponse>()
-  const [applicationData, setApplicationData] = useState<QueriesResponse>({
-    name: '',
-    initiator_users: [0],
-    implementation_effect: '',
-    initiative_direction: '',
-    organization: 0,
-    expert_users: [],
-    status: '',
-    description: '',
-    date: '',
-    id: 0
-  })
+  const [applicationData, setApplicationData] = FetchQueries.useGetQueriesById(queryId? queryId : Cookies.get('queryId'))
   const [applicationName, setApplicationName] = useState('')
   const [applicationDescription, setApplicationDescription] = useState('')
   const [applicationEffect, setApplicationEffect] = useState('')
-  const [applicationDirection, setApplicationDirection] = useState('')
+  const [applicationDirection, setApplicationDirection] = useState(0)
+  const [directions, setDirections] = FetchDirections.useGetDirections();
   const { store } = useContext(Context)
   const [expertSelect, setExpertSelect] = useState<number[]>([])
 
   useEffect(() => {
 
     function begin() {
-      queryId && fetchData(setIsLoading, setApplicationData, QueriesService.getQueriesTableDataById, queryId)
       fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizations)
       fetchData(setIsLoading, setUsers, UsersService.getUsersUpdate)
       fetchData(setIsLoading, setDepartments, OrganizationsService.getDepartments)
@@ -104,7 +92,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                   initiative: applicationName,
                   description: applicationDescription,
                   modification: applicationEffect,
-                  direction: getDirectionTranslation(applicationData.initiative_direction),
+                  direction: getDirectionName(applicationData.initiative_direction, directions),
                   organization: getOrganizationName(applicationData.organization, organization),
                   department: user?.department.name,
                   expert: applicationData.expert_users ? applicationData.expert_users : 'Не назначено',
@@ -170,12 +158,10 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                     >
                       <Select
                         className={`${styles.formField} ${styles.inp}`}
-                        options={[
-                          { value: 'tech_process', label: 'Технологические процессы' },
-                          { value: 'business_process', label: 'Бизнес-процессы' },
-                          { value: 'work_safety', label: 'Охрана труда' },
-                          { value: 'workspace', label: 'Рабочее пространство' }
-                        ]}
+                        options={directions.map((direct) => ({
+                          value: direct.id,
+                          label: direct.name
+                        }))}
                         onChange={(e) => handleChangeApplicationSelect(e, setApplicationDirection)}
                         aria-required={true}
                       />
