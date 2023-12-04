@@ -36,7 +36,8 @@ export class FetchUsers {
         id: 0,
         name: '',
         organization: 0
-      }
+      },
+      is_verified: false
     })
     useEffect(() => {
       fetchData(setIsLoading, setUsers, UsersService.getCurrentUser, id)
