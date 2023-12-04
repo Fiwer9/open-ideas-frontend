@@ -42,6 +42,7 @@ export const CreateQuery = () => {
             groups: [],
             user_permissions: [],
             likes: [],
+          is_verified: false
         }
     )
     const [direction, setDirection] = useState('')

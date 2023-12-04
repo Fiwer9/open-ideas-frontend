@@ -11,7 +11,7 @@ export default function Index() {
   const { userId } = router.query;
   let id = Array.isArray(userId) ? userId[0] : userId;
   id = id || "";
-
+  Cookies.set('userId', id);
 
   return (
     <div>

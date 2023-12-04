@@ -4,6 +4,7 @@ import styles from "./styles/QueryList.module.scss";
 import {QueriesResponse} from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 import {
+    checkExpert,
     fetchData,
     getStatusClassName,
     getStatusTranslation
@@ -34,7 +35,10 @@ export const QueryList = () => {
     const [isExpert, setIsExpert] = useState(false);
     const [isArchive, setIsArchive] = useState(false)
     const [user, setUser] = useState<UserResponse>()
-    const [organization, setOrganization] = useState<OrganizationsResponse>()
+    const [organization, setOrganization] = useState<OrganizationsResponse>({
+        name: '',
+        id: 0
+    })
     const [queriesTableData, setQueriesTableData] = useState<QueriesResponse[]>([
         {
             id: 1,
@@ -132,8 +136,11 @@ export const QueryList = () => {
         user && fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizationsById, user?.department.organization)
         user && Cookies.set('department', user?.department.name)
         user && Cookies.set('user_name', user?.name)
-        organization && Cookies.set('organization', organization.name)
     }, [user]);
+
+    useEffect(() => {
+        Cookies.set('organization', organization.name)
+    }, [organization]);
 
 
     const getData = () => {
@@ -173,7 +180,8 @@ export const QueryList = () => {
     };
 
     const handleRowClickIdea = (queryId: any) => {
-        router.push(`/queries/application?queryId=${queryId.id}`);
+        const isExpert = checkExpert(queryId, queriesTableData)
+        !isExpert ? router.push(`/queries/application?queryId=${queryId.id}`) : router.push(`/queries/expert?queryId=${queryId.id}`);
     }
 
     const handleCreateQuery = () => {
