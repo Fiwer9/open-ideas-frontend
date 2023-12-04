@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.3.1",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/axios": "^0.14.0",
     "@types/node": "18.16.1",
@@ -16,6 +17,7 @@
     "@types/react-dom": "18.2.1",
     "antd": "^5.7.0",
     "axios": "^1.4.0",
+    "chart.js": "^4.4.0",
     "dotenv": "^16.3.1",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.1",
@@ -29,6 +31,7 @@
     "next": "13.3.1",
     "prettier": "^2.8.8",
     "react": "18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-redux": "^8.1.0",
     "react-router-dom": "^6.10.0",
@@ -37,7 +40,9 @@
     "yarn": "^1.22.19"
   },
   "devDependencies": {
+    "@types/faker": "^6.6.9",
     "@types/js-cookie": "^3.0.3",
+    "faker": "^5.5.3",
     "sass": "^1.68.0"
   }
 }

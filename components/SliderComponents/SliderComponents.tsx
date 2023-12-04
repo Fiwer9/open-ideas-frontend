@@ -52,11 +52,10 @@ export const Slider = () => {
           <Menu.Item key={'3'} icon={<ReconciliationOutlined />} onClick={() => router.push('/organizations')}>Организации и отделы</Menu.Item>
           <Menu.Item key={'4'} icon={<ProjectOutlined />}>Направления</Menu.Item>
           <SubMenu key={'sub1'} icon={<BarChartOutlined />} title={'Аналитика'}>
-            <Menu.Item key={'5'}>Графики</Menu.Item>
+            <Menu.Item key={'5'} onClick={() => router.push('/charts')}>Графики</Menu.Item>
             <Menu.Item key={'6'}>Таблицы</Menu.Item>
           </SubMenu>
           <Menu.Item key={'7'} icon={<SettingOutlined />} onClick={() => router.push('/settings')}>Настройки</Menu.Item>
-
         </Menu>
         <Button
           type="text"
