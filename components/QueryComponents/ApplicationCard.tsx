@@ -7,15 +7,13 @@ import {Buttons} from "../ButtonComponent/Button";
 import avatar from "../../public/img/AvatarAratrum.svg"
 import styles from "./styles/ApplicationCard.module.scss";
 import router from "next/router";
-import QueriesService from "../../services/QueriesService";
 import OrganizationsService from "../../services/OrganizationsService";
-import {QueriesResponse} from "../../models/response/QueriesResponse";
 import {
-    formatDate, formatDateToServer,
-    getDirectionTranslation,
+    getDirectionName,
+    formatDateToServer,
     getOrganizationName, getStatusClassName,
     getStatusTranslation,
-    getUserName
+    getUserName, formatDate
 } from "../../utils/utils";
 import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import CommentService from "../../services/CommentService";
@@ -25,6 +23,9 @@ import {UserResponse} from "../../models/response/UserResponse";
 import {Context} from "../../pages/_app";
 import Image from "next/image";
 import type { UploadProps } from 'antd';
+import FetchQueries from "../../hooks/fetches/FetchQueries/FetchQueries";
+import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
+import Cookies from "js-cookie";
 
 type ApplicationCardProps = {
     queryId: string;
@@ -40,26 +41,14 @@ export const ApplicationCard = ({ queryId, user_status}: ApplicationCardProps) =
     const { store } = useContext(Context);
     const [status, setStatus] = useState('')
     const [isLiked, setIsLiked] = useState(false)
-    const [applicationData, setApplicationData] = useState<QueriesResponse>({
-        name: '',
-        initiator_users: [0],
-        implementation_effect: '',
-        initiative_direction: '',
-        organization: 0,
-        expert_users: [],
-        status: '',
-        description: '',
-        date: '',
-        id: 0
-    })
+    const [directions, setDirections] = FetchDirections.useGetDirections();
+    const [applicationData, setApplicationData] = FetchQueries.useGetQueriesById(queryId ? queryId : Cookies.get('queryId'))
 
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true)
             try {
-                const data = queryId && await QueriesService.getQueriesTableDataById(queryId)
                 const organizations = await OrganizationsService.getOrganizations()
-                data && setApplicationData(data.data)
                 setOrganization(organizations.data)
                 const comments = await CommentService.getComments()
                 const users = await UsersService.getUsers()
@@ -207,26 +196,27 @@ export const ApplicationCard = ({ queryId, user_status}: ApplicationCardProps) =
     };
 
   return (
-      <div>
+    <div>
+        {queryId && (
           <Card className={styles.card} loading={isLoading}>
               <Form className={styles.form}>
                   <Form.Item className={styles.logo}>
                       <div className={styles.headerContainer}>
                           <div className={styles.logo}>
-                            <Logo width={147} height={42} />
+                              <Logo width={147} height={42} />
                           </div>
                           <div className={styles.headerContent}>
                               <div className={styles.iconContainer}>
                                   {isLiked? (
-                                      <HeartFilled className={styles.likes} style={{color: '#FF185D'}} onClick={() => {
-                                          patchRemoveLike(Number(sessionStorage.getItem('user_id')))
-                                          setIsLiked(false)
-                                      }}/>
+                                    <HeartFilled className={styles.likes} style={{color: '#FF185D'}} onClick={() => {
+                                        patchRemoveLike(Number(sessionStorage.getItem('user_id')))
+                                        setIsLiked(false)
+                                    }}/>
                                   ) : (
-                                      <HeartOutlined className={styles.likes} onClick={() => {
-                                          patchAddLike(Number(sessionStorage.getItem('user_id')))
-                                          setIsLiked(true)
-                                      }}/>
+                                    <HeartOutlined className={styles.likes} onClick={() => {
+                                        patchAddLike(Number(sessionStorage.getItem('user_id')))
+                                        setIsLiked(true)
+                                    }}/>
                                   )}
                                   <p className={styles.numberLikes}>{getLikes()}</p>
                               </div>
@@ -249,7 +239,7 @@ export const ApplicationCard = ({ queryId, user_status}: ApplicationCardProps) =
                       </Row>
                       <Row className={styles.row}>
                           <p className={styles.rowText}>Направление:</p>
-                          <p className={styles.rowInf}>{getDirectionTranslation(applicationData.initiative_direction)}</p>
+                          <p className={styles.rowInf}>{getDirectionName(applicationData.initiative_direction, directions)}</p>
                       </Row>
                       <Row className={styles.row}>
                           <p className={styles.rowText}>Организация:</p>
@@ -265,8 +255,8 @@ export const ApplicationCard = ({ queryId, user_status}: ApplicationCardProps) =
                           <p className={`${styles.rowText} ${styles.comments}`}>Комментарии:</p>
                       </Row>
                       {dataComment
-                          .filter((comment) => comment.query === Number(queryId))
-                          .map((comment, index) => (
+                        .filter((comment) => comment.query === Number(queryId))
+                        .map((comment, index) => (
                           <Row className={styles.row} key={index}>
                               <div className={styles.userContainer}>
                                   <div className={styles.userAvatar}>
@@ -282,19 +272,19 @@ export const ApplicationCard = ({ queryId, user_status}: ApplicationCardProps) =
                                   </div>
                               </div>
                           </Row>
-                          ))}
+                        ))}
                   </Col>
                   <Form.Item className={styles.textAreaContainer}>
                       <p className={styles.textAreaTitle}>Оставьте свой комментарий по инициативе здесь:</p>
                       <div className={styles.textArea}>
-                          <textarea
-                              className={styles.textAreaCustom}
-                              placeholder={"Напишите комментарий по этой инициативе"}
-                              onChange={(evt: any) => {
-                                  setCommentValue(evt.target.value);
-                              }}
-                              value={commentValue}
-                          />
+                              <textarea
+                                className={styles.textAreaCustom}
+                                placeholder={"Напишите комментарий по этой инициативе"}
+                                onChange={(evt: any) => {
+                                    setCommentValue(evt.target.value);
+                                }}
+                                value={commentValue}
+                              />
                       </div>
                   </Form.Item>
                   {user_status ? (
@@ -339,6 +329,7 @@ export const ApplicationCard = ({ queryId, user_status}: ApplicationCardProps) =
                   )}
               </Form>
           </Card>
-      </div>
+        )}
+    </div>
   );
 };

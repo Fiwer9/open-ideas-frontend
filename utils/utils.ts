@@ -3,6 +3,7 @@ import {UserResponse} from "../models/response/UserResponse";
 import dayjs from "dayjs";
 import 'dayjs/locale/ru';
 import Cookies from "js-cookie";
+import {DirectionResponse} from "../models/response/DirectionResponse";
 import {IDepartment} from "../models/IDepartment";
 
 
@@ -13,7 +14,6 @@ export function getDepartmentName(depId: number | undefined, departments: IDepar
         }
     }
 }
-
 export function getOrganizationName(text: number | undefined, organizations: any) {
     for (let org of organizations) {
         if (org.id === text) {
@@ -68,6 +68,14 @@ export function formatDateToServer(date: any, separator='.') {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${year}${separator}${month}${separator}${day}`;
+}
+
+export const getDirectionName = (directionId: number, directions: DirectionResponse[]) => {
+    for (let direction of directions) {
+        if (direction.id === directionId) {
+            return direction.name;
+        }
+    }
 }
 
 export const getDirectionTranslation = (direction: string) => {
