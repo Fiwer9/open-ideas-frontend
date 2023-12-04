@@ -5,6 +5,7 @@ import 'dayjs/locale/ru';
 import Cookies from "js-cookie";
 import {IDepartment} from "../models/IDepartment";
 
+
 export function getDepartmentName(depId: number | undefined, departments: IDepartment[]) {
     for (let dep of departments) {
         if (dep.id === depId) {
@@ -158,6 +159,8 @@ export const getRouteTranslation = (route: string) => {
             return "Создание инициативы";
         case "editingApplication":
             return "Редактирование инициативы";
+        case 'settings':
+            return 'Настройки'
         case `adminApplication?queryId=${Cookies.get('queryId')}`:
             return Cookies.get('queryName');
         case `editingApplication?queryId=${Cookies.get('queryId')}`:

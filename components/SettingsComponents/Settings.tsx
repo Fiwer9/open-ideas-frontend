@@ -8,6 +8,9 @@ import { MainText } from "../MainTextComponent";
 import SwitchBar from "../FilterComponents/blocks/SwitchBar";
 import { PlusOutlined } from '@ant-design/icons';
 import type { InputRef } from 'antd';
+import FetchSettings from "../../hooks/FetchData/FetchSettings/FetchSettings";
+import Cookies from "js-cookie";
+import * as domain from "domain";
 
 
 function SwitchContent() {
@@ -28,11 +31,12 @@ export const Settings = () => {
   const layout = <SwitchContent />
 
   const { token } = theme.useToken();
-  const [tags, setTags] = useState(['mail.ru']);
+  const [tags, setTags] = FetchSettings.useGetDomains();
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [editInputIndex, setEditInputIndex] = useState(-1);
   const [editInputValue, setEditInputValue] = useState('');
+  const [loadedDOM, setLoadedDOM] = useState(false)
   const inputRef = useRef<InputRef>(null);
   const editInputRef = useRef<InputRef>(null);
 
@@ -46,9 +50,9 @@ export const Settings = () => {
     editInputRef.current?.focus();
   }, [editInputValue]);
 
-  const handleClose = (removedTag: string) => {
-    const newTags = tags.filter((tag) => tag !== removedTag);
-    console.log(newTags);
+  const handleClose = (removedTag: number) => {
+    FetchSettings.useRemoveDomains(removedTag)
+    const newTags = tags.filter((tag) => tag.id !== removedTag);
     setTags(newTags);
   };
 
@@ -61,9 +65,15 @@ export const Settings = () => {
   };
 
   const handleInputConfirm = () => {
-    if (inputValue && !tags.includes(inputValue)) {
-      setTags([...tags, inputValue]);
+    let id = 0;
+    for (let tag of tags) {
+      id += 1;
+      if (tag.domain.includes(inputValue)) {
+        return setTags([...tags])
+      }
     }
+    FetchSettings.usePostDomain(inputValue)
+    setTags([...tags, {id: id, domain: inputValue}]);
     setInputVisible(false);
     setInputValue('');
   };
@@ -74,7 +84,7 @@ export const Settings = () => {
 
   const handleEditInputConfirm = () => {
     const newTags = [...tags];
-    newTags[editInputIndex] = editInputValue;
+    newTags[editInputIndex].domain = editInputValue;
     setTags(newTags);
     setEditInputIndex(-1);
     setEditInputValue('');
@@ -95,97 +105,103 @@ export const Settings = () => {
     borderRadius: 2,
   };
 
+  useEffect(() => {
+    setLoadedDOM(true);
+  }, [tags]);
+
   return (
     <>
-      <div className={styles.container}>
-        <Slider/>
-        <div className={styles.content}>
-          <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
-          <Tabs />
-          <MainText text={'Настройки'}/>
-          <div className={styles.settingsContainer}>
-            <Col className={styles.column}>
-              <div className={styles.row}>
-                <p className={styles.rowText}>Почта</p>
-                <Space size={[0, 8]} wrap className={styles.tag}>
-                  {tags.map((tag, index) => {
-                    if (editInputIndex === index) {
-                      return (
-                        <Input
-                          ref={editInputRef}
-                          key={tag}
-                          size="small"
-                          style={tagInputStyle}
-                          value={editInputValue}
-                          onChange={handleEditInputChange}
-                          onBlur={handleEditInputConfirm}
-                          onPressEnter={handleEditInputConfirm}
-                        />
-                      );
-                    }
-                    const isLongTag = tag.length > 20;
-                    const tagElem = (
-                      <Tag
-                        key={tag}
-                        closable={index >= 0}
-                        style={{ userSelect: 'none' }}
-                        onClose={() => handleClose(tag)}
-                      >
+      {loadedDOM && (
+        <div className={styles.container}>
+          <Slider/>
+          <div className={styles.content}>
+            <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+            <Tabs />
+            <MainText text={'Настройки'}/>
+            <div className={styles.settingsContainer}>
+              <Col className={styles.column}>
+                <div className={styles.row}>
+                  <p className={styles.rowText}>Почта</p>
+                  <Space size={[0, 8]} wrap className={styles.tag}>
+                    {tags.map((tag, index) => {
+                      if (editInputIndex === index) {
+                        return (
+                          <Input
+                            ref={editInputRef}
+                            key={tag.id}
+                            size="small"
+                            style={tagInputStyle}
+                            value={editInputValue}
+                            onChange={handleEditInputChange}
+                            onBlur={handleEditInputConfirm}
+                            onPressEnter={handleEditInputConfirm}
+                          />
+                        );
+                      }
+                      const isLongTag = editInputValue.length > 20;
+                      const tagElem = (
+                        <Tag
+                          key={tag.id}
+                          closable={index >= 0}
+                          style={{ userSelect: 'none' }}
+                          onClose={() => handleClose(tag.id)}
+                        >
                         <span
                           onDoubleClick={(e) => {
                             if (index !== 0) {
                               setEditInputIndex(index);
-                              setEditInputValue(tag);
+                              setEditInputValue(tag.domain);
                               e.preventDefault();
                             }
                           }}
                         >
-                          {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                          {isLongTag ? `${tag.domain.slice(0, 20)}...` : tag.domain}
                         </span>
-                      </Tag>
-                    );
-                    return isLongTag ? (
-                      <Tooltip title={tag} key={tag}>
-                        {tagElem}
-                      </Tooltip>
+                        </Tag>
+                      );
+                      return isLongTag ? (
+                        <Tooltip title={tag.domain} key={tag.id}>
+                          {tagElem}
+                        </Tooltip>
+                      ) : (
+                        tagElem
+                      );
+                    })}
+                    {inputVisible ? (
+                      <Input
+                        ref={inputRef}
+                        type="text"
+                        size="small"
+                        style={tagInputStyle}
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onBlur={handleInputConfirm}
+                        onPressEnter={handleInputConfirm}
+                      />
                     ) : (
-                      tagElem
-                    );
-                  })}
-                  {inputVisible ? (
-                    <Input
-                      ref={inputRef}
-                      type="text"
-                      size="small"
-                      style={tagInputStyle}
-                      value={inputValue}
-                      onChange={handleInputChange}
-                      onBlur={handleInputConfirm}
-                      onPressEnter={handleInputConfirm}
-                    />
-                  ) : (
-                    <Tag style={tagPlusStyle} icon={<PlusOutlined />} onClick={showInput}>
-                      Добавить домен
-                    </Tag>
-                  )}
-                </Space>
-              </div>
-            </Col>
+                      <Tag style={tagPlusStyle} icon={<PlusOutlined />} onClick={showInput}>
+                        Добавить домен
+                      </Tag>
+                    )}
+                  </Space>
+                </div>
+              </Col>
 
-            <div className={styles.switchContainer}>
-              <SwitchBar
-                checkboxText={'Анонимные инициативы'}
-                hintText={'Возможность изменять поле Ф. И. О. при создании инициативы'}
-              />
-              <SwitchBar
-                checkboxText={'Прикладывание файлов'}
-                hintText={'Возможность прикладывать файлы при создании инициативы'}
-                layout={layout}
-              />
+              <div className={styles.switchContainer}>
+                <SwitchBar
+                  checkboxText={'Анонимные инициативы'}
+                  hintText={'Возможность изменять поле Ф. И. О. при создании инициативы'}
+                />
+                <SwitchBar
+                  checkboxText={'Прикладывание файлов'}
+                  hintText={'Возможность прикладывать файлы при создании инициативы'}
+                  layout={layout}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
