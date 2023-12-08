@@ -40,7 +40,7 @@
     "yarn": "^1.22.19"
   },
   "devDependencies": {
-    "@types/faker": "^6.6.9",
+    "@types/faker": "^5.5.3",
     "@types/js-cookie": "^3.0.3",
     "faker": "^5.5.3",
     "sass": "^1.68.0"
