@@ -9,7 +9,7 @@ interface ModalProps {
     active: any,
     setActive: any,
     text1: string,
-    text2: string,
+    text2?: string,
     textBtn1: string,
     textBtn2: string,
     onClick1: any,
