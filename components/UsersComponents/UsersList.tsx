@@ -45,11 +45,6 @@ export const UsersList = () => {
       dataIndex: 'name',
       key: 'name',
       width: "50%",
-      filters: names.map((name) => ({
-        text: name,
-        value: name,
-      })),
-      onFilter: (value: any, record: any) => record.name.includes(value),
     },
     {
       title: 'Почта',
