@@ -1,7 +1,7 @@
-import React, {ChangeEvent, useContext, useEffect, useState} from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import styles from "./styles/EditingApplication.module.scss";
 import { Slider } from "../SliderComponents/SliderComponents";
-import {Button, Form, Input, Select, Upload} from "antd";
+import {Button, Form, Input, Select, Upload, ConfigProvider} from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
@@ -153,7 +153,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                       name={'direction'}
                       rules={[{
                         required: true,
-                        message: 'Выберете направление инициативы'
+                        message: 'Выберите направление инициативы'
                       }]}
                     >
                       <Select
@@ -172,7 +172,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                       name={'organization'}
                       rules={[{
                         required: true,
-                        message: 'Выберете организацию'
+                        message: 'Выберите организацию'
                       }]}
                     >
                       <Select
@@ -191,7 +191,7 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                       name={'department'}
                       rules={[{
                         required: true,
-                        message: 'Выберете отдел'
+                        message: 'Выберите отдел'
                       }]}
                     >
                       <Select
@@ -209,26 +209,29 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                       label={'Назначенный эксперт'}
                       name={'expert'}
                       rules={[{
-                        message: 'Выберете эксперта'
+                        required: false,
+                        message: 'Выберите эксперта'
                       }]}
                     >
-                      <Select
-                        showSearch
-                        filterOption={(input, option) => (option?.label ?? '').includes(input)}
-                        filterSort={(optionA, optionB) =>
-                          (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                        }
-                        className={`${styles.formField} ${styles.inp}`}
-                        options={[
-                          { value: null, label: "-" },
-                          ...users.filter(user => user.is_active && user.is_verified).map(user => ({
-                            value: user.id,
-                            label: user.name
-                          }))
-                        ]}
-                        aria-required={true}
-                        onChange={(e) => e ? handleChangeApplicationSelect([e], setExpertSelect) : handleChangeApplicationSelect([], setExpertSelect)}
-                      />
+                      <ConfigProvider renderEmpty={() => <p>Нет экспертов</p>}>
+                        <Select
+                          showSearch
+                          filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                          filterSort={(optionA, optionB) =>
+                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                          }
+                          className={`${styles.formField} ${styles.inp}`}
+                          options={[
+                            { value: null, label: "-" },
+                            ...users.filter(user => user.is_active && user.is_verified).map(user => ({
+                              value: user.id,
+                              label: user.name
+                            }))
+                          ]}
+                          aria-required={true}
+                          onChange={(e) => e ? handleChangeApplicationSelect([e], setExpertSelect) : handleChangeApplicationSelect([], setExpertSelect)}
+                        />
+                      </ConfigProvider>
                     </Form.Item>
                   </div>
                 <div className={styles.files}>

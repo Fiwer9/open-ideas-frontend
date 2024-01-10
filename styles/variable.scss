@@ -339,6 +339,11 @@ $color-pule-purple: #F0F5FF;
   font-size: 14px;
 }
 
+.ant-select-item-empty {
+  text-align: center;
+  color: rgba($color-black, 0.25);
+}
+
 .statusCheck {
   color: #4b7271;
 }
