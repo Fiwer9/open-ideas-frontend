@@ -5,10 +5,15 @@ import CommentService from "../services/CommentService";
 import LikesService from "../services/LikesService";
 import QueriesService from "../services/QueriesService";
 import UsersService from "../services/UsersService";
+import SettingsService from "../services/SettingsService";
 
 export default class Store {
     user = {} as IUser;
     isAuth = false;
+    isAnonymous: boolean | undefined = false;
+    isFilesAttachment: boolean | undefined = false;
+    maxSizeFiles: number = 5000;
+    maxFilesAttached = 7;
 
     constructor() {
         makeAutoObservable(this);
@@ -107,6 +112,19 @@ export default class Store {
         }
     }
 
+    async getSettings() {
+        try {
+            const response = await SettingsService.getSettings();
+            response.data.forEach((setting) => {
+                this.isAnonymous = setting.anonymous_status
+                this.isFilesAttachment = setting.allow_file_attachment
+            })
+            return response
+        } catch (e: any) {
+            return e.response.data.detail
+        }
+    }
+
     async logout() {
         try {
             await AuthService.logout();
@@ -114,7 +132,16 @@ export default class Store {
             this.setAuth(false);
             this.setUser({} as IUser);
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.error(e.response?.data?.message);
+        }
+    }
+
+    async postSettings(allow_file_attachment: boolean | undefined, max_file_size: number | undefined, max_files_attached: number | undefined, anonymous_status: boolean | undefined) {
+        try {
+            await SettingsService.postSettings(allow_file_attachment, max_file_size, max_files_attached, anonymous_status)
+        }
+        catch (e: any) {
+            console.error(e.response?.data?.message)
         }
     }
 }
