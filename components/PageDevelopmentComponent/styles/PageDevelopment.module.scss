@@ -1,5 +1,8 @@
 @import "../../../styles/variable.scss";
 
+.logotip {
+  padding: 30px 80px;
+}
 
 .container {
   @extend %container;
@@ -17,6 +20,7 @@
   .btnPage {
     margin-top: 12px;
     margin-left: 50px;
+    padding: 7px 15px;
     font: {
       size: 30px;
     };
