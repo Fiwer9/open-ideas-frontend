@@ -216,7 +216,9 @@ export const QueryList = () => {
         ) : (
         <div className={styles.containerIdeas}>
             <div className={styles.contentIdeas}>
-                <Header user_name={user?.name} organization={organization && organization.name} department={user?.department.name}/>
+                <div className={styles.headerContainer}>
+                    <Header user_name={user?.name} organization={organization && organization.name} department={user?.department.name}/>
+                </div>
                 <div className={styles.header}>
                     <div className={styles.logoHeader}>
                         <Logo width={190} height={53} />
@@ -231,10 +233,14 @@ export const QueryList = () => {
                       onSearchTermChange={handleSearchTermChange}
                       onSearchNumberChange={handleSearchNumberChange}
                       placeholderNum={'Номер'}
-                      placeholderQuery={'Поиск по идеям'}/>
-                    <FilterBar icon={<PlusCircleOutlined />} filterText={'Создать идею'} onClick={handleCreateQuery}/>
-                    <CheckboxBar onToggleArchive={handleToggleExpert} checkboxText={'Я эксперт'}/>
-                    <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
+                      placeholderQuery={'Поиск по идеям'}
+                      stylesSearch={styles.searchBar}
+                    />
+                    <div className={styles.btnHead}>
+                        <FilterBar icon={<PlusCircleOutlined />} filterText={'Создать идею'} onClick={handleCreateQuery}/>
+                        <CheckboxBar onToggleArchive={handleToggleExpert} checkboxText={'Я эксперт'}/>
+                        <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
+                    </div>
                 </div>
                 <DataTable
                   columns={columns}
