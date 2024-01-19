@@ -44,20 +44,7 @@ export const QueryList = () => {
         name: '',
         id: 0
     })
-    const [queriesTableData, setQueriesTableData] = useState<QueriesResponse[]>([
-        {
-            id: 1,
-            date: "",
-            status: "",
-            description: '',
-            organization: 0,
-            expert_users: [],
-            implementation_effect: '',
-            initiative_direction: 0,
-            name: '',
-            initiator_users: [0],
-        }
-    ])
+    const [queriesTableData, setQueriesTableData] = FetchQueries.useGetQueries()
 
     const data = queriesTableData;
     const [searchTerm, setSearchTerm] = useState('');
@@ -65,6 +52,7 @@ export const QueryList = () => {
 
     useSearchNum(searchNumber, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
     useSearchQuery(searchTerm, queriesTableData, QueriesService.getQueriesTableData, setIsLoading, setQueriesTableData)
+
 
     const items = queriesTableData;
     const direct = [...new Set(directions.map((item) => item.name))];
@@ -128,6 +116,14 @@ export const QueryList = () => {
     };
 
     useEffect(() => {
+        const delay = 3000;
+        const fetchDataWithDelay = async () => {
+            await new Promise(resolve => setTimeout(resolve, delay));
+            fetchData(setIsLoading, setQueriesTableData, QueriesService.getQueriesTableData);
+        };
+        setIsLoading(true)
+        fetchDataWithDelay();
+        setIsLoading(false)
         fetchData(setIsLoading, setUser, UsersService.getCurrentUser, sessionStorage.getItem('user_id'));
     }, [isArchive]);
 
