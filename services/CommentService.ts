@@ -9,9 +9,6 @@ export default class CommentService {
     }
 
     static async sendComment(comment_text: string, query: number, user: number): Promise<AxiosResponse<CommentResponse>> {
-        const headers: AxiosRequestConfig["headers"] = {
-            "X-CSRFToken": `HPZnsSyWM6kS4ox2iDF9IrApK7ccH13e`,
-        };
-        return $api.post('/queries/comments/', {comment_text, query, user}, {headers})
+        return $api.post('/queries/comments/', {comment_text, query, user})
     }
 }
