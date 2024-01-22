@@ -12,6 +12,8 @@ export default class Store {
     isAuth = false;
     isAnonymous = false;
     isAllowFileAttachment = false;
+    maxFileSize: number = 1024;
+    maxFilesAttached: number = 5;
 
     constructor() {
         makeAutoObservable(this);
