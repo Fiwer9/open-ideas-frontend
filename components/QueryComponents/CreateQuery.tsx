@@ -18,6 +18,7 @@ import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections
 
 export const CreateQuery = () => {
     const [modalActive, setModalActive] = useState(false);
+    const { store } = useContext(Context);
     const [isLoading, setIsLoading] = useState(false);
     const [description, setDescription] = useState('')
     const [effect, setEffect] = useState('')
@@ -51,7 +52,6 @@ export const CreateQuery = () => {
     const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
     const [idea, setIdea] = useState('')
     const [secondModalActive, setSecondModalActive] = useState(false);
-    const { store } = useContext(Context);
     const closeModal = () => {
       setModalActive(false);
       setSecondModalActive(false);
@@ -157,19 +157,21 @@ export const CreateQuery = () => {
                                       setEffect(e.target.value)
                                   }} value={effect || ''} required={true}/>
                     </Form.Item>
-                    <Form.Item className={styles.formItems}>
-                      <div className={styles.label}>
-                        <InputLabel title={"Загрузка дополнительных файлов"}/>
-                      </div>
-                      <Upload
-                        maxCount={5}
-                        accept=".pdf, .webm, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
-                        multiple
-                        className='upload'
-                      >
-                        <Button className={styles.uploadBtn} icon={<UploadOutlined />}>Загрузить</Button>
-                      </Upload>
-                    </Form.Item>
+                    {store.isAllowFileAttachment && (
+                        <Form.Item className={styles.formItems}>
+                            <div className={styles.label}>
+                                <InputLabel title={"Загрузка дополнительных файлов"}/>
+                            </div>
+                            <Upload
+                                maxCount={5}
+                                accept=".pdf, .webm, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
+                                multiple
+                                className='upload'
+                            >
+                                <Button className={styles.uploadBtn} icon={<UploadOutlined />}>Загрузить</Button>
+                            </Upload>
+                        </Form.Item>
+                    )}
                     <div className={styles.containerBtn}>
                         <div className={styles.btnWhite}>
                             <Buttons text={"Назад"} onClick={() => {

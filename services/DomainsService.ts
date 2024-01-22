@@ -14,4 +14,8 @@ export default class DomainsService {
   static postDomain(domain: string): Promise<AxiosResponse<DomainsResponse>> {
     return $api.post(`/domain/domains/`, {domain})
   }
+
+  static putDomain(id: number, domain: string) {
+    return $api.put(`/domain/domains/${id}/`, {domain})
+  }
 }

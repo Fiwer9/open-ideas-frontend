@@ -26,6 +26,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "js-cookie": "^3.0.5",
+    "lodash.debounce": "^4.0.8",
     "mobx": "^6.9.0",
     "mobx-react-lite": "^3.4.3",
     "next": "13.3.1",
@@ -36,12 +37,12 @@
     "react-redux": "^8.1.0",
     "react-router-dom": "^6.10.0",
     "typescript": "5.0.4",
-    "universal-cookie": "^4.0.4",
-    "yarn": "^1.22.19"
+    "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
     "@types/faker": "^5.5.3",
     "@types/js-cookie": "^3.0.3",
+    "@types/lodash.debounce": "^4.0.9",
     "faker": "^5.5.3",
     "sass": "^1.68.0"
   }
