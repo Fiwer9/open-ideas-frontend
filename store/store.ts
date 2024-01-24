@@ -5,10 +5,15 @@ import CommentService from "../services/CommentService";
 import LikesService from "../services/LikesService";
 import QueriesService from "../services/QueriesService";
 import UsersService from "../services/UsersService";
+import SettingsService from "../services/SettingsSetvice";
 
 export default class Store {
     user = {} as IUser;
     isAuth = false;
+    isAnonymous = false;
+    isAllowFileAttachment = false;
+    maxFileSize: number = 1024;
+    maxFilesAttached: number = 5;
 
     constructor() {
         makeAutoObservable(this);
@@ -104,6 +109,14 @@ export default class Store {
             await AuthService.putRegistration(name, department);
         } catch (e: any) {
             return e.response.data.detail
+        }
+    }
+
+    async getSettings() {
+        try {
+            return await SettingsService.getSettings()
+        } catch (e: any) {
+            console.error(e)
         }
     }
 

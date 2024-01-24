@@ -1,35 +1,41 @@
 import { Slider } from "../SliderComponents/SliderComponents";
 import styles from "./styles/Settings.module.scss";
 import { Col, Space, Tag, theme, Tooltip, InputNumber, Input } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, {useCallback, useContext, useEffect, useRef, useState} from "react";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
 import { MainText } from "../MainTextComponent";
 import SwitchBar from "../FilterComponents/blocks/SwitchBar";
 import { PlusOutlined } from '@ant-design/icons';
 import type { InputRef } from 'antd';
-import FetchSettings from "../../hooks/FetchData/FetchSettings/FetchSettings";
+import FetchSettings from "../../hooks/fetches/FetchSettings/FetchSettings";
 import Cookies from "js-cookie";
-import * as domain from "domain";
+import {Context} from "../../pages/_app";
+import debounce from 'lodash.debounce'
 
 
-function SwitchContent() {
+function SwitchContent({maxFileSize, maxFilesAttached, onChangeSize, onChangeCount} : any) {
   return <div className={styles.contentSwitch}>
     <div className={styles.switchRow}>
       <p className={styles.textSwitch}>Максимальное число загружаемых файлов</p>
-      <InputNumber className={'inputNumber'} min={0} defaultValue={1} />
+      <InputNumber className={'inputNumber'} min={0} onChange={useCallback(
+          debounce((num) => {
+            onChangeCount(num)
+          }, 1000), []
+      )} defaultValue={maxFilesAttached} max={7}/>
     </div>
     <div className={`${styles.switchRow} ${styles.text}`}>
       <p className={styles.textSwitch}>Максимальный размер файла</p>
-      <InputNumber className={'inputNumber'} min={0} defaultValue={1024} />
+      <InputNumber className={'inputNumber'} min={0} defaultValue={maxFileSize} onChange={useCallback(
+          debounce((num) => {
+            onChangeSize(num)
+          }, 1000), []
+      )} max={5000}/>
     </div>
   </div>;
 }
 
-
 export const Settings = () => {
-  const layout = <SwitchContent />
-
   const { token } = theme.useToken();
   const [tags, setTags] = FetchSettings.useGetDomains();
   const [inputVisible, setInputVisible] = useState(false);
@@ -39,6 +45,12 @@ export const Settings = () => {
   const [loadedDOM, setLoadedDOM] = useState(false)
   const inputRef = useRef<InputRef>(null);
   const editInputRef = useRef<InputRef>(null);
+  const [settings, setSettings] = FetchSettings.useGetSettings();
+  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [allowFileAttachment, setAllowFileAttachment] = useState(false)
+  const [maxFileSize, setMaxFileSize] = useState(1024)
+  const [maxFilesAttached, setMaxFilesAttached] = useState(3)
+  const { store } = useContext(Context);
 
   useEffect(() => {
     if (inputVisible) {
@@ -82,12 +94,14 @@ export const Settings = () => {
     setEditInputValue(e.target.value);
   };
 
-  const handleEditInputConfirm = () => {
+  const handleEditInputConfirm = (tagId: number) => {
     const newTags = [...tags];
     newTags[editInputIndex].domain = editInputValue;
+    FetchSettings.usePutDomain(tagId, editInputValue)
     setTags(newTags);
     setEditInputIndex(-1);
     setEditInputValue('');
+    window.location.reload();
   };
 
   const tagInputStyle: React.CSSProperties = {
@@ -108,6 +122,41 @@ export const Settings = () => {
   useEffect(() => {
     setLoadedDOM(true);
   }, [tags]);
+
+  useEffect(() => {
+    if (settings[0]) {
+      setAllowFileAttachment(settings[0].allow_file_attachment)
+      setMaxFileSize(settings[0].max_file_size)
+      setMaxFilesAttached(settings[0].max_files_attached)
+      setIsAnonymous(settings[0].anonymous_status)
+      store.isAllowFileAttachment = settings[0].allow_file_attachment;
+      store.isAnonymous = settings[0].anonymous_status
+    }
+  }, [settings]);
+
+  const changeAllowFileAttachment = (bool: boolean) => {
+    settings[0] && FetchSettings.usePutSettings(1, bool, maxFileSize, maxFilesAttached, isAnonymous)
+    setAllowFileAttachment(bool)
+    store.isAllowFileAttachment = bool;
+  }
+
+  const changeAnonymousStatus = (bool: boolean) => {
+    settings[0] && FetchSettings.usePutSettings(1, allowFileAttachment, maxFileSize, maxFilesAttached, bool)
+    setIsAnonymous(bool)
+    store.isAnonymous = bool;
+  }
+
+  const changeMaxFileSize = (num: number) => {
+    settings[0] && FetchSettings.usePutSettings(1, store.isAllowFileAttachment, num, store.maxFilesAttached, store.isAnonymous)
+    setMaxFileSize(num)
+    store.maxFileSize = num
+  }
+
+  const chaneMaxFilesAttached = (num: number) => {
+    settings[0] && FetchSettings.usePutSettings(1, store.isAllowFileAttachment, store.maxFileSize, num, store.isAnonymous)
+    setMaxFilesAttached(num)
+    store.maxFilesAttached = num
+  }
 
   return (
     <>
@@ -133,8 +182,8 @@ export const Settings = () => {
                             style={tagInputStyle}
                             value={editInputValue}
                             onChange={handleEditInputChange}
-                            onBlur={handleEditInputConfirm}
-                            onPressEnter={handleEditInputConfirm}
+                            onBlur={() => handleEditInputConfirm(tag.id)}
+                            onPressEnter={() => handleEditInputConfirm(tag.id)}
                           />
                         );
                       }
@@ -148,11 +197,9 @@ export const Settings = () => {
                         >
                         <span
                           onDoubleClick={(e) => {
-                            if (index !== 0) {
-                              setEditInputIndex(index);
-                              setEditInputValue(tag.domain);
-                              e.preventDefault();
-                            }
+                            setEditInputIndex(index);
+                            setEditInputValue(tag.domain);
+                            e.preventDefault();
                           }}
                         >
                           {isLongTag ? `${tag.domain.slice(0, 20)}...` : tag.domain}
@@ -186,18 +233,23 @@ export const Settings = () => {
                   </Space>
                 </div>
               </Col>
-
-              <div className={styles.switchContainer}>
-                <SwitchBar
-                  checkboxText={'Анонимные инициативы'}
-                  hintText={'Возможность изменять поле Ф. И. О. при создании инициативы'}
-                />
-                <SwitchBar
-                  checkboxText={'Прикладывание файлов'}
-                  hintText={'Возможность прикладывать файлы при создании инициативы'}
-                  layout={layout}
-                />
-              </div>
+              {settings[0] && (
+                  <div className={styles.switchContainer}>
+                    <SwitchBar
+                        checkboxText={'Анонимные инициативы'}
+                        hintText={'Возможность изменять поле Ф. И. О. при создании инициативы'}
+                        isChecked={settings[0].anonymous_status}
+                        onChangeSwitch={changeAnonymousStatus}
+                    />
+                    <SwitchBar
+                        checkboxText={'Прикладывание файлов'}
+                        hintText={'Возможность прикладывать файлы при создании инициативы'}
+                        isChecked={settings[0].allow_file_attachment}
+                        layout={allowFileAttachment && <SwitchContent maxFileSize={settings[0].max_file_size} maxFilesAttached={settings[0].max_files_attached} onChangeSize={changeMaxFileSize} onChangeCount={chaneMaxFilesAttached}/>}
+                        onChangeSwitch={changeAllowFileAttachment}
+                    />
+                  </div>
+              )}
             </div>
           </div>
         </div>
