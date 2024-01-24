@@ -143,12 +143,10 @@ export const Settings = () => {
   const changeAnonymousStatus = (bool: boolean) => {
     settings[0] && FetchSettings.usePutSettings(1, allowFileAttachment, maxFileSize, maxFilesAttached, bool)
     setIsAnonymous(bool)
-    console.log(bool)
     store.isAnonymous = bool;
   }
 
   const changeMaxFileSize = (num: number) => {
-    console.log(num)
     settings[0] && FetchSettings.usePutSettings(1, store.isAllowFileAttachment, num, store.maxFilesAttached, store.isAnonymous)
     setMaxFileSize(num)
     store.maxFileSize = num
