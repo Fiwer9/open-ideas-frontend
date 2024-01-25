@@ -4,6 +4,12 @@
 
   .sider {
     position: relative;
+
+    @media (max-width: 768px) {
+      display: block;
+      position: absolute;
+      z-index: 10000;
+    }
   }
 }
 
