@@ -1,6 +1,11 @@
 .tabsContainer {
   margin: 20px 0 30px;
 
+  @media (max-width: 410px) {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
   .tabs {
     display: flex;
     align-items: center;
@@ -10,6 +15,7 @@
     .tags {
       @media (max-width: 410px) {
         margin-right: -40px;
+        margin-left: -13px;
       }
     }
 
@@ -23,6 +29,7 @@
         font: {
           size: 16px;
         };
+        margin: 7px 3px;
       }
     }
   }

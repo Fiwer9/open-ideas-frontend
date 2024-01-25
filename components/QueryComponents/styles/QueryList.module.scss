@@ -24,6 +24,10 @@
 .containerIdeas {
   @include container;
 
+  @media (max-width: 511px) {
+    overflow-x: hidden;
+  }
+
   .contentIdeas {
     @include content;
 
@@ -48,11 +52,21 @@
         };
       }
 
+      @media (max-width: 540px) {
+        padding: {
+          top: 55px;
+        };
+      }
+
       .logoHeader {
         margin-top: 50px;
         position: absolute;
         top: 12.5px;
         left: 24px;
+
+        @media (max-width: 540px) {
+          margin-top: 0;
+        }
       }
 
       .tabs {
@@ -76,16 +90,39 @@
         display: flex;
         gap: 20px;
 
-        @media (max-width: 673px) {
+        @media (max-width: 738px) {
+          gap: 10px;
+        }
+
+        @media (max-width: 540px) {
           gap: 5px;
         }
 
         @media (max-width: 378px) {
           display: flex;
           flex-direction: column;
-          margin-right: auto;
-          margin-left: auto;
           gap: 0;
+        }
+
+        .btnContainerFilt {
+          display: flex;
+          gap: 20px;
+
+          @media (max-width: 738px) {
+            gap: 10px;
+          }
+
+          @media (max-width: 540px) {
+            gap: 5px;
+          }
+        }
+
+        .btnContainer {
+          @media (max-width: 378px) {
+            display: flex;
+            margin: 0;
+            padding: 0;
+          }
         }
       }
 

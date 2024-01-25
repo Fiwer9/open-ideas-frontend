@@ -28,7 +28,6 @@ import OrganizationsService from "../../services/OrganizationsService";
 import {FilterOutlined, PlusCircleOutlined} from "@ant-design/icons";
 import {Logo} from "../PicturesComponents/Logo";
 import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
-import FetchQueries from "../../hooks/fetches/FetchQueries/FetchQueries";
 
 
 
@@ -237,9 +236,13 @@ export const QueryList = () => {
                       stylesSearch={styles.searchBar}
                     />
                     <div className={styles.btnHead}>
-                        <FilterBar icon={<PlusCircleOutlined />} filterText={'Создать идею'} onClick={handleCreateQuery}/>
-                        <CheckboxBar onToggleArchive={handleToggleExpert} checkboxText={'Я эксперт'}/>
-                        <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
+                        <div className={styles.btnContainerFilt}>
+                            <FilterBar icon={<PlusCircleOutlined />} filterText={'Создать идею'} onClick={handleCreateQuery}/>
+                            <CheckboxBar onToggleArchive={handleToggleExpert} checkboxText={'Я эксперт'}/>
+                        </div>
+                        <div className={styles.btnContainer}>
+                            <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
+                        </div>
                     </div>
                 </div>
                 <DataTable

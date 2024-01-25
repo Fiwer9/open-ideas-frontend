@@ -344,6 +344,12 @@ $color-pule-purple: #F0F5FF;
   color: rgba($color-black, 0.25);
 }
 
+.ant-table-pagination-right {
+  @media (max-width: 500px) {
+    float: left;
+  }
+}
+
 .statusCheck {
   color: #4b7271;
 }
