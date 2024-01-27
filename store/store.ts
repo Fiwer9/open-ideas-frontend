@@ -38,6 +38,17 @@ export default class Store {
         }
     }
 
+    async authorization (username: string, password: string) {
+        try {
+            const response = await AuthService.authorization(username, password);
+            const token = response.data.jwt_access
+            sessionStorage.setItem('token', token);
+            this.setAuth(false);
+        } catch (e: any) {
+            return e.response.data.email
+        }
+    }
+
     async postQuery(date: string, name: string, description: string, initiative_direction: number, status: string,
                     implementation_effect: string, organization: number, initiator_users: [number]){
         try {

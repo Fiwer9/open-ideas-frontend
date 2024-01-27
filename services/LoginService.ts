@@ -1,10 +1,14 @@
 import {AxiosResponse} from "axios";
 import $api from "../http";
-import {AuthResponse} from "../models/response/AuthResponse";
+import {AuthorizationResponse, AuthResponse} from "../models/response/AuthResponse";
 
 export default class AuthService {
     static async sendCode(email: string): Promise<AxiosResponse<AuthResponse>> {
         return $api.post('/auth/login/', { email })
+    }
+
+    static async authorization(username: string, password: string): Promise<AxiosResponse<AuthorizationResponse>> {
+        return $api.post(`/auth/password/${username}/${password}/`)
     }
 
     static async confirmEmail( codeStr: string): Promise<AxiosResponse<AuthResponse>> {

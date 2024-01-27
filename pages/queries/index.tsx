@@ -12,9 +12,7 @@ export default function Index() {
 
     return (
         <div>
-            {isAuthenticated && (
-                <QueryList />
-            )}
+            <QueryList />
         </div>
     );
 }

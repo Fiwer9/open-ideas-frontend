@@ -1,7 +1,7 @@
 import React, {createContext, useEffect} from "react";
-import {LogIn} from "../components/AuthComponents/LogIn";
 import Store from "../store/store";
 import router from "next/router";
+import NewLogin from "../components/AuthComponents/NewLogin";
 
 interface State {
     store: Store,
@@ -21,7 +21,7 @@ export default function Index() {
     }, [])
     return (
         <div>
-            <LogIn />
+            <NewLogin />
         </div>
     )
 }
