@@ -8,8 +8,8 @@ import Link from "next/link";
 import {Context} from "../../pages/_app";
 import router from "next/router";
 import {EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
-
 const {CheckableTag } = Tag
+
 function NewLogin() {
   const [selectedTag, setSelectedTag] = useState<string>('Вход');
   const [email, setEmail] = useState<string>('');
@@ -18,19 +18,16 @@ function NewLogin() {
   const [passwordRepeat, setPasswordRepeat] = useState('')
   const { store } = useContext(Context);
   const [loading, setLoading] = useState(false);
-  const handleChange = (tag: string, checked: boolean) => {
+  const handleChange = (tag: string) => {
     setSelectedTag(tag);
   };
 
-  const authorization = async () => {
+  const postAuthorization = async () => {
     try {
       setLoading(true)
-      const response = await store.authorization(email, password);
+      const response = await store.postAuthorization(email, password);
       response&& setError(String(response))
-      !response&& router.push({
-        pathname: '/queries',
-        query: { email: email }
-      });
+      !response&& router.push('/queries');
     } catch (error: any) {
       setError(error.response?.data?.message || 'Произошла ошибка');
     } finally {
@@ -46,19 +43,18 @@ function NewLogin() {
   const sendCode = async () => {
     try {
       setLoading(true)
-      const response = await store.authorization(email, password);
-      response&& setError(String(response))
-      !response&& router.push({
-        pathname: '/queries',
-        query: { email: email }
-      });
+      if (password === passwordRepeat) {
+        const response = await store.postRegistration(email, password);
+        console.log(response)
+        response&& setError(String(response))
+        !response&& router.push({pathname: '/auth/code', query: {email}});
+      }
     } catch (error: any) {
       setError(error.response?.data?.message || 'Произошла ошибка');
     } finally {
       setLoading(false)
     }
   };
-
   return (
     <div className={styles.container}>
       <Card className={selectedTag === 'Вход' ? styles.cardLog : styles.cardReg}>
@@ -69,7 +65,7 @@ function NewLogin() {
           <CheckableTag className={styles.tag}
             key={0}
             checked={selectedTag.includes('Регистрация')}
-            onChange={(checked) => handleChange('Регистрация', checked)}
+            onChange={() => handleChange('Регистрация')}
           >
             Регистрация
           </CheckableTag>
@@ -78,7 +74,7 @@ function NewLogin() {
             key={1}
             className={styles.tag}
             checked={selectedTag.includes('Вход')}
-            onChange={(checked) => handleChange('Вход', checked)}
+            onChange={() => handleChange('Вход')}
           >
             Вход
           </CheckableTag>
@@ -89,7 +85,7 @@ function NewLogin() {
               <InputLabel title={'Почта'} />
             </div>
             <Input onChange={(evt) => handleInputChange(evt, setEmail)} status={error ? 'error' : undefined} value={!error? email : ''} placeholder={"Введите почту"} required/>
-            {error&& (
+            {(error?.includes('username') || error?.includes('exists') || error?.includes('почты'))&& (
               <div className={styles.error}>
                 {error}
               </div>
@@ -100,6 +96,11 @@ function NewLogin() {
               <InputLabel title={'Пароль'} />
             </div>
             <Input.Password iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={(evt) => handleInputChange(evt, setPassword)} status={error ? 'error' : undefined} value={!error? password : ''}  placeholder={"Введите пароль"} required/>
+            {error?.includes('password')&& (
+              <div className={styles.error}>
+                {error}
+              </div>
+            )}
           </Form.Item>
           {selectedTag === "Регистрация" && (
             <Form.Item className={styles.content}>
@@ -108,6 +109,11 @@ function NewLogin() {
               </div>
               <div className={styles.input}>
                 <Input.Password iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={(evt) => handleInputChange(evt, setPasswordRepeat)} status={error ? 'error' : undefined} value={!error? passwordRepeat : ''}  placeholder={"Введите пароль"} required/>
+                {passwordRepeat !== password && passwordRepeat && (
+                  <div className={styles.error}>
+                    Пароли не совпадают!
+                  </div>
+                )}
               </div>
             </Form.Item>
           )}
@@ -119,7 +125,7 @@ function NewLogin() {
               selectedTag === 'Вход' ? (
                   <Button className={styles.button} type="primary" htmlType='submit' loading={loading} onClick={() => {
                     if (email && !error) {
-                      authorization();
+                      postAuthorization();
                     }
                   }}>
                     Вход
@@ -134,7 +140,6 @@ function NewLogin() {
                 </Button>
                 )
             }
-
           </div>
         </Form>
       </Card>

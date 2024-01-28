@@ -190,7 +190,7 @@ export const QueryList = () => {
         <div className={styles.container}>
             <Slider />
             <div className={styles.content}>
-                <Header user_name={user?.name} organization={organization && organization.name} department={user?.department.name}/>
+                <Header user_name={user?.name ? user.name : ''} organization={organization && organization.name || ''} department={user?.department.name || ''}/>
                 <Tabs />
                 <MainText text={'Инициативы'}/>
                 <div className={styles.infContainer}>

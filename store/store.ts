@@ -38,14 +38,20 @@ export default class Store {
         }
     }
 
-    async authorization (username: string, password: string) {
+    async postAuthorization (username: string, password: string) {
         try {
-            const response = await AuthService.authorization(username, password);
-            const token = response.data.jwt_access
-            sessionStorage.setItem('token', token);
+            const response = await AuthService.postAuthorization(username, password);
+            const user = {
+                user_id : response.data.user_id,
+                email: response.data.email,
+                token : response.data.jwt_access
+            }
+            sessionStorage.setItem('user', JSON.stringify(user))
+            sessionStorage.setItem('user_id', String(user.user_id))
             this.setAuth(false);
         } catch (e: any) {
-            return e.response.data.email
+            console.log(e)
+            return e.response.data.detail
         }
     }
 
@@ -139,6 +145,22 @@ export default class Store {
             this.setUser({} as IUser);
         } catch (e: any) {
             console.log(e.response?.data?.message);
+        }
+    }
+
+    async postRegistration(email: string, password: string) {
+        try {
+            const response = await AuthService.postRegistration(email, password);
+            const user = {
+                user_id : response.data.user_id,
+                email: response.data.email,
+                token : response.data.jwt_access
+            }
+            sessionStorage.setItem('user', JSON.stringify(user))
+            sessionStorage.setItem('user_id', String(user.user_id))
+        }
+        catch (e: any) {
+            return e.response.data.detail
         }
     }
 }

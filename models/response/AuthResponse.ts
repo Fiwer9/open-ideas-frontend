@@ -12,6 +12,8 @@ export interface AuthResponse {
 
 
 export interface AuthorizationResponse {
+    email: string;
+    user_id: number;
     username: string;
     is_verified: boolean;
     jwt_refresh: string;

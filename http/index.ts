@@ -10,9 +10,12 @@ const $api = axios.create({
     baseURL: API_URL,
 })
 
+
+
 $api.interceptors.request.use((config) => {
-  if (sessionStorage.getItem('token')) {
-    config.headers.Authorization = `Bearer ${sessionStorage.getItem('token')}`
+  if (sessionStorage.getItem('user')) {
+    const token = JSON.parse(sessionStorage.getItem('user')).token || ''
+    config.headers.Authorization = `Bearer ${token}`
   }
   return config;
 })

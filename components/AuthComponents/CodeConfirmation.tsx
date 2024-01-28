@@ -16,7 +16,10 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
     const { store } = useContext(Context)
     const [loading, setLoading] = useState(false);
 
-
+    const refreshCode = () => {
+        sessionStorage.removeItem('user')
+        router.push('../../')
+    }
     const isVerified = (response: any) => {
         if (!response.is_verified) {
             router.push('/auth/registration')
@@ -76,7 +79,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
                     </Button>
                 </div>
                 <div className={styles.btnRepeatCode}>
-                    <Button type='link' onClick={() => router.push('../../')}>Отправить код повторно </Button>
+                    <Button type='link' onClick={refreshCode}>Отправить код повторно </Button>
                 </div>
             </Form>
         </div>

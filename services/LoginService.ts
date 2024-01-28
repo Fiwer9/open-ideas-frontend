@@ -7,13 +7,13 @@ export default class AuthService {
         return $api.post('/auth/login/', { email })
     }
 
-    static async authorization(username: string, password: string): Promise<AxiosResponse<AuthorizationResponse>> {
+    static async postAuthorization(username: string, password: string): Promise<AxiosResponse<AuthorizationResponse>> {
         return $api.post(`/auth/password/${username}/${password}/`)
     }
 
     static async confirmEmail( codeStr: string): Promise<AxiosResponse<AuthResponse>> {
         const code = Number(codeStr)
-        return $api.post<AuthResponse>(`/auth/token/${code}/`, {code})
+        return $api.post<AuthResponse>(`/auth/token/${code}/`)
     }
 
     static async logout() {
@@ -22,5 +22,9 @@ export default class AuthService {
 
     static async putRegistration(name: string, department: number) {
         return $api.put<AuthResponse>(`/auth/register/`, {name, department})
+    }
+
+    static async postRegistration(email: string, password: string): Promise<AxiosResponse<AuthorizationResponse>> {
+        return $api.post(`/auth/passreg/${email}/${password}/`)
     }
 }

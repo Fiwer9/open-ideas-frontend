@@ -15,7 +15,7 @@ export const Context = createContext<State>({
 
 export default function Index() {
     useEffect(() => {
-        if(sessionStorage.getItem('user_id')) {
+        if(sessionStorage.getItem('user')) {
             router.push('/queries')
         }
     }, [])
