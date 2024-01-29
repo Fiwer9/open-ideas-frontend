@@ -17,7 +17,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
     const [loading, setLoading] = useState(false);
 
     const refreshCode = () => {
-        sessionStorage.removeItem('user')
+        sessionStorage.clear()
         router.push('../../')
     }
     const isVerified = (response: any) => {

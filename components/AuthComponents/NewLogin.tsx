@@ -45,7 +45,6 @@ function NewLogin() {
       setLoading(true)
       if (password === passwordRepeat) {
         const response = await store.postRegistration(email, password);
-        console.log(response)
         response&& setError(String(response))
         !response&& router.push({pathname: '/auth/code', query: {email}});
       }
