@@ -15,9 +15,10 @@ export const Context = createContext<State>({
 
 export default function Index() {
     useEffect(() => {
-        if(sessionStorage.getItem('user')) {
+        if(sessionStorage.getItem('token_access')) {
+            store.checkAuth()
             router.push('/queries')
-        }
+            }
     }, [])
     return (
         <div>

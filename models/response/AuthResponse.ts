@@ -19,3 +19,7 @@ export interface AuthorizationResponse {
     jwt_refresh: string;
     jwt_access: string;
 }
+
+export interface TokenResponse {
+    access: string
+}

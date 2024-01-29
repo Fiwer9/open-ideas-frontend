@@ -117,9 +117,11 @@ function NewLogin() {
               </div>
             </Form.Item>
           )}
-          <Form.Item className={styles.content}>
-            <Link className={styles.link} href={''}>Забыли пароль?</Link>
-          </Form.Item>
+          {selectedTag === 'Вход' &&
+            <Form.Item className={styles.content}>
+              <Link className={styles.link} href={''}>Забыли пароль?</Link>
+            </Form.Item>
+          }
           <div className={styles.buttonContainer}>
             {
               selectedTag === 'Вход' ? (

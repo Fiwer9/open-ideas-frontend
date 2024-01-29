@@ -6,6 +6,9 @@ import LikesService from "../services/LikesService";
 import QueriesService from "../services/QueriesService";
 import UsersService from "../services/UsersService";
 import SettingsService from "../services/SettingsSetvice";
+import axios from "axios";
+import {TokenResponse} from "../models/response/AuthResponse";
+import {API_URL_TOKEN} from "../http";
 
 export default class Store {
     user = {} as IUser;
@@ -44,11 +47,14 @@ export default class Store {
             const user = {
                 user_id : response.data.user_id,
                 email: response.data.email,
-                token : response.data.jwt_access
+                token_access : response.data.jwt_access,
+                token_refresh: response.data.jwt_refresh
             }
+            sessionStorage.setItem('token_access', user.token_access)
+            sessionStorage.setItem('token_refresh', user.token_refresh)
             sessionStorage.setItem('user', JSON.stringify(user))
             sessionStorage.setItem('user_id', String(user.user_id))
-            this.setAuth(false);
+            this.setAuth(true);
         } catch (e: any) {
             console.log(e)
             return e.response.data.detail
@@ -154,13 +160,28 @@ export default class Store {
             const user = {
                 user_id : response.data.user_id,
                 email: response.data.email,
-                token : response.data.jwt_access
+                token_access : response.data.jwt_access,
+                token_refresh: response.data.jwt_refresh
             }
+            sessionStorage.setItem('token_access', user.token_access)
+            sessionStorage.setItem('token_refresh', user.token_refresh)
             sessionStorage.setItem('user', JSON.stringify(user))
             sessionStorage.setItem('user_id', String(user.user_id))
+            this.setAuth(true)
         }
         catch (e: any) {
             return e.response.data.detail
+        }
+    }
+
+    async checkAuth() {
+        const refresh = sessionStorage.getItem('token_refresh')
+        try {
+            const response = await axios.post<TokenResponse>(`${API_URL_TOKEN}/token/refresh/`, {refresh}, {withCredentials: true})
+            localStorage.setItem('token_access', response.data.access)
+            this.setAuth(true)
+        } catch (e) {
+            console.error(e.response.data.message)
         }
     }
 }
