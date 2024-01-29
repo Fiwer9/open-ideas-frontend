@@ -6,8 +6,12 @@ export const useSearchQuery = (searchNum: any, lisOfQuery: any, getData: any, se
   useEffect(() => {
     const filterQuery = async (searchText: any, listOfQuery: QueriesResponse[], getData: any) => {
       if (!searchText) {
-        const data = await getData()
-        return data.data;
+        try {
+          const data = await getData()
+          return data.data;
+        } catch (e) {
+          console.error(e.message)
+        }
       } else {
         return listOfQuery.filter(({ name }) =>
           name.toLowerCase().includes(searchText.toLowerCase())

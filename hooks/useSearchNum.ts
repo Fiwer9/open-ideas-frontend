@@ -6,8 +6,12 @@ export const useSearchNum = (searchNum: any, lisOfQuery: any, getData: any, setI
   useEffect(() => {
     const filterNumber = async (searchNum: any, listOfQuery: QueriesResponse[], getData: any) => {
       if (!searchNum) {
-        const data = await getData()
-        return data.data;
+        try {
+          const data = await getData()
+          return data.data;
+        } catch (e) {
+          console.error(e.message)
+        }
       } else {
         return listOfQuery.filter(({id}) =>
           id.toString().includes(searchNum.toString())

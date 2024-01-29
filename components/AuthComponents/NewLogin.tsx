@@ -69,7 +69,7 @@ function NewLogin() {
           >
             Регистрация
           </CheckableTag>
-          <line></line>
+          <em></em>
           <CheckableTag
             key={1}
             className={styles.tag}

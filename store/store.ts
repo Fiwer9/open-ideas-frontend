@@ -67,7 +67,7 @@ export default class Store {
             await QueriesService.postQuery(date, name, description, initiative_direction, status,
                 implementation_effect, organization, initiator_users);
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.error(e.message);
         }
     }
 
@@ -78,7 +78,7 @@ export default class Store {
                 implementation_effect, organization, initiator_users, id, expertUsers) : await QueriesService.patchQuery(date, name, description, initiative_direction, status,
               implementation_effect, organization, initiator_users, id)
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.error(e.message);
         }
     }
 
@@ -86,7 +86,7 @@ export default class Store {
         try {
             await UsersService.putUserUpdate(name, email, is_verified, is_staff, is_superuser, id, is_active)
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.error(e.message);
         }
     }
 
@@ -94,7 +94,7 @@ export default class Store {
         try {
             await QueriesService.deleteQuery(id)
         } catch (e: any) {
-            console.error(e.response?.data?.message);
+            console.error(e.message);
         }
     }
 
@@ -102,7 +102,7 @@ export default class Store {
         try {
             await CommentService.sendComment(comment, query, user);
         } catch (e: any) {
-            console.error(e.response?.data?.message);
+            console.error(e.message);
         }
     }
 
@@ -110,7 +110,7 @@ export default class Store {
         try {
             await LikesService.patchLike(id, data);
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.log(e.message);
         }
     }
 
@@ -139,7 +139,7 @@ export default class Store {
         try {
             return await SettingsService.getSettings()
         } catch (e: any) {
-            console.error(e)
+            console.error(e.message)
         }
     }
 
@@ -150,7 +150,7 @@ export default class Store {
             this.setAuth(false);
             this.setUser({} as IUser);
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.log(e.message);
         }
     }
 
@@ -181,7 +181,7 @@ export default class Store {
             localStorage.setItem('token_access', response.data.access)
             this.setAuth(true)
         } catch (e) {
-            console.error(e.response.data.message)
+            console.error(e.message)
         }
     }
 }
