@@ -1,0 +1,25 @@
+import { Status } from "../redux/slices/queriesSlice";
+
+export const getUser = () => {
+  try {
+    const user = JSON.parse(sessionStorage.getItem("user")) || {
+      user_id: 0,
+      email: "",
+      is_verified: false,
+    };
+    const status = Status.SUCCESS;
+    return {
+      user,
+      status,
+    };
+  } catch (e) {
+    return {
+      user: {
+        user_id: 0,
+        email: "",
+        is_verified: false,
+      },
+      status: Status.SUCCESS,
+    };
+  }
+};
