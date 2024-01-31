@@ -65,11 +65,6 @@ $color-pule-purple: #F0F5FF;
   };
 }
 
-@mixin inputForm {
-  height: 40px;
-  border-radius: 2px;
-}
-
 @mixin inputLabelForm {
   font: {
     family: Poppins, sans-serif;

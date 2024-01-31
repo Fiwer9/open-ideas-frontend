@@ -162,6 +162,7 @@ export const UserEditing = ({userId}: UserEditingProps) => {
                   >
                     <Input
                       className={styles.inp}
+                      style={{height: 40, borderRadius: 2}}
                       onChange={(evt) => handleChangeApplicationVar(evt, setUserName)}
                     />
                   </Form.Item>
@@ -174,7 +175,11 @@ export const UserEditing = ({userId}: UserEditingProps) => {
                       message: 'Введите почту пользователя',
                     }]}
                   >
-                    <Input className={styles.inp} onChange={(evt) => handleChangeApplicationVar(evt, setEmail)}/>
+                    <Input
+                      className={styles.inp}
+                      style={{height: 40, borderRadius: 2}}
+                      onChange={(evt) => handleChangeApplicationVar(evt, setEmail)}
+                    />
                   </Form.Item>
                   <Form.Item
                     className={styles.formItem}
@@ -233,7 +238,7 @@ export const UserEditing = ({userId}: UserEditingProps) => {
                     <Select
                       className='select'
                       disabled={true}
-                      style={{height: 40}}
+                      style={{height: 40, marginBottom: 60}}
                       placeholder={'Выберете отдел'}
                       options={departments.filter(dep => organization ? dep.organization === organization : user.department? dep.organization === user.department.organization : 'Не назначено').map(department => ({
                         value: department.id,
@@ -314,6 +319,11 @@ export const UserEditing = ({userId}: UserEditingProps) => {
                       onChange={(e) => handleChangeApplicationSelect(e, setGroups)}
                     />
                   </Form.Item>
+                </div>
+
+                <div className={styles.btnContainer1440}>
+                  <Button className={styles.btnFooter1440} onClick={handleSaveButton}>
+                    <span>Сохранить изменения</span></Button>
                 </div>
               </div>
             </Form>
