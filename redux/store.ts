@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
-import auth from "./slices/authSlice";
-import queries from "./slices/queriesSlice";
+import auth from "./authSlice/slice";
+import queries from "./queriesSlice/slice";
 
 export const store = configureStore({
   reducer: {

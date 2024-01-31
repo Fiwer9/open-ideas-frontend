@@ -7,13 +7,13 @@ import Link from "next/link";
 import router from "next/router";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useAppDispatch } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { selectStatus } from "../../redux/authSlice/selectors";
 import {
   postAuthorization,
   postRegistration,
-  selectStatus,
-} from "../../redux/slices/authSlice";
-import { useSelector } from "react-redux";
-import { Status } from "../../redux/slices/queriesSlice";
+} from "../../redux/authSlice/asyncActions";
+import { Status } from "../../redux/queriesSlice/types";
 
 const { CheckableTag } = Tag;
 

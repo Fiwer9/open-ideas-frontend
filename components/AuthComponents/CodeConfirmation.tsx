@@ -5,12 +5,10 @@ import { Logo } from "../PicturesComponents/Logo";
 import styles from "./styles/CodeConfirmation.module.scss";
 import router from "next/router";
 import { useAppDispatch } from "../../redux/store";
-import {
-  postCodeConfirmation,
-  selectStatus,
-} from "../../redux/slices/authSlice";
 import { useSelector } from "react-redux";
-import { Status } from "../../redux/slices/queriesSlice";
+import { selectStatus } from "../../redux/authSlice/selectors";
+import { postCodeConfirmation } from "../../redux/authSlice/asyncActions";
+import { Status } from "../../redux/queriesSlice/types";
 
 type ConfirmationProps = {
   email: string;

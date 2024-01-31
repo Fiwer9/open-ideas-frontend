@@ -31,7 +31,7 @@ import { Logo } from "../PicturesComponents/Logo";
 import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
 import FetchQueries from "../../hooks/fetches/FetchQueries/FetchQueries";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/slices/authSlice";
+import { selectCurrentUser } from "../../redux/authSlice/selectors";
 
 export const QueryList = () => {
   const router = useRouter();

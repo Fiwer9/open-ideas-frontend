@@ -1,4 +1,4 @@
-import { Status } from "../redux/slices/queriesSlice";
+import { Status } from "../redux/queriesSlice/types";
 
 export const getUser = () => {
   try {

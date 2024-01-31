@@ -1,30 +1,7 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
-import QueriesService from "../../services/QueriesService";
-
-export type FetchFamousArgs = {
-  user_id?: number;
-};
-
-export const fetchQueries = createAsyncThunk<
-  QueriesResponse[],
-  FetchFamousArgs
->("queries/fetchQueries", async ({ user_id }) => {
-  const { data } = await QueriesService.getQueriesTableData(user_id);
-  return data;
-});
-
-export enum Status {
-  LOADING = "loading",
-  ERROR = "error",
-  SUCCESS = "success",
-}
-
-interface QueriesSliceState {
-  queries: QueriesResponse[];
-  status: Status;
-}
+import { QueriesSliceState, Status } from "./types";
+import { fetchQueries } from "./asyncActions";
 
 const initialState: QueriesSliceState = {
   queries: [],
@@ -54,8 +31,6 @@ export const queriesSlice = createSlice({
     });
   },
 });
-
-export const selectQueriesData = (state: RootState) => state.queries;
 
 export const { setQueries } = queriesSlice.actions;
 

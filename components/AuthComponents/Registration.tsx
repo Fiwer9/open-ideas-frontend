@@ -11,8 +11,9 @@ import OrganizationsService from "../../services/OrganizationsService";
 import { IDepartment } from "../../models/IDepartment";
 import { useAppDispatch } from "../../redux/store";
 import { useSelector } from "react-redux";
-import { putRegistration, selectStatus } from "../../redux/slices/authSlice";
-import { Status } from "../../redux/slices/queriesSlice";
+import { putRegistration } from "../../redux/authSlice/slice";
+import { selectStatus } from "../../redux/authSlice/selectors";
+import { Status } from "../../redux/queriesSlice/types";
 
 export const Registration = () => {
   const [name, setName] = useState<string>("");

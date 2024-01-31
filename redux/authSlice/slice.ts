@@ -1,53 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../store";
 import AuthService from "../../services/LoginService";
-import { AuthorizationResponse } from "../../models/response/AuthResponse";
-import { Status } from "./queriesSlice";
-import { IUser } from "../../models/IUser";
+import { Status } from "../queriesSlice/slice";
 import { getUser } from "../../utils/getUser";
-
-type AuthorizationState = {
-  user: IUser;
-  status: Status;
-};
+import {
+  postAuthorization,
+  postCodeConfirmation,
+  postRegistration,
+} from "./asyncActions";
+import { AuthorizationState, PutRegistrationArgs } from "./types";
 
 const initialState: AuthorizationState = getUser();
-
-type PostAuthorizationArgs = {
-  email: string;
-  password: string;
-};
-
-type PostCodeConfirmationArgs = {
-  code: string;
-};
-
-type PutRegistrationArgs = {
-  name: string;
-  departmentId: number;
-};
-export const postAuthorization = createAsyncThunk<
-  AuthorizationResponse,
-  PostAuthorizationArgs
->("auth/postAuthorization", async ({ email, password }) => {
-  const { data } = await AuthService.postAuthorization(email, password);
-  return data;
-});
-
-export const postRegistration = createAsyncThunk<
-  AuthorizationResponse,
-  PostAuthorizationArgs
->("auth/postRegistration", async ({ email, password }) => {
-  const { data } = await AuthService.postRegistration(email, password);
-  return data;
-});
-
-export const postCodeConfirmation = createAsyncThunk(
-  "auth/postCodeConfirmation",
-  async ({ code }: PostCodeConfirmationArgs) => {
-    await AuthService.confirmEmail(Number(code));
-  }
-);
 
 export const putRegistration = createAsyncThunk(
   "auth/putRegistration",
@@ -123,8 +85,5 @@ export const authSlice = createSlice({
     });
   },
 });
-
-export const selectStatus = (state: RootState) => state.auth.status;
-export const selectCurrentUser = (state: RootState) => state.auth.user;
 
 export default authSlice.reducer;

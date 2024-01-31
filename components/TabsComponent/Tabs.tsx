@@ -7,7 +7,7 @@ import { UserResponse } from "../../models/response/UserResponse";
 import router from "next/router";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/slices/authSlice";
+import { selectCurrentUser } from "../../redux/authSlice/selectors";
 const { CheckableTag } = Tag;
 
 const tagsData = ["Инициативы", "Панель администратора"];
