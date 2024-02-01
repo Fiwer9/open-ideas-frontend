@@ -19,7 +19,13 @@
 
     @media (max-width: 430px) {
       padding-left: 25px;
-      padding-right: 20px;
+      width: auto;
+    }
+
+    .headerContainer {
+      @media (max-width: 430px) {
+        display: none;
+      }
     }
 
     .contentContainer {
@@ -85,11 +91,28 @@
             padding-top: 15px;
           }
 
+          @media (max-width: 430px) {
+            padding-top: 20px;
+          }
+
+          .heading {
+            margin: 0;
+
+            @media (max-width: 430px) {
+              font-size: 24px;
+              margin-bottom: 15px;
+            }
+          }
+
           .checkboxContainer {
             margin: {
               top: 50px;
               bottom: 50px;
             };
+
+            @media (max-width: 430px) {
+              margin-top: 0;
+            }
 
             .checkboxItem {
               @media (max-width: 1440px) {
@@ -113,8 +136,18 @@
             };
           }
 
+          .heading {
+            @media (max-width: 430px) {
+              font-size: 24px;
+            }
+          }
+
           .groupForm {
             margin-top: 32px;
+
+            @media (max-width: 430px) {
+              margin-top: 25px;
+            }
           }
         }
 
