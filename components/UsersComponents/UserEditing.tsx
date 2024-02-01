@@ -129,7 +129,9 @@ export const UserEditing = ({userId}: UserEditingProps) => {
   return (
     <>
       <div className={styles.container}>
-        <Slider/>
+        <div className={styles.slider}>
+          <Slider/>
+        </div>
         <div className={styles.content}>
           <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
           <Tabs />

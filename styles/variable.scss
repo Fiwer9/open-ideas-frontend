@@ -251,19 +251,21 @@ $color-pule-purple: #F0F5FF;
 
 .checkbox {
   padding: {
-    top: 8px;
-    bottom: 8px;
+    top: 7px;
+    bottom: 7px;
     left: 10px;
   }
   font: {
     family: RobotoRegular, sans-serif;
     weight: 400;
-    size: 14px;
+    size: 15px;
   };
 
   .ant-checkbox-inner {
     border-radius: 2px;
     border-color: rgba($color-black, 0.6);
+    width: 18px;
+    height: 18px;
   }
 
   span {
