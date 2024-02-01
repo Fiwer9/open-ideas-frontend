@@ -24,27 +24,113 @@
 .containerIdeas {
   @include container;
 
+  @media (max-width: 511px) {
+    overflow-x: hidden;
+  }
+
   .contentIdeas {
     @include content;
 
+    .headerContainer {
+      @media (max-width: 540px) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 1000px) {
+      padding: {
+        top: 130px;
+        left: 20px;
+        right: 20px;
+      };
+    }
+
     .header {
-      display: flex;
-      align-items: center;
+      @media (max-width: 720px) {
+        padding: {
+          top: 115px;
+        };
+      }
+
+      @media (max-width: 540px) {
+        padding: {
+          top: 55px;
+        };
+      }
 
       .logoHeader {
         margin-top: 50px;
         position: absolute;
         top: 12.5px;
         left: 24px;
+
+        @media (max-width: 540px) {
+          margin-top: 0;
+        }
       }
 
       .tabs {
-        margin-left: 550px;
+        margin-right: auto;
+        margin-left: auto;
       }
     }
 
     .infContainer {
       @include infContainerTable;
+
+      .searchBar {
+        margin-right: 20px;
+
+        @media (max-width: 630px) {
+          margin-right: -7px;
+        }
+      }
+
+      .btnHead {
+        display: flex;
+        gap: 20px;
+
+        @media (max-width: 738px) {
+          gap: 10px;
+        }
+
+        @media (max-width: 540px) {
+          gap: 5px;
+        }
+
+        @media (max-width: 378px) {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+
+        .btnContainerFilt {
+          display: flex;
+          gap: 20px;
+
+          @media (max-width: 738px) {
+            gap: 10px;
+          }
+
+          @media (max-width: 540px) {
+            gap: 5px;
+          }
+        }
+
+        .btnContainer {
+          @media (max-width: 378px) {
+            display: flex;
+            margin: 0;
+            padding: 0;
+          }
+        }
+      }
+
+      @media (max-width: 540px) {
+        display: flex;
+        flex-direction: column-reverse;
+        text-align: left;
+      }
     }
 
     .table {
