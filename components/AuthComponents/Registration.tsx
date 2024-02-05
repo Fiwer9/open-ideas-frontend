@@ -8,7 +8,7 @@ import styles from "./styles/Registration.module.scss";
 import router from "next/router";
 import { useAppDispatch } from "../../redux/store";
 import { useSelector } from "react-redux";
-import { putRegistration } from "../../redux/authSlice/slice";
+import { putRegistration, setStatus } from "../../redux/authSlice/slice";
 import { selectStatus } from "../../redux/authSlice/selectors";
 import { Status } from "../../redux/queriesSlice/types";
 import {
@@ -23,8 +23,7 @@ import {
 export const Registration = () => {
   const [name, setName] = useState<string>("");
   const [organizationId, setOrganizationId] = useState<number>(0);
-  const [department, setDepartment] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [departmentId, setDepartmentId] = useState(0);
   const departments = useSelector(selectDepartments);
   const organizations = useSelector(selectOrganizations);
   const dispatch = useAppDispatch();
@@ -45,33 +44,34 @@ export const Registration = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchDepartments({ organization_id: organizationId }));
+    organizationId &&
+      dispatch(fetchDepartments({ organization_id: organizationId }));
   }, [organizationId]);
 
   const handleInputChange = (evt: any) => {
     setName(evt.target.value);
-    setError(null);
   };
 
   const handleSubmitButton = async () => {
     try {
-      let departmentId = 0;
-      for (let dep of departments) {
-        if (dep.name === department) {
-          departmentId = dep.id;
-        }
-      }
       dispatch(
         putRegistration({
           name,
           departmentId,
         })
       );
-      router.push("/queries");
     } catch (error: any) {
       console.error(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+    if (status !== Status.SUCCESS) {
+      return;
+    }
+    dispatch(setStatus(Status.WAITING));
+    router.push("/queries");
+  }, [status]);
 
   return (
     <div className={styles.container}>
@@ -114,6 +114,7 @@ export const Registration = () => {
                 placeholder={"Название организации"}
                 options={optionsOrg}
                 onChange={(e: any) => {
+                  console.log(e);
                   setOrganizationId(e);
                 }}
               />
@@ -142,7 +143,7 @@ export const Registration = () => {
                 placeholder={"Название отдела"}
                 options={optionsDep}
                 onChange={(e: any) => {
-                  setDepartment(e);
+                  setDepartmentId(e);
                 }}
               />
             </div>
@@ -151,7 +152,7 @@ export const Registration = () => {
         <div className={styles.containerBtn}>
           <div
             className={
-              name && organizationId && department && !error
+              name && organizationId && departmentId
                 ? styles.btnBlue
                 : styles.disabledBtn
             }
@@ -159,13 +160,11 @@ export const Registration = () => {
             <Buttons
               text={"Зарегистрироваться"}
               props={
-                name && organizationId && department && !error
-                  ? "submit"
-                  : "disabled"
+                name && organizationId && departmentId ? "submit" : "disabled"
               }
               type={"submit"}
               onClick={() => {
-                if (name && organizationId && department && !error) {
+                if (name && organizationId && departmentId) {
                   handleSubmitButton();
                 }
               }}

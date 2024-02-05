@@ -36,16 +36,24 @@ function NewLogin() {
         password,
       })
     );
-
-    status === Status.SUCCESS && router.push("/queries");
   };
+
+  useEffect(() => {
+    if (status !== Status.SUCCESS) {
+      return;
+    }
+    dispatch(setStatus(Status.WAITING));
+    selectedTag === "Вход" && router.push("/queries");
+    selectedTag === "Регистрация" &&
+      router.push({ pathname: "/auth/code", query: { email } });
+  }, [status]);
 
   const handleInputChange = (
     evt: React.ChangeEvent<HTMLInputElement>,
     setData: (value: string) => void
   ) => {
     setData(evt.target.value);
-    dispatch(setStatus(Status.SUCCESS));
+    evt.target.value.length === 1 && dispatch(setStatus(Status.WAITING));
   };
 
   const sendCode = async () => {
@@ -56,7 +64,6 @@ function NewLogin() {
           password,
         })
       );
-      router.push({ pathname: "/auth/code", query: { email } });
     }
   };
 
@@ -103,7 +110,7 @@ function NewLogin() {
             <Input
               onChange={(evt) => handleInputChange(evt, setEmail)}
               status={status === Status.ERROR ? "error" : undefined}
-              value={status === Status.SUCCESS ? email : ""}
+              value={status !== Status.ERROR ? email : ""}
               placeholder={"Введите почту"}
               required
             />
@@ -118,7 +125,7 @@ function NewLogin() {
               }
               onChange={(evt) => handleInputChange(evt, setPassword)}
               status={status === Status.ERROR ? "error" : undefined}
-              value={status === Status.SUCCESS ? password : ""}
+              value={status !== Status.ERROR ? password : ""}
               placeholder={"Введите пароль"}
               required
             />
@@ -140,7 +147,7 @@ function NewLogin() {
                   }
                   onChange={(evt) => handleInputChange(evt, setPasswordRepeat)}
                   status={status === Status.ERROR ? "error" : undefined}
-                  value={status === Status.SUCCESS ? passwordRepeat : ""}
+                  value={status !== Status.ERROR ? passwordRepeat : ""}
                   placeholder={"Введите пароль"}
                   required
                 />
@@ -171,7 +178,7 @@ function NewLogin() {
                 htmlType="submit"
                 loading={status === Status.LOADING}
                 onClick={() => {
-                  if (email) {
+                  if (email && password) {
                     postAuth();
                   }
                 }}
@@ -185,7 +192,7 @@ function NewLogin() {
                 htmlType="submit"
                 loading={status === Status.LOADING}
                 onClick={() => {
-                  if (email && status === Status.SUCCESS) {
+                  if (email && password && passwordRepeat) {
                     sendCode();
                   }
                 }}

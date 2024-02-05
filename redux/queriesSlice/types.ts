@@ -8,6 +8,7 @@ export enum Status {
   LOADING = "loading",
   ERROR = "error",
   SUCCESS = "success",
+  WAITING = "waiting",
 }
 
 export interface QueriesSliceState {

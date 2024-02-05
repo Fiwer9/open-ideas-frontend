@@ -5,7 +5,7 @@ import { fetchQueries } from "./asyncActions";
 
 const initialState: QueriesSliceState = {
   queries: [],
-  status: Status.LOADING,
+  status: Status.WAITING,
 };
 
 export const queriesSlice = createSlice({

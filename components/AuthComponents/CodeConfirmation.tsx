@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Input } from "antd";
 import { InputLabel } from "../InputLabelComponent/InputLabel";
 import { Logo } from "../PicturesComponents/Logo";
@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { selectStatus } from "../../redux/authSlice/selectors";
 import { postCodeConfirmation } from "../../redux/authSlice/asyncActions";
 import { Status } from "../../redux/queriesSlice/types";
+import { setStatus } from "../../redux/authSlice/slice";
 
 type ConfirmationProps = {
   email: string;
@@ -16,7 +17,6 @@ type ConfirmationProps = {
 
 export const CodeConfirmation = ({ email }: ConfirmationProps) => {
   const [code, setCode] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const status = useSelector(selectStatus);
 
@@ -31,12 +31,19 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
         code,
       })
     );
-    router.push("/auth/registration/");
   };
+
+  useEffect(() => {
+    if (status !== Status.SUCCESS) {
+      return;
+    }
+    dispatch(setStatus(Status.WAITING));
+    router.push("/auth/registration/");
+  }, [status]);
 
   const handleInputChange = (evt: any) => {
     setCode(evt.target.value);
-    setError(null);
+    evt.target.value.length === 1 && dispatch(setStatus(Status.WAITING));
   };
 
   return (
@@ -55,19 +62,21 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
           <div className={styles.input}>
             <Input
               onChange={handleInputChange}
-              status={error ? "error" : undefined}
-              value={!error ? code : ""}
+              status={status === Status.ERROR ? "error" : undefined}
+              value={status === Status.WAITING ? code : ""}
               placeholder={"Код подтверждения с Email"}
               required
             />
           </div>
-          {error && <div className={styles.error}>{error}</div>}
+          {status === Status.ERROR && (
+            <div className={styles.error}>Неверный код!</div>
+          )}
         </Form.Item>
         <div className={styles.btnBlue}>
           <Button
             loading={status === Status.LOADING}
             onClick={() => {
-              if (code && !error) {
+              if (code) {
                 confirmEmail();
               }
             }}
@@ -79,7 +88,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
         </div>
         <div className={styles.btnRepeatCode}>
           <Button type="link" onClick={refreshCode}>
-            Отправить код повторно{" "}
+            Отправить код повторно
           </Button>
         </div>
       </Form>

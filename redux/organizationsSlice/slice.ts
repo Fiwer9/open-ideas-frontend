@@ -8,7 +8,7 @@ import { IDepartment } from "../../models/IDepartment";
 const initialState: OrganizationsSliceState = {
   organizations: [],
   departments: [],
-  status: Status.LOADING,
+  status: Status.WAITING,
 };
 
 export const organizationsSlice = createSlice({

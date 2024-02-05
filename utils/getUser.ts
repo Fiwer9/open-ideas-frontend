@@ -7,7 +7,7 @@ export const getUser = () => {
       email: "",
       is_verified: false,
     };
-    const status = Status.SUCCESS;
+    const status = Status.WAITING;
     return {
       user,
       status,
@@ -19,7 +19,7 @@ export const getUser = () => {
         email: "",
         is_verified: false,
       },
-      status: Status.SUCCESS,
+      status: Status.WAITING,
     };
   }
 };
