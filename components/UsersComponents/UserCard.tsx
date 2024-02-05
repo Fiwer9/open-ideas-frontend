@@ -52,12 +52,16 @@ export const UserCard = ({userId} : UserCardProps) => {
   return (
     <>
       <div className={styles.container}>
-        <Slider/>
+        <div className={styles.slider}>
+          <Slider/>
+        </div>
         <div className={styles.content}>
-          <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+          <div className={styles.headerContainer}>
+            <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+          </div>
           <Tabs />
           <div className={styles.userContainer}>
-            <Image src={avatar} alt={'Аватар'} width={190} height={190}/>
+            <Image src={avatar} alt={'Аватар'} width={190} height={190} className={styles.avatar}/>
 
             <div className={styles.infUser}>
               <p className={styles.nameUser}>{data.user_name}</p>
@@ -74,14 +78,16 @@ export const UserCard = ({userId} : UserCardProps) => {
                     <p className={styles.rowInf}>{data.expert_queries}</p>
                   </div>
 
-                  <div className={`${styles.row} ${styles.rowOrg}`}>
-                    <p className={styles.rowText}>Организация:</p>
-                    <p className={styles.rowInf}>{data.organization}</p>
-                  </div>
+                  <div className={styles.rowOrgAdapt}>
+                    <div className={`${styles.row} ${styles.rowOrg}`}>
+                      <p className={styles.rowText}>Организация:</p>
+                      <p className={styles.rowInf}>{data.organization}</p>
+                    </div>
 
-                  <div className={styles.row}>
-                    <p className={styles.rowText}>Отдел:</p>
-                    <p className={styles.rowInf}>{data.department}</p>
+                    <div className={styles.row}>
+                      <p className={styles.rowText}>Отдел:</p>
+                      <p className={styles.rowInf}>{data.department}</p>
+                    </div>
                   </div>
                 </div>
               </Col>

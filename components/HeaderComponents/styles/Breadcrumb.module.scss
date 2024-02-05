@@ -3,4 +3,9 @@
   top: 12.5px;
   left: 24px;
   font-size: 13px;
+
+  @media (max-width: 768px) {
+    font-size: 11px;
+    left: auto;
+  }
 }

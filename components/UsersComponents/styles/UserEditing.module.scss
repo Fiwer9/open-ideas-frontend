@@ -3,22 +3,75 @@
 .container {
   @include container;
 
+  .slider {
+    @media (max-width: 430px) {
+      display: none;
+    }
+  }
+
   .content {
     @include content;
     margin-bottom: 50px;
 
+    @media (max-width: 768px) {
+      padding-left: 120px;
+    }
+
+    @media (max-width: 430px) {
+      padding-left: 25px;
+      width: auto;
+    }
+
+    .headerContainer {
+      @media (max-width: 430px) {
+        display: none;
+      }
+    }
+
     .contentContainer {
       margin: 0;
-      margin-top: 46px;
+      margin-top: 15px;
       display: flex;
       gap: 200px;
       @include pageTitle;
 
+      @media (max-width: 1700px) {
+        gap: 100px;
+      }
+
+      @media (max-width: 1440px) {
+        display: inline-block;
+      }
+
       .editing {
         width: 70%;
 
+        .heading {
+          margin: 0;
+          @include pageTitle;
+          min-width: 460px;
+
+          @media (max-width: 430px) {
+            font-size: 24px;
+          }
+        }
+
         .formContainer {
           margin-top: 50px;
+
+          @media (max-width: 430px) {
+            margin-top: 30px;
+          }
+
+          .formItem {
+            margin: 0;
+            min-width: 440px;
+            @include inputLabelForm;
+
+            .inp {
+              margin-top: 5px;
+            }
+          }
 
           .formItem:not(:first-child) {
             margin-top: 30px;
@@ -30,8 +83,42 @@
         width: 100%;
 
         .rigths {
+          @media (max-width: 1440px) {
+            border: {
+              bottom: 2px solid rgba(0, 0, 0, 0.2);
+              top: 2px solid rgba(0, 0, 0, 0.2);
+            };
+            padding-top: 15px;
+          }
+
+          @media (max-width: 430px) {
+            padding-top: 20px;
+          }
+
+          .heading {
+            margin: 0;
+
+            @media (max-width: 430px) {
+              font-size: 24px;
+              margin-bottom: 15px;
+            }
+          }
+
           .checkboxContainer {
-            margin-top: 50px;
+            margin: {
+              top: 50px;
+              bottom: 50px;
+            };
+
+            @media (max-width: 430px) {
+              margin-top: 0;
+            }
+
+            .checkboxItem {
+              @media (max-width: 1440px) {
+                max-width: 797px;
+              }
+            }
 
             .checkboxItem:not(:first-child) {
               margin-top: 20px;
@@ -42,8 +129,55 @@
         .group {
           margin-top: 25px;
 
+          @media (max-width: 1440px) {
+            margin: {
+              top: 40px;
+              bottom: 90px;
+            };
+          }
+
+          .heading {
+            @media (max-width: 430px) {
+              font-size: 24px;
+            }
+          }
+
           .groupForm {
             margin-top: 32px;
+
+            @media (max-width: 430px) {
+              margin-top: 25px;
+            }
+          }
+        }
+
+        .btnContainer1440 {
+          @media (max-width: 2060px) {
+            display: none;
+          }
+
+          @media (max-width: 1440px) {
+            display: block;
+            margin: {
+              top: 50px;
+              bottom: 20px;
+            };
+            background-color: white;
+            box-shadow: 1px 20px 40px 0 #0000001A;
+            padding: 10px 20px 20px;
+            position: fixed;
+            bottom: 0;
+            width: 80%;
+          }
+
+          .btnFooter1440 {
+            height: 40px;
+            border-radius: 2px;
+            font: {
+              family: Poppins, sans-serif;
+              weight: 400;
+              size: 16px;
+            };
           }
         }
       }
@@ -51,6 +185,10 @@
 
     .btnContainer {
       margin-top: 50px;
+
+      @media (max-width: 1440px) {
+        display: none;
+      }
 
       .btnFooter {
         height: 40px;
@@ -65,17 +203,3 @@
   }
 }
 
-.heading {
-  margin: 0;
-  @include pageTitle;
-}
-
-.formItem {
-  margin: 0;
-  @include inputLabelForm;
-
-  .inp {
-    margin-top: 5px;
-    @include inputForm;
-  }
-}
