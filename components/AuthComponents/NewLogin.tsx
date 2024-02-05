@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles/NewLogin.module.scss";
 import { Button, Card, Form, Input, Tag } from "antd";
 import { Logo } from "../PicturesComponents/Logo";
 import { InputLabel } from "../InputLabelComponent/InputLabel";
 import Link from "next/link";
-import router from "next/router";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useAppDispatch } from "../../redux/store";
 import { useSelector } from "react-redux";
@@ -14,6 +13,8 @@ import {
   postRegistration,
 } from "../../redux/authSlice/asyncActions";
 import { Status } from "../../redux/queriesSlice/types";
+import { setStatus } from "../../redux/authSlice/slice";
+import router from "next/router";
 
 const { CheckableTag } = Tag;
 
@@ -21,7 +22,6 @@ function NewLogin() {
   const [selectedTag, setSelectedTag] = useState<string>("Вход");
   const [email, setEmail] = useState<string>("");
   const status = useSelector(selectStatus);
-  const [error, setError] = useState<string | null>(null);
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const dispatch = useAppDispatch();
@@ -30,13 +30,13 @@ function NewLogin() {
   };
 
   const postAuth = async () => {
-    console.log(email, password);
     dispatch(
       postAuthorization({
         email,
         password,
       })
     );
+
     status === Status.SUCCESS && router.push("/queries");
   };
 
@@ -45,7 +45,7 @@ function NewLogin() {
     setData: (value: string) => void
   ) => {
     setData(evt.target.value);
-    setError(null);
+    dispatch(setStatus(Status.SUCCESS));
   };
 
   const sendCode = async () => {
@@ -59,6 +59,15 @@ function NewLogin() {
       router.push({ pathname: "/auth/code", query: { email } });
     }
   };
+
+  useEffect(() => {
+    if (status === Status.ERROR) {
+      setEmail("");
+      setPassword("");
+      setPasswordRepeat("");
+    }
+  }, [status]);
+
   return (
     <div className={styles.container}>
       <Card
@@ -93,16 +102,11 @@ function NewLogin() {
             </div>
             <Input
               onChange={(evt) => handleInputChange(evt, setEmail)}
-              status={error ? "error" : undefined}
-              value={!error ? email : ""}
+              status={status === Status.ERROR ? "error" : undefined}
+              value={status === Status.SUCCESS ? email : ""}
               placeholder={"Введите почту"}
               required
             />
-            {(error?.includes("username") ||
-              error?.includes("exists") ||
-              error?.includes("почты")) && (
-              <div className={styles.error}>{error}</div>
-            )}
           </Form.Item>
           <Form.Item className={selectedTag === "Вход" ? styles.content : ""}>
             <div className={styles.title}>
@@ -113,13 +117,15 @@ function NewLogin() {
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
               }
               onChange={(evt) => handleInputChange(evt, setPassword)}
-              status={error ? "error" : undefined}
-              value={!error ? password : ""}
+              status={status === Status.ERROR ? "error" : undefined}
+              value={status === Status.SUCCESS ? password : ""}
               placeholder={"Введите пароль"}
               required
             />
-            {error?.includes("password") && (
-              <div className={styles.error}>{error}</div>
+            {status === Status.ERROR && selectedTag === "Вход" && (
+              <div className={styles.error}>
+                Не правильный логин или пароль!
+              </div>
             )}
           </Form.Item>
           {selectedTag === "Регистрация" && (
@@ -133,13 +139,19 @@ function NewLogin() {
                     visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                   }
                   onChange={(evt) => handleInputChange(evt, setPasswordRepeat)}
-                  status={error ? "error" : undefined}
-                  value={!error ? passwordRepeat : ""}
+                  status={status === Status.ERROR ? "error" : undefined}
+                  value={status === Status.SUCCESS ? passwordRepeat : ""}
                   placeholder={"Введите пароль"}
                   required
                 />
                 {passwordRepeat !== password && passwordRepeat && (
                   <div className={styles.error}>Пароли не совпадают!</div>
+                )}
+                {status === Status.ERROR && (
+                  <div className={styles.error}>
+                    Вход с этим доменом невозможен или такой пользователь уже
+                    есть!
+                  </div>
                 )}
               </div>
             </Form.Item>
@@ -173,7 +185,7 @@ function NewLogin() {
                 htmlType="submit"
                 loading={status === Status.LOADING}
                 onClick={() => {
-                  if (email && !error) {
+                  if (email && status === Status.SUCCESS) {
                     sendCode();
                   }
                 }}

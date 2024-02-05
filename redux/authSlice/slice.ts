@@ -1,6 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import AuthService from "../../services/LoginService";
-import { Status } from "../queriesSlice/slice";
 import { getUser } from "../../utils/getUser";
 import {
   postAuthorization,
@@ -8,6 +7,7 @@ import {
   postRegistration,
 } from "./asyncActions";
 import { AuthorizationState, PutRegistrationArgs } from "./types";
+import { Status } from "../queriesSlice/types";
 
 const initialState: AuthorizationState = getUser();
 
@@ -21,7 +21,11 @@ export const putRegistration = createAsyncThunk(
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setStatus: (state, action: PayloadAction<Status>) => {
+      state.status = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(postAuthorization.fulfilled, (state, action) => {
       state.status = Status.SUCCESS;
@@ -38,9 +42,8 @@ export const authSlice = createSlice({
     builder.addCase(postAuthorization.pending, (state) => {
       state.status = Status.LOADING;
     });
-    builder.addCase(postAuthorization.rejected, (state, action) => {
+    builder.addCase(postAuthorization.rejected, (state) => {
       state.status = Status.ERROR;
-      console.log(action);
     });
 
     builder.addCase(postRegistration.fulfilled, (state, action) => {
@@ -62,6 +65,7 @@ export const authSlice = createSlice({
     builder.addCase(postRegistration.rejected, (state) => {
       state.status = Status.ERROR;
     });
+
     builder.addCase(postCodeConfirmation.fulfilled, (state) => {
       state.status = Status.SUCCESS;
     });
@@ -85,5 +89,7 @@ export const authSlice = createSlice({
     });
   },
 });
+
+export const { setStatus } = authSlice.actions;
 
 export default authSlice.reducer;

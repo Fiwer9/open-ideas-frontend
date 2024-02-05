@@ -1,5 +1,5 @@
 import { IUser } from "../../models/IUser";
-import { Status } from "../queriesSlice/slice";
+import { Status } from "../queriesSlice/types";
 
 export type AuthorizationState = {
   user: IUser;
