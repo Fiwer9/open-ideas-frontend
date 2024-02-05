@@ -11,10 +11,10 @@ export default class AuthService {
   }
 
   static async postAuthorization(
-    username: string,
+    email: string,
     password: string
   ): Promise<AxiosResponse<AuthorizationResponse>> {
-    return $api.post(`/auth/password/`, { username, password });
+    return $api.post(`/auth/password/`, { email, password });
   }
 
   static async confirmEmail(
@@ -36,6 +36,6 @@ export default class AuthService {
     email: string,
     password: string
   ): Promise<AxiosResponse<AuthorizationResponse>> {
-    return $api.post(`/auth/passreg/`, { username: email, password: password });
+    return $api.post(`/auth/passreg/`, { email, password });
   }
 }
