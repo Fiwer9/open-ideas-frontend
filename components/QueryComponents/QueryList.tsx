@@ -191,9 +191,13 @@ export const QueryList = () => {
     return (
       Cookies.get('selectedTag') === 'Панель администратора' ? (
         <div className={styles.container}>
-            <Slider />
+            <div className={styles.slider}>
+                <Slider />
+            </div>
             <div className={styles.content}>
-                <Header user_name={user?.name} organization={organization && organization.name} department={user?.department.name}/>
+                <div className={styles.headerContainer}>
+                    <Header user_name={user?.name} organization={organization && organization.name} department={user?.department.name}/>
+                </div>
                 <Tabs />
                 <MainText text={'Инициативы'}/>
                 <div className={styles.infContainer}>
@@ -201,8 +205,10 @@ export const QueryList = () => {
                                onSearchNumberChange={handleSearchNumberChange}
                                placeholderNum={'Номер'}
                                placeholderQuery={'Поиск по идеям'}/>
-                    <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
-                    <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
+                    <div className={styles.filterContainer}>
+                        <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
+                        <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
+                    </div>
                 </div>
                 <DataTable
                   data={getData()}

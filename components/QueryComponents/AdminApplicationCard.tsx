@@ -154,13 +154,17 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
   return (
     <>
       <div className={styles.container}>
-        <Slider/>
+        <div className={styles.slider}>
+          <Slider/>
+        </div>
         <div className={styles.content}>
-          <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+          <div className={styles.headerContainer}>
+            <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+          </div>
           <Tabs />
           <div>
-            <div>
-              <div className={styles.headerContainer}>
+            <div className={styles.ideaInfContainer}>
+              <div className={styles.headerContainerIdea}>
                 <p className={styles.nameInitiative}>{applicationData.name}</p>
                 <div className={styles.btnHeader}>
                   <div className={styles.likesContainer}>
@@ -251,12 +255,21 @@ export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
                 </div>
               ))}
           </div>
+
           <div className={styles.btnContainer}>
             <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => router.push(`/queries/editingApplication?queryId=${queryId}`)}>Редактировать данные инициативы</button>
             <button className={`${styles.btnRed} ${styles.btnFooter}`}
                     onClick={() => {
                       setModalActive(true);
                     }}>Удалить инициативу</button>
+          </div>
+
+          <div className={styles.btnContainer430}>
+            <button className={`${styles.btnBlue} ${styles.btnFooter430}`} onClick={() => router.push(`/queries/editingApplication?queryId=${queryId}`)}>Редактировать</button>
+            <button className={`${styles.btnRed} ${styles.btnFooter430}`}
+                    onClick={() => {
+                      setModalActive(true);
+                    }}>Удалить</button>
           </div>
         </div>
       </div>

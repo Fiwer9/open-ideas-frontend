@@ -287,7 +287,6 @@ $color-pule-purple: #F0F5FF;
 
 .uploadFile {
   display: flex;
-  flex-direction: column-reverse;
   margin-top: 20px;
 
   .ant-upload-list-item {
@@ -310,8 +309,16 @@ $color-pule-purple: #F0F5FF;
   display: flex;
 
   .ant-upload-list {
-    display: flex;
+    width: 100%;
     margin-top: 8px;
+
+    @media (max-width: 1440px) {
+      width: 50%;
+    }
+
+    @media (max-width: 768px) {
+      width: 90%;
+    }
   }
 
   .ant-upload-list-item {
