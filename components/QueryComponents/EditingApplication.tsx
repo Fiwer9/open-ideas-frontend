@@ -80,9 +80,13 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
   return (
     <>
       <div className={styles.container}>
-        <Slider />
+        <div className={styles.slider}>
+          <Slider />
+        </div>
         <div className={styles.content}>
-          <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+          <div className={styles.headerContainer}>
+            <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+          </div>
           <Tabs />
             {applicationData.name && user  && (
               <Form
@@ -234,22 +238,22 @@ export const EditingApplication = ({queryId}: EditingApplicationProps) => {
                       </ConfigProvider>
                     </Form.Item>
                   </div>
-                <div className={styles.files}>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={'Дополнительные файлы'}
-                    name={'file'}
-                  >
-                    <Upload
-                      maxCount={5}
-                      accept=".webm, .pdf, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
-                      multiple
-                      className='upload'
+                  <div className={styles.files}>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Дополнительные файлы'}
+                      name={'file'}
                     >
-                      <Button icon={<UploadOutlined />}>Загрузить</Button>
-                    </Upload>
-                  </Form.Item>
-              </div>
+                      <Upload
+                        maxCount={5}
+                        accept=".webm, .pdf, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
+                        multiple
+                        className='upload'
+                      >
+                        <Button icon={<UploadOutlined />}>Загрузить</Button>
+                      </Upload>
+                    </Form.Item>
+                  </div>
                 </div>
           </Form>
             )}

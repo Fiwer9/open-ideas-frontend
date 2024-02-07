@@ -289,9 +289,15 @@ $color-pule-purple: #F0F5FF;
   display: flex;
   margin-top: 20px;
 
-  .ant-upload-list-item {
-    padding: 20px 10px;
-    border: 1px solid $color-gray;
+  .ant-upload-list {
+    width: 100%;
+    margin-top: 8px;
+
+    .ant-upload-list-item {
+      margin-right: 15px;
+      padding: 20px 10px;
+      border: 1px solid $color-gray;
+    }
   }
 }
 
@@ -302,27 +308,6 @@ $color-pule-purple: #F0F5FF;
   .ant-upload-list-item {
     padding: 20px 10px;
     border: 1px solid $color-gray;
-  }
-}
-
-.uploadFile {
-  display: flex;
-
-  .ant-upload-list {
-    width: 100%;
-    margin-top: 8px;
-
-    @media (max-width: 1440px) {
-      width: 50%;
-    }
-
-    @media (max-width: 768px) {
-      width: 90%;
-    }
-  }
-
-  .ant-upload-list-item {
-    margin-right: 15px;
   }
 }
 
