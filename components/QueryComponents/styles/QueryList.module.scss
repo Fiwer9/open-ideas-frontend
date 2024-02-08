@@ -3,12 +3,8 @@
 .container {
   @include container;
 
-  @media (max-width: 643px) {
-    overflow-x: hidden;
-  }
-
   .slider {
-    @media (max-width: 420px) {
+    @media (max-width: 430px) {
       display: none;
     }
   }
@@ -26,7 +22,7 @@
       };
     }
 
-    @media (max-width: 420px) {
+    @media (max-width: 430px) {
       padding: {
         left: 10px;
         right: 10px;
@@ -42,7 +38,7 @@
     .infContainer {
       @include infContainerTable;
 
-      @media (max-width: 420px) {
+      @media (max-width: 430px) {
         display: flex;
         flex-direction: column-reverse;
       }
@@ -59,7 +55,7 @@
           margin-left: 50px;
         }
 
-        @media (max-width: 420px) {
+        @media (max-width: 430px) {
           margin-left: 0;
         }
       }
