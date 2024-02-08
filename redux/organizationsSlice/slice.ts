@@ -9,6 +9,7 @@ const initialState: OrganizationsSliceState = {
   organizations: [],
   departments: [],
   status: Status.WAITING,
+  detail: {},
 };
 
 export const organizationsSlice = createSlice({
@@ -27,8 +28,13 @@ export const organizationsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchOrganizations.fulfilled, (state, action) => {
+      if (action.payload.error.is_error) {
+        state.detail = action.payload.error.detail as string;
+        state.status = Status.ERROR;
+        return;
+      }
       state.status = Status.SUCCESS;
-      state.organizations = action.payload;
+      state.organizations = action.payload.data;
     });
     builder.addCase(fetchOrganizations.pending, (state) => {
       state.status = Status.LOADING;
@@ -40,8 +46,14 @@ export const organizationsSlice = createSlice({
     });
 
     builder.addCase(fetchDepartments.fulfilled, (state, action) => {
+      if (action.payload.error.is_error) {
+        state.detail = action.payload.error.detail as string;
+        state.status = Status.ERROR;
+        return;
+      }
+
       state.status = Status.SUCCESS;
-      state.departments = action.payload;
+      state.departments = action.payload.data;
     });
     builder.addCase(fetchDepartments.pending, (state) => {
       state.status = Status.LOADING;

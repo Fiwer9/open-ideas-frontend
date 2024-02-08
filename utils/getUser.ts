@@ -1,6 +1,7 @@
 import { Status } from "../redux/queriesSlice/types";
+import { AuthorizationState } from "../redux/authSlice/types";
 
-export const getUser = () => {
+export const getUser = (): AuthorizationState => {
   try {
     const user = JSON.parse(sessionStorage.getItem("user")) || {
       user_id: 0,
@@ -11,6 +12,7 @@ export const getUser = () => {
     return {
       user,
       status,
+      detail: {},
     };
   } catch (e) {
     return {
@@ -20,6 +22,7 @@ export const getUser = () => {
         is_verified: false,
       },
       status: Status.WAITING,
+      detail: {},
     };
   }
 };

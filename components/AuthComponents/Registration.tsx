@@ -8,8 +8,8 @@ import styles from "./styles/Registration.module.scss";
 import router from "next/router";
 import { useAppDispatch } from "../../redux/store";
 import { useSelector } from "react-redux";
-import { putRegistration, setStatus } from "../../redux/authSlice/slice";
-import { selectStatus } from "../../redux/authSlice/selectors";
+import { setStatus } from "../../redux/authSlice/slice";
+import { selectAuthStatus } from "../../redux/authSlice/selectors";
 import { Status } from "../../redux/queriesSlice/types";
 import {
   fetchDepartments,
@@ -19,6 +19,7 @@ import {
   selectDepartments,
   selectOrganizations,
 } from "../../redux/organizationsSlice/selectors";
+import { putRegistration } from "../../redux/authSlice/asyncActions";
 
 export const Registration = () => {
   const [name, setName] = useState<string>("");
@@ -27,7 +28,7 @@ export const Registration = () => {
   const departments = useSelector(selectDepartments);
   const organizations = useSelector(selectOrganizations);
   const dispatch = useAppDispatch();
-  const status = useSelector(selectStatus);
+  const status = useSelector(selectAuthStatus);
 
   const optionsDep = departments.map((department) => ({
     value: department.id,

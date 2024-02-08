@@ -6,7 +6,10 @@ import styles from "./styles/CodeConfirmation.module.scss";
 import router from "next/router";
 import { useAppDispatch } from "../../redux/store";
 import { useSelector } from "react-redux";
-import { selectStatus } from "../../redux/authSlice/selectors";
+import {
+  selectDetail,
+  selectAuthStatus,
+} from "../../redux/authSlice/selectors";
 import { postCodeConfirmation } from "../../redux/authSlice/asyncActions";
 import { Status } from "../../redux/queriesSlice/types";
 import { setStatus } from "../../redux/authSlice/slice";
@@ -18,7 +21,8 @@ type ConfirmationProps = {
 export const CodeConfirmation = ({ email }: ConfirmationProps) => {
   const [code, setCode] = useState("");
   const dispatch = useAppDispatch();
-  const status = useSelector(selectStatus);
+  const status = useSelector(selectAuthStatus);
+  const detail = useSelector(selectDetail) as string;
 
   const refreshCode = () => {
     sessionStorage.clear();
@@ -69,7 +73,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
             />
           </div>
           {status === Status.ERROR && (
-            <div className={styles.error}>Неверный код!</div>
+            <div className={styles.error}>{detail}</div>
           )}
         </Form.Item>
         <div className={styles.btnBlue}>

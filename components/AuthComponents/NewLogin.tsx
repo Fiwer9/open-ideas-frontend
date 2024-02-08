@@ -7,7 +7,10 @@ import Link from "next/link";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useAppDispatch } from "../../redux/store";
 import { useSelector } from "react-redux";
-import { selectStatus } from "../../redux/authSlice/selectors";
+import {
+  selectDetail,
+  selectAuthStatus,
+} from "../../redux/authSlice/selectors";
 import {
   postAuthorization,
   postRegistration,
@@ -21,7 +24,8 @@ const { CheckableTag } = Tag;
 function NewLogin() {
   const [selectedTag, setSelectedTag] = useState<string>("Вход");
   const [email, setEmail] = useState<string>("");
-  const status = useSelector(selectStatus);
+  const status = useSelector(selectAuthStatus);
+  const detail = useSelector(selectDetail);
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const dispatch = useAppDispatch();
@@ -114,6 +118,9 @@ function NewLogin() {
               placeholder={"Введите почту"}
               required
             />
+            {status === Status.ERROR && (
+              <div className={styles.error}>{detail.email}</div>
+            )}
           </Form.Item>
           <Form.Item className={selectedTag === "Вход" ? styles.content : ""}>
             <div className={styles.title}>
@@ -130,9 +137,7 @@ function NewLogin() {
               required
             />
             {status === Status.ERROR && selectedTag === "Вход" && (
-              <div className={styles.error}>
-                Не правильный логин или пароль!
-              </div>
+              <div className={styles.error}>{detail.password}</div>
             )}
           </Form.Item>
           {selectedTag === "Регистрация" && (
@@ -155,10 +160,7 @@ function NewLogin() {
                   <div className={styles.error}>Пароли не совпадают!</div>
                 )}
                 {status === Status.ERROR && (
-                  <div className={styles.error}>
-                    Вход с этим доменом невозможен или такой пользователь уже
-                    есть!
-                  </div>
+                  <div className={styles.error}>{detail.password}</div>
                 )}
               </div>
             </Form.Item>
