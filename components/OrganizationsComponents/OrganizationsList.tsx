@@ -74,17 +74,23 @@ export const OrganizationsList = () => {
   return (
     <>
       <div className={styles.container}>
-        <Slider/>
+        <div className={styles.slider}>
+          <Slider/>
+        </div>
         <div className={styles.content}>
-          <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          <div className={styles.headerContainer}>
+            <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          </div>
           <Tabs />
           <MainText text={'Организация и отделы'}/>
           <div className={styles.infContainer}>
             <SearchBar
               placeholderNum={'Номер'}
               placeholderQuery={'Поиск по организация'}/>
-            <FilterBar icon={<PlusCircleOutlined />} filterText={'Добавить организацию'} onClick={() => { setModalActive(true) }} />
-            <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
+            <div className={styles.filterContainer}>
+              <FilterBar icon={<PlusCircleOutlined />} filterText={'Добавить организацию'} onClick={() => { setModalActive(true) }} />
+              <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
+            </div>
           </div>
           <Table
             className={styles.table}
@@ -101,18 +107,35 @@ export const OrganizationsList = () => {
         </div>
       </div>
 
-      <Modal
-        active={modalActive} setActive={setModalActive}
-        text1={"Добавить организацию"}
-        classNameBtn1={styles.btnWhite}
-        textBtn1={"Назад"}
-        classNameBtn2={styles.btnBlue}
-        textBtn2={"Добавить организацию"}
-        onClick1={closeModal}
-        onClick2={() => router.push('/organizations')}
-        stylesContentModal={styles.contentModal}
-        layout={layout}
-      />
+      <div className={styles.modal}>
+        <Modal
+          active={modalActive} setActive={setModalActive}
+          text1={"Добавить организацию"}
+          classNameBtn1={styles.btnWhite}
+          textBtn1={"Назад"}
+          classNameBtn2={styles.btnBlue}
+          textBtn2={"Добавить организацию"}
+          onClick1={closeModal}
+          onClick2={() => router.push('/organizations')}
+          stylesContentModal={styles.contentModal}
+          layout={layout}
+        />
+      </div>
+
+      <div className={styles.modal430}>
+        <Modal
+          active={modalActive} setActive={setModalActive}
+          text1={"Добавить организацию"}
+          classNameBtn1={styles.btnWhite}
+          textBtn1={"Назад"}
+          classNameBtn2={styles.btnBlue}
+          textBtn2={"Добавить"}
+          onClick1={closeModal}
+          onClick2={() => router.push('/organizations')}
+          stylesContentModal={styles.contentModal}
+          layout={layout}
+        />
+      </div>
     </>
   );
 };

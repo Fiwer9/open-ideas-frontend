@@ -38,17 +38,19 @@ export const OrganizationCard = () => {
   return (
     <>
       <div className={styles.container}>
-        <Slider/>
+        <div className={styles.slider}>
+          <Slider/>
+        </div>
         <div className={styles.content}>
-          <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          <div className={styles.headerContainer}>
+            <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          </div>
           <Tabs />
           <MainText text={'Aratreum'}/>
 
           <Col className={styles.column}>
             <div className={styles.row}>
               <p className={styles.rowText}>Отделы</p>
-            </div>
-            <div className={styles.row}>
               <p className={styles.rowInf}>Отдел 1, Отдел 2</p>
             </div>
           </Col>
@@ -56,6 +58,11 @@ export const OrganizationCard = () => {
           <div className={styles.btnContainer}>
             <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => { setModalActive(true) }}>Редактировать данные организации</button>
             <button className={`${styles.btnRed} ${styles.btnFooter}`} onClick={() => { setSecondModalActive(true) }}>Удалить организацию</button>
+          </div>
+
+          <div className={styles.btnContainer430}>
+            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => { setModalActive(true) }}>Редактировать</button>
+            <button className={`${styles.btnRed} ${styles.btnFooter}`} onClick={() => { setSecondModalActive(true) }}>Удалить</button>
           </div>
         </div>
       </div>
