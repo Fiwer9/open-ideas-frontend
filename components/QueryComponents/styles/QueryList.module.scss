@@ -3,17 +3,64 @@
 .container {
   @include container;
 
+  .slider {
+    @media (max-width: 430px) {
+      display: none;
+    }
+  }
+
   .content {
    @include content;
 
+    @media (max-width: 768px) {
+      padding-left: 110px;
+    }
+
+    @media (max-width: 685px) {
+      padding: {
+        right: 4px;
+      };
+    }
+
+    @media (max-width: 430px) {
+      padding: {
+        left: 10px;
+        right: 10px;
+      };
+    }
+
+    .headerContainer {
+      @media (max-width: 640px) {
+        display: none;
+      }
+    }
+
     .infContainer {
       @include infContainerTable;
+
+      @media (max-width: 430px) {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+
+      .filterContainer {
+        display: flex;
+        gap: 10px;
+
+        @media (max-width: 1440px) {
+          margin-left: 100px;
+        }
+
+        @media (max-width: 768px) {
+          margin-left: 50px;
+        }
+
+        @media (max-width: 430px) {
+          margin-left: 0;
+        }
+      }
     }
 
-
-    @media (max-width: 720px) {
-      padding: 16px;
-    }
     @media (max-width: 420px) {
       margin: 0;
     }

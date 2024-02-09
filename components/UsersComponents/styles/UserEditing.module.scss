@@ -160,14 +160,13 @@
             display: block;
             margin: {
               top: 50px;
-              bottom: 20px;
             };
             background-color: white;
             box-shadow: 1px 20px 40px 0 #0000001A;
-            padding: 10px 20px 20px;
-            position: fixed;
             bottom: 0;
-            width: 80%;
+            position: sticky;
+            padding: 10px 20px 20px;
+            border-radius: 2px;
           }
 
           .btnFooter1440 {
