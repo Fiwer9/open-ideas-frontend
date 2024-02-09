@@ -12,7 +12,7 @@ export default class OrganizationsService {
   }
   static async getOrganizationsById(
     id: number
-  ): Promise<AxiosResponse<OrganizationsResponse[]>> {
+  ): Promise<AxiosResponse<ResponseInterface<OrganizationsResponse>>> {
     return $api.get(`/organizations/organizations/${id}`);
   }
 

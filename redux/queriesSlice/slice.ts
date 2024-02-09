@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
 import { QueriesSliceState, Status } from "./types";
 import { fetchQueries } from "./asyncActions";
+import { DetailType } from "../../models/response/ResponseInterface";
 
 const initialState: QueriesSliceState = {
-  queries: [],
+  items: [],
   status: Status.WAITING,
+  detail: {},
 };
 
 export const queriesSlice = createSlice({
@@ -13,21 +15,24 @@ export const queriesSlice = createSlice({
   initialState,
   reducers: {
     setQueries: (state, action: PayloadAction<QueriesResponse[]>) => {
-      state.queries = action.payload;
+      state.items = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchQueries.fulfilled, (state, action) => {
+      if (action.payload.error.is_error) {
+        state.detail = action.payload.error.detail as DetailType;
+      }
+      state.items = action.payload.data;
       state.status = Status.SUCCESS;
-      state.queries = action.payload;
     });
     builder.addCase(fetchQueries.pending, (state) => {
       state.status = Status.LOADING;
-      state.queries = [];
+      state.items = [];
     });
     builder.addCase(fetchQueries.rejected, (state) => {
       state.status = Status.ERROR;
-      state.queries = [];
+      state.items = [];
     });
   },
 });

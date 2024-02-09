@@ -1,7 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../queriesSlice/types";
 import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
-import { fetchDepartments, fetchOrganizations } from "./asyncActions";
+import {
+  fetchDepartments,
+  fetchOrganizationById,
+  fetchOrganizations,
+} from "./asyncActions";
 import { OrganizationsSliceState } from "./types";
 import { IDepartment } from "../../models/IDepartment";
 
@@ -33,8 +37,9 @@ export const organizationsSlice = createSlice({
         state.status = Status.ERROR;
         return;
       }
-      state.status = Status.SUCCESS;
+
       state.organizations = action.payload.data;
+      state.status = Status.SUCCESS;
     });
     builder.addCase(fetchOrganizations.pending, (state) => {
       state.status = Status.LOADING;
@@ -52,8 +57,8 @@ export const organizationsSlice = createSlice({
         return;
       }
 
-      state.status = Status.SUCCESS;
       state.departments = action.payload.data;
+      state.status = Status.SUCCESS;
     });
     builder.addCase(fetchDepartments.pending, (state) => {
       state.status = Status.LOADING;
@@ -62,6 +67,24 @@ export const organizationsSlice = createSlice({
     builder.addCase(fetchDepartments.rejected, (state) => {
       state.status = Status.ERROR;
       state.departments = [];
+    });
+
+    builder.addCase(fetchOrganizationById.fulfilled, (state, action) => {
+      if (action.payload.error.is_error) {
+        state.detail = action.payload.error.detail as string;
+        state.status = Status.ERROR;
+        return;
+      }
+      state.organizations = action.payload.data;
+      state.status = Status.SUCCESS;
+    });
+    builder.addCase(fetchOrganizationById.pending, (state) => {
+      state.status = Status.LOADING;
+      state.organizations = [];
+    });
+    builder.addCase(fetchOrganizationById.rejected, (state) => {
+      state.status = Status.ERROR;
+      state.organizations = [];
     });
   },
 });

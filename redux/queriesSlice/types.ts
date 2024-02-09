@@ -1,4 +1,5 @@
 import { QueriesResponse } from "../../models/response/QueriesResponse";
+import { DetailType } from "../../models/response/ResponseInterface";
 
 export type FetchFamousArgs = {
   user_id?: number;
@@ -12,6 +13,7 @@ export enum Status {
 }
 
 export interface QueriesSliceState {
-  queries: QueriesResponse[];
+  items: QueriesResponse[];
   status: Status;
+  detail: DetailType;
 }

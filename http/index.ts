@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { TokenResponse } from "../models/response/AuthResponse";
 import router from "next/router";
+import { ResponseInterface } from "../models/response/ResponseInterface";
 
 let flag = true;
 
@@ -24,32 +25,26 @@ $api.interceptors.request.use((config) => {
   return config;
 });
 
-$api.interceptors.response.use(
-  (config) => {
+$api.interceptors.response.use(async (config) => {
+  if (!config.data.error.is_error) {
     return config;
-  },
-  async (error) => {
-    const originalRequest = error.config;
-    if (
-      error.response.data.code == 401 &&
-      !window.location.pathname.includes("code")
-    ) {
-      try {
-        const refresh = sessionStorage.getItem("token_refresh");
-        const response = await axios.post<TokenResponse>(
-          `${API_URL_TOKEN}/token/refresh/`,
-          { refresh },
-          { withCredentials: true }
-        );
-        sessionStorage.setItem("token_access", response.data.access);
-        return $api.request(originalRequest);
-      } catch (e) {
-        console.error(e.message);
-        flag && router.push("/");
-        flag = false;
-      }
-    }
   }
-);
+  if (config.data.code === 401 && !window.location.pathname.includes("code")) {
+    const refresh = sessionStorage.getItem("token_refresh");
+    const response = await axios.post<ResponseInterface<TokenResponse>>(
+      `${API_URL_TOKEN}/token/refresh/`,
+      { refresh },
+      { withCredentials: true }
+    );
+    if (response.data?.error?.is_error) {
+      flag && router.push("/");
+      flag = false;
+    }
+    console.log(config);
+    const acceptResponse = response as unknown as AxiosResponse<TokenResponse>;
+    sessionStorage.setItem("token_access", acceptResponse.data.access);
+    return $api.request(config.config);
+  }
+});
 
 export default $api;

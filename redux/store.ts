@@ -3,12 +3,16 @@ import { useDispatch } from "react-redux";
 import auth from "./authSlice/slice";
 import queries from "./queriesSlice/slice";
 import organizations from "./organizationsSlice/slice";
+import directions from "./directionsSlice/slice";
+import users from "./usersSlice/slice";
 
 export const store = configureStore({
   reducer: {
     auth,
     queries,
     organizations,
+    directions,
+    users,
   },
 });
 

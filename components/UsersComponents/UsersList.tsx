@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Slider } from "../SliderComponents/SliderComponents";
 import { Tabs } from "../TabsComponent/Tabs";
 import { Header } from "../HeaderComponents/Header";
@@ -9,47 +9,50 @@ import { FilterOutlined } from "@ant-design/icons";
 import router from "next/router";
 
 import styles from "./styles/UsersList.module.scss";
-import {DataTable} from "../TableComponent/Table";
-import {fetchData, getOrganizationName} from "../../utils/utils";
+import { DataTable } from "../TableComponent/Table";
+import { fetchData, getOrganizationName } from "../../utils/utils";
 import UsersService from "../../services/UsersService";
-import {UsersUpdateResponse} from "../../models/response/UsersUpdateResponse";
+import { UsersUpdateResponse } from "../../models/response/UsersUpdateResponse";
 import OrganizationsService from "../../services/OrganizationsService";
-import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
-import {useSearchNum} from "../../hooks/useSearchNum";
-import {useSearchQuery} from "../../hooks/useSearchQuery";
+import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
+import { useSearchNum } from "../../hooks/useSearchNum";
+import { useSearchQuery } from "../../hooks/useSearchQuery";
 import Cookies from "js-cookie";
-
 
 export const UsersList = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [usersData, setUsersData] = useState<UsersUpdateResponse[]>([])
-  const [organizations, setOrganizations] = useState<OrganizationsResponse[]>([])
+  const [usersData, setUsersData] = useState<UsersUpdateResponse[]>([]);
+  const [organizations, setOrganizations] = useState<OrganizationsResponse[]>(
+    []
+  );
   const emails = [...new Set(usersData.map((user) => user.email))];
   const names = [...new Set(usersData.map((user) => user.name))];
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchNumber, setSearchNumber] = useState('');
-  const organizationsFilter = [...new Set(organizations.map((organization) => organization.name))];
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchNumber, setSearchNumber] = useState("");
+  const organizationsFilter = [
+    ...new Set(organizations.map((organization) => organization.name)),
+  ];
   const [domLoaded, setDomLoaded] = useState(false);
   const columns: any = [
     {
-      title: 'Номер',
-      dataIndex: 'id',
-      key: 'id',
+      title: "Номер",
+      dataIndex: "id",
+      key: "id",
       width: "5%",
       showSorterTooltip: false,
       sorter: (a: any, b: any) => a.id - b.id,
       align: "center",
     },
     {
-      title: 'Ф.И.О.',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Ф.И.О.",
+      dataIndex: "name",
+      key: "name",
       width: "50%",
     },
     {
-      title: 'Почта',
-      dataIndex: 'email',
-      key: 'email',
+      title: "Почта",
+      dataIndex: "email",
+      key: "email",
       width: "20%",
       filters: emails.map((email) => ({
         text: email,
@@ -58,39 +61,46 @@ export const UsersList = () => {
       onFilter: (value: any, record: any) => record.email.includes(value),
     },
     {
-      title: 'Организация',
-      dataIndex: 'organization',
-      key: 'organization',
+      title: "Организация",
+      dataIndex: "organization",
+      key: "organization",
       width: "20%",
       filters: organizationsFilter.map((organization) => ({
         text: organization,
         value: organization,
       })),
-      onFilter: (value: any, record: any) => record.organization.includes(value),
+      onFilter: (value: any, record: any) =>
+        record.organization.includes(value),
     },
   ];
 
   useEffect(() => {
     const delay = 3000;
     const fetchDataWithDelay = async () => {
-      await new Promise(resolve => setTimeout(resolve, delay));
+      await new Promise((resolve) => setTimeout(resolve, delay));
       fetchData(setIsLoading, setUsersData, UsersService.getUsersUpdate);
-      fetchData(setIsLoading, setOrganizations, OrganizationsService.getOrganizations);
+      fetchData(
+        setIsLoading,
+        setOrganizations,
+        OrganizationsService.getOrganizations
+      );
     };
-    setIsLoading(true)
+    setIsLoading(true);
     fetchDataWithDelay();
-    setIsLoading(false)
-    setDomLoaded(true)
+    setIsLoading(false);
+    setDomLoaded(true);
   }, []);
 
   const data = usersData.map((user) => ({
     id: user.id,
     name: user.name,
     email: user.email,
-    organization: user.department ? getOrganizationName(user.department.organization, organizations) : 'Не назначено'
-  }))
+    organization: user.department
+      ? getOrganizationName(user.department.organization, organizations)
+      : "Не назначено",
+  }));
   const handleRowClick = (user: any) => {
-    router.push(`/users/userCard?userId=${user.id}`)
+    router.push(`/users/userCard?userId=${user.id}`);
   };
 
   const handleSearchTermChange = (searchText: any) => {
@@ -101,25 +111,42 @@ export const UsersList = () => {
     setSearchNumber(searchNum);
   };
 
-  useSearchNum(searchNumber, usersData, UsersService.getUsersUpdate, setIsLoading, setUsersData)
-  useSearchQuery(searchTerm, usersData, UsersService.getUsersUpdate, setIsLoading, setUsersData)
+  useSearchNum(
+    searchNumber,
+    usersData,
+    UsersService.getUsersUpdate,
+    setIsLoading,
+    setUsersData
+  );
+  useSearchQuery(
+    searchTerm,
+    usersData,
+    UsersService.getUsersUpdate,
+    setIsLoading,
+    setUsersData
+  );
 
   return (
     <>
       {domLoaded && (
         <div className={styles.container}>
-          <Slider/>
+          <Slider />
           <div className={styles.content}>
-            <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+            <Header
+              userName={Cookies.get("user_name")}
+              organization={Cookies.get("organization")}
+              department={Cookies.get("department")}
+            />
             <Tabs />
-            <MainText text={'Пользователи'}/>
+            <MainText text={"Пользователи"} />
             <div className={styles.infContainer}>
               <SearchBar
                 onSearchTermChange={handleSearchTermChange}
                 onSearchNumberChange={handleSearchNumberChange}
-                placeholderNum={'Номер'}
-                placeholderQuery={'Поиск по пользователям'}/>
-              <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
+                placeholderNum={"Номер"}
+                placeholderQuery={"Поиск по пользователям"}
+              />
+              <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
             </div>
             <DataTable
               data={data}

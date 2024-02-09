@@ -1,44 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import styles from "./styles/Tabs.module.scss";
 import { Tag } from "antd";
-import { fetchData } from "../../utils/utils";
-import UsersService from "../../services/UsersService";
-import { UserResponse } from "../../models/response/UserResponse";
 import router from "next/router";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/authSlice/selectors";
+import { selectUpdateUser } from "../../redux/usersSlice/selectors";
+import { useAppDispatch } from "../../redux/store";
+import { fetchCurrentUpdateUser } from "../../redux/usersSlice/asyncActions";
 const { CheckableTag } = Tag;
 
 const tagsData = ["Инициативы", "Панель администратора"];
 
-export const Tabs = () => {
-  const [isStaff, setIsStaff] = useState(false);
+export const Tabs: React.FC = memo(() => {
   const [selectedTags, setSelectedTags] = useState<string[]>(["Инициативы"]);
-  const [user, setUser] = useState<UserResponse>();
   const { user_id } = useSelector(selectCurrentUser);
-  const [isLoading, setIsLoading] = useState(false);
+  const user = useSelector(selectUpdateUser);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetchData(
-      setIsLoading,
-      setUser,
-      UsersService.getCurrentUpdateUser,
-      Number(user_id)
-    );
+    dispatch(fetchCurrentUpdateUser({ user_id }));
   }, []);
-
-  useEffect(() => {
-    checkExpertUser();
-  }, [user]);
 
   useEffect(() => {
     Cookies.set("selectedTags", selectedTags[0]);
   }, [selectedTags]);
-
-  const checkExpertUser = () => {
-    user && user.is_staff && setIsStaff(user.is_staff);
-  };
 
   const handleChangeTag = (tag: string, checked: boolean) => {
     const nextSelectedTags = checked
@@ -61,7 +47,7 @@ export const Tabs = () => {
       <div className={styles.tabs}>
         {tagsData.map((tag) => {
           const isAdministratorTagDisabled =
-            tag === "Панель администратора" && !isStaff;
+            tag === "Панель администратора" && !user.is_staff;
 
           return (
             <CheckableTag
@@ -89,4 +75,4 @@ export const Tabs = () => {
       </div>
     </div>
   );
-};
+});

@@ -1,27 +1,43 @@
-import React from "react";
+import React, { memo, useEffect } from "react";
 import styles from "../styles/Account.module.scss";
 import { Button } from "antd";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../redux/usersSlice/selectors";
+import { useAppDispatch } from "../../../redux/store";
+import { fetchCurrentUser } from "../../../redux/usersSlice/asyncActions";
+import { selectCurrentUser } from "../../../redux/authSlice/selectors";
+import { fetchOrganizationById } from "../../../redux/organizationsSlice/asyncActions";
+import { selectOrganization } from "../../../redux/organizationsSlice/selectors";
 
-interface AccountBlockProps {
-  user_name?: string;
-  department?: string;
-  organization?: string;
-}
+export const AccountBlock: React.FC = memo(() => {
+  const user = useSelector(selectUser);
+  const { user_id } = useSelector(selectCurrentUser);
+  const organization = useSelector(selectOrganization);
+  const dispatch = useAppDispatch();
 
-export const AccountBlock = (props: AccountBlockProps) => {
+  useEffect(() => {
+    dispatch(fetchCurrentUser({ user_id }));
+  }, []);
+
+  useEffect(() => {
+    dispatch(
+      fetchOrganizationById({ organization_id: user?.department?.organization })
+    );
+  }, [user]);
+
   return (
     <div className={styles.account}>
       <Button type={"text"} className={styles.buttonTop}>
-        {props.user_name || "Аноним"}
+        {user.name || "Аноним"}
       </Button>{" "}
       <span>|</span>
       <Button type={"text"} className={styles.aratrum}>
-        {props.organization || "Неизвестно"}
+        {organization.name || "Неизвестно"}
       </Button>{" "}
       <span>|</span>
       <Button type={"text"} className={styles.buttonTop}>
-        {props.department || "Неизвестно"}
+        {user.department?.name || "Неизвестно"}
       </Button>
     </div>
   );
-};
+});

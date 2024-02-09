@@ -2,74 +2,71 @@ import React, { useEffect, useState } from "react";
 
 import styles from "./styles/QueryList.module.scss";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
-import QueriesService from "../../services/QueriesService";
 import {
-  fetchData,
   getDirectionName,
   checkExpert,
   getStatusClassName,
-  getStatusTranslation,
+  statusTranslation,
 } from "../../utils/utils";
 import { Slider } from "../SliderComponents/SliderComponents";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
 import { MainText } from "../MainTextComponent";
 import { DataTable } from "../TableComponent/Table";
-import { useSearchNum } from "../../hooks/useSearchNum";
-import { useSearchQuery } from "../../hooks/useSearchQuery";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import UsersService from "../../services/UsersService";
-import { UserResponse } from "../../models/response/UserResponse";
-import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
-import OrganizationsService from "../../services/OrganizationsService";
 import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Logo } from "../PicturesComponents/Logo";
-import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
-import FetchQueries from "../../hooks/fetches/FetchQueries/FetchQueries";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/authSlice/selectors";
+import {
+  selectDirections,
+  selectStatusDirections,
+} from "../../redux/directionsSlice/selectors";
+import {
+  selectQueriesData,
+  selectStatusQueries,
+} from "../../redux/queriesSlice/selectors";
+import { useAppDispatch } from "../../redux/store";
+import { fetchQueries } from "../../redux/queriesSlice/asyncActions";
+import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
 
 export const QueryList = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isExpert, setIsExpert] = useState(false);
-  const [directions, setDirections] = FetchDirections.useGetDirections();
+  const directions = useSelector(selectDirections);
+  const directionsStatus = useSelector(selectStatusDirections);
+  const queriesStatus = useSelector(selectStatusQueries);
+  const dispatch = useAppDispatch();
   const [isArchive, setIsArchive] = useState(false);
-  const [user, setUser] = useState<UserResponse>();
   const { user_id } = useSelector(selectCurrentUser);
-  const [organization, setOrganization] = useState<OrganizationsResponse>({
-    name: "",
-    id: 0,
-  });
-  const [queriesTableData, setQueriesTableData] = FetchQueries.useGetQueries();
+  const queriesTableData = useSelector(selectQueriesData);
 
   const data = queriesTableData;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchNumber, setSearchNumber] = useState("");
 
-  useSearchNum(
-    searchNumber,
-    queriesTableData,
-    QueriesService.getQueriesTableData,
-    setIsLoading,
-    setQueriesTableData
-  );
-  useSearchQuery(
-    searchTerm,
-    queriesTableData,
-    QueriesService.getQueriesTableData,
-    setIsLoading,
-    setQueriesTableData
-  );
-
-  const items = queriesTableData;
+  // useSearchNum(
+  //   searchNumber,
+  //   queriesTableData,
+  //   QueriesService.getQueriesTableData,
+  //   setIsLoading,
+  //   setQueriesTableData
+  // );
+  // useSearchQuery(
+  //   searchTerm,
+  //   queriesTableData,
+  //   QueriesService.getQueriesTableData,
+  //   setIsLoading,
+  //   setQueriesTableData
+  // );
   const direct = [...new Set(directions?.map((item) => item.name))];
   const status = [
-    ...new Set(items?.map((item) => getStatusTranslation(item.status))),
+    ...new Set(queriesTableData?.map((item) => statusTranslation[item.status])),
   ];
 
   const columns = [
@@ -112,7 +109,7 @@ export const QueryList = () => {
         <>
           {
             <span className={`${getStatusClassName(styles, text)}`}>
-              {getStatusTranslation(text)}
+              {statusTranslation[text]}
             </span>
           }
         </>
@@ -123,46 +120,19 @@ export const QueryList = () => {
         value: status,
       })),
       onFilter: (value: any, record: any) =>
-        getStatusTranslation(record.status).includes(value),
+        statusTranslation[record.status.includes(value)],
     },
   ];
+
+  useEffect(() => {
+    dispatch(fetchDirections());
+    dispatch(fetchQueries({}));
+  }, []);
 
   const handleRowClick = (queryId: any) => {
     Cookies.set("queryId", queryId.id);
     router.push(`/queries/adminApplication?queryId=${queryId.id}`);
   };
-
-  useEffect(() => {
-    const delay = 3000;
-    const fetchDataWithDelay = async () => {
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      fetchData(
-        setIsLoading,
-        setQueriesTableData,
-        QueriesService.getQueriesTableData
-      );
-    };
-    setIsLoading(true);
-    fetchDataWithDelay();
-    setIsLoading(false);
-    fetchData(setIsLoading, setUser, UsersService.getCurrentUser, user_id);
-  }, [isArchive]);
-
-  useEffect(() => {
-    user &&
-      fetchData(
-        setIsLoading,
-        setOrganization,
-        OrganizationsService.getOrganizationsById,
-        user?.department.organization
-      );
-    user && Cookies.set("department", user?.department.name);
-    user && Cookies.set("user_name", user?.name);
-  }, [user]);
-
-  useEffect(() => {
-    organization && Cookies.set("organization", organization.name);
-  }, [organization]);
 
   const getData = () => {
     if (isExpert && isArchive) {
@@ -227,11 +197,7 @@ export const QueryList = () => {
     <div className={styles.container}>
       <Slider />
       <div className={styles.content}>
-        <Header
-          user_name={user?.name ? user.name : ""}
-          organization={(organization && organization.name) || ""}
-          department={user?.department.name || ""}
-        />
+        <Header />
         <Tabs />
         <MainText text={"Инициативы"} />
         <div className={styles.infContainer}>
@@ -248,7 +214,7 @@ export const QueryList = () => {
           />
         </div>
         <DataTable
-          data={getData()}
+          data={queriesTableData}
           columns={columns}
           isLoading={isLoading}
           onRowClick={handleRowClick}
@@ -258,11 +224,7 @@ export const QueryList = () => {
   ) : (
     <div className={styles.containerIdeas}>
       <div className={styles.contentIdeas}>
-        <Header
-          user_name={user?.name}
-          organization={organization && organization.name}
-          department={user?.department.name}
-        />
+        <Header />
         <div className={styles.header}>
           <div className={styles.logoHeader}>
             <Logo width={190} height={53} />
@@ -295,7 +257,7 @@ export const QueryList = () => {
         </div>
         <DataTable
           columns={columns}
-          data={getData()}
+          data={getData() as QueriesResponse[]}
           onRowClick={handleRowClickIdea}
           isLoading={isLoading}
         />

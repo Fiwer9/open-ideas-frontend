@@ -4,12 +4,16 @@ import { IDepartment } from "../../models/IDepartment";
 import { DetailType } from "../../models/response/ResponseInterface";
 
 export type OrganizationsSliceState = {
-  organizations: OrganizationsResponse[];
+  organizations: OrganizationsResponse[] | OrganizationsResponse;
   departments: IDepartment[];
   status: Status;
   detail: DetailType | string;
 };
 
 export type FetchDepartmentsArgs = {
+  organization_id: number;
+};
+
+export type FetchOrganizationByIdArgs = {
   organization_id: number;
 };

@@ -8,7 +8,6 @@ import styles from "./styles/Registration.module.scss";
 import router from "next/router";
 import { useAppDispatch } from "../../redux/store";
 import { useSelector } from "react-redux";
-import { setStatus } from "../../redux/authSlice/slice";
 import { selectAuthStatus } from "../../redux/authSlice/selectors";
 import { Status } from "../../redux/queriesSlice/types";
 import {
@@ -70,7 +69,6 @@ export const Registration = () => {
     if (status !== Status.SUCCESS) {
       return;
     }
-    dispatch(setStatus(Status.WAITING));
     router.push("/queries");
   }, [status]);
 
