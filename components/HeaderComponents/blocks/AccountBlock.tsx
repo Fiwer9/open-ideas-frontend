@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../styles/Account.module.scss";
-import {Button} from "antd";
+import { Button } from "antd";
 
 interface AccountBlockProps {
   user_name?: string;
@@ -11,9 +11,17 @@ interface AccountBlockProps {
 export const AccountBlock = (props: AccountBlockProps) => {
   return (
     <div className={styles.account}>
-      <Button type={"text"} className={styles.buttonTop}>{props.user_name}</Button> <span>|</span>
-      <Button type={"text"} className={styles.aratrum}>{props.organization}</Button>  <span>|</span>
-      <Button type={"text"} className={styles.buttonTop}>{props.department}</Button>
+      <Button type={"text"} className={styles.buttonTop}>
+        {props.user_name || "Аноним"}
+      </Button>{" "}
+      <span>|</span>
+      <Button type={"text"} className={styles.aratrum}>
+        {props.organization || "Неизвестно"}
+      </Button>{" "}
+      <span>|</span>
+      <Button type={"text"} className={styles.buttonTop}>
+        {props.department || "Неизвестно"}
+      </Button>
     </div>
-  )
-}
+  );
+};

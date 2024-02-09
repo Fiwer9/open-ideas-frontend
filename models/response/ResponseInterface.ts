@@ -7,6 +7,7 @@ export type DetailType = {
   email?: string[];
   password?: string[];
   departments?: string[];
+  detail?: string;
 };
 
 export interface ResponseInterface<T> {

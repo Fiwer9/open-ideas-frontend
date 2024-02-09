@@ -22,7 +22,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
   const [code, setCode] = useState("");
   const dispatch = useAppDispatch();
   const status = useSelector(selectAuthStatus);
-  const detail = useSelector(selectDetail) as string;
+  const detail = useSelector(selectDetail);
 
   const refreshCode = () => {
     sessionStorage.clear();
@@ -73,7 +73,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
             />
           </div>
           {status === Status.ERROR && (
-            <div className={styles.error}>{detail}</div>
+            <div className={styles.error}>{detail.detail}</div>
           )}
         </Form.Item>
         <div className={styles.btnBlue}>

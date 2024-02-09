@@ -32,7 +32,7 @@ export const authSlice = createSlice({
         action: PayloadAction<ResponseInterface<AuthorizationResponse>>
       ) => {
         if (action.payload.error.is_error) {
-          state.detail = action.payload.data as unknown as DetailType;
+          state.detail = action.payload.error.detail as unknown as DetailType;
           state.status = Status.ERROR;
           return;
         }
@@ -61,7 +61,7 @@ export const authSlice = createSlice({
 
     builder.addCase(postRegistration.fulfilled, (state, action) => {
       if (typeof action.payload !== "string") {
-        state.detail = action.payload.data as unknown as DetailType;
+        state.detail = action.payload.error.detail as unknown as DetailType;
         state.status = Status.ERROR;
         return;
       }
@@ -77,7 +77,7 @@ export const authSlice = createSlice({
 
     builder.addCase(postCodeConfirmation.fulfilled, (state, action) => {
       if (action.payload.error.is_error) {
-        state.detail = action.payload.error.detail as unknown as string;
+        state.detail = action.payload.error.detail as unknown as DetailType;
         state.status = Status.ERROR;
         return;
       }
@@ -103,7 +103,7 @@ export const authSlice = createSlice({
 
     builder.addCase(putRegistration.fulfilled, (state, action) => {
       if (action.payload.error.is_error) {
-        state.detail = action.payload.data as unknown as DetailType;
+        state.detail = action.payload.error.detail as unknown as DetailType;
         state.status = Status.ERROR;
         return;
       }

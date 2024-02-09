@@ -137,7 +137,9 @@ function NewLogin() {
               required
             />
             {status === Status.ERROR && selectedTag === "Вход" && (
-              <div className={styles.error}>{detail.password}</div>
+              <div className={styles.error}>
+                {detail.password || "Неверный пароль"}
+              </div>
             )}
           </Form.Item>
           {selectedTag === "Регистрация" && (

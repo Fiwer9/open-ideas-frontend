@@ -5,7 +5,7 @@ import { DetailType } from "../../models/response/ResponseInterface";
 export type AuthorizationState = {
   user: IUser;
   status: Status;
-  detail: DetailType | string;
+  detail: DetailType;
 };
 
 export type PostAuthorizationArgs = {
