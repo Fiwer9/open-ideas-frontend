@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 
 import styles from "./styles/QueryList.module.scss";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
 import {
-  getDirectionName,
   checkExpert,
+  getDirectionName,
   getStatusClassName,
   statusTranslation,
 } from "../../utils/utils";
@@ -31,25 +31,36 @@ import {
   selectStatusQueries,
 } from "../../redux/queriesSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
-import { fetchQueries } from "../../redux/queriesSlice/asyncActions";
+import { fetchQueriesByName } from "../../redux/queriesSlice/asyncActions";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
+import { selectFilters } from "../../redux/filterSlice/selectors";
+import { Status } from "../../redux/queriesSlice/types";
 
-export const QueryList = () => {
+export const QueryList: React.FC = memo(() => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [isExpert, setIsExpert] = useState(false);
   const directions = useSelector(selectDirections);
   const directionsStatus = useSelector(selectStatusDirections);
   const queriesStatus = useSelector(selectStatusQueries);
   const dispatch = useAppDispatch();
-  const [isArchive, setIsArchive] = useState(false);
   const { user_id } = useSelector(selectCurrentUser);
   const queriesTableData = useSelector(selectQueriesData);
 
-  const data = queriesTableData;
-  const [searchTerm, setSearchTerm] = useState("");
+  const { searchValue, isArchive, isExpert } = useSelector(selectFilters);
   const [searchNumber, setSearchNumber] = useState("");
 
+  useEffect(() => {
+    if (
+      directionsStatus === Status.LOADING ||
+      queriesStatus === Status.LOADING
+    ) {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [directionsStatus, queriesStatus]);
+
+  useEffect(() => {}, []);
   // useSearchNum(
   //   searchNumber,
   //   queriesTableData,
@@ -64,70 +75,78 @@ export const QueryList = () => {
   //   setIsLoading,
   //   setQueriesTableData
   // );
-  const direct = [...new Set(directions?.map((item) => item.name))];
-  const status = [
+  const getDirections = () => [
+    ...new Set(directions?.map((item) => item.name)),
+  ];
+  const getStatus = () => [
     ...new Set(queriesTableData?.map((item) => statusTranslation[item.status])),
   ];
 
-  const columns = [
-    {
-      title: "Номер",
-      dataIndex: "id",
-      key: "id",
-      width: "5%",
-      showSorterTooltip: false,
-      sorter: (a: any, b: any) => a.id - b.id,
-      onRow: (record: QueriesResponse) => ({
-        onClick: () => handleRowClick(record.id),
-      }),
-      align: "center",
-    },
-    {
-      title: "Инициатива (Идея)",
-      dataIndex: "name",
-      key: "name",
-      width: "60%",
-    },
-    {
-      title: "Направление",
-      dataIndex: "initiative_direction",
-      key: "initiative_direction",
-      width: "15%",
-      render: (directionId: number) =>
-        getDirectionName(directionId, directions),
-      filters: direct.map((direction) => ({
-        text: direction,
-        value: direction,
-      })),
-      onFilter: (value: any, record: any) => record.name.includes(value),
-    },
-    {
-      title: "Статус заявки",
-      dataIndex: "status",
-      key: "status",
-      render: (text: string) => (
-        <>
-          {
-            <span className={`${getStatusClassName(styles, text)}`}>
-              {statusTranslation[text]}
-            </span>
-          }
-        </>
-      ),
-      width: "15%",
-      filters: status?.map((status) => ({
-        text: status,
-        value: status,
-      })),
-      onFilter: (value: any, record: any) =>
-        statusTranslation[record.status.includes(value)],
-    },
-  ];
+  const getColumns = useCallback(
+    () => [
+      {
+        title: "Номер",
+        dataIndex: "id",
+        key: "id",
+        width: "5%",
+        showSorterTooltip: false,
+        sorter: (a: any, b: any) => a.id - b.id,
+        onRow: (record: QueriesResponse) => ({
+          onClick: () => handleRowClick(record.id),
+        }),
+        align: "center",
+      },
+      {
+        title: "Инициатива (Идея)",
+        dataIndex: "name",
+        key: "name",
+        width: "60%",
+      },
+      {
+        title: "Направление",
+        dataIndex: "initiative_direction",
+        key: "initiative_direction",
+        width: "15%",
+        render: (directionId: number) =>
+          getDirectionName(directionId, directions),
+        filters: getDirections().map((direction) => ({
+          text: direction,
+          value: direction,
+        })),
+        onFilter: (value: any, record: any) => record.name.includes(value),
+      },
+      {
+        title: "Статус заявки",
+        dataIndex: "status",
+        key: "status",
+        render: (text: string) => (
+          <>
+            {
+              <span className={`${getStatusClassName(styles, text)}`}>
+                {statusTranslation[text]}
+              </span>
+            }
+          </>
+        ),
+        width: "15%",
+        filters: getStatus()?.map((status) => ({
+          text: status,
+          value: status,
+        })),
+        onFilter: (value: any, record: any) =>
+          statusTranslation[record.status.includes(value)],
+      },
+    ],
+    []
+  );
 
   useEffect(() => {
     dispatch(fetchDirections());
-    dispatch(fetchQueries({}));
   }, []);
+
+  useEffect(() => {
+    dispatch(fetchQueriesByName({ value: searchValue }));
+  }, [searchValue]);
 
   const handleRowClick = (queryId: any) => {
     Cookies.set("queryId", queryId.id);
@@ -156,29 +175,11 @@ export const QueryList = () => {
       return queriesTableData?.filter(
         (query) => query.status !== "rejected" && query.status !== "registered"
       );
-    } else if (searchTerm) {
-      return data.map((item) => item.name);
-    } else if (searchNumber) {
-      return data.map((item) => item.id);
-    } else {
-      return data;
     }
-  };
-
-  const handleSearchTermChange = (searchText: any) => {
-    setSearchTerm(searchText);
   };
 
   const handleSearchNumberChange = (searchNum: any) => {
     setSearchNumber(searchNum);
-  };
-
-  const handleToggleArchive = (checked: any) => {
-    setIsArchive(checked);
-  };
-
-  const handleToggleExpert = (checked: any) => {
-    setIsExpert(checked);
   };
 
   const handleRowClickIdea = (queryId: any) => {
@@ -202,20 +203,16 @@ export const QueryList = () => {
         <MainText text={"Инициативы"} />
         <div className={styles.infContainer}>
           <SearchBar
-            onSearchTermChange={handleSearchTermChange}
             onSearchNumberChange={handleSearchNumberChange}
             placeholderNum={"Номер"}
             placeholderQuery={"Поиск по идеям"}
           />
           <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
-          <CheckboxBar
-            onToggleArchive={handleToggleArchive}
-            checkboxText={"Архив"}
-          />
+          <CheckboxBar checkboxText={"Архив"} />
         </div>
         <DataTable
-          data={queriesTableData}
-          columns={columns}
+          data={getData() as QueriesResponse[]}
+          columns={getColumns()}
           isLoading={isLoading}
           onRowClick={handleRowClick}
         />
@@ -236,7 +233,6 @@ export const QueryList = () => {
         <MainText text={"Инициативы"} />
         <div className={styles.infContainer}>
           <SearchBar
-            onSearchTermChange={handleSearchTermChange}
             onSearchNumberChange={handleSearchNumberChange}
             placeholderNum={"Номер"}
             placeholderQuery={"Поиск по идеям"}
@@ -246,17 +242,11 @@ export const QueryList = () => {
             filterText={"Создать идею"}
             onClick={handleCreateQuery}
           />
-          <CheckboxBar
-            onToggleArchive={handleToggleExpert}
-            checkboxText={"Я эксперт"}
-          />
-          <CheckboxBar
-            onToggleArchive={handleToggleArchive}
-            checkboxText={"Архив"}
-          />
+          <CheckboxBar checkboxText={"Я эксперт"} />
+          <CheckboxBar checkboxText={"Архив"} />
         </div>
         <DataTable
-          columns={columns}
+          columns={getColumns()}
           data={getData() as QueriesResponse[]}
           onRowClick={handleRowClickIdea}
           isLoading={isLoading}
@@ -264,4 +254,4 @@ export const QueryList = () => {
       </div>
     </div>
   );
-};
+});

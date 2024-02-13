@@ -5,6 +5,8 @@ import queries from "./queriesSlice/slice";
 import organizations from "./organizationsSlice/slice";
 import directions from "./directionsSlice/slice";
 import users from "./usersSlice/slice";
+import filter from "./filterSlice/slice";
+import menu from "./menuSlice/slice";
 
 export const store = configureStore({
   reducer: {
@@ -13,10 +15,12 @@ export const store = configureStore({
     organizations,
     directions,
     users,
+    filter,
+    menu,
   },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 
-type AppDispatch = typeof store.dispatch;
+export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo } from "react";
 import { Menu, MenuProps } from "antd";
 import {
   BarChartOutlined,
@@ -16,6 +16,13 @@ import router from "next/router";
 const { Sider } = Layout;
 
 import styles from "./styles/sider.module.scss";
+import {
+  selectCurrentPage,
+  selectMenuCollapsed,
+} from "../../redux/menuSlice/selectors";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../redux/store";
+import { changeCollapsed, setCurrentPage } from "../../redux/menuSlice/slice";
 
 const menuList = [
   { url: "/queries" },
@@ -70,11 +77,21 @@ const items: MenuProps["items"] = [
   },
 ];
 
-export const Slider = () => {
-  const [collapsed, setCollapsed] = useState(false);
+export const Slider: React.FC = memo(() => {
+  const collapsed = useSelector(selectMenuCollapsed);
+  const selectedPage = useSelector(selectCurrentPage);
+  const dispatch = useAppDispatch();
+  const updateCollapsed = () => {
+    dispatch(changeCollapsed(!collapsed));
+  };
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const handleClickItem = (item: any) => {
+    dispatch(setCurrentPage(item.key));
+    router.push(item.key);
+  };
 
   return (
     <Layout className={styles.layout}>
@@ -102,24 +119,14 @@ export const Slider = () => {
         <Menu
           mode="inline"
           defaultOpenKeys={["sub1"]}
-          onClick={(item) => router.push(item.key)}
-          selectedKeys={
-            typeof window !== "undefined"
-              ? menuList
-                  .map((el) => el.url)
-                  .filter((el) =>
-                    el === "/"
-                      ? router.asPath === "/"
-                      : router.asPath.includes(el)
-                  )
-              : ["/queries"]
-          }
+          onClick={handleClickItem}
+          selectedKeys={selectedPage}
           items={items}
         ></Menu>
         <Button
           type="text"
           icon={collapsed ? <ArrowBack /> : <ArrowNext />}
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={updateCollapsed}
           className={styles.button}
           style={{
             width: 24,
@@ -133,4 +140,4 @@ export const Slider = () => {
       </Sider>
     </Layout>
   );
-};
+});

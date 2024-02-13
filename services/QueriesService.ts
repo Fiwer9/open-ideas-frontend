@@ -78,4 +78,10 @@ export default class QueriesService {
   static async deleteQuery(id: number): Promise<AxiosResponse> {
     return $api.delete(`/queries/queries/${id}/`);
   }
+
+  static async getQueriesTableDataByName(
+    value: string
+  ): Promise<AxiosResponse<ResponseInterface<QueriesResponse[]>>> {
+    return $api.get(`/queries/queries?search=${value}`);
+  }
 }

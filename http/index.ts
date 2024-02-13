@@ -39,10 +39,11 @@ $api.interceptors.response.use(async (config) => {
     if (response.data?.error?.is_error) {
       flag && router.push("/");
       flag = false;
+      return;
     }
-    console.log(config);
     const acceptResponse = response as unknown as AxiosResponse<TokenResponse>;
-    sessionStorage.setItem("token_access", acceptResponse.data.access);
+    refresh &&
+      sessionStorage.setItem("token_access", acceptResponse.data.access);
     return $api.request(config.config);
   }
 });

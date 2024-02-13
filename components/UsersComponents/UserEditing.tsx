@@ -2,7 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { Slider } from "../SliderComponents/SliderComponents";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
-import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
+import CheckboxBar, {
+  CheckboxBlock,
+} from "../FilterComponents/blocks/CheckboxBar";
 import { Button, Form, Input, Select } from "antd";
 
 import styles from "./styles/UserEditing.module.scss";
@@ -339,7 +341,7 @@ export const UserEditing = ({ userId }: UserEditingProps) => {
 
                   <div className={styles.checkboxContainer}>
                     <Form.Item className={styles.checkboxItem} name={"active"}>
-                      <CheckboxBar
+                      <CheckboxBlock
                         defaultChecked={user.is_active}
                         checkboxText={"Активный"}
                         hintText={
