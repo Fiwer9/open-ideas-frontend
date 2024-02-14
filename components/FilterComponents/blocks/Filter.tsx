@@ -1,39 +1,47 @@
-import React, {useState} from "react";
+import React, { memo, useState } from "react";
 import { Button, DatePicker, TimeRangePickerProps } from "antd";
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
 
 import styles from "../styles/Filter.module.scss";
 
-const dateFormatList = ['DD.MM.YYYY', 'DD.MM.YY', 'DD-MM-YYYY', 'DD-MM-YY'];
+const dateFormatList = ["DD.MM.YYYY", "DD.MM.YY", "DD-MM-YYYY", "DD-MM-YY"];
 
 interface FilterProps {
   onChange?: (start: string, end: string) => void;
   selectedDateStart?: string;
-  selectedDateEnd?: string
+  selectedDateEnd?: string;
 }
 
-const rangePresets: TimeRangePickerProps['presets'] = [
-  { label: 'Последние 7 дней', value: [dayjs().add(-7, 'd'), dayjs()] },
-  { label: 'Последние 28 дней', value: [dayjs().add(-28, 'd'), dayjs()] },
-  { label: 'Последние 90 дней', value: [dayjs().add(-90, 'd'), dayjs()] },
-  { label: 'Последние 365 дней', value: [dayjs().add(-365, 'd'), dayjs()] },
-  { label: 'Всё время', value: [dayjs().add(-1825, 'd'), dayjs()] },
+const rangePresets: TimeRangePickerProps["presets"] = [
+  { label: "Последние 7 дней", value: [dayjs().add(-7, "d"), dayjs()] },
+  { label: "Последние 28 дней", value: [dayjs().add(-28, "d"), dayjs()] },
+  { label: "Последние 90 дней", value: [dayjs().add(-90, "d"), dayjs()] },
+  { label: "Последние 365 дней", value: [dayjs().add(-365, "d"), dayjs()] },
+  { label: "Всё время", value: [dayjs().add(-1825, "d"), dayjs()] },
 ];
 
 function ContentDate() {
-  return <div className={styles.contentDate}>
-    <p className={styles.period}>Продолжительность выбранного периода: 30 дней</p>
-    <div className={styles.btnContainer}>
-      <Button type="link" className={styles.btnDate}>ОТМЕНА</Button>
-      <Button type="link" className={styles.btnDate}>ВЫБРАТЬ</Button>
+  return (
+    <div className={styles.contentDate}>
+      <p className={styles.period}>
+        Продолжительность выбранного периода: 30 дней
+      </p>
+      <div className={styles.btnContainer}>
+        <Button type="link" className={styles.btnDate}>
+          ОТМЕНА
+        </Button>
+        <Button type="link" className={styles.btnDate}>
+          ВЫБРАТЬ
+        </Button>
+      </div>
     </div>
-  </div>;
+  );
 }
 
-const Filter: React.FC<FilterProps> = () => {
+const Filter: React.FC<FilterProps> = memo(() => {
   const [isOpenFilter, setIsOpenFilter] = useState(false);
 
   return (
@@ -44,23 +52,32 @@ const Filter: React.FC<FilterProps> = () => {
           <div className={styles.dropdown}>
             <span className={styles.textDropdown}>С момента публикации</span>
             <img
-              src={'./img/triangle.svg'}
+              src={"./img/triangle.svg"}
               width={15}
               height={10}
               alt=""
               onClick={() => setIsOpenFilter(!isOpenFilter)}
-              className={isOpenFilter ? styles.triangleOpen : styles.triangleClose}
+              className={
+                isOpenFilter ? styles.triangleOpen : styles.triangleClose
+              }
             ></img>
           </div>
         </div>
-        {isOpenFilter ? <RangePicker presets={rangePresets}
-                                     renderExtraFooter={() => ContentDate()}
-                                     className={styles.rangePicker}
-                                     defaultValue={[dayjs('01.01.2023', dateFormatList[0]), dayjs('15.04.2023', dateFormatList[0])]} format={dateFormatList}
-        /> : null}
+        {isOpenFilter ? (
+          <RangePicker
+            presets={rangePresets}
+            renderExtraFooter={() => ContentDate()}
+            className={styles.rangePicker}
+            defaultValue={[
+              dayjs("01.01.2023", dateFormatList[0]),
+              dayjs("15.04.2023", dateFormatList[0]),
+            ]}
+            format={dateFormatList}
+          />
+        ) : null}
       </div>
     </div>
   );
-};
+});
 
 export default Filter;

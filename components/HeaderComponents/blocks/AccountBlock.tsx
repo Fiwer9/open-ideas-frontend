@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import styles from "../styles/Account.module.scss";
 import { Button } from "antd";
 import { useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import { fetchOrganizationById } from "../../../redux/organizationsSlice/asyncAc
 import { selectOrganization } from "../../../redux/organizationsSlice/selectors";
 
 export const AccountBlock: React.FC = memo(() => {
+  const [isClient, setIsClient] = useState(false);
   const user = useSelector(selectUser);
   const { user_id } = useSelector(selectCurrentUser);
   const organization = useSelector(selectOrganization);
@@ -21,9 +22,19 @@ export const AccountBlock: React.FC = memo(() => {
 
   useEffect(() => {
     dispatch(
-      fetchOrganizationById({ organization_id: user?.department?.organization })
+      fetchOrganizationById({
+        organization_id: user?.department?.organization,
+      })
     );
   }, [user]);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return;
+  }
 
   return (
     <div className={styles.account}>

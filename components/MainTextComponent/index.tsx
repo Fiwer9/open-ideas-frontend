@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import styles from "./styles/index.module.scss";
 
 interface MainTextProps {
@@ -6,6 +6,16 @@ interface MainTextProps {
 }
 
 export const MainText: React.FC<MainTextProps> = memo(({ text }) => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return;
+  }
+
   return (
     <div className={styles.titleContainer}>
       <h1 className={styles.title}>{text}</h1>

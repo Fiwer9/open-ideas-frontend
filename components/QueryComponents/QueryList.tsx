@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 
 import styles from "./styles/QueryList.module.scss";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
@@ -35,19 +35,25 @@ import { fetchQueriesByName } from "../../redux/queriesSlice/asyncActions";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
 import { selectFilters } from "../../redux/filterSlice/selectors";
 import { Status } from "../../redux/queriesSlice/types";
+import { selectSelectedTag } from "../../redux/menuSlice/selectors";
 
 export const QueryList: React.FC = memo(() => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const directions = useSelector(selectDirections);
   const directionsStatus = useSelector(selectStatusDirections);
   const queriesStatus = useSelector(selectStatusQueries);
   const dispatch = useAppDispatch();
   const { user_id } = useSelector(selectCurrentUser);
   const queriesTableData = useSelector(selectQueriesData);
-
+  const selectedTag = useSelector(selectSelectedTag);
   const { searchValue, isArchive, isExpert } = useSelector(selectFilters);
   const [searchNumber, setSearchNumber] = useState("");
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (
@@ -82,63 +88,60 @@ export const QueryList: React.FC = memo(() => {
     ...new Set(queriesTableData?.map((item) => statusTranslation[item.status])),
   ];
 
-  const getColumns = useCallback(
-    () => [
-      {
-        title: "Номер",
-        dataIndex: "id",
-        key: "id",
-        width: "5%",
-        showSorterTooltip: false,
-        sorter: (a: any, b: any) => a.id - b.id,
-        onRow: (record: QueriesResponse) => ({
-          onClick: () => handleRowClick(record.id),
-        }),
-        align: "center",
-      },
-      {
-        title: "Инициатива (Идея)",
-        dataIndex: "name",
-        key: "name",
-        width: "60%",
-      },
-      {
-        title: "Направление",
-        dataIndex: "initiative_direction",
-        key: "initiative_direction",
-        width: "15%",
-        render: (directionId: number) =>
-          getDirectionName(directionId, directions),
-        filters: getDirections().map((direction) => ({
-          text: direction,
-          value: direction,
-        })),
-        onFilter: (value: any, record: any) => record.name.includes(value),
-      },
-      {
-        title: "Статус заявки",
-        dataIndex: "status",
-        key: "status",
-        render: (text: string) => (
-          <>
-            {
-              <span className={`${getStatusClassName(styles, text)}`}>
-                {statusTranslation[text]}
-              </span>
-            }
-          </>
-        ),
-        width: "15%",
-        filters: getStatus()?.map((status) => ({
-          text: status,
-          value: status,
-        })),
-        onFilter: (value: any, record: any) =>
-          statusTranslation[record.status.includes(value)],
-      },
-    ],
-    []
-  );
+  const getColumns = () => [
+    {
+      title: "Номер",
+      dataIndex: "id",
+      key: "id",
+      width: "5%",
+      showSorterTooltip: false,
+      sorter: (a: any, b: any) => a.id - b.id,
+      onRow: (record: QueriesResponse) => ({
+        onClick: () => handleRowClick(record.id),
+      }),
+      align: "center",
+    },
+    {
+      title: "Инициатива (Идея)",
+      dataIndex: "name",
+      key: "name",
+      width: "60%",
+    },
+    {
+      title: "Направление",
+      dataIndex: "initiative_direction",
+      key: "initiative_direction",
+      width: "15%",
+      render: (directionId: number) =>
+        getDirectionName(directionId, directions),
+      filters: getDirections().map((direction) => ({
+        text: direction,
+        value: direction,
+      })),
+      onFilter: (value: any, record: any) => record.name.includes(value),
+    },
+    {
+      title: "Статус заявки",
+      dataIndex: "status",
+      key: "status",
+      render: (text: string) => (
+        <>
+          {
+            <span className={`${getStatusClassName(styles, text)}`}>
+              {statusTranslation[text]}
+            </span>
+          }
+        </>
+      ),
+      width: "15%",
+      filters: getStatus()?.map((status) => ({
+        text: status,
+        value: status,
+      })),
+      onFilter: (value: any, record: any) =>
+        statusTranslation[record.status.includes(value)],
+    },
+  ];
 
   useEffect(() => {
     dispatch(fetchDirections());
@@ -193,65 +196,72 @@ export const QueryList: React.FC = memo(() => {
   const handleCreateQuery = () => {
     router.push("/queries/create");
   };
+  if (!isClient) {
+    return;
+  }
 
-  return Cookies.get("selectedTag") === "Панель администратора" ? (
-    <div className={styles.container}>
-      <Slider />
-      <div className={styles.content}>
-        <Header />
-        <Tabs />
-        <MainText text={"Инициативы"} />
-        <div className={styles.infContainer}>
-          <SearchBar
-            onSearchNumberChange={handleSearchNumberChange}
-            placeholderNum={"Номер"}
-            placeholderQuery={"Поиск по идеям"}
-          />
-          <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
-          <CheckboxBar checkboxText={"Архив"} />
-        </div>
-        <DataTable
-          data={getData() as QueriesResponse[]}
-          columns={getColumns()}
-          isLoading={isLoading}
-          onRowClick={handleRowClick}
-        />
-      </div>
-    </div>
-  ) : (
-    <div className={styles.containerIdeas}>
-      <div className={styles.contentIdeas}>
-        <Header />
-        <div className={styles.header}>
-          <div className={styles.logoHeader}>
-            <Logo width={190} height={53} />
-          </div>
-          <div className={styles.tabs}>
+  return (
+    <>
+      {selectedTag === "Панель администратора" ? (
+        <div className={styles.container}>
+          <Slider />
+          <div className={styles.content}>
+            <Header />
             <Tabs />
+            <MainText text={"Инициативы"} />
+            <div className={styles.infContainer}>
+              <SearchBar
+                onSearchNumberChange={handleSearchNumberChange}
+                placeholderNum={"Номер"}
+                placeholderQuery={"Поиск по идеям"}
+              />
+              <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
+              <CheckboxBar checkboxText={"Архив"} />
+            </div>
+            <DataTable
+              data={getData() as QueriesResponse[]}
+              columns={getColumns()}
+              isLoading={isLoading}
+              onRowClick={handleRowClick}
+            />
           </div>
         </div>
-        <MainText text={"Инициативы"} />
-        <div className={styles.infContainer}>
-          <SearchBar
-            onSearchNumberChange={handleSearchNumberChange}
-            placeholderNum={"Номер"}
-            placeholderQuery={"Поиск по идеям"}
-          />
-          <FilterBar
-            icon={<PlusCircleOutlined />}
-            filterText={"Создать идею"}
-            onClick={handleCreateQuery}
-          />
-          <CheckboxBar checkboxText={"Я эксперт"} />
-          <CheckboxBar checkboxText={"Архив"} />
+      ) : (
+        <div className={styles.containerIdeas}>
+          <div className={styles.contentIdeas}>
+            <Header />
+            <div className={styles.header}>
+              <div className={styles.logoHeader}>
+                <Logo width={190} height={53} />
+              </div>
+              <div className={styles.tabs}>
+                <Tabs />
+              </div>
+            </div>
+            <MainText text={"Инициативы"} />
+            <div className={styles.infContainer}>
+              <SearchBar
+                onSearchNumberChange={handleSearchNumberChange}
+                placeholderNum={"Номер"}
+                placeholderQuery={"Поиск по идеям"}
+              />
+              <FilterBar
+                icon={<PlusCircleOutlined />}
+                filterText={"Создать идею"}
+                onClick={handleCreateQuery}
+              />
+              <CheckboxBar checkboxText={"Я эксперт"} />
+              <CheckboxBar checkboxText={"Архив"} />
+            </div>
+            <DataTable
+              columns={getColumns()}
+              data={getData() as QueriesResponse[]}
+              onRowClick={handleRowClickIdea}
+              isLoading={isLoading}
+            />
+          </div>
         </div>
-        <DataTable
-          columns={getColumns()}
-          data={getData() as QueriesResponse[]}
-          onRowClick={handleRowClickIdea}
-          isLoading={isLoading}
-        />
-      </div>
-    </div>
+      )}
+    </>
   );
 });

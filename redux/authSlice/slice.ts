@@ -72,7 +72,7 @@ export const authSlice = createSlice({
       state.status = Status.LOADING;
     });
     builder.addCase(postRegistration.rejected, (state) => {
-      state.status = Status.ERROR;
+      state.status = Status.SUCCESS;
     });
 
     builder.addCase(postCodeConfirmation.fulfilled, (state, action) => {

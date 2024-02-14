@@ -64,7 +64,7 @@ const CheckboxBar: React.FC<CheckboxBarProps> = memo(({ checkboxText }) => {
         defaultChecked={false}
         className="checkbox"
         onChange={onToggleArchive}
-        value={value}
+        checked={value}
       >
         {checkboxText}
       </Checkbox>

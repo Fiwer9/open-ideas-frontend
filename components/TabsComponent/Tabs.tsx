@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect } from "react";
 import styles from "./styles/Tabs.module.scss";
 import { Tag } from "antd";
 import router from "next/router";
@@ -8,12 +8,14 @@ import { selectCurrentUser } from "../../redux/authSlice/selectors";
 import { selectUpdateUser } from "../../redux/usersSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
 import { fetchCurrentUpdateUser } from "../../redux/usersSlice/asyncActions";
+import { changeSelectedTag } from "../../redux/menuSlice/slice";
+import { selectSelectedTag } from "../../redux/menuSlice/selectors";
 const { CheckableTag } = Tag;
 
 const tagsData = ["Инициативы", "Панель администратора"];
 
 export const Tabs: React.FC = memo(() => {
-  const [selectedTags, setSelectedTags] = useState<string[]>(["Инициативы"]);
+  const selectedTags = useSelector(selectSelectedTag) as unknown as string[];
   const { user_id } = useSelector(selectCurrentUser);
   const user = useSelector(selectUpdateUser);
   const dispatch = useAppDispatch();
@@ -23,22 +25,22 @@ export const Tabs: React.FC = memo(() => {
   }, []);
 
   useEffect(() => {
-    Cookies.set("selectedTags", selectedTags[0]);
+    dispatch(changeSelectedTag(selectedTags));
   }, [selectedTags]);
 
   const handleChangeTag = (tag: string, checked: boolean) => {
     const nextSelectedTags = checked
       ? [tag]
-      : selectedTags.filter((t) => t === tag);
-    setSelectedTags(nextSelectedTags);
+      : tagsData.filter((t) => t === tag);
+    dispatch(changeSelectedTag(nextSelectedTags[0]));
     Cookies.set("selectedTag", tag);
     tag !== selectedTags[0] && router.push("/queries");
   };
 
   useEffect(() => {
-    const savedSelectedTag = Cookies.get("selectedTag");
+    const savedSelectedTag = sessionStorage.getItem("selectedTag");
     if (savedSelectedTag) {
-      setSelectedTags([savedSelectedTag]);
+      dispatch(changeSelectedTag(savedSelectedTag));
     }
   }, []);
 

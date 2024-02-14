@@ -27,6 +27,7 @@ const SearchBar: React.FC<SearchBarProps> = memo(
       setValue(evt.target.value);
       updateSearchValue(evt.target.value);
     };
+
     return (
       <div className={styles.inputContainer}>
         <div className={styles.inputNumber}>

@@ -25,27 +25,34 @@ $api.interceptors.request.use((config) => {
   return config;
 });
 
-$api.interceptors.response.use(async (config) => {
-  if (!config.data.error.is_error) {
+$api.interceptors.response.use(
+  async (config: AxiosResponse<ResponseInterface<any>>) => {
+    if (!config.data.error.is_error) {
+      return config;
+    }
+    if (
+      config.data.code === 401 &&
+      !window.location.pathname.includes("code")
+    ) {
+      const refresh = sessionStorage.getItem("token_refresh");
+      const response = await axios.post<ResponseInterface<TokenResponse>>(
+        `${API_URL_TOKEN}/token/refresh/`,
+        { refresh },
+        { withCredentials: true }
+      );
+      if (response.data?.error?.is_error) {
+        flag && router.push("/");
+        flag = false;
+        return;
+      }
+      const acceptResponse =
+        response as unknown as AxiosResponse<TokenResponse>;
+      refresh &&
+        sessionStorage.setItem("token_access", acceptResponse.data.access);
+      return $api.request(config.config);
+    }
     return config;
   }
-  if (config.data.code === 401 && !window.location.pathname.includes("code")) {
-    const refresh = sessionStorage.getItem("token_refresh");
-    const response = await axios.post<ResponseInterface<TokenResponse>>(
-      `${API_URL_TOKEN}/token/refresh/`,
-      { refresh },
-      { withCredentials: true }
-    );
-    if (response.data?.error?.is_error) {
-      flag && router.push("/");
-      flag = false;
-      return;
-    }
-    const acceptResponse = response as unknown as AxiosResponse<TokenResponse>;
-    refresh &&
-      sessionStorage.setItem("token_access", acceptResponse.data.access);
-    return $api.request(config.config);
-  }
-});
+);
 
 export default $api;

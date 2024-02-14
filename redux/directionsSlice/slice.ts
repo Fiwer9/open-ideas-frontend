@@ -15,8 +15,11 @@ export const directionsSlice = createSlice({
   name: "directions",
   initialState,
   reducers: {
-    setOrganizations: (state, action: PayloadAction<DirectionResponse[]>) => {
+    setDirections: (state, action: PayloadAction<DirectionResponse[]>) => {
       state.items = action.payload;
+    },
+    setStatus: (state, action: PayloadAction<Status>) => {
+      state.status = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -40,6 +43,6 @@ export const directionsSlice = createSlice({
   },
 });
 
-export const { setOrganizations } = directionsSlice.actions;
+export const { setDirections, setStatus } = directionsSlice.actions;
 
 export default directionsSlice.reducer;

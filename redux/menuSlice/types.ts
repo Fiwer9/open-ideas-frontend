@@ -1,4 +1,5 @@
 export interface MenuSliceState {
-  collapsed: boolean;
+  isCollapsed: boolean;
   currentPage: string[];
+  selectedTag: string;
 }

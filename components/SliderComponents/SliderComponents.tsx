@@ -18,7 +18,7 @@ const { Sider } = Layout;
 import styles from "./styles/sider.module.scss";
 import {
   selectCurrentPage,
-  selectMenuCollapsed,
+  selectMenuIsCollapsed,
 } from "../../redux/menuSlice/selectors";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
@@ -78,7 +78,7 @@ const items: MenuProps["items"] = [
 ];
 
 export const Slider: React.FC = memo(() => {
-  const collapsed = useSelector(selectMenuCollapsed);
+  const collapsed = useSelector(selectMenuIsCollapsed);
   const selectedPage = useSelector(selectCurrentPage);
   const dispatch = useAppDispatch();
   const updateCollapsed = () => {
@@ -118,7 +118,7 @@ export const Slider: React.FC = memo(() => {
 
         <Menu
           mode="inline"
-          defaultOpenKeys={["sub1"]}
+          defaultOpenKeys={!collapsed && ["sub1"]}
           onClick={handleClickItem}
           selectedKeys={selectedPage}
           items={items}

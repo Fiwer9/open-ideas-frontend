@@ -113,7 +113,6 @@ export const Registration = () => {
                 placeholder={"Название организации"}
                 options={optionsOrg}
                 onChange={(e: any) => {
-                  console.log(e);
                   setOrganizationId(e);
                 }}
               />

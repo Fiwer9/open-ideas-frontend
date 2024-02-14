@@ -128,7 +128,6 @@ export const UserEditing = ({ userId }: UserEditingProps) => {
   };
 
   const handleActive = (e: any) => {
-    console.log(e);
     setIsActive(e);
   };
 
