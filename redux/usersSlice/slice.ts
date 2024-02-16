@@ -2,9 +2,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../queriesSlice/types";
 import { DetailType } from "../../models/response/ResponseInterface";
 import { UserResponse } from "../../models/response/UserResponse";
-import { fetchCurrentUpdateUser, fetchCurrentUser } from "./asyncActions";
+import {
+  fetchCurrentUpdateUser,
+  fetchCurrentUser,
+  fetchUpdateUsers,
+} from "./asyncActions";
 import { UsersSliceState } from "./types";
 import { UsersUpdateResponse } from "../../models/response/UsersUpdateResponse";
+import { fetchUsersBuilder, fetchUsersUpdateBuilder } from "./builders";
 
 const initialState: UsersSliceState = {
   users: [],
@@ -57,6 +62,23 @@ export const usersSlice = createSlice({
       state.usersUpdate = [];
     });
     builder.addCase(fetchCurrentUpdateUser.rejected, (state) => {
+      state.status = Status.ERROR;
+      state.usersUpdate = [];
+    });
+    builder.addCase(fetchUpdateUsers.fulfilled, (state, action) => {
+      if (action.payload.error.is_error) {
+        state.detail = action.payload.error.detail as DetailType;
+        state.status = Status.ERROR;
+        return;
+      }
+      state.usersUpdate = action.payload.data;
+      state.status = Status.SUCCESS;
+    });
+    builder.addCase(fetchUpdateUsers.pending, (state) => {
+      state.status = Status.LOADING;
+      state.usersUpdate = [];
+    });
+    builder.addCase(fetchUpdateUsers.rejected, (state) => {
       state.status = Status.ERROR;
       state.usersUpdate = [];
     });

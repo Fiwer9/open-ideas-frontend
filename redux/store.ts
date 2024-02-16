@@ -7,6 +7,7 @@ import directions from "./directionsSlice/slice";
 import users from "./usersSlice/slice";
 import filter from "./filterSlice/slice";
 import menu from "./menuSlice/slice";
+import comments from "./commentsSlice/slice";
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     users,
     filter,
     menu,
+    comments,
   },
 });
 

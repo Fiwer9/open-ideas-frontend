@@ -1,7 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
-import { FetchQueriesArgs, FetchQueriesByNameArgs } from "./types";
+import {
+  FetchQueriesArgs,
+  FetchQueriesByIdArgs,
+  FetchQueriesByNameArgs,
+} from "./types";
 import { ResponseInterface } from "../../models/response/ResponseInterface";
 
 export const fetchQueries = createAsyncThunk<
@@ -17,5 +21,13 @@ export const fetchQueriesByName = createAsyncThunk<
   FetchQueriesByNameArgs
 >("queries/fetchQueriesByName", async ({ value }) => {
   const { data } = await QueriesService.getQueriesTableDataByName(value);
+  return data;
+});
+
+export const fetchQueriesById = createAsyncThunk<
+  ResponseInterface<QueriesResponse>,
+  FetchQueriesByIdArgs
+>("queries/fetchQueriesById", async ({ id }) => {
+  const { data } = await QueriesService.getQueriesTableDataById(Number(id));
   return data;
 });

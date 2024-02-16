@@ -13,3 +13,5 @@ export const selectUpdateUser = (state: RootState) =>
 
 export const selectUpdateUsers = (state: RootState) =>
   state.users.usersUpdate as UsersUpdateResponse[];
+
+export const selectUsersStatus = (state: RootState) => state.users.status;

@@ -20,3 +20,10 @@ export const fetchCurrentUpdateUser = createAsyncThunk<
   const { data } = await UsersService.getCurrentUpdateUser(user_id);
   return data;
 });
+
+export const fetchUpdateUsers = createAsyncThunk<
+  ResponseInterface<UsersUpdateResponse[]>
+>("users/fetchUpdateUser", async () => {
+  const { data } = await UsersService.getUsersUpdate();
+  return data;
+});

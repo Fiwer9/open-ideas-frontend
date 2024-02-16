@@ -5,6 +5,8 @@ import "dayjs/locale/ru";
 import Cookies from "js-cookie";
 import { DirectionResponse } from "../models/response/DirectionResponse";
 import { IDepartment } from "../models/IDepartment";
+import { OrganizationsResponse } from "../models/response/OrganizationsResponse";
+import { UsersUpdateResponse } from "../models/response/UsersUpdateResponse";
 
 export function getDepartmentName(
   depId: number | undefined,
@@ -17,14 +19,11 @@ export function getDepartmentName(
   }
 }
 export function getOrganizationName(
-  text: number | undefined,
-  organizations: any
+  id: number,
+  organizations: OrganizationsResponse[]
 ) {
-  for (let org of organizations) {
-    if (org.id === text) {
-      return org.name;
-    }
-  }
+  const { name } = organizations.find((organization) => organization.id === id);
+  return name;
 }
 
 export function getOrganizationId(text: number, organizations: any) {
@@ -79,7 +78,7 @@ export const getDirectionName = (
   directions: DirectionResponse[]
 ) => {
   const { name } = directions.find((direction) => direction.id === directionId);
-
+  console.log(name);
   return name;
 };
 
@@ -201,7 +200,7 @@ export const getRouteTranslation = (route: string) => {
   }
 };
 
-export function getUserName(userId: number, users: UserResponse[]) {
+export function getUserName(userId: number, users: UsersUpdateResponse[]) {
   const user = users.find((user) => user.id === userId);
   if (user) {
     return user.name;

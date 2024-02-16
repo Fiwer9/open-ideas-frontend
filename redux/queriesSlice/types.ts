@@ -13,11 +13,15 @@ export enum Status {
 }
 
 export interface QueriesSliceState {
-  items: QueriesResponse[];
+  items: QueriesResponse[] | QueriesResponse;
   status: Status;
   detail: DetailType;
 }
 
 export interface FetchQueriesByNameArgs {
   value: string;
+}
+
+export interface FetchQueriesByIdArgs {
+  id: string;
 }

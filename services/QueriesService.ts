@@ -12,8 +12,8 @@ export default class QueriesService {
       : $api.get(`/queries/queries/`);
   }
   static async getQueriesTableDataById(
-    id: string
-  ): Promise<AxiosResponse<QueriesResponse>> {
+    id: number
+  ): Promise<AxiosResponse<ResponseInterface<QueriesResponse>>> {
     return $api.get(`/queries/queries/${id}/`);
   }
 

@@ -9,7 +9,9 @@ export default class UsersService {
     return $api.get("/users/users/");
   }
 
-  static async getUsersUpdate(): Promise<AxiosResponse<UsersUpdateResponse[]>> {
+  static async getUsersUpdate(): Promise<
+    AxiosResponse<ResponseInterface<UsersUpdateResponse[]>>
+  > {
     return $api.get("/users/update/");
   }
 
