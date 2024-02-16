@@ -5,6 +5,8 @@ import { QueriesResponse } from "../../models/response/QueriesResponse";
 import {
   checkExpert,
   getDirectionName,
+  getDirections,
+  getStatus,
   getStatusClassName,
   statusTranslation,
 } from "../../utils/utils";
@@ -48,7 +50,6 @@ export const QueryList: React.FC = memo(() => {
   const queriesTableData = useSelector(selectQueriesData);
   const selectedTag = useSelector(selectSelectedTag);
   const { searchValue, isArchive, isExpert } = useSelector(selectFilters);
-  const [searchNumber, setSearchNumber] = useState("");
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -66,28 +67,6 @@ export const QueryList: React.FC = memo(() => {
     }
   }, [directionsStatus, queriesStatus]);
 
-  useEffect(() => {}, []);
-  // useSearchNum(
-  //   searchNumber,
-  //   queriesTableData,
-  //   QueriesService.getQueriesTableData,
-  //   setIsLoading,
-  //   setQueriesTableData
-  // );
-  // useSearchQuery(
-  //   searchTerm,
-  //   queriesTableData,
-  //   QueriesService.getQueriesTableData,
-  //   setIsLoading,
-  //   setQueriesTableData
-  // );
-  const getDirections = () => [
-    ...new Set(directions?.map((item) => item.name)),
-  ];
-  const getStatus = () => [
-    ...new Set(queriesTableData?.map((item) => statusTranslation[item.status])),
-  ];
-
   const getColumns = () => [
     {
       title: "Номер",
@@ -95,10 +74,7 @@ export const QueryList: React.FC = memo(() => {
       key: "id",
       width: "5%",
       showSorterTooltip: false,
-      sorter: (a: any, b: any) => a.id - b.id,
-      onRow: (record: QueriesResponse) => ({
-        onClick: () => handleRowClick(record.id),
-      }),
+      sorter: (a: QueriesResponse, b: QueriesResponse) => a.id - b.id,
       align: "center",
     },
     {
@@ -114,7 +90,7 @@ export const QueryList: React.FC = memo(() => {
       width: "15%",
       render: (directionId: number) =>
         getDirectionName(directionId, directions),
-      filters: getDirections().map((direction) => ({
+      filters: getDirections(directions).map((direction) => ({
         text: direction,
         value: direction,
       })),
@@ -134,7 +110,7 @@ export const QueryList: React.FC = memo(() => {
         </>
       ),
       width: "15%",
-      filters: getStatus()?.map((status) => ({
+      filters: getStatus(queriesTableData)?.map((status) => ({
         text: status,
         value: status,
       })),
@@ -151,8 +127,8 @@ export const QueryList: React.FC = memo(() => {
     dispatch(fetchQueriesByName({ value: searchValue }));
   }, [searchValue]);
 
-  const handleRowClick = (queryId: any) => {
-    Cookies.set("queryId", queryId.id);
+  const handleRowClick = (queryId: QueriesResponse) => {
+    Cookies.set("queryId", String(queryId.id));
     router.push(`/queries/adminApplication?queryId=${queryId.id}`);
   };
 
@@ -181,13 +157,9 @@ export const QueryList: React.FC = memo(() => {
     }
   };
 
-  const handleSearchNumberChange = (searchNum: any) => {
-    setSearchNumber(searchNum);
-  };
-
-  const handleRowClickIdea = (queryId: any) => {
-    Cookies.set("queryId", queryId.id);
-    const isExpert = checkExpert(queryId, queriesTableData);
+  const handleRowClickIdea = (queryId: QueriesResponse) => {
+    Cookies.set("queryId", String(queryId.id));
+    const isExpert = checkExpert(queryId);
     !isExpert
       ? router.push(`/queries/application?queryId=${queryId.id}`)
       : router.push(`/queries/expert?queryId=${queryId.id}`);
@@ -196,6 +168,7 @@ export const QueryList: React.FC = memo(() => {
   const handleCreateQuery = () => {
     router.push("/queries/create");
   };
+
   if (!isClient) {
     return;
   }
@@ -211,7 +184,6 @@ export const QueryList: React.FC = memo(() => {
             <MainText text={"Инициативы"} />
             <div className={styles.infContainer}>
               <SearchBar
-                onSearchNumberChange={handleSearchNumberChange}
                 placeholderNum={"Номер"}
                 placeholderQuery={"Поиск по идеям"}
               />
@@ -241,7 +213,6 @@ export const QueryList: React.FC = memo(() => {
             <MainText text={"Инициативы"} />
             <div className={styles.infContainer}>
               <SearchBar
-                onSearchNumberChange={handleSearchNumberChange}
                 placeholderNum={"Номер"}
                 placeholderQuery={"Поиск по идеям"}
               />

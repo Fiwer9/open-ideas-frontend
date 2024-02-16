@@ -78,12 +78,18 @@ export const getDirectionName = (
   directionId: number,
   directions: DirectionResponse[]
 ) => {
-  for (let direction of directions) {
-    if (direction.id === directionId) {
-      return direction.name;
-    }
-  }
+  const { name } = directions.find((direction) => direction.id === directionId);
+
+  return name;
 };
+
+export const getDirections = (directions: DirectionResponse[]) => [
+  ...new Set(directions.map((item) => item.name)),
+];
+
+export const getStatus = (queriesTableData: QueriesResponse[]) => [
+  ...new Set(queriesTableData.map((item) => statusTranslation[item.status])),
+];
 
 export const getDirectionTranslation = (direction: string) => {
   switch (direction) {
@@ -146,20 +152,11 @@ export const getDirectionTranslationOnEng = (direction: string) => {
   }
 };
 
-export const checkExpert = (queryId: any, data: QueriesResponse[]) => {
-  let isExpert = false;
-
-  data.forEach((query) => {
-    if (queryId.id === query.id) {
-      query.expert_users.forEach((user) => {
-        if (user === Number(sessionStorage.getItem("user_id"))) {
-          isExpert = true;
-        }
-      });
-    }
-  });
-
-  return isExpert;
+export const checkExpert = (queryId: QueriesResponse) => {
+  return (
+    queryId.expert_users[0] ===
+    Number(JSON.parse(sessionStorage.getItem("user")).user_id)
+  );
 };
 
 export const fetchData = async (
