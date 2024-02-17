@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 
 import styles from "./styles/QueryList.module.scss";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
@@ -33,11 +33,21 @@ import {
   selectStatusQueries,
 } from "../../redux/queriesSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
-import { fetchQueriesByName } from "../../redux/queriesSlice/asyncActions";
+import {
+  fetchQueriesByUser,
+  fetchQueriesByName,
+  fetchQueries,
+} from "../../redux/queriesSlice/asyncActions";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
 import { selectFilters } from "../../redux/filterSlice/selectors";
 import { Status } from "../../redux/queriesSlice/types";
 import { selectSelectedTag } from "../../redux/menuSlice/selectors";
+import { setStatusUsers } from "../../redux/usersSlice/slice";
+import { setStatusQueries } from "../../redux/queriesSlice/slice";
+import { setStatusDirections } from "../../redux/directionsSlice/slice";
+import { setStatusOrganizations } from "../../redux/organizationsSlice/slice";
+import debounce from "lodash.debounce";
+import { selectOrgStatus } from "../../redux/organizationsSlice/selectors";
 
 export const QueryList: React.FC = memo(() => {
   const router = useRouter();
@@ -45,6 +55,7 @@ export const QueryList: React.FC = memo(() => {
   const directions = useSelector(selectDirections);
   const directionsStatus = useSelector(selectStatusDirections);
   const queriesStatus = useSelector(selectStatusQueries);
+  const organizationsStatus = useSelector(selectOrgStatus);
   const dispatch = useAppDispatch();
   const { user_id } = useSelector(selectCurrentUser);
   const queriesTableData = useSelector(selectQueriesData);
@@ -58,12 +69,13 @@ export const QueryList: React.FC = memo(() => {
 
   useEffect(() => {
     if (
-      directionsStatus === Status.LOADING ||
-      queriesStatus === Status.LOADING
+      directionsStatus === Status.SUCCESS &&
+      queriesStatus === Status.SUCCESS &&
+      organizationsStatus === Status.SUCCESS
     ) {
-      setIsLoading(true);
-    } else {
       setIsLoading(false);
+    } else {
+      setIsLoading(true);
     }
   }, [directionsStatus, queriesStatus]);
 
@@ -119,12 +131,24 @@ export const QueryList: React.FC = memo(() => {
     },
   ];
 
+  const fetchData = useCallback(
+    debounce(async () => {
+      await dispatch(fetchQueries());
+      await dispatch(fetchDirections());
+    }, 2000),
+    []
+  );
+
+  const fetchDataByName = useCallback(async () => {
+    await dispatch(fetchQueriesByName({ value: searchValue }));
+  }, [searchValue]);
+
   useEffect(() => {
-    dispatch(fetchDirections());
+    fetchData();
   }, []);
 
   useEffect(() => {
-    dispatch(fetchQueriesByName({ value: searchValue }));
+    fetchDataByName();
   }, [searchValue]);
 
   const handleRowClick = (queryId: QueriesResponse) => {
@@ -136,14 +160,14 @@ export const QueryList: React.FC = memo(() => {
     if (isExpert && isArchive) {
       return queriesTableData?.filter(
         (query) =>
-          (query.expert_users.includes(Number(user_id)) &&
+          (query.expert_users.includes(user_id) &&
             query.status === "rejected") ||
           query.status === "registered"
       );
     }
     if (isExpert) {
       return queriesTableData?.filter((query) =>
-        query.expert_users.includes(Number(user_id))
+        query.expert_users.includes(user_id)
       );
     }
     if (isArchive) {
@@ -158,11 +182,14 @@ export const QueryList: React.FC = memo(() => {
   };
 
   const handleRowClickIdea = (queryId: QueriesResponse) => {
-    Cookies.set("queryId", String(queryId.id));
     const isExpert = checkExpert(queryId);
     !isExpert
       ? router.push(`/queries/application?queryId=${queryId.id}`)
       : router.push(`/queries/expert?queryId=${queryId.id}`);
+    dispatch(setStatusUsers(Status.WAITING));
+    dispatch(setStatusQueries(Status.WAITING));
+    dispatch(setStatusDirections(Status.WAITING));
+    dispatch(setStatusOrganizations(Status.WAITING));
   };
 
   const handleCreateQuery = () => {
@@ -225,7 +252,7 @@ export const QueryList: React.FC = memo(() => {
               <CheckboxBar checkboxText={"Архив"} />
             </div>
             <DataTable
-              columns={getColumns()}
+              columns={directions.length > 0 && getColumns()}
               data={getData() as QueriesResponse[]}
               onRowClick={handleRowClickIdea}
               isLoading={isLoading}

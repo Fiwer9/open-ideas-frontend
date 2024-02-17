@@ -2,8 +2,10 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ResponseInterface } from "../../models/response/ResponseInterface";
 import { UserResponse } from "../../models/response/UserResponse";
 import UsersService from "../../services/UsersService";
-import { FetchUsersArgs } from "./types";
+import { FetchUsersArgs, PatchLikesArgs } from "./types";
 import { UsersUpdateResponse } from "../../models/response/UsersUpdateResponse";
+import LikesService from "../../services/LikesService";
+import { LikesResponse } from "../../models/response/LikesResponse";
 
 export const fetchCurrentUser = createAsyncThunk<
   ResponseInterface<UserResponse>,
@@ -23,7 +25,15 @@ export const fetchCurrentUpdateUser = createAsyncThunk<
 
 export const fetchUpdateUsers = createAsyncThunk<
   ResponseInterface<UsersUpdateResponse[]>
->("users/fetchUpdateUser", async () => {
+>("users/fetchUpdateUsers", async () => {
   const { data } = await UsersService.getUsersUpdate();
+  return data;
+});
+
+export const patchLikes = createAsyncThunk<
+  ResponseInterface<LikesResponse>,
+  PatchLikesArgs
+>("users/patchLikes", async ({ userId, likedQueries }) => {
+  const { data } = await LikesService.patchLike(userId, likedQueries);
   return data;
 });

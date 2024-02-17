@@ -23,3 +23,21 @@ export const fetchQueriesBuilder = (
     state.items = [];
   });
 };
+
+export const patchQueryBuilder = (
+  builder: ActionReducerMapBuilder<WritableDraft<QueriesSliceState>>,
+  patch: AsyncThunk<any, any, any>
+) => {
+  builder.addCase(patch.fulfilled, (state, action) => {
+    if (action.payload.error.is_error) {
+      state.detail = action.payload.error.detail as DetailType;
+    }
+    state.status = Status.SUCCESS;
+  });
+  builder.addCase(patch.pending, (state) => {
+    state.status = Status.LOADING;
+  });
+  builder.addCase(patch.rejected, (state) => {
+    state.status = Status.ERROR;
+  });
+};

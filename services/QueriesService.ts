@@ -2,6 +2,7 @@ import $api from "../http";
 import { QueriesResponse } from "../models/response/QueriesResponse";
 import { AxiosResponse } from "axios";
 import { ResponseInterface } from "../models/response/ResponseInterface";
+import { PatchQueryArgs } from "../redux/queriesSlice/types";
 
 export default class QueriesService {
   static async getQueriesTableData(
@@ -40,38 +41,17 @@ export default class QueriesService {
   }
 
   static async patchQuery(
-    date: string,
-    name: string,
-    description: string,
-    initiative_direction: number,
-    status: string,
-    implementation_effect: string,
-    organization: number,
-    initiator_users: [number],
     id: number,
+    props: PatchQueryArgs,
     expert_users?: number[]
   ): Promise<AxiosResponse> {
     return expert_users
       ? $api.patch(`/queries/queries/${id}/`, {
-          date,
-          name,
-          description,
-          initiative_direction,
-          status,
-          implementation_effect,
-          organization,
-          initiator_users,
+          ...props,
           expert_users,
         })
-      : $api.patch(`/queries/queries/${id}/`, {
-          date,
-          name,
-          description,
-          initiative_direction,
-          status,
-          implementation_effect,
-          organization,
-          initiator_users,
+      : $api.patch(`/queries/queries/${props.id}/`, {
+          ...props,
         });
   }
 

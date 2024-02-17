@@ -20,6 +20,9 @@ export const organizationsSlice = createSlice({
   name: "organizations",
   initialState,
   reducers: {
+    setStatusOrganizations: (state, action: PayloadAction<Status>) => {
+      state.status = action.payload;
+    },
     setOrganizations: (
       state,
       action: PayloadAction<OrganizationsResponse[]>
@@ -89,6 +92,7 @@ export const organizationsSlice = createSlice({
   },
 });
 
-export const { setOrganizations } = organizationsSlice.actions;
+export const { setOrganizations, setStatusOrganizations } =
+  organizationsSlice.actions;
 
 export default organizationsSlice.reducer;

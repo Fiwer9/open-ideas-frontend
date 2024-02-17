@@ -5,14 +5,22 @@ import {
   FetchQueriesArgs,
   FetchQueriesByIdArgs,
   FetchQueriesByNameArgs,
+  PatchQueryArgs,
 } from "./types";
 import { ResponseInterface } from "../../models/response/ResponseInterface";
 
-export const fetchQueries = createAsyncThunk<
+export const fetchQueriesByUser = createAsyncThunk<
   ResponseInterface<QueriesResponse[]>,
   FetchQueriesArgs
->("queries/fetchQueries", async ({ user_id }) => {
+>("queries/fetchQueriesByUser", async ({ user_id }) => {
   const { data } = await QueriesService.getQueriesTableData(user_id);
+  return data;
+});
+
+export const fetchQueries = createAsyncThunk<
+  ResponseInterface<QueriesResponse[]>
+>("queries/fetchQueries", async () => {
+  const { data } = await QueriesService.getQueriesTableData();
   return data;
 });
 
@@ -29,5 +37,13 @@ export const fetchQueriesById = createAsyncThunk<
   FetchQueriesByIdArgs
 >("queries/fetchQueriesById", async ({ id }) => {
   const { data } = await QueriesService.getQueriesTableDataById(Number(id));
+  return data;
+});
+
+export const patchQuery = createAsyncThunk<
+  ResponseInterface<QueriesResponse>,
+  PatchQueryArgs
+>("queries/patchQuery", async (props) => {
+  const { data } = await QueriesService.patchQuery(props.id, props);
   return data;
 });

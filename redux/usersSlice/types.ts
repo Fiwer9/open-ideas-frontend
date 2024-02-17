@@ -13,3 +13,8 @@ export interface UsersSliceState {
 export type FetchUsersArgs = {
   user_id: number;
 };
+
+export type PatchLikesArgs = {
+  userId: number;
+  likedQueries: number[];
+};

@@ -7,3 +7,9 @@ export interface CommentsSliceState {
   status: Status;
   detail: DetailType;
 }
+
+export interface PostCommentsArgs {
+  comment: string;
+  query_id: number;
+  user_id: number;
+}

@@ -66,19 +66,25 @@ export function formatDateRu(date: string) {
   return dayjs(currentDate[0]).format("DD MMMM YYYY г.");
 }
 
-export function formatDateToServer(date: any, separator = ".") {
+export function formatDateToServer(date: Date, separator = ".") {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
   return `${year}${separator}${month}${separator}${day}`;
 }
 
+export const getAllUserLikes = (
+  users: UsersUpdateResponse[],
+  user_id: number
+) => {
+  const { likes } = users.find((user) => user.id === user_id);
+  return [...likes];
+};
 export const getDirectionName = (
   directionId: number,
   directions: DirectionResponse[]
 ) => {
   const { name } = directions.find((direction) => direction.id === directionId);
-  console.log(name);
   return name;
 };
 
@@ -151,9 +157,9 @@ export const getDirectionTranslationOnEng = (direction: string) => {
   }
 };
 
-export const checkExpert = (queryId: QueriesResponse) => {
+export const checkExpert = (query: QueriesResponse) => {
   return (
-    queryId.expert_users[0] ===
+    query.expert_users[0] ===
     Number(JSON.parse(sessionStorage.getItem("user")).user_id)
   );
 };
@@ -207,18 +213,6 @@ export function getUserName(userId: number, users: UsersUpdateResponse[]) {
   }
   return "Аноним";
 }
-
-const getAllUserLikes = (users: UserResponse[]) => {
-  const res = [];
-  for (let user of users) {
-    if (user.id === Number(sessionStorage.getItem("user_id"))) {
-      for (let query of user.likes) {
-        res.push(query.id);
-      }
-    }
-  }
-  return res;
-};
 
 export function getLikes(users: UserResponse[], queryId: string) {
   let like = 0;
