@@ -6,6 +6,10 @@
   .inputNumber {
     max-width: 134px;
 
+    @media (max-width: 768px) {
+      max-width: 91px;
+    }
+
     input {
       border-radius: 2px;
       height: 40px;
@@ -34,11 +38,23 @@
       }
   }
 
-  @media (max-width: 420px) {
-    flex-direction: column;
+  @media (max-width: 460px) {
+    flex-direction: row;
 
     .inputNumber {
-      max-width: 400px;
+      width: 100%;
+      max-width: 91px;
+    }
+
+    .inputSearch {
+      max-width: 260px;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 375px) {
+    .inputSearch {
+      max-width: 160px;
       width: 100%;
     }
   }

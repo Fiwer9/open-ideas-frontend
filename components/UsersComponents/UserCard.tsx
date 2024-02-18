@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Slider } from "../SliderComponents/SliderComponents";
 import { Tabs } from "../TabsComponent/Tabs";
 import { Header } from "../HeaderComponents/Header";
@@ -9,78 +9,59 @@ import styles from "./styles/UserCard.module.scss";
 import { Button, Col } from "antd";
 import router from "next/router";
 import Cookies from "js-cookie";
-import { UserResponse } from "../../models/response/UserResponse";
-import { fetchData, getOrganizationName } from "../../utils/utils";
+import {UserResponse} from "../../models/response/UserResponse";
+import {fetchData, getOrganizationName} from "../../utils/utils";
 import UsersService from "../../services/UsersService";
-import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
+import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
 import OrganizationsService from "../../services/OrganizationsService";
-import { QueriesResponse } from "../../models/response/QueriesResponse";
+import {QueriesResponse} from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 
 interface UserCardProps {
   userId: string;
 }
 
-export const UserCard = ({ userId }: UserCardProps) => {
-  Cookies.set("userId", userId);
+export const UserCard = ({userId} : UserCardProps) => {
+
+  Cookies.set('userId', userId);
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<UserResponse>();
   const [organizations, setOrganizations] = useState<OrganizationsResponse[]>();
   const [queries, setQueries] = useState<QueriesResponse[]>([]);
   useEffect(() => {
-    userId &&
-      fetchData(
-        setIsLoading,
-        setUser,
-        UsersService.getCurrentUpdateUser,
-        userId
-      );
-    fetchData(
-      setIsLoading,
-      setOrganizations,
-      OrganizationsService.getOrganizations
-    );
-    fetchData(
-      setIsLoading,
-      setQueries,
-      QueriesService.getQueriesTableData,
-      userId
-    );
+    userId && fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, userId);
+    fetchData(setIsLoading, setOrganizations, OrganizationsService.getOrganizations);
+    fetchData(setIsLoading, setQueries, QueriesService.getQueriesTableData, userId)
   }, [userId]);
 
   function getQueries() {
-    return queries.map((query) => `№${query.id}`);
+    return queries.map(query => `№${query.id}`)
   }
 
   const data = {
     user_name: user?.name,
     email: user?.email,
-    organization:
-      organizations && user?.department
-        ? getOrganizationName(user?.department.organization, organizations)
-        : "Не назначено",
-    department: user?.department ? user?.department.name : "Не назначено",
-    expert_queries: queries
-      ? getQueries().toString().replaceAll(",", ", ")
-      : "",
-  };
+    organization: organizations && user?.department ? getOrganizationName(user?.department.organization, organizations) : 'Не назначено',
+    department: user?.department ? user?.department.name : 'Не назначено',
+    expert_queries: queries ? getQueries().toString().replaceAll(',', ', ') : ''
+  }
 
   useEffect(() => {
-    user && Cookies.set("userName", user.name);
+    user && Cookies.set('userName', user.name)
   }, [user]);
   return (
     <>
       <div className={styles.container}>
-        <Slider />
+        <div className={styles.slider}>
+          <Slider/>
+        </div>
         <div className={styles.content}>
-          <Header
-            userName={Cookies.get("user_name")}
-            organization={Cookies.get("organization")}
-            department={Cookies.get("department")}
-          />
+          <div className={styles.headerContainer}>
+            <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+          </div>
           <Tabs />
           <div className={styles.userContainer}>
-            <Image src={avatar} alt={"Аватар"} width={190} height={190} />
+            <Image src={avatar} alt={'Аватар'} width={190} height={190} className={styles.avatar}/>
 
             <div className={styles.infUser}>
               <p className={styles.nameUser}>{data.user_name}</p>
@@ -97,25 +78,21 @@ export const UserCard = ({ userId }: UserCardProps) => {
                     <p className={styles.rowInf}>{data.expert_queries}</p>
                   </div>
 
-                  <div className={`${styles.row} ${styles.rowOrg}`}>
-                    <p className={styles.rowText}>Организация:</p>
-                    <p className={styles.rowInf}>{data.organization}</p>
-                  </div>
+                  <div className={styles.rowOrgAdapt}>
+                    <div className={`${styles.row} ${styles.rowOrg}`}>
+                      <p className={styles.rowText}>Организация:</p>
+                      <p className={styles.rowInf}>{data.organization}</p>
+                    </div>
 
-                  <div className={styles.row}>
-                    <p className={styles.rowText}>Отдел:</p>
-                    <p className={styles.rowInf}>{data.department}</p>
+                    <div className={styles.row}>
+                      <p className={styles.rowText}>Отдел:</p>
+                      <p className={styles.rowInf}>{data.department}</p>
+                    </div>
                   </div>
                 </div>
               </Col>
 
-              <Button
-                className={styles.btnFooter}
-                type="primary"
-                onClick={() =>
-                  router.push(`/users/editingUser?userId=${userId}`)
-                }
-              >
+              <Button className={styles.btnFooter} type="primary" onClick={() => router.push(`/users/editingUser?userId=${userId}`)}>
                 <span>Редактировать профиль</span>
               </Button>
             </div>

@@ -8,10 +8,11 @@ import { setSearchValue } from "../../../redux/filterSlice/slice";
 interface SearchBarProps {
   placeholderNum: string;
   placeholderQuery: string;
+	stylesSearch?: any,
 }
 
 const SearchBar: React.FC<SearchBarProps> = memo(
-  ({ placeholderNum, placeholderQuery }) => {
+  ({ placeholderNum, placeholderQuery, stylesSearch }) => {
     const dispatch = useAppDispatch();
 
     const updateSearchValue = useCallback(
@@ -26,7 +27,7 @@ const SearchBar: React.FC<SearchBarProps> = memo(
     };
 
     return (
-      <div className={styles.inputContainer}>
+			<div className={`${styles.inputContainer} ${stylesSearch}`}>
         <div className={styles.inputNumber}>
           <Input placeholder={placeholderNum} onChange={onSearchTermChange} />
         </div>

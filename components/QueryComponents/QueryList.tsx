@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from 'react';
 
 import styles from "./styles/QueryList.module.scss";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
@@ -15,11 +15,11 @@ import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
 import { MainText } from "../MainTextComponent";
 import { DataTable } from "../TableComponent/Table";
-import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import SearchBar from "../FilterComponents/blocks/SearchBar"
 import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Logo } from "../PicturesComponents/Logo";
 import { useSelector } from "react-redux";
@@ -204,18 +204,23 @@ export const QueryList: React.FC = memo(() => {
     <>
       {selectedTag === "Панель администратора" ? (
         <div className={styles.container}>
-          <Slider />
-          <div className={styles.content}>
+          <div className={styles.slider}>
+                <Slider />
+          </div>
+            <div className={styles.content}>
+                <div className={styles.headerContainer}>
             <Header />
-            <Tabs />
+            </div>
+                <Tabs />
             <MainText text={"Инициативы"} />
             <div className={styles.infContainer}>
               <SearchBar
                 placeholderNum={"Номер"}
                 placeholderQuery={"Поиск по идеям"}
               />
-              <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
-              <CheckboxBar checkboxText={"Архив"} />
+              <div className={styles.filterContainer}>
+                        <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
+              <CheckboxBar checkboxText={"Архив"} /></div>
             </div>
             <DataTable
               data={getData() as QueriesResponse[]}
@@ -228,8 +233,10 @@ export const QueryList: React.FC = memo(() => {
       ) : (
         <div className={styles.containerIdeas}>
           <div className={styles.contentIdeas}>
-            <Header />
-            <div className={styles.header}>
+            <div className={styles.headerContainer}>
+                    <Header />
+            </div>
+                <div className={styles.header}>
               <div className={styles.logoHeader}>
                 <Logo width={190} height={53} />
               </div>
@@ -242,14 +249,20 @@ export const QueryList: React.FC = memo(() => {
               <SearchBar
                 placeholderNum={"Номер"}
                 placeholderQuery={"Поиск по идеям"}
-              />
-              <FilterBar
+
+              stylesSearch={styles.searchBar}
+                    />
+                    <div className={styles.btnHead}>
+                        <div className={styles.btnContainerFilt}><FilterBar
                 icon={<PlusCircleOutlined />}
                 filterText={"Создать идею"}
                 onClick={handleCreateQuery}
               />
               <CheckboxBar checkboxText={"Я эксперт"} />
-              <CheckboxBar checkboxText={"Архив"} />
+              </div>
+                        <div className={styles.btnContainer}>
+                            <CheckboxBar checkboxText={"Архив"} /></div>
+                    </div>
             </div>
             <DataTable
               columns={directions.length > 0 && getColumns()}

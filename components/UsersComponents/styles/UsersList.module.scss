@@ -3,11 +3,40 @@
 .container {
   @include container;
 
+  .slider {
+    @media (max-width: 420px) {
+      display: none;
+    }
+  }
+
   .content {
     @include content;
 
+    @media (max-width: 768px) {
+      padding-left: 110px;
+    }
+
+    @media (max-width: 420px) {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .headerContainer {
+      @media (max-width: 640px) {
+        display: none;
+      }
+    }
+
     .infContainer {
       @include infContainerTable;
+
+      .filter {
+        margin-left: 300px;
+
+        @media (max-width: 1300px) {
+          margin-left: 19px;
+        }
+      }
     }
 
     .table {

@@ -1,24 +1,22 @@
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import styles from "./styles/EditingApplication.module.scss";
 import { Slider } from "../SliderComponents/SliderComponents";
-import { Button, Form, Input, Select, Upload, ConfigProvider } from "antd";
+import {Button, Form, Input, Select, Upload, ConfigProvider} from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
 import Cookies from "js-cookie";
 import {
-  fetchData,
-  formatDateToServer,
-  getAuthor,
-  getDirectionName,
-  getOrganizationName,
+  fetchData, formatDateToServer,
+  getAuthor, getDirectionName,
+  getOrganizationName
 } from "../../utils/utils";
 import OrganizationsService from "../../services/OrganizationsService";
 import UsersService from "../../services/UsersService";
-import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
-import { UserResponse } from "../../models/response/UserResponse";
-import { Context } from "../../pages/_app";
-import { IDepartment } from "../../models/IDepartment";
+import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
+import {UserResponse} from "../../models/response/UserResponse";
+import {Context} from "../../pages/_app";
+import {IDepartment} from "../../models/IDepartment";
 import { UploadOutlined } from "@ant-design/icons";
 import FetchQueries from "../../hooks/fetches/FetchQueries/FetchQueries";
 import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
@@ -26,323 +24,243 @@ import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections
 interface EditingApplicationProps {
   queryId: string;
 }
-export const EditingApplication = ({ queryId }: EditingApplicationProps) => {
+export const EditingApplication = ({queryId}: EditingApplicationProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [organization, setOrganization] = useState<OrganizationsResponse[]>([]);
-  const [users, setUsers] = useState<UserResponse[]>([]);
-  const [departments, setDepartments] = useState<IDepartment[]>([]);
-  const [user, setUser] = useState<UserResponse>();
-  const [applicationData, setApplicationData] = FetchQueries.useGetQueriesById(
-    queryId ? queryId : Cookies.get("queryId")
-  );
-  const [applicationName, setApplicationName] = useState("");
-  const [applicationDescription, setApplicationDescription] = useState("");
-  const [applicationEffect, setApplicationEffect] = useState("");
-  const [applicationDirection, setApplicationDirection] = useState(0);
+  const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
+  const [users, setUsers] = useState<UserResponse[]>([])
+  const [departments, setDepartments] = useState<IDepartment[]>([])
+  const [user, setUser] = useState<UserResponse>()
+  const [applicationData, setApplicationData] = FetchQueries.useGetQueriesById(queryId? queryId : Cookies.get('queryId'))
+  const [applicationName, setApplicationName] = useState('')
+  const [applicationDescription, setApplicationDescription] = useState('')
+  const [applicationEffect, setApplicationEffect] = useState('')
+  const [applicationDirection, setApplicationDirection] = useState(0)
   const [directions, setDirections] = FetchDirections.useGetDirections();
-  const { store } = useContext(Context);
-  const [expertSelect, setExpertSelect] = useState<number[]>([]);
+  const { store } = useContext(Context)
+  const [expertSelect, setExpertSelect] = useState<number[]>([])
 
   useEffect(() => {
+
     function begin() {
-      fetchData(
-        setIsLoading,
-        setOrganization,
-        OrganizationsService.getOrganizations
-      );
-      fetchData(setIsLoading, setUsers, UsersService.getUsersUpdate);
-      fetchData(
-        setIsLoading,
-        setDepartments,
-        OrganizationsService.getDepartments
-      );
+      fetchData(setIsLoading, setOrganization, OrganizationsService.getOrganizations)
+      fetchData(setIsLoading, setUsers, UsersService.getUsersUpdate)
+      fetchData(setIsLoading, setDepartments, OrganizationsService.getDepartments)
     }
 
-    begin();
-  }, [queryId]);
+    begin()
+
+  }, [queryId])
 
   useEffect(() => {
-    getAuthor(applicationData.initiator_users, users, setUser);
-    setApplicationName(applicationData.name);
-    setApplicationDescription(applicationData.description);
-    setApplicationEffect(applicationData.implementation_effect);
-    setApplicationDirection(applicationData.initiative_direction);
-    setExpertSelect(applicationData.expert_users);
+    getAuthor(applicationData.initiator_users, users, setUser)
+    setApplicationName(applicationData.name)
+    setApplicationDescription(applicationData.description)
+    setApplicationEffect(applicationData.implementation_effect)
+    setApplicationDirection(applicationData.initiative_direction)
+    setExpertSelect(applicationData.expert_users)
   }, [applicationData, user]);
 
-  function handleChangeApplicationVar(
-    event: ChangeEvent<any>,
-    setData: React.SetStateAction<any>
-  ): void {
-    setData(event.target.value);
-  }
+  function handleChangeApplicationVar(event: ChangeEvent<any>, setData: React.SetStateAction<any>): void {
+      setData(event.target.value)
+    }
 
-  function handleChangeApplicationSelect(
-    event: any[],
-    setData: React.SetStateAction<any>
-  ): void {
-    setData(event);
+  function handleChangeApplicationSelect(event: any[], setData: React.SetStateAction<any>): void {
+    setData(event)
   }
 
   function handleSaveChanges() {
     const currentDate = new Date();
-    const date = formatDateToServer(currentDate, "-");
-    store.patchQuery(
-      date,
-      applicationName,
-      applicationDescription,
-      applicationDirection,
-      applicationData.status,
-      applicationEffect,
-      applicationData.organization,
-      applicationData.initiator_users,
-      Number(queryId),
-      expertSelect
-    );
-    window.history.back();
+    const date = formatDateToServer(currentDate, '-')
+    store.patchQuery(date, applicationName, applicationDescription, applicationDirection, applicationData.status, applicationEffect,
+      applicationData.organization, applicationData.initiator_users, Number(queryId), expertSelect)
+    window.history.back()
   }
+
 
   return (
     <>
       <div className={styles.container}>
-        <Slider />
+        <div className={styles.slider}>
+          <Slider />
+        </div>
         <div className={styles.content}>
-          <Header
-            userName={Cookies.get("user_name")}
-            organization={Cookies.get("organization")}
-            department={Cookies.get("department")}
-          />
+          <div className={styles.headerContainer}>
+            <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+          </div>
           <Tabs />
-          {applicationData.name && user && (
-            <Form
-              layout="vertical"
-              className={styles.contentContainer}
-              initialValues={{
-                initiative: applicationName,
-                description: applicationDescription,
-                modification: applicationEffect,
-                direction: getDirectionName(
-                  applicationData.initiative_direction,
-                  directions
-                ),
-                organization: getOrganizationName(
-                  applicationData.organization,
-                  organization
-                ),
-                department: user?.department.name,
-                expert: applicationData.expert_users
-                  ? applicationData.expert_users
-                  : "Не назначено",
-              }}
-            >
-              <p className={styles.textHeader}>Редактирование инициативы</p>
-              <div className={styles.inpContainer}>
-                <div className={styles.formContainer}>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"Инициатива (Идея)"}
-                    name={"initiative"}
-                    rules={[
-                      {
+            {applicationData.name && user  && (
+              <Form
+                layout="vertical"
+                className={styles.contentContainer}
+                initialValues={{
+                  initiative: applicationName,
+                  description: applicationDescription,
+                  modification: applicationEffect,
+                  direction: getDirectionName(applicationData.initiative_direction, directions),
+                  organization: getOrganizationName(applicationData.organization, organization),
+                  department: user?.department.name,
+                  expert: applicationData.expert_users ? applicationData.expert_users : 'Не назначено',
+                }}
+              >
+                <p className={styles.textHeader}>Редактирование инициативы</p>
+                <div className={styles.inpContainer}>
+                  <div className={styles.formContainer}>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={"Инициатива (Идея)"}
+                      name={"initiative"}
+                      rules={[{
                         required: true,
-                        message: "Введите название инициативы",
-                      },
-                    ]}
-                  >
-                    <Input
-                      className={`${styles.formField} ${styles.inp}`}
-                      onChange={(evt) =>
-                        handleChangeApplicationVar(evt, setApplicationName)
-                      }
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"Описание инициативы"}
-                    name={"description"}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Введите описание инициативы",
-                      },
-                    ]}
-                  >
-                    <TextArea
-                      className={styles.formField}
-                      rows={5}
-                      onChange={(e) =>
-                        handleChangeApplicationVar(e, setApplicationDescription)
-                      }
-                      required
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"Эффект от доработки"}
-                    name={"modification"}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Введите эффект от доработки",
-                      },
-                    ]}
-                  >
-                    <TextArea
-                      className={styles.formField}
-                      rows={5}
-                      onChange={(e) =>
-                        handleChangeApplicationVar(e, setApplicationEffect)
-                      }
-                      required
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"Направление"}
-                    name={"direction"}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Выберите направление инициативы",
-                      },
-                    ]}
-                  >
-                    <Select
-                      className={`${styles.formField} ${styles.inp}`}
-                      options={directions.map((direct) => ({
-                        value: direct.id,
-                        label: direct.name,
-                      }))}
-                      onChange={(e) =>
-                        handleChangeApplicationSelect(
-                          e,
-                          setApplicationDirection
-                        )
-                      }
-                      aria-required={true}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"Организация"}
-                    name={"organization"}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Выберите организацию",
-                      },
-                    ]}
-                  >
-                    <Select
-                      className={`${styles.formField} ${styles.inp}`}
-                      options={organization.map((org) => ({
-                        value: org.id,
-                        label: org.name,
-                      }))}
-                      aria-required={true}
-                      disabled
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"Отдел"}
-                    name={"department"}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Выберите отдел",
-                      },
-                    ]}
-                  >
-                    <Select
-                      className={`${styles.formField} ${styles.inp}`}
-                      options={departments
-                        .filter(
-                          (dep) =>
-                            dep.organization === applicationData.organization
-                        )
-                        .map((dep) => ({
-                          value: dep.id,
-                          label: dep.name,
-                        }))}
-                      aria-required={true}
-                      disabled
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"Назначенный эксперт"}
-                    name={"expert"}
-                    rules={[
-                      {
-                        required: false,
-                        message: "Выберите эксперта",
-                      },
-                    ]}
-                  >
-                    <ConfigProvider renderEmpty={() => <p>Нет экспертов</p>}>
-                      <Select
-                        showSearch
-                        filterOption={(input, option) =>
-                          (option?.label ?? "").includes(input)
-                        }
-                        filterSort={(optionA, optionB) =>
-                          (optionA?.label ?? "")
-                            .toLowerCase()
-                            .localeCompare((optionB?.label ?? "").toLowerCase())
-                        }
-                        className={`${styles.formField} ${styles.inp}`}
-                        options={[
-                          { value: null, label: "-" },
-                          ...users
-                            .filter(
-                              (user) => user.is_active && user.is_verified
-                            )
-                            .map((user) => ({
-                              value: user.id,
-                              label: user.name,
-                            })),
-                        ]}
-                        aria-required={true}
-                        onChange={(e) =>
-                          e
-                            ? handleChangeApplicationSelect(
-                                [e],
-                                setExpertSelect
-                              )
-                            : handleChangeApplicationSelect([], setExpertSelect)
-                        }
-                      />
-                    </ConfigProvider>
-                  </Form.Item>
-                </div>
-                <div className={styles.files}>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"Дополнительные файлы"}
-                    name={"file"}
-                  >
-                    <Upload
-                      maxCount={5}
-                      accept=".webm, .pdf, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
-                      multiple
-                      className="upload"
+                        message: 'Введите название инициативы'
+                      }]}
                     >
-                      <Button icon={<UploadOutlined />}>Загрузить</Button>
-                    </Upload>
-                  </Form.Item>
+                      <Input
+                        className={`${styles.formField} ${styles.inp}`}
+                        onChange={(evt) => handleChangeApplicationVar(evt, setApplicationName)}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Описание инициативы'}
+                      name={'description'}
+                      rules={[{
+                        required: true,
+                        message: 'Введите описание инициативы'
+                      }]}
+                    >
+                      <TextArea
+                        className={styles.formField}
+                        rows={5}
+                        onChange={(e) => handleChangeApplicationVar(e, setApplicationDescription)}
+                        required
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Эффект от доработки'}
+                      name={'modification'}
+                      rules={[{
+                        required: true,
+                        message: 'Введите эффект от доработки'
+                      }]}
+                    >
+                      <TextArea
+                        className={styles.formField}
+                        rows={5}
+                        onChange={(e) => handleChangeApplicationVar(e, setApplicationEffect)}
+                        required
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Направление'}
+                      name={'direction'}
+                      rules={[{
+                        required: true,
+                        message: 'Выберите направление инициативы'
+                      }]}
+                    >
+                      <Select
+                        className={`${styles.formField} ${styles.inp}`}
+                        options={directions.map((direct) => ({
+                          value: direct.id,
+                          label: direct.name
+                        }))}
+                        onChange={(e) => handleChangeApplicationSelect(e, setApplicationDirection)}
+                        aria-required={true}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Организация'}
+                      name={'organization'}
+                      rules={[{
+                        required: true,
+                        message: 'Выберите организацию'
+                      }]}
+                    >
+                      <Select
+                        className={`${styles.formField} ${styles.inp}`}
+                        options={organization.map(org => ({
+                          value: org.id,
+                          label: org.name
+                        }))}
+                        aria-required={true}
+                        disabled
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Отдел'}
+                      name={'department'}
+                      rules={[{
+                        required: true,
+                        message: 'Выберите отдел'
+                      }]}
+                    >
+                      <Select
+                        className={`${styles.formField} ${styles.inp}`}
+                        options={departments.filter(dep => dep.organization === applicationData.organization).map(dep => ({
+                          value: dep.id,
+                          label: dep.name
+                        }))}
+                        aria-required={true}
+                        disabled
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Назначенный эксперт'}
+                      name={'expert'}
+                      rules={[{
+                        required: false,
+                        message: 'Выберите эксперта'
+                      }]}
+                    >
+                      <ConfigProvider renderEmpty={() => <p>Нет экспертов</p>}>
+                        <Select
+                          showSearch
+                          filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                          filterSort={(optionA, optionB) =>
+                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                          }
+                          className={`${styles.formField} ${styles.inp}`}
+                          options={[
+                            { value: null, label: "-" },
+                            ...users.filter(user => user.is_active && user.is_verified).map(user => ({
+                              value: user.id,
+                              label: user.name
+                            }))
+                          ]}
+                          aria-required={true}
+                          onChange={(e) => e ? handleChangeApplicationSelect([e], setExpertSelect) : handleChangeApplicationSelect([], setExpertSelect)}
+                        />
+                      </ConfigProvider>
+                    </Form.Item>
+                  </div>
+                  <div className={styles.files}>
+                    <Form.Item
+                      className={styles.formItem}
+                      label={'Дополнительные файлы'}
+                      name={'file'}
+                    >
+                      <Upload
+                        maxCount={5}
+                        accept=".webm, .pdf, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
+                        multiple
+                        className='upload'
+                      >
+                        <Button icon={<UploadOutlined />}>Загрузить</Button>
+                      </Upload>
+                    </Form.Item>
+                  </div>
                 </div>
-              </div>
-            </Form>
-          )}
+          </Form>
+            )}
 
           <div className={styles.btnContainer}>
-            <Button
-              className={`${styles.btnDefault} ${styles.btnFooter}`}
-              onClick={() => handleSaveChanges()}
-            >
-              <span>Сохранить изменения</span>
-            </Button>
+            <Button className={`${styles.btnDefault} ${styles.btnFooter}`} onClick={() => handleSaveChanges()}>
+              <span>Сохранить изменения</span></Button>
           </div>
         </div>
       </div>

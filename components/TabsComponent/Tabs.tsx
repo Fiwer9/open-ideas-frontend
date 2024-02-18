@@ -63,6 +63,7 @@ export const Tabs: React.FC = memo(() => {
                 pointerEvents: isAdministratorTagDisabled ? "none" : "auto",
                 opacity: isAdministratorTagDisabled ? 0.5 : 1,
               }}
+              className={styles.tags}
             >
               <p
                 style={{

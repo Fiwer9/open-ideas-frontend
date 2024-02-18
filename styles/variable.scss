@@ -43,16 +43,16 @@ $color-pule-purple: #F0F5FF;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin-top: 17px;
-  gap: 7px;
+  margin-top: 30px;
+  gap: 20px;
 
   @media (max-width: 720px) {
-    flex-direction: column;
     align-items: flex-end;
   }
-  @media (max-width: 420px) {
+  @media (max-width: 540px) {
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    gap: 7px;
   }
 }
 
@@ -62,11 +62,6 @@ $color-pule-purple: #F0F5FF;
     weight: 600;
     size: 32px;
   };
-}
-
-@mixin inputForm {
-  height: 40px;
-  border-radius: 2px;
 }
 
 @mixin inputLabelForm {
@@ -255,19 +250,21 @@ $color-pule-purple: #F0F5FF;
 
 .checkbox {
   padding: {
-    top: 8px;
-    bottom: 8px;
+    top: 7px;
+    bottom: 7px;
     left: 10px;
   }
   font: {
     family: RobotoRegular, sans-serif;
     weight: 400;
-    size: 14px;
+    size: 15px;
   };
 
   .ant-checkbox-inner {
     border-radius: 2px;
     border-color: rgba($color-black, 0.6);
+    width: 18px;
+    height: 18px;
   }
 
   span {
@@ -289,12 +286,17 @@ $color-pule-purple: #F0F5FF;
 
 .uploadFile {
   display: flex;
-  flex-direction: column-reverse;
   margin-top: 20px;
 
-  .ant-upload-list-item {
-    padding: 20px 10px;
-    border: 1px solid $color-gray;
+  .ant-upload-list {
+    width: 100%;
+    margin-top: 8px;
+
+    .ant-upload-list-item {
+      margin-right: 15px;
+      padding: 20px 10px;
+      border: 1px solid $color-gray;
+    }
   }
 }
 
@@ -305,19 +307,6 @@ $color-pule-purple: #F0F5FF;
   .ant-upload-list-item {
     padding: 20px 10px;
     border: 1px solid $color-gray;
-  }
-}
-
-.uploadFile {
-  display: flex;
-
-  .ant-upload-list {
-    display: flex;
-    margin-top: 8px;
-  }
-
-  .ant-upload-list-item {
-    margin-right: 15px;
   }
 }
 
@@ -341,6 +330,12 @@ $color-pule-purple: #F0F5FF;
 .ant-select-item-empty {
   text-align: center;
   color: rgba($color-black, 0.25);
+}
+
+.ant-table-pagination-right {
+  @media (max-width: 500px) {
+    float: left;
+  }
 }
 
 .statusCheck {

@@ -12,28 +12,17 @@ import FilterBar from "../FilterComponents/blocks/FilterBar";
 import { PlusCircleOutlined } from "@ant-design/icons";
 
 function ContentModal() {
-  return (
-    <div className={styles.contentMod}>
-      <Form.Item>
-        <Input
-          placeholder={"Напишите название организации"}
-          className={styles.inp}
-        />
-      </Form.Item>
-      <Form.Item>
-        <Input
-          placeholder={"Напишите название отдела"}
-          className={styles.inp}
-        />
-      </Form.Item>
-      <Form.Item>
-        <FilterBar
-          icon={<PlusCircleOutlined />}
-          filterText={"Добавить отдел"}
-        />
-      </Form.Item>
-    </div>
-  );
+  return <div className={styles.contentMod}>
+    <Form.Item>
+      <Input placeholder={"Напишите название организации"} className={styles.inp} />
+    </Form.Item>
+    <Form.Item>
+      <Input placeholder={"Напишите название отдела"} className={styles.inp}/>
+    </Form.Item>
+    <Form.Item>
+      <FilterBar icon={<PlusCircleOutlined />} filterText={'Добавить отдел'}/>
+    </Form.Item>
+  </div>;
 }
 
 export const OrganizationCard = () => {
@@ -49,63 +38,50 @@ export const OrganizationCard = () => {
   return (
     <>
       <div className={styles.container}>
-        <Slider />
+        <div className={styles.slider}>
+          <Slider/>
+        </div>
         <div className={styles.content}>
-          <Header
-            userName={"Иванов Иван Иванович"}
-            organization={"Aratrum"}
-            department={"Отдел"}
-          />
+          <div className={styles.headerContainer}>
+            <Header user_name={'Иванов Иван Иванович'} organization={'Aratrum'} department={'Отдел'}/>
+          </div>
           <Tabs />
-          <MainText text={"Aratreum"} />
+          <MainText text={'Aratreum'}/>
 
           <Col className={styles.column}>
             <div className={styles.row}>
               <p className={styles.rowText}>Отделы</p>
-            </div>
-            <div className={styles.row}>
               <p className={styles.rowInf}>Отдел 1, Отдел 2</p>
             </div>
           </Col>
 
           <div className={styles.btnContainer}>
-            <button
-              className={`${styles.btnBlue} ${styles.btnFooter}`}
-              onClick={() => {
-                setModalActive(true);
-              }}
-            >
-              Редактировать данные организации
-            </button>
-            <button
-              className={`${styles.btnRed} ${styles.btnFooter}`}
-              onClick={() => {
-                setSecondModalActive(true);
-              }}
-            >
-              Удалить организацию
-            </button>
+            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => { setModalActive(true) }}>Редактировать данные организации</button>
+            <button className={`${styles.btnRed} ${styles.btnFooter}`} onClick={() => { setSecondModalActive(true) }}>Удалить организацию</button>
+          </div>
+
+          <div className={styles.btnContainer430}>
+            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => { setModalActive(true) }}>Редактировать</button>
+            <button className={`${styles.btnRed} ${styles.btnFooter}`} onClick={() => { setSecondModalActive(true) }}>Удалить</button>
           </div>
         </div>
       </div>
 
       <Modal
-        active={modalActive}
-        setActive={setModalActive}
+        active={modalActive} setActive={setModalActive}
         text1={"Редактирование организации"}
         classNameBtn1={styles.btnWhite}
         textBtn1={"Назад"}
         classNameBtn2={styles.btnBlue}
         textBtn2={"Редактировать"}
         onClick1={closeModal}
-        onClick2={() => router.push("/organizations/orgCard")}
+        onClick2={() => router.push('/organizations/orgCard')}
         stylesContentModal={styles.contentModal}
         layout={layout}
       />
 
       <Modal
-        active={secondModalActive}
-        setActive={setSecondModalActive}
+        active={secondModalActive} setActive={setSecondModalActive}
         text1={"Удалить организацию?"}
         text2={"Восстановить будет невозможно"}
         classNameBtn1={styles.btnWhite}
@@ -113,7 +89,7 @@ export const OrganizationCard = () => {
         classNameBtn2={styles.btnRed}
         textBtn2={"Удалить организацию"}
         onClick1={closeModal}
-        onClick2={() => router.push("/organizations")}
+        onClick2={() => router.push('/organizations')}
         stylesContentModal={styles.contentModalDel}
       />
     </>
