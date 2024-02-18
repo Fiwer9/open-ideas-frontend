@@ -1,5 +1,5 @@
 export interface QueriesResponse {
-  id: number;
+  id?: number;
   date: string;
   name: string;
   description: string;
@@ -16,5 +16,5 @@ export interface QueriesResponse {
   implementation_effect: string;
   organization: number;
   initiator_users: [number];
-  expert_users: [number];
+  expert_users?: [number];
 }

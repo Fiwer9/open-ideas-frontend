@@ -22,8 +22,14 @@ export function getOrganizationName(
   id: number,
   organizations: OrganizationsResponse[]
 ) {
-  const { name } = organizations.find((organization) => organization.id === id);
-  return name;
+  try {
+    const { name } = organizations.find(
+      (organization) => organization.id === id
+    );
+    return name;
+  } catch (e) {
+    return "Неизвестно";
+  }
 }
 
 export function getOrganizationId(text: number, organizations: any) {

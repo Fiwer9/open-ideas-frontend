@@ -7,14 +7,17 @@ interface ButtonsProps {
   onClick: () => void;
   type: "button" | "submit" | "reset";
   props?: string;
+  className?: string;
 }
 
 export const Buttons: React.FC<ButtonsProps> = memo(
-  ({ text, onClick, type, props }) => {
+  ({ text, onClick, type, props, className }) => {
     return (
       <button
         className={
-          props === "disabled" ? `${styles.disabledBtn}` : `${styles.btn}`
+          props === "disabled"
+            ? `${styles.disabledBtn}`
+            : `${styles.btn}` + ` ${className ? className : ""} `
         }
         onClick={onClick}
         type={type}

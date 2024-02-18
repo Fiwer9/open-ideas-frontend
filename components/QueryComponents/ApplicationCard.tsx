@@ -64,6 +64,7 @@ import { UsersUpdateResponse } from "../../models/response/UsersUpdateResponse";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
 import { TextAreas } from "../TextAreaComponent/TextArea";
 import { setCurrentComment } from "../../redux/commentsSlice/slice";
+import debounce from "lodash.debounce";
 
 type ApplicationCardProps = {
   user_status: string;
@@ -149,13 +150,16 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
       );
     };
 
-    const fetchData = async () => {
-      await dispatch(fetchQueriesById({ id: queryId }));
-      await dispatch(fetchUpdateUsers());
-      await dispatch(fetchDirections());
-      await dispatch(fetchOrganizations());
-      await dispatch(fetchComments());
-    };
+    const fetchData = useCallback(
+      debounce(async () => {
+        await dispatch(fetchQueriesById({ id: queryId }));
+        await dispatch(fetchUpdateUsers());
+        await dispatch(fetchDirections());
+        await dispatch(fetchOrganizations());
+        await dispatch(fetchComments());
+      }, 2000),
+      [queryId]
+    );
 
     useEffect(() => {
       queryId && fetchData();

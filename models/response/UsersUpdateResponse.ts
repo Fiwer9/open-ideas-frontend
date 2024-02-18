@@ -5,6 +5,6 @@ export interface UsersUpdateResponse {
   email: string;
   id: number;
   name: string;
-  department: IDepartment;
+  department: number;
   likes: number[];
 }
