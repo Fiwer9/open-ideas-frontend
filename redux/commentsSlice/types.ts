@@ -6,6 +6,7 @@ export interface CommentsSliceState {
   items: CommentResponse[];
   status: Status;
   detail: DetailType;
+  currentComment: string;
 }
 
 export interface PostCommentsArgs {

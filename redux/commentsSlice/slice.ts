@@ -8,6 +8,7 @@ import { fetchComments, postComment } from "./asyncActions";
 const initialState: CommentsSliceState = {
   items: [],
   status: Status.WAITING,
+  currentComment: "",
   detail: {},
 };
 
@@ -15,6 +16,9 @@ export const commentsSlice = createSlice({
   name: "comments",
   initialState,
   reducers: {
+    setCurrentComment: (state, action: PayloadAction<string>) => {
+      state.currentComment = action.payload;
+    },
     setComments: (state, action: PayloadAction<CommentResponse[]>) => {
       state.items = action.payload;
     },
@@ -55,6 +59,6 @@ export const commentsSlice = createSlice({
   },
 });
 
-export const { setComments } = commentsSlice.actions;
+export const { setComments, setCurrentComment } = commentsSlice.actions;
 
 export default commentsSlice.reducer;

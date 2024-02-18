@@ -30,10 +30,7 @@ import {
 } from "../../redux/directionsSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
-import {
-  selectOrganization,
-  selectOrganizations,
-} from "../../redux/organizationsSlice/selectors";
+import { selectOrganizations } from "../../redux/organizationsSlice/selectors";
 import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
 import { selectCurrentUser } from "../../redux/authSlice/selectors";
 import {
@@ -50,6 +47,7 @@ import {
 } from "../../redux/usersSlice/selectors";
 import {
   selectComments,
+  selectCurrentComment,
   selectStatusComments,
 } from "../../redux/commentsSlice/selectors";
 import {
@@ -61,11 +59,11 @@ import {
   postComment,
 } from "../../redux/commentsSlice/asyncActions";
 import { Status } from "../../redux/queriesSlice/types";
-import debounce from "lodash.debounce";
-import { DirectionResponse } from "../../models/response/DirectionResponse";
 import { CommentResponse } from "../../models/response/CommentResponse";
 import { UsersUpdateResponse } from "../../models/response/UsersUpdateResponse";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
+import { TextAreas } from "../TextAreaComponent/TextArea";
+import { setCurrentComment } from "../../redux/commentsSlice/slice";
 
 type ApplicationCardProps = {
   user_status: string;
@@ -114,7 +112,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
     const router = useRouter();
     const { queryId } = router.query as { queryId: string };
     const [isLoading, setIsLoading] = useState(false);
-    const [commentValue, setCommentValue] = useState("");
+    const commentValue = useSelector(selectCurrentComment);
     const users = useSelector(selectUpdateUsers);
     const [status, setStatus] = useState("");
     const [isLiked, setIsLiked] = useState(false);
@@ -362,13 +360,8 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                 Оставьте свой комментарий по инициативе здесь:
               </p>
               <div className={styles.textArea}>
-                <textarea
-                  className={styles.textAreaCustom}
+                <TextAreas
                   placeholder={"Напишите комментарий по этой инициативе"}
-                  onChange={(evt: any) => {
-                    setCommentValue(evt.target.value);
-                  }}
-                  value={commentValue}
                 />
               </div>
             </Form.Item>
@@ -399,6 +392,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                       onClick={() => {
                         router.push("/queries");
                       }}
+                      type="reset"
                     />
                   </div>
                   <div className={`${styles.btnBlue} ${styles.btnForm}`}>
@@ -409,6 +403,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                         router.push("/queries");
                       }}
                       text={"Отправить"}
+                      type={"submit"}
                     />
                   </div>
                 </div>
@@ -419,6 +414,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                   <Buttons
                     onClick={() => router.push("/queries")}
                     text={"Назад"}
+                    type={"reset"}
                   />
                 </div>
                 <div className={`${styles.btnBlue} ${styles.btnForm}`}>
@@ -426,8 +422,9 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                     text={"Отправить"}
                     type="submit"
                     onClick={() => {
-                      router.push("/queries");
                       commentValue && sendComment(commentValue);
+                      dispatch(setCurrentComment(""));
+                      router.push("/queries");
                     }}
                   />
                 </div>
