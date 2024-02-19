@@ -6,6 +6,7 @@ import {
   FetchQueriesByIdArgs,
   FetchQueriesByNameArgs,
   PatchQueryArgs,
+  PostQueryArgs,
 } from "./types";
 import { ResponseInterface } from "../../models/response/ResponseInterface";
 
@@ -45,5 +46,13 @@ export const patchQuery = createAsyncThunk<
   PatchQueryArgs
 >("queries/patchQuery", async (props) => {
   const { data } = await QueriesService.patchQuery(props.id, props);
+  return data;
+});
+
+export const postQuery = createAsyncThunk<
+  ResponseInterface<QueriesResponse>,
+  PostQueryArgs
+>("queries/postQuery", async (props) => {
+  const { data } = await QueriesService.postQuery(props);
   return data;
 });

@@ -2,7 +2,7 @@ import $api from "../http";
 import { QueriesResponse } from "../models/response/QueriesResponse";
 import { AxiosResponse } from "axios";
 import { ResponseInterface } from "../models/response/ResponseInterface";
-import { PatchQueryArgs } from "../redux/queriesSlice/types";
+import { PatchQueryArgs, PostQueryArgs } from "../redux/queriesSlice/types";
 
 export default class QueriesService {
   static async getQueriesTableData(
@@ -18,16 +18,18 @@ export default class QueriesService {
     return $api.get(`/queries/queries/${id}/`);
   }
 
-  static async postQuery(
-    date: string,
-    name: string,
-    description: string,
-    initiative_direction: number,
-    status: string,
-    implementation_effect: string,
-    organization: number,
-    initiator_users: [number]
-  ): Promise<AxiosResponse> {
+  static async postQuery({
+    date,
+    name,
+    description,
+    initiative_direction,
+    status,
+    implementation_effect,
+    organization,
+    initiator_users,
+  }: PostQueryArgs): Promise<
+    AxiosResponse<ResponseInterface<QueriesResponse>>
+  > {
     return $api.post(`/queries/queries/`, {
       date,
       name,

@@ -8,6 +8,7 @@ import users from "./usersSlice/slice";
 import filter from "./filterSlice/slice";
 import menu from "./menuSlice/slice";
 import comments from "./commentsSlice/slice";
+import modals from "./modalsSlice/slice";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     filter,
     menu,
     comments,
+    modals,
   },
 });
 

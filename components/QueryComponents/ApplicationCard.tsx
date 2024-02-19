@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
-import { Card, Form, Upload, Radio } from "antd";
+import { Card, Upload, Radio, Flex } from "antd";
 import {
   DownloadOutlined,
   HeartFilled,
@@ -259,10 +259,10 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
     };
 
     return (
-      <div>
+      <>
         <Card className={styles.card} loading={isLoading}>
-          <Form className={styles.form}>
-            <Form.Item className={styles.logo}>
+          <Flex className={styles.form} vertical={true}>
+            <div className={styles.logo}>
               <div className={styles.headerContainer}>
                 <div className={styles.logo}>
                   <Logo width={147} height={42} />
@@ -301,7 +301,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                   </p>
                 </div>
               </div>
-            </Form.Item>
+            </div>
             <Col className={styles.col}>
               <Row className={styles.row}>
                 <p className={styles.rowText}>Номер заявки:</p>
@@ -345,13 +345,20 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
               </Row>
               <Row className={styles.row}>
                 <p className={`${styles.rowText} ${styles.comments}`}>
-                  Комментарии:
+                  Комментарии (
+                  {
+                    dataComment.filter(
+                      (comment) => comment.query === Number(queryId)
+                    ).length
+                  }
+                  ):
                 </p>
               </Row>
               {dataComment
                 ?.filter((comment) => comment.query === Number(queryId))
                 .map((comment, index) => (
                   <CommentBlock
+                    key={index}
                     index={index}
                     comment={comment}
                     users={users}
@@ -359,7 +366,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                   />
                 ))}
             </Col>
-            <Form.Item className={styles.textAreaContainer}>
+            <div className={styles.textAreaContainer}>
               <p className={styles.textAreaTitle}>
                 Оставьте свой комментарий по инициативе здесь:
               </p>
@@ -368,7 +375,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                   placeholder={"Напишите комментарий по этой инициативе"}
                 />
               </div>
-            </Form.Item>
+            </div>
             {user_status ? (
               <div className={styles.footerContainerChild}>
                 <div className={styles.buttonsContainer}>
@@ -434,9 +441,9 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                 </div>
               </div>
             )}
-          </Form>
+          </Flex>
         </Card>
-      </div>
+      </>
     );
   }
 );

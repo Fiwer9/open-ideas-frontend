@@ -7,8 +7,8 @@ import {
   fetchQueriesByName,
   patchQuery,
   fetchQueries,
+  postQuery,
 } from "./asyncActions";
-import { DetailType } from "../../models/response/ResponseInterface";
 import { fetchQueriesBuilder, patchQueryBuilder } from "./builders";
 
 const initialState: QueriesSliceState = {
@@ -34,6 +34,7 @@ export const queriesSlice = createSlice({
     fetchQueriesBuilder(builder, fetchQueriesById);
     fetchQueriesBuilder(builder, fetchQueries);
     patchQueryBuilder(builder, patchQuery);
+    patchQueryBuilder(builder, postQuery);
   },
 });
 

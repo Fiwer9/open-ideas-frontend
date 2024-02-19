@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from "react";
 
 import styles from "./styles/QueryList.module.scss";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
@@ -19,7 +19,7 @@ import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import SearchBar from "../FilterComponents/blocks/SearchBar"
+import SearchBar from "../FilterComponents/blocks/SearchBar";
 import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Logo } from "../PicturesComponents/Logo";
 import { useSelector } from "react-redux";
@@ -34,7 +34,6 @@ import {
 } from "../../redux/queriesSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
 import {
-  fetchQueriesByUser,
   fetchQueriesByName,
   fetchQueries,
 } from "../../redux/queriesSlice/asyncActions";
@@ -101,7 +100,7 @@ export const QueryList: React.FC = memo(() => {
       key: "initiative_direction",
       width: "15%",
       render: (directionId: number) =>
-        getDirectionName(directionId, directions),
+        directions.length > 0 && getDirectionName(directionId, directions),
       filters: getDirections(directions).map((direction) => ({
         text: direction,
         value: direction,
@@ -131,13 +130,10 @@ export const QueryList: React.FC = memo(() => {
     },
   ];
 
-  const fetchData = useCallback(
-    debounce(async () => {
-      await dispatch(fetchQueries());
-      await dispatch(fetchDirections());
-    }, 2000),
-    []
-  );
+  const fetchData = debounce(async () => {
+    await dispatch(fetchDirections());
+    await dispatch(fetchQueries());
+  }, 2000);
 
   const fetchDataByName = useCallback(async () => {
     await dispatch(fetchQueriesByName({ value: searchValue }));
@@ -205,13 +201,13 @@ export const QueryList: React.FC = memo(() => {
       {selectedTag === "Панель администратора" ? (
         <div className={styles.container}>
           <div className={styles.slider}>
-                <Slider />
+            <Slider />
           </div>
-            <div className={styles.content}>
-                <div className={styles.headerContainer}>
-            <Header />
+          <div className={styles.content}>
+            <div className={styles.headerContainer}>
+              <Header />
             </div>
-                <Tabs />
+            <Tabs />
             <MainText text={"Инициативы"} />
             <div className={styles.infContainer}>
               <SearchBar
@@ -219,8 +215,9 @@ export const QueryList: React.FC = memo(() => {
                 placeholderQuery={"Поиск по идеям"}
               />
               <div className={styles.filterContainer}>
-                        <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
-              <CheckboxBar checkboxText={"Архив"} /></div>
+                <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
+                <CheckboxBar checkboxText={"Архив"} />
+              </div>
             </div>
             <DataTable
               data={getData() as QueriesResponse[]}
@@ -234,9 +231,9 @@ export const QueryList: React.FC = memo(() => {
         <div className={styles.containerIdeas}>
           <div className={styles.contentIdeas}>
             <div className={styles.headerContainer}>
-                    <Header />
+              <Header />
             </div>
-                <div className={styles.header}>
+            <div className={styles.header}>
               <div className={styles.logoHeader}>
                 <Logo width={190} height={53} />
               </div>
@@ -249,20 +246,21 @@ export const QueryList: React.FC = memo(() => {
               <SearchBar
                 placeholderNum={"Номер"}
                 placeholderQuery={"Поиск по идеям"}
-
-              stylesSearch={styles.searchBar}
-                    />
-                    <div className={styles.btnHead}>
-                        <div className={styles.btnContainerFilt}><FilterBar
-                icon={<PlusCircleOutlined />}
-                filterText={"Создать идею"}
-                onClick={handleCreateQuery}
+                stylesSearch={styles.searchBar}
               />
-              <CheckboxBar checkboxText={"Я эксперт"} />
+              <div className={styles.btnHead}>
+                <div className={styles.btnContainerFilt}>
+                  <FilterBar
+                    icon={<PlusCircleOutlined />}
+                    filterText={"Создать идею"}
+                    onClick={handleCreateQuery}
+                  />
+                  <CheckboxBar checkboxText={"Я эксперт"} />
+                </div>
+                <div className={styles.btnContainer}>
+                  <CheckboxBar checkboxText={"Архив"} />
+                </div>
               </div>
-                        <div className={styles.btnContainer}>
-                            <CheckboxBar checkboxText={"Архив"} /></div>
-                    </div>
             </div>
             <DataTable
               columns={directions.length > 0 && getColumns()}

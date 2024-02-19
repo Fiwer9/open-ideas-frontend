@@ -8,12 +8,14 @@ interface ButtonsProps {
   type: "button" | "submit" | "reset";
   props?: string;
   className?: string;
+  form?: string;
 }
 
 export const Buttons: React.FC<ButtonsProps> = memo(
-  ({ text, onClick, type, props, className }) => {
+  ({ text, onClick, type, props, className, form }) => {
     return (
       <button
+        form={form}
         className={
           props === "disabled"
             ? `${styles.disabledBtn}`

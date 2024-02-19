@@ -40,6 +40,14 @@ export function getOrganizationId(text: number, organizations: any) {
   }
 }
 
+export function getOrganizationNameById(
+  orgName: string,
+  organizations: OrganizationsResponse[]
+) {
+  const data = organizations.find((org) => org.name === orgName);
+  return data.id;
+}
+
 export function getStatusClassName(styles: any, status: string) {
   switch (status) {
     case "registered":
