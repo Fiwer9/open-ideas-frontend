@@ -54,7 +54,6 @@ export const QueryList: React.FC = memo(() => {
   const directions = useSelector(selectDirections);
   const directionsStatus = useSelector(selectStatusDirections);
   const queriesStatus = useSelector(selectStatusQueries);
-  const organizationsStatus = useSelector(selectOrgStatus);
   const dispatch = useAppDispatch();
   const { user_id } = useSelector(selectCurrentUser);
   const queriesTableData = useSelector(selectQueriesData);
@@ -69,8 +68,7 @@ export const QueryList: React.FC = memo(() => {
   useEffect(() => {
     if (
       directionsStatus === Status.SUCCESS &&
-      queriesStatus === Status.SUCCESS &&
-      organizationsStatus === Status.SUCCESS
+      queriesStatus === Status.SUCCESS
     ) {
       setIsLoading(false);
     } else {

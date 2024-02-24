@@ -20,6 +20,7 @@ import {
   formatDate,
   getAllUserLikes,
   getDirectionName,
+  statusTranslation,
 } from "../../utils/utils";
 import Image from "next/image";
 import type { UploadProps } from "antd";
@@ -297,7 +298,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                       applicationData?.status
                     )}`}
                   >
-                    {getStatusTranslation(applicationData?.status)}
+                    {statusTranslation[applicationData?.status]}
                   </p>
                 </div>
               </div>

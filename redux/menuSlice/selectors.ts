@@ -5,3 +5,5 @@ export const selectMenuIsCollapsed = (state: RootState) =>
 export const selectCurrentPage = (state: RootState) => state.menu.currentPage;
 
 export const selectSelectedTag = (state: RootState) => state.menu.selectedTag;
+
+export const selectIsStaff = (state: RootState) => state.menu.isStaff;

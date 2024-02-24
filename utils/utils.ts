@@ -98,8 +98,14 @@ export const getDirectionName = (
   directionId: number,
   directions: DirectionResponse[]
 ) => {
-  const { name } = directions.find((direction) => direction.id === directionId);
-  return name;
+  try {
+    const { name } = directions.find(
+      (direction) => direction.id === directionId
+    );
+    return name;
+  } catch (e) {
+    return "Неизвестно";
+  }
 };
 
 export const getDirections = (directions: DirectionResponse[]) => [
@@ -228,28 +234,8 @@ export function getUserName(userId: number, users: UsersUpdateResponse[]) {
   return "Аноним";
 }
 
-export function getLikes(users: UserResponse[], queryId: string) {
-  let like = 0;
-  for (let user of users) {
-    for (let query of user.likes) {
-      if (query.id === Number(queryId)) {
-        like += 1;
-      }
-    }
-  }
-  return like;
-}
+export function getAuthor(users_id: [number], users: UsersUpdateResponse[]) {
+  const { name } = users.find((user) => user.id === users_id[0]);
 
-export function getAuthor(
-  users_id: [number],
-  users: UserResponse[],
-  setUser: any
-) {
-  for (let id of users_id) {
-    for (let user of users) {
-      if (id === user.id) {
-        setUser(user);
-      }
-    }
-  }
+  return name;
 }

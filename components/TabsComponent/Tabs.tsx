@@ -9,7 +9,11 @@ import { selectUpdateUser } from "../../redux/usersSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
 import { fetchCurrentUpdateUser } from "../../redux/usersSlice/asyncActions";
 import { changeSelectedTag } from "../../redux/menuSlice/slice";
-import { selectSelectedTag } from "../../redux/menuSlice/selectors";
+import {
+  selectIsStaff,
+  selectSelectedTag,
+} from "../../redux/menuSlice/selectors";
+import { fetchUserIsStaff } from "../../redux/menuSlice/asyncActions";
 const { CheckableTag } = Tag;
 
 const tagsData = ["Инициативы", "Панель администратора"];
@@ -17,11 +21,11 @@ const tagsData = ["Инициативы", "Панель администрато
 export const Tabs: React.FC = memo(() => {
   const selectedTags = useSelector(selectSelectedTag) as unknown as string[];
   const { user_id } = useSelector(selectCurrentUser);
-  const user = useSelector(selectUpdateUser);
+  const isStaff = useSelector(selectIsStaff);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchCurrentUpdateUser({ user_id }));
+    dispatch(fetchUserIsStaff({ user_id }));
   }, []);
 
   useEffect(() => {
@@ -49,7 +53,7 @@ export const Tabs: React.FC = memo(() => {
       <div className={styles.tabs}>
         {tagsData.map((tag) => {
           const isAdministratorTagDisabled =
-            tag === "Панель администратора" && !user.is_staff;
+            tag === "Панель администратора" && !isStaff;
 
           return (
             <CheckableTag

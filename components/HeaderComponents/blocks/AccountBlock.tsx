@@ -2,31 +2,34 @@ import React, { memo, useEffect, useState } from "react";
 import styles from "../styles/Account.module.scss";
 import { Button } from "antd";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../../redux/usersSlice/selectors";
 import { useAppDispatch } from "../../../redux/store";
-import { fetchCurrentUser } from "../../../redux/usersSlice/asyncActions";
 import { selectCurrentUser } from "../../../redux/authSlice/selectors";
 import { fetchOrganizationById } from "../../../redux/organizationsSlice/asyncActions";
-import { selectOrganization } from "../../../redux/organizationsSlice/selectors";
+import { Status } from "../../../redux/queriesSlice/types";
+import { selectUserForHeader } from "../../../redux/headerSlice/selectors";
+import {
+  fetchOrganizationHeader,
+  fetchUserHeader,
+} from "../../../redux/headerSlice/asyncActions";
 
 export const AccountBlock: React.FC = memo(() => {
   const [isClient, setIsClient] = useState(false);
-  const user = useSelector(selectUser);
+  const { userName, organization, department, status, organizationId } =
+    useSelector(selectUserForHeader);
   const { user_id } = useSelector(selectCurrentUser);
-  const organization = useSelector(selectOrganization);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchCurrentUser({ user_id }));
+    dispatch(fetchUserHeader({ user_id }));
   }, []);
 
   useEffect(() => {
     dispatch(
-      fetchOrganizationById({
-        organization_id: user?.department?.organization,
+      fetchOrganizationHeader({
+        organization_id: organizationId,
       })
     );
-  }, [user]);
+  }, [organizationId]);
 
   useEffect(() => {
     setIsClient(true);
@@ -38,16 +41,28 @@ export const AccountBlock: React.FC = memo(() => {
 
   return (
     <div className={styles.account}>
-      <Button type={"text"} className={styles.buttonTop}>
-        {user.name || "Аноним"}
+      <Button
+        loading={status === Status.LOADING}
+        type={"text"}
+        className={styles.buttonTop}
+      >
+        {userName || "Аноним"}
       </Button>{" "}
       <span>|</span>
-      <Button type={"text"} className={styles.aratrum}>
-        {organization.name || "Неизвестно"}
+      <Button
+        loading={status === Status.LOADING}
+        type={"text"}
+        className={styles.aratrum}
+      >
+        {organization || "Неизвестно"}
       </Button>{" "}
       <span>|</span>
-      <Button type={"text"} className={styles.buttonTop}>
-        {user.department?.name || "Неизвестно"}
+      <Button
+        loading={status === Status.LOADING}
+        type={"text"}
+        className={styles.buttonTop}
+      >
+        {department || "Неизвестно"}
       </Button>
     </div>
   );
