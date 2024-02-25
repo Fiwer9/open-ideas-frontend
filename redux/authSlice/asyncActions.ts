@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   AuthorizationResponse,
   AuthResponse,
+  TokenResponse,
 } from "../../models/response/AuthResponse";
 import AuthService from "../../services/LoginService";
 import {
@@ -10,6 +11,8 @@ import {
   PutRegistrationArgs,
 } from "./types";
 import { ResponseInterface } from "../../models/response/ResponseInterface";
+import axios from "axios";
+import { API_URL_TOKEN } from "../../http";
 
 export const postAuthorization = createAsyncThunk<
   ResponseInterface<AuthorizationResponse>,
@@ -41,4 +44,14 @@ export const postCodeConfirmation = createAsyncThunk<
 >("auth/postCodeConfirmation", async ({ code }) => {
   const { data } = await AuthService.confirmEmail(Number(code));
   return data;
+});
+
+export const checkAuth = createAsyncThunk("auth/checkAuth", async () => {
+  const refresh = sessionStorage.getItem("token_refresh");
+  const response = await axios.post<TokenResponse>(
+    `${API_URL_TOKEN}/token/refresh/`,
+    { refresh },
+    { withCredentials: true }
+  );
+  sessionStorage.setItem("token_access", response.data.access);
 });

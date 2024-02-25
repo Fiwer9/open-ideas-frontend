@@ -3,6 +3,7 @@ import { UserCard } from "../../../components/UsersComponents/UserCard";
 import { useAuthenticatedUser } from "../../../hooks/useNotRegister";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import { PageDevelopment } from "../../../components/PageDevelopmentComponent/PageDevelopment";
 
 export default function Index() {
   const router = useRouter();
@@ -13,7 +14,8 @@ export default function Index() {
 
   return (
     <div>
-      <UserCard userId={id} />
+      {/*<UserCard userId={id} />*/}
+      <PageDevelopment />
     </div>
   );
 }

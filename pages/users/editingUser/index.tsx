@@ -1,7 +1,6 @@
 import React from "react";
-import { UserEditing } from "../../../components/UsersComponents/UserEditing";
-import { useAuthenticatedUser } from "../../../hooks/useNotRegister";
 import { useRouter } from "next/router";
+import { PageDevelopment } from "../../../components/PageDevelopmentComponent/PageDevelopment";
 
 export default function Index() {
   const router = useRouter();
@@ -11,7 +10,8 @@ export default function Index() {
 
   return (
     <div>
-      <UserEditing userId={id} />
+      {/*<UserEditing userId={id} />*/}
+      <PageDevelopment />
     </div>
   );
 }
