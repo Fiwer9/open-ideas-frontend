@@ -1,39 +1,32 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import { Card, Upload, Radio, Flex } from "antd";
 import {
   DownloadOutlined,
   HeartFilled,
   HeartOutlined,
 } from "@ant-design/icons";
-import { Row, Col } from "antd";
-import { Logo } from "../PicturesComponents/Logo";
-import { Buttons } from "../ButtonComponent/Button";
-import avatar from "../../public/img/AvatarAratrum.svg";
-import styles from "./styles/ApplicationCard.module.scss";
-import { useRouter } from "next/router";
-import {
-  formatDateToServer,
-  getOrganizationName,
-  getStatusClassName,
-  getStatusTranslation,
-  getUserName,
-  formatDate,
-  getAllUserLikes,
-  getDirectionName,
-  statusTranslation,
-} from "../../utils/utils";
-import Image from "next/image";
 import type { UploadProps } from "antd";
+import { Card, Col, Flex, Radio, Row, Upload } from "antd";
+import debounce from "lodash.debounce";
+import { useRouter } from "next/router";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/authSlice/selectors";
+import {
+  fetchCommentsById,
+  postComment,
+} from "../../redux/commentsSlice/asyncActions";
+import {
+  selectComments,
+  selectCurrentComment,
+  selectStatusComments,
+} from "../../redux/commentsSlice/selectors";
+import { setCurrentComment } from "../../redux/commentsSlice/slice";
+import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
 import {
   selectDirections,
   selectStatusDirections,
 } from "../../redux/directionsSlice/selectors";
-import { useAppDispatch } from "../../redux/store";
-import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
-import { selectOrganizations } from "../../redux/organizationsSlice/selectors";
 import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
-import { selectCurrentUser } from "../../redux/authSlice/selectors";
+import { selectOrganizations } from "../../redux/organizationsSlice/selectors";
 import {
   fetchQueriesById,
   patchQuery,
@@ -42,72 +35,61 @@ import {
   selectQueryData,
   selectStatusQueries,
 } from "../../redux/queriesSlice/selectors";
-import {
-  selectUpdateUsers,
-  selectUsersStatus,
-} from "../../redux/usersSlice/selectors";
-import {
-  selectComments,
-  selectCurrentComment,
-  selectStatusComments,
-} from "../../redux/commentsSlice/selectors";
+import { Status } from "../../redux/queriesSlice/types";
+import { useAppDispatch } from "../../redux/store";
 import {
   fetchUpdateUsers,
   patchLikes,
 } from "../../redux/usersSlice/asyncActions";
 import {
-  fetchComments,
-  postComment,
-} from "../../redux/commentsSlice/asyncActions";
-import { Status } from "../../redux/queriesSlice/types";
-import { CommentResponse } from "../../models/response/CommentResponse";
-import { UsersUpdateResponse } from "../../models/response/UsersUpdateResponse";
-import { QueriesResponse } from "../../models/response/QueriesResponse";
+  selectUpdateUsers,
+  selectUsersStatus,
+} from "../../redux/usersSlice/selectors";
+import {
+  formatDateToServer,
+  getAllUserLikes,
+  getDirectionName,
+  getOrganizationName,
+  getStatusClassName,
+  statusTranslation,
+} from "../../utils/utils";
+import { Buttons } from "../ButtonComponent/Button";
+import { Logo } from "../PicturesComponents/Logo";
 import { TextAreas } from "../TextAreaComponent/TextArea";
-import { setCurrentComment } from "../../redux/commentsSlice/slice";
-import debounce from "lodash.debounce";
+import styles from "./styles/ApplicationCard.module.scss";
+import { CommentBlock } from "./blocks/CommentBlock";
+
+const props: UploadProps = {
+  defaultFileList: [
+    {
+      uid: "1",
+      name: "xxx.png",
+      status: "done",
+      url: "",
+    },
+    {
+      uid: "2",
+      name: "xxx.png",
+      status: "done",
+      url: "",
+    },
+    {
+      uid: "3",
+      name: "xxx.png",
+      status: "done",
+      url: "",
+    },
+  ],
+  showUploadList: {
+    showDownloadIcon: true,
+    downloadIcon: <DownloadOutlined />,
+    showRemoveIcon: false,
+  },
+};
 
 type ApplicationCardProps = {
   user_status: string;
 };
-
-type CommentBlockProps = {
-  index: number;
-  comment: CommentResponse;
-  users: UsersUpdateResponse[];
-  applicationData: QueriesResponse;
-};
-
-const CommentBlock: React.FC<CommentBlockProps> = memo(
-  ({ index, comment, users, applicationData }) => {
-    const checkExpert = (commentUser: number) =>
-      applicationData.expert_users[0] === commentUser;
-
-    return (
-      <Row className={styles.row} key={index}>
-        <div className={styles.userContainer}>
-          <div className={styles.userAvatar}>
-            <Image src={avatar} width={60} alt={"Аватарка"}></Image>
-          </div>
-          <div className={styles.user}>
-            <div className={styles.userName}>
-              <p className={styles.name}>
-                {users.length > 0 && getUserName(comment.user, users)}
-              </p>
-              <p className={styles.status}>
-                {applicationData.expert_users && checkExpert(comment.user)
-                  ? "(Эксперт)"
-                  : "(Пользователь)"}
-              </p>
-            </div>
-            <p className={styles.data}>{formatDate(comment.created_at)}</p>
-            <p className={styles.comment}>{comment.comment_text}</p>
-          </div>
-        </div>
-      </Row>
-    );
-  }
-);
 
 export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
   ({ user_status }) => {
@@ -157,7 +139,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
         await dispatch(fetchUpdateUsers());
         await dispatch(fetchDirections());
         await dispatch(fetchOrganizations());
-        await dispatch(fetchComments());
+        await dispatch(fetchCommentsById({ queryId }));
       }, 2000),
       [queryId]
     );
@@ -170,7 +152,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
       users.length > 0 && getIsLiked();
     }, [users]);
 
-    const getLikes = useCallback(() => {
+    const getLikes = () => {
       let like = 0;
       for (let user of users) {
         for (let query_id of user.likes) {
@@ -180,7 +162,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
         }
       }
       return like;
-    }, [users]);
+    };
 
     const changeStatus = async (status: string) => {
       const currentDate = new Date();
@@ -217,6 +199,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
 
     const patchAddLike = async (userId: number) => {
       const likedQueries = [...getAllUserLikes(users, userId), Number(queryId)];
+      console.log(likedQueries);
       await dispatch(patchLikes({ userId, likedQueries }));
       await dispatch(fetchUpdateUsers());
     };
@@ -229,34 +212,6 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
       }
       await dispatch(patchLikes({ userId, likedQueries }));
       await dispatch(fetchUpdateUsers());
-    };
-
-    const props: UploadProps = {
-      defaultFileList: [
-        {
-          uid: "1",
-          name: "xxx.png",
-          status: "done",
-          url: "",
-        },
-        {
-          uid: "2",
-          name: "xxx.png",
-          status: "done",
-          url: "",
-        },
-        {
-          uid: "3",
-          name: "xxx.png",
-          status: "done",
-          url: "",
-        },
-      ],
-      showUploadList: {
-        showDownloadIcon: true,
-        downloadIcon: <DownloadOutlined />,
-        showRemoveIcon: false,
-      },
     };
 
     return (
@@ -346,26 +301,19 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
               </Row>
               <Row className={styles.row}>
                 <p className={`${styles.rowText} ${styles.comments}`}>
-                  Комментарии (
-                  {
-                    dataComment.filter(
-                      (comment) => comment.query === Number(queryId)
-                    ).length
-                  }
+                  Комментарии ({dataComment.length}
                   ):
                 </p>
               </Row>
-              {dataComment
-                ?.filter((comment) => comment.query === Number(queryId))
-                .map((comment, index) => (
-                  <CommentBlock
-                    key={index}
-                    index={index}
-                    comment={comment}
-                    users={users}
-                    applicationData={applicationData}
-                  />
-                ))}
+              {dataComment.map((comment, index) => (
+                <CommentBlock
+                  key={index}
+                  index={index}
+                  comment={comment}
+                  users={users}
+                  applicationData={applicationData}
+                />
+              ))}
             </Col>
             <div className={styles.textAreaContainer}>
               <p className={styles.textAreaTitle}>

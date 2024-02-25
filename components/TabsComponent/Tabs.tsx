@@ -2,12 +2,9 @@ import React, { memo, useEffect } from "react";
 import styles from "./styles/Tabs.module.scss";
 import { Tag } from "antd";
 import router from "next/router";
-import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/authSlice/selectors";
-import { selectUpdateUser } from "../../redux/usersSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
-import { fetchCurrentUpdateUser } from "../../redux/usersSlice/asyncActions";
 import { changeSelectedTag } from "../../redux/menuSlice/slice";
 import {
   selectIsStaff,
@@ -19,7 +16,9 @@ const { CheckableTag } = Tag;
 const tagsData = ["Инициативы", "Панель администратора"];
 
 export const Tabs: React.FC = memo(() => {
-  const selectedTags = useSelector(selectSelectedTag) as unknown as string[];
+  const selectedTags = useSelector(selectSelectedTag);
+
+  console.log(selectedTags);
   const { user_id } = useSelector(selectCurrentUser);
   const isStaff = useSelector(selectIsStaff);
   const dispatch = useAppDispatch();
@@ -28,16 +27,12 @@ export const Tabs: React.FC = memo(() => {
     dispatch(fetchUserIsStaff({ user_id }));
   }, []);
 
-  useEffect(() => {
-    dispatch(changeSelectedTag(selectedTags));
-  }, [selectedTags]);
-
   const handleChangeTag = (tag: string, checked: boolean) => {
     const nextSelectedTags = checked
       ? [tag]
       : tagsData.filter((t) => t === tag);
     dispatch(changeSelectedTag(nextSelectedTags[0]));
-    Cookies.set("selectedTag", tag);
+    sessionStorage.setItem("selectedTag", tag);
     tag !== selectedTags[0] && router.push("/queries");
   };
 
@@ -58,10 +53,10 @@ export const Tabs: React.FC = memo(() => {
           return (
             <CheckableTag
               key={tag}
-              checked={selectedTags.includes(tag)}
+              checked={tag.includes(selectedTags)}
               onChange={(checked) => handleChangeTag(tag, checked)}
               style={{
-                background: selectedTags.includes(tag)
+                background: tag.includes(selectedTags)
                   ? "var(--geek-blue-1, #F0F5FF)"
                   : "none",
                 pointerEvents: isAdministratorTagDisabled ? "none" : "auto",
@@ -71,7 +66,7 @@ export const Tabs: React.FC = memo(() => {
             >
               <p
                 style={{
-                  color: selectedTags.includes(tag) ? "#2F54EB" : "#434343",
+                  color: tag.includes(selectedTags) ? "#2F54EB" : "#434343",
                 }}
               >
                 {tag}

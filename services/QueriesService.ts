@@ -57,7 +57,9 @@ export default class QueriesService {
         });
   }
 
-  static async deleteQuery(id: number): Promise<AxiosResponse> {
+  static async deleteQuery(
+    id: number
+  ): Promise<AxiosResponse<ResponseInterface<null>>> {
     return $api.delete(`/queries/queries/${id}/`);
   }
 

@@ -51,7 +51,8 @@
 
     .text2 {
       margin: 0;
-      margin-top: 20px;
+      margin-top: 10px;
+      margin-bottom: 20px;
       font: {
         family: RobotoRegular, sans-serif;
         weight: 400;
@@ -74,6 +75,21 @@
   .btnContainer {
     text-align: center !important;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+
+    .btnRed {
+      font-size: 16px;
+      border: 1px solid $color-red;
+      display: flex;
+      background-color: $color-white;
+      color: $color-red;
+      border-radius: 2px;
+      cursor: pointer;
+      padding: 8px 16px;
+      justify-content: center;
+      align-items: center;
+    }
+
   }
 }

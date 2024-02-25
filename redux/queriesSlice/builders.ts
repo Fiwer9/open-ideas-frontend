@@ -24,7 +24,7 @@ export const fetchQueriesBuilder = (
   });
 };
 
-export const patchQueryBuilder = (
+export const postQueryBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<QueriesSliceState>>,
   patch: AsyncThunk<any, any, any>
 ) => {

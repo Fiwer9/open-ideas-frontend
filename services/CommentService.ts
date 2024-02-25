@@ -1,7 +1,6 @@
 import $api from "../http";
 import { AxiosResponse } from "axios";
 import { CommentResponse } from "../models/response/CommentResponse";
-import { AxiosRequestConfig } from "axios";
 import { ResponseInterface } from "../models/response/ResponseInterface";
 
 export default class CommentService {
@@ -9,6 +8,12 @@ export default class CommentService {
     AxiosResponse<ResponseInterface<CommentResponse[]>>
   > {
     return $api.get("/queries/comments/");
+  }
+
+  static async getCommentsByQuery(
+    query: number
+  ): Promise<AxiosResponse<ResponseInterface<CommentResponse[]>>> {
+    return $api.get(`/queries/comments/?query=${query}`);
   }
 
   static async sendComment(

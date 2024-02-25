@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
 import {
+  DeleteQueryArgs,
   FetchQueriesArgs,
   FetchQueriesByIdArgs,
   FetchQueriesByNameArgs,
@@ -54,5 +55,13 @@ export const postQuery = createAsyncThunk<
   PostQueryArgs
 >("queries/postQuery", async (props) => {
   const { data } = await QueriesService.postQuery(props);
+  return data;
+});
+
+export const deleteQuery = createAsyncThunk<
+  ResponseInterface<null>,
+  DeleteQueryArgs
+>("queries/deleteQuery", async ({ queryId }) => {
+  const { data } = await QueriesService.deleteQuery(Number(queryId));
   return data;
 });

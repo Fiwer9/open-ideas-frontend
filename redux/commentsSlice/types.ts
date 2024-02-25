@@ -14,3 +14,7 @@ export interface PostCommentsArgs {
   query_id: number;
   user_id: number;
 }
+
+export interface FetchCommentsByQueryArgs {
+  queryId: string;
+}

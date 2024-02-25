@@ -48,3 +48,7 @@ export interface PostQueryArgs {
   organization: number;
   initiator_users: [number];
 }
+
+export interface DeleteQueryArgs {
+  queryId: string;
+}

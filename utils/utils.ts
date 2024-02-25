@@ -1,5 +1,4 @@
 import { QueriesResponse } from "../models/response/QueriesResponse";
-import { UserResponse } from "../models/response/UserResponse";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
 import Cookies from "js-cookie";
@@ -48,6 +47,16 @@ export function getOrganizationNameById(
   return data.id;
 }
 
+export const statusClassName = (styles: any) => ({
+  registered: styles.statusRegistered,
+  check: styles.statusCheck,
+  analysis: styles.statusAnalysis,
+  accepted: styles.statusAccepted,
+  implementation: styles.statusImplementation,
+  rejected: styles.statusRejected,
+  done: styles.statusDone,
+});
+
 export function getStatusClassName(styles: any, status: string) {
   switch (status) {
     case "registered":
@@ -75,9 +84,13 @@ export function formatDate(date: string) {
 }
 
 export function formatDateRu(date: string) {
-  dayjs.locale("ru");
-  const currentDate = date.split("T");
-  return dayjs(currentDate[0]).format("DD MMMM YYYY г.");
+  try {
+    dayjs.locale("ru");
+    const currentDate = date.split("T");
+    return dayjs(currentDate[0]).format("DD MMMM YYYY г.");
+  } catch (e) {
+    return "";
+  }
 }
 
 export function formatDateToServer(date: Date, separator = ".") {
@@ -235,7 +248,10 @@ export function getUserName(userId: number, users: UsersUpdateResponse[]) {
 }
 
 export function getAuthor(users_id: [number], users: UsersUpdateResponse[]) {
-  const { name } = users.find((user) => user.id === users_id[0]);
-
-  return name;
+  try {
+    const { name } = users.find((user) => user.id === users_id[0]);
+    return name;
+  } catch (e) {
+    return null;
+  }
 }

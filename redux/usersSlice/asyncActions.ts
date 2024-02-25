@@ -35,5 +35,6 @@ export const patchLikes = createAsyncThunk<
   PatchLikesArgs
 >("users/patchLikes", async ({ userId, likedQueries }) => {
   const { data } = await LikesService.patchLike(userId, likedQueries);
+  console.log(data)
   return data;
 });

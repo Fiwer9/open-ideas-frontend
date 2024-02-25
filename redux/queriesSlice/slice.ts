@@ -8,8 +8,9 @@ import {
   patchQuery,
   fetchQueries,
   postQuery,
+  deleteQuery,
 } from "./asyncActions";
-import { fetchQueriesBuilder, patchQueryBuilder } from "./builders";
+import { fetchQueriesBuilder, postQueryBuilder } from "./builders";
 
 const initialState: QueriesSliceState = {
   items: [],
@@ -33,8 +34,9 @@ export const queriesSlice = createSlice({
     fetchQueriesBuilder(builder, fetchQueriesByName);
     fetchQueriesBuilder(builder, fetchQueriesById);
     fetchQueriesBuilder(builder, fetchQueries);
-    patchQueryBuilder(builder, patchQuery);
-    patchQueryBuilder(builder, postQuery);
+    fetchQueriesBuilder(builder, patchQuery);
+    postQueryBuilder(builder, postQuery);
+    postQueryBuilder(builder, deleteQuery);
   },
 });
 

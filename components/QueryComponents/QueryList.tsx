@@ -46,7 +46,6 @@ import { setStatusQueries } from "../../redux/queriesSlice/slice";
 import { setStatusDirections } from "../../redux/directionsSlice/slice";
 import { setStatusOrganizations } from "../../redux/organizationsSlice/slice";
 import debounce from "lodash.debounce";
-import { selectOrgStatus } from "../../redux/organizationsSlice/selectors";
 
 export const QueryList: React.FC = memo(() => {
   const router = useRouter();
@@ -147,6 +146,7 @@ export const QueryList: React.FC = memo(() => {
 
   const handleRowClick = (queryId: QueriesResponse) => {
     Cookies.set("queryId", String(queryId.id));
+    Cookies.set("queryName", String(queryId.name));
     router.push(`/queries/adminApplication?queryId=${queryId.id}`);
   };
 

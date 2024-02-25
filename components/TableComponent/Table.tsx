@@ -6,6 +6,7 @@ import { QueriesResponse } from "../../models/response/QueriesResponse";
 import { UserResponse } from "../../models/response/UserResponse";
 import { UsersUpdateResponse } from "../../models/response/UsersUpdateResponse";
 import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
+import type { TableProps as RcTableProps } from "rc-table/lib/Table";
 
 const locale = {
   emptyText: "Тут ещё нет идей",
@@ -29,7 +30,7 @@ export const DataTable: React.FC<DataTable> = memo(
       <div className={styles.tableContainer}>
         <Table
           className={styles.table}
-          dataSource={data}
+          dataSource={data as RcTableProps<any>["data"]}
           columns={columns}
           loading={isLoading}
           onRow={(element) => ({
