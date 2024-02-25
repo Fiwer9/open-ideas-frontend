@@ -38,7 +38,7 @@ export default class AuthService {
   static async postRegistration(
     email: string,
     password: string
-  ): Promise<AxiosResponse<string | ResponseInterface<AuthorizationResponse>>> {
+  ): Promise<AxiosResponse<ResponseInterface<AuthorizationResponse>>> {
     return $api.post(`/auth/passreg/`, { email, password });
   }
 }

@@ -22,7 +22,7 @@ $color-pule-purple: #F0F5FF;
 @mixin container {
   display: flex;
   justify-content: space-between;
-  height: 100vh;
+  height: 100%;
 }
 
 @mixin content {

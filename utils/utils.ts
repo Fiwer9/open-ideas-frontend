@@ -252,6 +252,6 @@ export function getAuthor(users_id: [number], users: UsersUpdateResponse[]) {
     const { name } = users.find((user) => user.id === users_id[0]);
     return name;
   } catch (e) {
-    return null;
+    return "Не назначено";
   }
 }

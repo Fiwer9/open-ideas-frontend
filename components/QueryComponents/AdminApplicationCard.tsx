@@ -137,7 +137,7 @@ export const AdminApplicationCard = () => {
   }, [queryId]);
 
   useEffect(() => {
-    applicationData.expert_users &&
+    applicationData?.expert_users &&
       dispatch(
         fetchCurrentUser({ user_id: applicationData?.initiator_users[0] })
       );
@@ -215,7 +215,7 @@ export const AdminApplicationCard = () => {
                 <div className={styles.ideaInfContainer}>
                   <div className={styles.headerContainerIdea}>
                     <p className={styles.nameInitiative}>
-                      {applicationData.name}
+                      {applicationData?.name}
                     </p>
                     <div className={styles.btnHeader}>
                       <div className={styles.likesContainer}>
@@ -224,13 +224,13 @@ export const AdminApplicationCard = () => {
                           {users.length > 0 && getLikes()}
                         </p>
                       </div>
-                      {applicationData.status && (
+                      {applicationData?.status && (
                         <Select
                           className={`selectInitiative ${statusClassName(
                             styles
                           )}`}
                           style={{ width: 250 }}
-                          defaultValue={applicationData.status}
+                          defaultValue={applicationData?.status}
                           options={statusOptions}
                           onChange={(value) => changeStatus(value)}
                         />
@@ -238,7 +238,7 @@ export const AdminApplicationCard = () => {
                     </div>
                   </div>
                   <p className={styles.data}>{`Дата создания ${formatDateRu(
-                    applicationData.date
+                    applicationData?.date
                   )}`}</p>
                 </div>
 
@@ -247,30 +247,30 @@ export const AdminApplicationCard = () => {
                     <div className={styles.row}>
                       <p className={styles.rowText}>Получено от:</p>
                       <p className={styles.rowInf}>
-                        {getAuthor(applicationData.initiator_users, users)}
+                        {getAuthor(applicationData?.initiator_users, users)}
                       </p>
                     </div>
                     <div className={styles.row}>
                       <p className={styles.rowText}>Инициатива (Идея):</p>
-                      <p className={styles.rowInf}>{applicationData.name}</p>
+                      <p className={styles.rowInf}>{applicationData?.name}</p>
                     </div>
                     <div className={styles.row}>
                       <p className={styles.rowText}>Описание инициативы:</p>
                       <p className={styles.rowInf}>
-                        {applicationData.description}
+                        {applicationData?.description}
                       </p>
                     </div>
                     <div className={styles.row}>
                       <p className={styles.rowText}>Эффект от доработки:</p>
                       <p className={styles.rowInf}>
-                        {applicationData.implementation_effect}
+                        {applicationData?.implementation_effect}
                       </p>
                     </div>
                     <div className={styles.row}>
                       <p className={styles.rowText}>Направление:</p>
                       <p className={styles.rowInf}>
                         {getDirectionName(
-                          applicationData.initiative_direction,
+                          applicationData?.initiative_direction,
                           directions
                         )}
                       </p>
@@ -279,7 +279,7 @@ export const AdminApplicationCard = () => {
                       <p className={styles.rowText}>Организация:</p>
                       <p className={styles.rowInf}>
                         {getOrganizationName(
-                          applicationData.organization,
+                          applicationData?.organization,
                           organizations
                         )}
                       </p>
@@ -293,7 +293,7 @@ export const AdminApplicationCard = () => {
                     <div className={styles.row}>
                       <p className={styles.rowText}>Назначенный эксперт:</p>
                       <p className={styles.rowInf}>
-                        {getExpert(applicationData.expert_users)}
+                        {getExpert(applicationData?.expert_users)}
                       </p>
                     </div>
                   </div>

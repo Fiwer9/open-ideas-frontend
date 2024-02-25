@@ -36,6 +36,7 @@ export interface PatchQueryArgs {
   organization: number;
   initiator_users: [number];
   id: number;
+  expert_users?: [number];
 }
 
 export interface PostQueryArgs {

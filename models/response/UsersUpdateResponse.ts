@@ -1,5 +1,3 @@
-import { IDepartment } from "../IDepartment";
-
 export interface UsersUpdateResponse {
   is_staff: boolean;
   email: string;
@@ -7,4 +5,7 @@ export interface UsersUpdateResponse {
   name: string;
   department: number;
   likes: number[];
+  is_verified: boolean;
+  is_active: boolean;
+  is_superuser: boolean;
 }

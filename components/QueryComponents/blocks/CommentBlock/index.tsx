@@ -50,7 +50,7 @@ export const CommentBlock: React.FC<CommentBlockProps> = memo(
 export const CommentBlockAdmin: React.FC<CommentBlockProps> = memo(
   ({ index, comment, users, applicationData }) => {
     const checkExpert = (commentUser: number) =>
-      applicationData.expert_users[0] === commentUser;
+      applicationData?.expert_users[0] === commentUser;
 
     return (
       <div className={stylesAdmin.avatarContainer} key={index}>
@@ -63,7 +63,7 @@ export const CommentBlockAdmin: React.FC<CommentBlockProps> = memo(
               comment.user,
               users
             )} ${
-              applicationData.expert_users && checkExpert(comment.user)
+              applicationData?.expert_users && checkExpert(comment.user)
                 ? "(Эксперт)"
                 : "(Пользователь)"
             }`}</p>

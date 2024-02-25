@@ -60,7 +60,7 @@ export const authSlice = createSlice({
     });
 
     builder.addCase(postRegistration.fulfilled, (state, action) => {
-      if (typeof action.payload !== "string") {
+      if (action.payload.error.is_error) {
         state.detail = action.payload.error.detail as unknown as DetailType;
         state.status = Status.ERROR;
         return;

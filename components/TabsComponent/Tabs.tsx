@@ -17,8 +17,6 @@ const tagsData = ["Инициативы", "Панель администрато
 
 export const Tabs: React.FC = memo(() => {
   const selectedTags = useSelector(selectSelectedTag);
-
-  console.log(selectedTags);
   const { user_id } = useSelector(selectCurrentUser);
   const isStaff = useSelector(selectIsStaff);
   const dispatch = useAppDispatch();

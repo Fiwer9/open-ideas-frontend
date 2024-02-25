@@ -28,7 +28,7 @@ export const putRegistration = createAsyncThunk<
 });
 
 export const postRegistration = createAsyncThunk<
-  ResponseInterface<AuthorizationResponse> | string,
+  ResponseInterface<AuthorizationResponse>,
   PostAuthorizationArgs
 >("auth/postRegistration", async ({ email, password }) => {
   const { data } = await AuthService.postRegistration(email, password);

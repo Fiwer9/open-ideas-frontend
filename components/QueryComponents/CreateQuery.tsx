@@ -82,31 +82,27 @@ function NewCreateQuery() {
   }, []);
 
   const onSubmit = async (data: PostQueryProps) => {
-    try {
-      const {
+    const {
+      name,
+      organization,
+      description,
+      initiative_direction,
+      implementation_effect,
+    } = data;
+    const formattedEndDate = formatDateToServer(new Date(), "-");
+    dispatch(
+      postQuery({
         name,
-        organization,
-        description,
-        initiative_direction,
         implementation_effect,
-      } = data;
-      const formattedEndDate = formatDateToServer(new Date(), "-");
-      dispatch(
-        postQuery({
-          name,
-          implementation_effect,
-          date: formattedEndDate,
-          status: "check",
-          initiative_direction,
-          initiator_users: [user_id],
-          description,
-          organization: getOrganizationNameById(organization, organizations),
-        })
-      );
-      router.push("/queries");
-    } catch (error: any) {
-      console.log(error.response?.data?.message);
-    }
+        date: formattedEndDate,
+        status: "check",
+        initiative_direction,
+        initiator_users: [user_id],
+        description,
+        organization: getOrganizationNameById(organization, organizations),
+      })
+    );
+    await router.push("/queries");
   };
 
   const onReset = () => {

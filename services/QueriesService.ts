@@ -44,15 +44,14 @@ export default class QueriesService {
 
   static async patchQuery(
     id: number,
-    props: PatchQueryArgs,
-    expert_users?: number[]
+    props: PatchQueryArgs
   ): Promise<AxiosResponse> {
-    return expert_users
+    console.log(props);
+    return props.expert_users
       ? $api.patch(`/queries/queries/${id}/`, {
           ...props,
-          expert_users,
         })
-      : $api.patch(`/queries/queries/${props.id}/`, {
+      : $api.patch(`/queries/queries/${id}/`, {
           ...props,
         });
   }
