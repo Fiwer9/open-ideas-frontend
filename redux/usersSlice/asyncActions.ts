@@ -15,6 +15,14 @@ export const fetchCurrentUser = createAsyncThunk<
   return data;
 });
 
+export const fetchUsers = createAsyncThunk<ResponseInterface<UserResponse[]>>(
+  "users/fetchUsers",
+  async () => {
+    const { data } = await UsersService.getUsers();
+    return data;
+  }
+);
+
 export const fetchCurrentUpdateUser = createAsyncThunk<
   ResponseInterface<UsersUpdateResponse>,
   FetchUsersArgs
@@ -35,6 +43,6 @@ export const patchLikes = createAsyncThunk<
   PatchLikesArgs
 >("users/patchLikes", async ({ userId, likedQueries }) => {
   const { data } = await LikesService.patchLike(userId, likedQueries);
-  console.log(data)
+  console.log(data);
   return data;
 });

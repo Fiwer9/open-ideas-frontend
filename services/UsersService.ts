@@ -5,7 +5,9 @@ import { UsersUpdateResponse } from "../models/response/UsersUpdateResponse";
 import { ResponseInterface } from "../models/response/ResponseInterface";
 
 export default class UsersService {
-  static async getUsers(): Promise<AxiosResponse<UserResponse[]>> {
+  static async getUsers(): Promise<
+    AxiosResponse<ResponseInterface<UserResponse[]>>
+  > {
     return $api.get("/users/users/");
   }
 

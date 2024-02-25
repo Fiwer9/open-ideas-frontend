@@ -280,7 +280,9 @@ export const EditingApplication = () => {
                         <Select
                           showSearch
                           filterOption={(input, option) =>
-                            (option?.label ?? "").includes(input)
+                            (option?.label.toLowerCase() ?? "").includes(
+                              input.toLowerCase()
+                            )
                           }
                           filterSort={(optionA, optionB) =>
                             (optionA?.label ?? "")
@@ -291,7 +293,6 @@ export const EditingApplication = () => {
                           }
                           className={`${styles.formField} ${styles.inp}`}
                           options={[
-                            { value: 0, label: "-" },
                             ...users
                               .filter(
                                 (user) => user.is_active && user.is_verified

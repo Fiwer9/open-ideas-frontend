@@ -205,8 +205,8 @@ export const fetchData = async (
 ) => {
   setIsLoading(true);
   try {
-    const data = arg ? await getData(arg) : await getData();
-    setData(data?.data);
+    const { data } = arg ? await getData(arg) : await getData();
+    setData(data.data);
   } catch (error) {
     console.error(error);
   } finally {

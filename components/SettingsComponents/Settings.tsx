@@ -16,7 +16,6 @@ import { PlusOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
 import FetchSettings from "../../hooks/fetches/FetchSettings/FetchSettings";
 import Cookies from "js-cookie";
-import { Context } from "../../pages/_app";
 import debounce from "lodash.debounce";
 
 function SwitchContent({
@@ -78,7 +77,6 @@ export const Settings = () => {
   const [allowFileAttachment, setAllowFileAttachment] = useState(false);
   const [maxFileSize, setMaxFileSize] = useState(1024);
   const [maxFilesAttached, setMaxFilesAttached] = useState(3);
-  const { store } = useContext(Context);
 
   useEffect(() => {
     if (inputVisible) {
@@ -157,8 +155,8 @@ export const Settings = () => {
       setMaxFileSize(settings[0].max_file_size);
       setMaxFilesAttached(settings[0].max_files_attached);
       setIsAnonymous(settings[0].anonymous_status);
-      store.isAllowFileAttachment = settings[0].allow_file_attachment;
-      store.isAnonymous = settings[0].anonymous_status;
+      // store.isAllowFileAttachment = settings[0].allow_file_attachment;
+      // store.isAnonymous = settings[0].anonymous_status;
     }
   }, [settings]);
 
@@ -172,7 +170,7 @@ export const Settings = () => {
         isAnonymous
       );
     setAllowFileAttachment(bool);
-    store.isAllowFileAttachment = bool;
+    // store.isAllowFileAttachment = bool;
   };
 
   const changeAnonymousStatus = (bool: boolean) => {
@@ -185,33 +183,33 @@ export const Settings = () => {
         bool
       );
     setIsAnonymous(bool);
-    store.isAnonymous = bool;
+    // store.isAnonymous = bool;
   };
 
   const changeMaxFileSize = (num: number) => {
-    settings[0] &&
-      FetchSettings.usePutSettings(
-        1,
-        store.isAllowFileAttachment,
-        num,
-        store.maxFilesAttached,
-        store.isAnonymous
-      );
-    setMaxFileSize(num);
-    store.maxFileSize = num;
+    // settings[0] &&
+    //   FetchSettings.usePutSettings(
+    //     1,
+    //     store.isAllowFileAttachment,
+    //     num,
+    //     store.maxFilesAttached,
+    //     store.isAnonymous
+    //   );
+    // setMaxFileSize(num);
+    // store.maxFileSize = num;
   };
 
   const chaneMaxFilesAttached = (num: number) => {
-    settings[0] &&
-      FetchSettings.usePutSettings(
-        1,
-        store.isAllowFileAttachment,
-        store.maxFileSize,
-        num,
-        store.isAnonymous
-      );
-    setMaxFilesAttached(num);
-    store.maxFilesAttached = num;
+    // settings[0] &&
+    //   FetchSettings.usePutSettings(
+    //     1,
+    //     store.isAllowFileAttachment,
+    //     store.maxFileSize,
+    //     num,
+    //     store.isAnonymous
+    //   );
+    // setMaxFilesAttached(num);
+    // store.maxFilesAttached = num;
   };
 
   return (
@@ -220,11 +218,7 @@ export const Settings = () => {
         <div className={styles.container}>
           <Slider />
           <div className={styles.content}>
-            <Header
-              userName={Cookies.get("user_name")}
-              organization={Cookies.get("organization")}
-              department={Cookies.get("department")}
-            />
+            <Header />
             <Tabs />
             <MainText text={"Настройки"} />
             <div className={styles.settingsContainer}>
@@ -299,36 +293,34 @@ export const Settings = () => {
                   </Space>
                 </div>
               </Col>
-              {settings[0] && (
-                <div className={styles.switchContainer}>
-                  <SwitchBar
-                    checkboxText={"Анонимные инициативы"}
-                    hintText={
-                      "Возможность изменять поле Ф. И. О. при создании инициативы"
-                    }
-                    isChecked={settings[0].anonymous_status}
-                    onChangeSwitch={changeAnonymousStatus}
-                  />
-                  <SwitchBar
-                    checkboxText={"Прикладывание файлов"}
-                    hintText={
-                      "Возможность прикладывать файлы при создании инициативы"
-                    }
-                    isChecked={settings[0].allow_file_attachment}
-                    layout={
-                      allowFileAttachment && (
-                        <SwitchContent
-                          maxFileSize={settings[0].max_file_size}
-                          maxFilesAttached={settings[0].max_files_attached}
-                          onChangeSize={changeMaxFileSize}
-                          onChangeCount={chaneMaxFilesAttached}
-                        />
-                      )
-                    }
-                    onChangeSwitch={changeAllowFileAttachment}
-                  />
-                </div>
-              )}
+              <div className={styles.switchContainer}>
+                <SwitchBar
+                  checkboxText={"Анонимные инициативы"}
+                  hintText={
+                    "Возможность изменять поле Ф. И. О. при создании инициативы"
+                  }
+                  // isChecked={settings[0].anonymous_status}
+                  onChangeSwitch={changeAnonymousStatus}
+                />
+                <SwitchBar
+                  checkboxText={"Прикладывание файлов"}
+                  hintText={
+                    "Возможность прикладывать файлы при создании инициативы"
+                  }
+                  // isChecked={settings[0].allow_file_attachment}
+                  layout={
+                    allowFileAttachment && (
+                      <SwitchContent
+                        // maxFileSize={settings[0].max_file_size}
+                        // maxFilesAttached={settings[0].max_files_attached}
+                        onChangeSize={changeMaxFileSize}
+                        onChangeCount={chaneMaxFilesAttached}
+                      />
+                    )
+                  }
+                  onChangeSwitch={changeAllowFileAttachment}
+                />
+              </div>
             </div>
           </div>
         </div>
