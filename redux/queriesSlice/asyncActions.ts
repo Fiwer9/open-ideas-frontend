@@ -47,7 +47,6 @@ export const patchQuery = createAsyncThunk<
   PatchQueryArgs
 >("queries/patchQuery", async (props) => {
   if (props.expert_users) {
-    console.log(props);
     const { data } = await QueriesService.patchQuery(props.id, props);
     return data;
   }
