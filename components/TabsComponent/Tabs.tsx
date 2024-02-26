@@ -31,7 +31,7 @@ export const Tabs: React.FC = memo(() => {
       : tagsData.filter((t) => t === tag);
     dispatch(changeSelectedTag(nextSelectedTags[0]));
     sessionStorage.setItem("selectedTag", tag);
-    tag !== selectedTags[0] && router.push("/queries");
+    tag !== selectedTags && router.push("/queries");
   };
 
   useEffect(() => {
