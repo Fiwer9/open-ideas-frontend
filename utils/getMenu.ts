@@ -6,7 +6,9 @@ export const getMenu = (): MenuSliceState => {
     const currentPage = sessionStorage.getItem("current_page_menu")
       ? [sessionStorage.getItem("current_page_menu")]
       : ["/queries"];
-    const selectedTag = sessionStorage.getItem("selectedTag");
+    const selectedTag = sessionStorage.getItem("selectedTag")
+      ? sessionStorage.getItem("selectedTag")
+      : "Инициативы";
     const isStaff = sessionStorage.getItem("is_staff") === "true" || false;
     return {
       isCollapsed,

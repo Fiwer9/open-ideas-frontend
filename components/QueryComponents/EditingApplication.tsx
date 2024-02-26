@@ -115,7 +115,12 @@ export const EditingApplication = () => {
         initiative_direction,
         implementation_effect,
         initiator_users: applicationData.initiator_users,
-        expert_users: expert_users !== 0 ? [expert_users] : null,
+        expert_users:
+          expert_users !== 0
+            ? typeof expert_users === "string"
+              ? applicationData.expert_users
+              : [expert_users]
+            : null,
       })
     );
     router.back();
