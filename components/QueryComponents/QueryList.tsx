@@ -3,7 +3,6 @@ import React, { memo, useCallback, useEffect, useState } from "react";
 import styles from "./styles/QueryList.module.scss";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
 import {
-  checkExpert,
   getDirectionName,
   getDirections,
   getStatus,
@@ -34,8 +33,8 @@ import {
 } from "../../redux/queriesSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
 import {
-  fetchQueriesByName,
   fetchQueries,
+  fetchQueriesByName,
 } from "../../redux/queriesSlice/asyncActions";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
 import { selectFilters } from "../../redux/filterSlice/selectors";
@@ -176,10 +175,7 @@ export const QueryList: React.FC = memo(() => {
   };
 
   const handleRowClickIdea = (queryId: QueriesResponse) => {
-    const isExpert = checkExpert(queryId);
-    !isExpert
-      ? router.push(`/queries/application?queryId=${queryId.id}`)
-      : router.push(`/queries/expert?queryId=${queryId.id}`);
+    router.push(`/queries/application?queryId=${queryId.id}`);
     dispatch(setStatusUsers(Status.WAITING));
     dispatch(setStatusQueries(Status.WAITING));
     dispatch(setStatusDirections(Status.WAITING));
