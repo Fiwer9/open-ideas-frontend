@@ -18,8 +18,8 @@ const $api = axios.create({
 });
 
 $api.interceptors.request.use((config) => {
-  if (sessionStorage.getItem("token_access")) {
-    const token = sessionStorage.getItem("token_access");
+  if (localStorage.getItem("token_access")) {
+    const token = localStorage.getItem("token_access");
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
@@ -34,7 +34,7 @@ $api.interceptors.response.use(
       config.data.code === 401 &&
       !window.location.pathname.includes("code")
     ) {
-      const refresh = sessionStorage.getItem("token_refresh");
+      const refresh = localStorage.getItem("token_refresh");
       const response = await axios.post<ResponseInterface<TokenResponse>>(
         `${API_URL_TOKEN}/token/refresh/`,
         { refresh },
@@ -48,7 +48,7 @@ $api.interceptors.response.use(
       const acceptResponse =
         response as unknown as AxiosResponse<TokenResponse>;
       refresh &&
-        sessionStorage.setItem("token_access", acceptResponse.data.access);
+        localStorage.setItem("token_access", acceptResponse.data.access);
       return $api.request(config.config);
     }
     return config;

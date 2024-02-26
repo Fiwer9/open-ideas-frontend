@@ -3,7 +3,7 @@ import { AuthorizationState } from "../redux/authSlice/types";
 
 export const getUser = (): AuthorizationState => {
   try {
-    const user = JSON.parse(sessionStorage.getItem("user")) || {
+    const user = JSON.parse(localStorage.getItem("user")) || {
       user_id: 0,
       email: "",
       is_verified: false,

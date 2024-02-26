@@ -103,7 +103,6 @@ export const EditingApplication = () => {
       expert_users,
       description,
     } = data;
-    console.log(expert_users);
     dispatch(
       patchQuery({
         date,

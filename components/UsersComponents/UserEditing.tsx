@@ -77,7 +77,6 @@ export const UserEditing = ({ userId }: UserEditingProps) => {
     event: any[],
     setData: React.SetStateAction<any>
   ): void {
-    console.log(event);
     setData(event);
   }
 
@@ -109,7 +108,6 @@ export const UserEditing = ({ userId }: UserEditingProps) => {
   };
 
   const handleActive = (e: any) => {
-    console.log(e);
     setIsActive(e);
   };
 

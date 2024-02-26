@@ -193,7 +193,7 @@ export const getDirectionTranslationOnEng = (direction: string) => {
 export const checkExpert = (query: QueriesResponse) => {
   return (
     query.expert_users[0] ===
-    Number(JSON.parse(sessionStorage.getItem("user")).user_id)
+    Number(JSON.parse(localStorage.getItem("user")).user_id)
   );
 };
 

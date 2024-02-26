@@ -7,7 +7,7 @@ import { checkAuth } from "../redux/authSlice/asyncActions";
 export default function Index() {
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if (sessionStorage.getItem("token_access")) {
+    if (localStorage.getItem("token_access")) {
       dispatch(checkAuth());
       router.push("/queries");
     }

@@ -43,12 +43,9 @@ export const authSlice = createSlice({
           is_verified: action.payload.data.is_verified,
         };
         state.user = user;
-        sessionStorage.setItem("user", JSON.stringify(user));
-        sessionStorage.setItem("token_access", action.payload.data.jwt_access);
-        sessionStorage.setItem(
-          "token_refresh",
-          action.payload.data.jwt_refresh
-        );
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token_access", action.payload.data.jwt_access);
+        localStorage.setItem("token_refresh", action.payload.data.jwt_refresh);
         state.status = Status.SUCCESS;
       }
     );
@@ -88,9 +85,9 @@ export const authSlice = createSlice({
         is_verified: action.payload.data.is_verified,
       };
       state.user = user;
-      sessionStorage.setItem("user", JSON.stringify(user));
-      sessionStorage.setItem("token_access", action.payload.data.jwt_access);
-      sessionStorage.setItem("token_refresh", action.payload.data.jwt_refresh);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token_access", action.payload.data.jwt_access);
+      localStorage.setItem("token_refresh", action.payload.data.jwt_refresh);
       state.status = Status.SUCCESS;
     });
 

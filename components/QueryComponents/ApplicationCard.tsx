@@ -218,7 +218,6 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
 
     const patchAddLike = async (userId: number) => {
       const likedQueries = [...getAllUserLikes(users, userId), Number(queryId)];
-      console.log(likedQueries);
       await dispatch(patchLikes({ userId, likedQueries }));
       await dispatch(fetchUpdateUsers());
     };

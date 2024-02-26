@@ -47,11 +47,11 @@ export const postCodeConfirmation = createAsyncThunk<
 });
 
 export const checkAuth = createAsyncThunk("auth/checkAuth", async () => {
-  const refresh = sessionStorage.getItem("token_refresh");
+  const refresh = localStorage.getItem("token_refresh");
   const response = await axios.post<TokenResponse>(
     `${API_URL_TOKEN}/token/refresh/`,
     { refresh },
     { withCredentials: true }
   );
-  sessionStorage.setItem("token_access", response.data.access);
+  localStorage.setItem("token_access", response.data.access);
 });

@@ -46,7 +46,6 @@ export default class QueriesService {
     id: number,
     props: PatchQueryArgs
   ): Promise<AxiosResponse> {
-    console.log(props);
     return $api.patch(`/queries/queries/${id}/`, {
       ...props,
     });
