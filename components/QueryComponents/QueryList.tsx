@@ -130,7 +130,7 @@ export const QueryList: React.FC = memo(() => {
   const fetchData = debounce(async () => {
     await dispatch(fetchDirections());
     await dispatch(fetchQueries());
-  }, 2000);
+  }, 4000);
 
   const fetchDataByName = useCallback(async () => {
     await dispatch(fetchQueriesByName({ value: searchValue }));

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles/EditingApplication.module.scss";
 import { Slider } from "../SliderComponents/SliderComponents";
-import { Button, Form, Input, Select, Upload } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
@@ -11,7 +11,6 @@ import {
   getOrganizationName,
   getOrganizationNameById,
 } from "../../utils/utils";
-import { UploadOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import {
   selectUpdateUsers,
@@ -306,22 +305,22 @@ export const EditingApplication = () => {
                         />
                       </Form.Item>
                     </div>
-                    <div className={styles.files}>
-                      <Form.Item
-                        className={styles.formItem}
-                        label={"Дополнительные файлы"}
-                        name={"file"}
-                      >
-                        <Upload
-                          maxCount={5}
-                          accept=".webm, .pdf, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
-                          multiple
-                          className="upload"
-                        >
-                          <Button icon={<UploadOutlined />}>Загрузить</Button>
-                        </Upload>
-                      </Form.Item>
-                    </div>
+                    {/*<div className={styles.files}>*/}
+                    {/*  <Form.Item*/}
+                    {/*    className={styles.formItem}*/}
+                    {/*    label={"Дополнительные файлы"}*/}
+                    {/*    name={"file"}*/}
+                    {/*  >*/}
+                    {/*    <Upload*/}
+                    {/*      maxCount={5}*/}
+                    {/*      accept=".webm, .pdf, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"*/}
+                    {/*      multiple*/}
+                    {/*      className="upload"*/}
+                    {/*    >*/}
+                    {/*      <Button icon={<UploadOutlined />}>Загрузить</Button>*/}
+                    {/*    </Upload>*/}
+                    {/*  </Form.Item>*/}
+                    {/*</div>*/}
                   </div>
                 </Form>
                 <div className={styles.btnContainer}>

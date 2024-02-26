@@ -38,6 +38,8 @@ import {
   changeIsModalSubmitActive,
 } from "../../redux/modalsSlice/slice";
 import { MainText } from "../MainTextComponent";
+import { setStatusQueries } from "../../redux/queriesSlice/slice";
+import { setStatusDirections } from "../../redux/directionsSlice/slice";
 
 interface PostQueryProps {
   name: string;
@@ -102,10 +104,14 @@ function NewCreateQuery() {
         organization: getOrganizationNameById(organization, organizations),
       })
     );
+    dispatch(setStatusQueries(Status.WAITING));
+    dispatch(setStatusDirections(Status.WAITING));
     await router.push("/queries");
   };
 
   const onReset = () => {
+    dispatch(setStatusQueries(Status.WAITING));
+    dispatch(setStatusDirections(Status.WAITING));
     router.push("/queries");
   };
 

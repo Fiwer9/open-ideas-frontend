@@ -4,7 +4,7 @@ import {
   HeartOutlined,
 } from "@ant-design/icons";
 import type { UploadProps } from "antd";
-import { Card, Col, Flex, Radio, Row, Upload } from "antd";
+import { Card, Col, Flex, Radio, Row } from "antd";
 import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
 import React, { memo, useCallback, useEffect, useState } from "react";
@@ -19,7 +19,10 @@ import {
   selectCurrentComment,
   selectStatusComments,
 } from "../../redux/commentsSlice/selectors";
-import { setCurrentComment } from "../../redux/commentsSlice/slice";
+import {
+  setComments,
+  setCurrentComment,
+} from "../../redux/commentsSlice/slice";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
 import {
   selectDirections,
@@ -58,6 +61,8 @@ import { Logo } from "../PicturesComponents/Logo";
 import { TextAreas } from "../TextAreaComponent/TextArea";
 import styles from "./styles/ApplicationCard.module.scss";
 import { CommentBlock } from "./blocks/CommentBlock";
+import { setStatusQueries } from "../../redux/queriesSlice/slice";
+import { setStatusDirections } from "../../redux/directionsSlice/slice";
 
 const props: UploadProps = {
   defaultFileList: [
@@ -195,6 +200,20 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
       await dispatch(
         postComment({ comment, query_id: Number(queryId), user_id })
       );
+      const currentDate = new Date();
+      const date = formatDateToServer(currentDate, "-");
+      dispatch(
+        setComments([
+          ...dataComment,
+          {
+            comment_text: comment,
+            query: Number(queryId),
+            user: user_id,
+            created_at: date,
+            id: dataComment.length + 1,
+          },
+        ])
+      );
     };
 
     const patchAddLike = async (userId: number) => {
@@ -293,12 +312,12 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                     )}
                 </p>
               </Row>
-              <Row className={styles.row}>
-                <div className={styles.files}>
-                  <p className={styles.rowText}>Прикреплённые файлы:</p>
-                  <Upload {...props} className="uploadFile"></Upload>
-                </div>
-              </Row>
+              {/*<Row className={styles.row}>*/}
+              {/*  <div className={styles.files}>*/}
+              {/*    <p className={styles.rowText}>Прикреплённые файлы:</p>*/}
+              {/*    <Upload {...props} className="uploadFile"></Upload>*/}
+              {/*  </div>*/}
+              {/*</Row>*/}
               <Row className={styles.row}>
                 <p className={`${styles.rowText} ${styles.comments}`}>
                   Комментарии ({dataComment.length}
@@ -332,6 +351,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                     <Radio.Group
                       onChange={(e) => {
                         setStatus(e.target.value);
+                        changeStatus(e.target.value);
                       }}
                       value={status}
                     >
@@ -348,9 +368,12 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                 <div className={styles.submitBtns}>
                   <div className={styles.btnWhite}>
                     <Buttons
-                      text={"Отменить"}
+                      text={"Назад"}
                       onClick={() => {
+                        dispatch(setStatusQueries(Status.WAITING));
+                        dispatch(setStatusDirections(Status.WAITING));
                         router.push("/queries");
+                        dispatch(setCurrentComment(""));
                       }}
                       type="reset"
                     />
@@ -359,8 +382,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                     <Buttons
                       onClick={() => {
                         commentValue && sendComment(commentValue);
-                        status && changeStatus(status);
-                        router.push("/queries");
+                        dispatch(setCurrentComment(""));
                       }}
                       text={"Отправить"}
                       type={"submit"}
@@ -372,7 +394,10 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
               <div className={styles.footerContainer}>
                 <div className={styles.btnWhite}>
                   <Buttons
-                    onClick={() => router.push("/queries")}
+                    onClick={() => {
+                      router.push("/queries");
+                      dispatch(setCurrentComment(""));
+                    }}
                     text={"Назад"}
                     type={"reset"}
                   />
@@ -384,7 +409,6 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = memo(
                     onClick={() => {
                       commentValue && sendComment(commentValue);
                       dispatch(setCurrentComment(""));
-                      router.push("/queries");
                     }}
                   />
                 </div>

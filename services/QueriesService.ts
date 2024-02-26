@@ -47,13 +47,9 @@ export default class QueriesService {
     props: PatchQueryArgs
   ): Promise<AxiosResponse> {
     console.log(props);
-    return props.expert_users
-      ? $api.patch(`/queries/queries/${id}/`, {
-          ...props,
-        })
-      : $api.patch(`/queries/queries/${id}/`, {
-          ...props,
-        });
+    return $api.patch(`/queries/queries/${id}/`, {
+      ...props,
+    });
   }
 
   static async deleteQuery(
