@@ -1,12 +1,14 @@
 import React from "react";
-import { OrganizationCard } from "../../../components/OrganizationsComponents/OrganizationCard";
-
+import { PageDevelopment } from "../../../components/PageDevelopmentComponent/PageDevelopment";
+import { useCheckStaff } from "../../../hooks/useCheckStaff";
 
 export default function Index() {
+  const isStaff = useCheckStaff();
 
   return (
     <div>
-      <OrganizationCard />
+      {/*<OrganizationCard />*/}
+      {isStaff && <PageDevelopment />}
     </div>
   );
 }

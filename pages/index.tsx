@@ -1,28 +1,16 @@
-import React, {createContext, useEffect} from "react";
-import Store from "../store/store";
+import React, { useEffect } from "react";
 import router from "next/router";
 import NewLogin from "../components/AuthComponents/NewLogin";
-
-interface State {
-    store: Store,
-}
-
-const store = new Store();
-
-export const Context = createContext<State>({
-    store,
-})
+import { useAppDispatch } from "../redux/store";
+import { checkAuth } from "../redux/authSlice/asyncActions";
 
 export default function Index() {
-    useEffect(() => {
-        if(sessionStorage.getItem('token_access')) {
-            store.checkAuth()
-            router.push('/queries')
-            }
-    }, [])
-    return (
-        <div>
-            <NewLogin />
-        </div>
-    )
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (localStorage.getItem("token_access")) {
+      dispatch(checkAuth());
+      router.push("/queries");
+    }
+  }, []);
+  return <NewLogin />;
 }

@@ -1,51 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect } from "react";
 import styles from "./styles/Tabs.module.scss";
 import { Tag } from "antd";
-import { fetchData } from "../../utils/utils";
-import UsersService from "../../services/UsersService";
-import { UserResponse } from "../../models/response/UserResponse";
 import router from "next/router";
-import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/authSlice/selectors";
+import { useAppDispatch } from "../../redux/store";
+import { changeSelectedTag } from "../../redux/menuSlice/slice";
+import {
+  selectIsStaff,
+  selectSelectedTag,
+} from "../../redux/menuSlice/selectors";
+import { fetchUserIsStaff } from "../../redux/menuSlice/asyncActions";
 const { CheckableTag } = Tag;
 
+const tagsData = ["Инициативы", "Панель администратора"];
 
-const tagsData = ['Инициативы', 'Панель администратора'];
-
-export const Tabs = () => {
-  const [isStaff, setIsStaff] = useState(false);
-  const [selectedTags, setSelectedTags] = useState<string[]>(['Инициативы']);
-  const [user, setUser] = useState<UserResponse>();
-  const [isLoading, setIsLoading] = useState(false)
+export const Tabs: React.FC = memo(() => {
+  const selectedTags = useSelector(selectSelectedTag);
+  const { user_id } = useSelector(selectCurrentUser);
+  const isStaff = useSelector(selectIsStaff);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetchData(setIsLoading, setUser, UsersService.getCurrentUpdateUser, Number(sessionStorage.getItem('user_id')));
+    dispatch(fetchUserIsStaff({ user_id }));
   }, []);
-
-  useEffect(() => {
-    checkExpertUser();
-  }, [user]);
-
-  useEffect(() => {
-    Cookies.set('selectedTags', selectedTags[0]);
-  }, [selectedTags]);
-
-  const checkExpertUser = () => {
-    user && user.is_staff && setIsStaff(user.is_staff);
-  };
 
   const handleChangeTag = (tag: string, checked: boolean) => {
     const nextSelectedTags = checked
       ? [tag]
-      : selectedTags.filter((t) => t === tag);
-    setSelectedTags(nextSelectedTags);
-    Cookies.set('selectedTag', tag);
-    tag !== selectedTags[0]  && router.push('/queries')
+      : tagsData.filter((t) => t === tag);
+    dispatch(changeSelectedTag(nextSelectedTags[0]));
+    sessionStorage.setItem("selectedTag", tag);
+    tag !== selectedTags && router.push("/queries");
   };
 
   useEffect(() => {
-    const savedSelectedTag = Cookies.get('selectedTag');
+    const savedSelectedTag = sessionStorage.getItem("selectedTag");
     if (savedSelectedTag) {
-      setSelectedTags([savedSelectedTag]);
+      dispatch(changeSelectedTag(savedSelectedTag));
     }
   }, []);
 
@@ -53,25 +45,34 @@ export const Tabs = () => {
     <div className={styles.tabsContainer}>
       <div className={styles.tabs}>
         {tagsData.map((tag) => {
-          const isAdministratorTagDisabled = tag === 'Панель администратора' && !isStaff;
+          const isAdministratorTagDisabled =
+            tag === "Панель администратора" && !isStaff;
 
           return (
             <CheckableTag
               key={tag}
-              checked={selectedTags.includes(tag)}
+              checked={tag.includes(selectedTags)}
               onChange={(checked) => handleChangeTag(tag, checked)}
               style={{
-                background: selectedTags.includes(tag) ? 'var(--geek-blue-1, #F0F5FF)' : 'none',
-                pointerEvents: isAdministratorTagDisabled ? 'none' : 'auto',
+                background: tag.includes(selectedTags)
+                  ? "var(--geek-blue-1, #F0F5FF)"
+                  : "none",
+                pointerEvents: isAdministratorTagDisabled ? "none" : "auto",
                 opacity: isAdministratorTagDisabled ? 0.5 : 1,
               }}
               className={styles.tags}
             >
-              <p style={{ color: selectedTags.includes(tag) ? '#2F54EB' : '#434343' }}>{tag}</p>
+              <p
+                style={{
+                  color: tag.includes(selectedTags) ? "#2F54EB" : "#434343",
+                }}
+              >
+                {tag}
+              </p>
             </CheckableTag>
           );
         })}
       </div>
     </div>
   );
-};
+});

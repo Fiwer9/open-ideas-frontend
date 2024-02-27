@@ -1,290 +1,388 @@
-import { Slider } from "../SliderComponents/SliderComponents";
-import styles from "./styles/AdminApplicationCard.module.scss";
 import { DownloadOutlined, HeartOutlined } from "@ant-design/icons";
-import { Col, Select, Upload } from "antd";
-import avatar from "../../public/img/AvatarAratrum.svg";
-import Image from "next/image";
-import Modal from "../ModalsComponents/Modal";
-import React, {useContext, useEffect, useState} from "react";
-import { Header } from "../HeaderComponents/Header";
-import { Tabs } from "../TabsComponent/Tabs";
+import { Col, Select, Upload, UploadProps } from "antd";
+import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
-import {UserResponse} from "../../models/response/UserResponse";
-import {Context} from "../../pages/_app";
+import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { fetchCommentsById } from "../../redux/commentsSlice/asyncActions";
 import {
-  fetchData,
-  formatDate, formatDateRu, formatDateToServer, getAuthor, getDirectionName,
-  getLikes,
-  getOrganizationName, getStatusClassName, getStatusTranslation,
-  getUserName
+  selectComments,
+  selectStatusComments,
+} from "../../redux/commentsSlice/selectors";
+import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
+import {
+  selectDirections,
+  selectStatusDirections,
+} from "../../redux/directionsSlice/selectors";
+import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
+import {
+  selectOrganizations,
+  selectOrgStatus,
+} from "../../redux/organizationsSlice/selectors";
+import {
+  deleteQuery,
+  fetchQueriesById,
+  patchQuery,
+} from "../../redux/queriesSlice/asyncActions";
+import {
+  selectQueryData,
+  selectStatusQueries,
+} from "../../redux/queriesSlice/selectors";
+import { useAppDispatch } from "../../redux/store";
+import {
+  fetchCurrentUser,
+  fetchUpdateUsers,
+} from "../../redux/usersSlice/asyncActions";
+import {
+  selectUpdateUsers,
+  selectUser,
+  selectUsersStatus,
+} from "../../redux/usersSlice/selectors";
+import { statusOptions } from "../../utils/consts";
+import {
+  formatDateRu,
+  formatDateToServer,
+  getAuthor,
+  getDirectionName,
+  getOrganizationName,
+  statusClassName,
 } from "../../utils/utils";
-import Cookies from "js-cookie";
-import type { UploadProps } from 'antd';
-import FetchQueries from "../../hooks/fetches/FetchQueries/FetchQueries";
-import {FetchUsers} from "../../hooks/fetches/FetchUsers/FetchUsers";
-import FetchOrganizations from "../../hooks/fetches/FetchOrganizations/FetchOrganizations";
-import FetchComments from "../../hooks/fetches/FetchComments/FetchComments";
-import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
+import { Header } from "../HeaderComponents/Header";
+import { Slider } from "../SliderComponents/SliderComponents";
+import { Tabs } from "../TabsComponent/Tabs";
+import { CommentBlockAdmin } from "./blocks/CommentBlock";
+import styles from "./styles/AdminApplicationCard.module.scss";
+import { changeIsModalSubmitActive } from "../../redux/modalsSlice/slice";
+import ModalAdditionalText from "../ModalsComponents/ModalAdditionalText";
+import { Status } from "../../redux/queriesSlice/types";
+import { setPageId, setPageName } from "../../redux/menuSlice/slice";
 
+const props: UploadProps = {
+  defaultFileList: [
+    {
+      uid: "1",
+      name: "xxx.png",
+      status: "done",
+      url: "",
+    },
+    {
+      uid: "2",
+      name: "xxx.png",
+      status: "done",
+      url: "",
+    },
+    {
+      uid: "3",
+      name: "xxx.png",
+      status: "done",
+      url: "",
+    },
+  ],
+  showUploadList: {
+    showDownloadIcon: true,
+    downloadIcon: <DownloadOutlined />,
+    showRemoveIcon: false,
+  },
+};
 
-interface AdminApplicationCardProps {
-  queryId: string;
-}
-
-export const AdminApplicationCard = ({queryId} : AdminApplicationCardProps) => {
-
+export const AdminApplicationCard = () => {
   const router = useRouter();
-  const [modalActive, setModalActive] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [organization, setOrganization] = FetchOrganizations.useGetOrganizations()
-  const [users, setUsers] = FetchUsers.useGetUsers();
-  const [user, setUser] = useState<UserResponse>()
-  const { store } = useContext(Context);
-  const [dataComment, setDataComment] = FetchComments.useGetComments();
-  const [directions, setDirections] = FetchDirections.useGetDirections();
-  const [status, setStatus] = useState('')
-  const [applicationData, setApplicationData] = FetchQueries.useGetQueriesById(queryId? queryId : Cookies.get('queryId'))
+  const { queryId } = router.query as { queryId: string };
+  const [isLoading, setIsLoading] = useState(true);
+  const organizations = useSelector(selectOrganizations);
+  const users = useSelector(selectUpdateUsers);
+  const user = useSelector(selectUser);
+  const dataComments = useSelector(selectComments);
+  const directions = useSelector(selectDirections);
+  const applicationData = useSelector(selectQueryData);
+  const statusOrganizations = useSelector(selectOrgStatus);
+  const statusUsers = useSelector(selectUsersStatus);
+  const statusComments = useSelector(selectStatusComments);
+  const statusDirections = useSelector(selectStatusDirections);
+  const statusQuery = useSelector(selectStatusQueries);
+  const dispatch = useAppDispatch();
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
 
-    function begin() {
-      const translateStatus = getStatusTranslation(applicationData.status)
-      setStatus(translateStatus)
+  useEffect(() => {
+    if (
+      statusDirections === Status.SUCCESS &&
+      statusQuery === Status.SUCCESS &&
+      statusComments === Status.SUCCESS &&
+      statusOrganizations === Status.SUCCESS &&
+      statusUsers === Status.SUCCESS
+    ) {
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
     }
+  }, [
+    statusDirections,
+    statusUsers,
+    statusOrganizations,
+    statusComments,
+    statusQuery,
+  ]);
 
-    begin()
+  const fetchData = useCallback(
+    debounce(async () => {
+      await dispatch(fetchQueriesById({ id: queryId }));
+      await dispatch(fetchUpdateUsers());
+      await dispatch(fetchDirections());
+      await dispatch(fetchOrganizations());
+      await dispatch(fetchCommentsById({ queryId }));
+      dispatch(setPageId(Number(queryId)));
+    }, 2000),
+    [queryId],
+  );
 
-  }, [queryId])
+  useEffect(() => {
+    queryId && fetchData();
+  }, [queryId]);
 
-  const closeModal = () => {
-    setModalActive(false);
+  useEffect(() => {
+    applicationData.name && dispatch(setPageName(applicationData.name));
+    applicationData?.expert_users &&
+      dispatch(
+        fetchCurrentUser({ user_id: applicationData?.initiator_users[0] }),
+      );
+  }, [applicationData.name]);
+
+  const changeStatus = async (status: string) => {
+    const currentDate = new Date();
+    const date = formatDateToServer(currentDate, "-");
+    const {
+      name,
+      id,
+      description,
+      organization,
+      initiative_direction,
+      initiator_users,
+      implementation_effect,
+    } = applicationData;
+    await dispatch(
+      patchQuery({
+        date,
+        status,
+        id,
+        description,
+        name,
+        initiative_direction,
+        initiator_users,
+        implementation_effect,
+        organization,
+      }),
+    );
   };
 
-  useEffect(() => {
-    getAuthor(applicationData.initiator_users, users, setUser)
-    Cookies.set('queryName', applicationData.name)
-  }, [applicationData]);
+  function getExpert(users_id?: [number]) {
+    try {
+      const { name } = users.find((user) => user.id === users_id[0]);
 
+      return name;
+    } catch (e) {
+      return "Не назначено";
+    }
+  }
 
-  function getExpert(users_id: any) {
-    const expert = []
-    for (let id of users_id) {
-      for (let user of users) {
-        if (id === user.id) {
-          expert.push(user.name)
+  const handleDeleteIdea = async () => {
+    dispatch(changeIsModalSubmitActive(false));
+    await dispatch(deleteQuery({ queryId }));
+    await router.push("/queries");
+  };
+
+  const getLikes = () => {
+    let like = 0;
+    for (let user of users) {
+      for (let query_id of user.likes) {
+        if (query_id === Number(queryId)) {
+          like += 1;
         }
       }
     }
-    return expert? expert : 'Не назначено'
-  }
 
-  const checkExpert = (comment_user: number) => {
-    let isExpert = false;
-
-    applicationData.expert_users.forEach((user) => {
-      if (user === comment_user) {
-        isExpert = true;
-      }
-    });
-
-    return isExpert;
-  }
-
-  const data = {
-    user_name: user?.name,
-    query_name: applicationData.name,
-    description: applicationData.description,
-    effect: applicationData.implementation_effect,
-    direction: getDirectionName(applicationData.initiative_direction, directions),
-    organization: getOrganizationName(applicationData.organization, organization),
-    department: user?.department.name,
-    expert: getExpert(applicationData.expert_users),
-    status: getStatusTranslation(applicationData.status)
-  }
-
-  useEffect(() => {
-    setStatus(getStatusTranslation(applicationData.status))
-  }, [applicationData]);
-
-  const patchQuery = async (status: string) => {
-    try {
-      const currentDate = new Date();
-      const date = formatDateToServer(currentDate, '-')
-      await store.patchQuery(date, applicationData.name, applicationData.description,
-        applicationData.initiative_direction, status, applicationData.implementation_effect,
-        applicationData.organization, applicationData.initiator_users, Number(queryId));
-    } catch (error: any) {
-      console.log(error.response?.data?.message);
-    }
-  }
-
-  function handleDeleteIdea() {
-    router.push('/queries')
-    store.deleteQuery(Number(queryId))
-  }
-
-  const props: UploadProps = {
-    defaultFileList: [
-      {
-        uid: '1',
-        name: 'xxx.png',
-        status: 'done',
-        url: '',
-      },
-      {
-        uid: '2',
-        name: 'xxx.png',
-        status: 'done',
-        url: '',
-      },
-      {
-        uid: '3',
-        name: 'xxx.png',
-        status: 'done',
-        url: '',
-      },
-    ],
-    showUploadList: {
-      showDownloadIcon: true,
-      downloadIcon: <DownloadOutlined />,
-      showRemoveIcon: false,
-    },
+    return like;
   };
+
+  if (!isClient) {
+    return;
+  }
 
   return (
     <>
       <div className={styles.container}>
         <div className={styles.slider}>
-          <Slider/>
+          <Slider />
         </div>
         <div className={styles.content}>
           <div className={styles.headerContainer}>
-            <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+            <Header />
           </div>
-          <Tabs />
-          <div>
-            <div className={styles.ideaInfContainer}>
-              <div className={styles.headerContainerIdea}>
-                <p className={styles.nameInitiative}>{applicationData.name}</p>
-                <div className={styles.btnHeader}>
-                  <div className={styles.likesContainer}>
-                    <HeartOutlined width={20} height={20} />
-                    <p className={styles.numberLikes}>{getLikes(users, queryId)}</p>
-                  </div>
-                  {applicationData.status && (
-                    <Select
-                      className={`selectInitiative ${getStatusClassName(styles, applicationData.status)}`}
-                      style={{width: 250}}
-                      defaultValue={applicationData.status}
-                      options={[
-                        { value: 'registered', label: 'Зарегистрирована' },
-                        { value: 'check', label: 'На рассмотрении' },
-                        { value: 'analysis', label: 'Анализируется экспертом' },
-                        { value: 'accepted', label: 'На рассмотрении у руководства' },
-                        { value: 'implementation', label: 'Принята к реализации' },
-                        { value: 'done', label: 'Выполнена' },
-                        { value: 'rejected', label: 'Отклонена' },
-                      ]}
-                      onChange={(value) => patchQuery(value)}
-                    />
-                  )}
-                </div>
-              </div>
-              <p className={styles.data}>{`Дата создания ${formatDateRu(applicationData.date)}`}</p>
-            </div>
-
-            <Col className={styles.column}>
+          {!isLoading && (
+            <>
+              <Tabs />
               <div>
-                <div className={styles.row}>
-                  <p className={styles.rowText}>Получено от:</p>
-                  <p className={styles.rowInf}>{data.user_name}</p>
-                </div>
-                <div className={styles.row}>
-                  <p className={styles.rowText}>Инициатива (Идея):</p>
-                  <p className={styles.rowInf}>{data.query_name}</p>
-                </div>
-                <div className={styles.row}>
-                  <p className={styles.rowText}>Описание инициативы:</p>
-                  <p className={styles.rowInf}>{data.description}</p>
-                </div>
-                <div className={styles.row}>
-                  <p className={styles.rowText}>Эффект от доработки:</p>
-                  <p className={styles.rowInf}>{data.effect}</p>
-                </div>
-                <div className={styles.row}>
-                  <p className={styles.rowText}>Направление:</p>
-                  <p className={styles.rowInf}>{data.direction}</p>
-                </div>
-                <div className={styles.row}>
-                  <p className={styles.rowText}>Организация:</p>
-                  <p className={styles.rowInf}>{data.organization}</p>
-                </div>
-                <div className={styles.row}>
-                  <p className={styles.rowText}>Отдел:</p>
-                  <p className={styles.rowInf}>{data.department}</p>
-                </div>
-                <div className={styles.row}>
-                  <p className={styles.rowText}>Назначенный эксперт:</p>
-                  <p className={styles.rowInf}>{data.expert? data.expert : 'Не назначено'}</p>
-                </div>
-              </div>
-              <div className={styles.rows}>
-                <div className={styles.files}>
-                  <p className={styles.rowTexts}>Прикреплённые файлы:</p>
-                  <Upload {...props} className='uploadFile'></Upload>
-                </div>
-              </div>
-            </Col>
-
-            <div className={styles.commentContainer}>
-              <p className={styles.comment}>Комментарии:</p>
-            </div>
-            {dataComment .filter((comment) => comment.query === Number(queryId))
-              .map((comment) => (
-                <div className={styles.avatarContainer}>
-                  <div className={styles.avatar}>
-                    <div className={styles.userImg}>
-                      <Image src={avatar} alt={"Avatar"}/>
-                    </div>
-                    <div className={styles.infComment}>
-                      <p className={styles.name}>{`${getUserName(comment.user, users)} ${checkExpert(comment.user)? '(Эксперт)' : '(Пользователь)'}`}</p>
-                      <p className={styles.date}>{formatDate(comment.created_at)}</p>
-                      <p className={styles.commentText}>{comment.comment_text}</p>
+                <div className={styles.ideaInfContainer}>
+                  <div className={styles.headerContainerIdea}>
+                    <p className={styles.nameInitiative}>
+                      {applicationData?.name}
+                    </p>
+                    <div className={styles.btnHeader}>
+                      <div className={styles.likesContainer}>
+                        <HeartOutlined width={20} height={20} />
+                        <p className={styles.numberLikes}>
+                          {users.length > 0 && getLikes()}
+                        </p>
+                      </div>
+                      {applicationData?.status && (
+                        <Select
+                          className={`selectInitiative ${statusClassName(
+                            styles,
+                          )}`}
+                          style={{ width: 250 }}
+                          defaultValue={applicationData?.status}
+                          options={statusOptions}
+                          onChange={(value) => changeStatus(value)}
+                        />
+                      )}
                     </div>
                   </div>
+                  <p className={styles.data}>{`Дата создания ${formatDateRu(
+                    applicationData?.date,
+                  )}`}</p>
                 </div>
-              ))}
-          </div>
 
-          <div className={styles.btnContainer}>
-            <button className={`${styles.btnBlue} ${styles.btnFooter}`} onClick={() => router.push(`/queries/editingApplication?queryId=${queryId}`)}>Редактировать данные инициативы</button>
-            <button className={`${styles.btnRed} ${styles.btnFooter}`}
-                    onClick={() => {
-                      setModalActive(true);
-                    }}>Удалить инициативу</button>
-          </div>
+                <Col className={styles.column}>
+                  <div className={styles.rightContent}>
+                    <div className={styles.row}>
+                      <p className={styles.rowText}>Получено от:</p>
+                      <p className={styles.rowInf}>
+                        {getAuthor(applicationData?.initiator_users, users)}
+                      </p>
+                    </div>
+                    <div className={styles.row}>
+                      <p className={styles.rowText}>Инициатива (Идея):</p>
+                      <p className={styles.rowInf}>{applicationData?.name}</p>
+                    </div>
+                    <div className={styles.row}>
+                      <p className={styles.rowText}>Описание инициативы:</p>
+                      <p className={styles.rowInf}>
+                        {applicationData?.description}
+                      </p>
+                    </div>
+                    <div className={styles.row}>
+                      <p className={styles.rowText}>Эффект от доработки:</p>
+                      <p className={styles.rowInf}>
+                        {applicationData?.implementation_effect}
+                      </p>
+                    </div>
+                    <div className={styles.row}>
+                      <p className={styles.rowText}>Направление:</p>
+                      <p className={styles.rowInf}>
+                        {getDirectionName(
+                          applicationData?.initiative_direction,
+                          directions,
+                        )}
+                      </p>
+                    </div>
+                    <div className={styles.row}>
+                      <p className={styles.rowText}>Организация:</p>
+                      <p className={styles.rowInf}>
+                        {getOrganizationName(
+                          applicationData?.organization,
+                          organizations,
+                        )}
+                      </p>
+                    </div>
+                    <div className={styles.row}>
+                      <p className={styles.rowText}>Отдел:</p>
+                      <p className={styles.rowInf}>
+                        {user?.department?.name && user.department.name}
+                      </p>
+                    </div>
+                    <div className={styles.row}>
+                      <p className={styles.rowText}>Назначенный эксперт:</p>
+                      <p className={styles.rowInf}>
+                        {getExpert(applicationData?.expert_users)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className={styles.rows}>
+                    <div className={styles.files}>
+                      <p className={styles.rowTexts}>Прикреплённые файлы:</p>
+                      <Upload {...props} className="uploadFile"></Upload>
+                    </div>
+                  </div>
+                </Col>
 
-          <div className={styles.btnContainer430}>
-            <button className={`${styles.btnBlue} ${styles.btnFooter430}`} onClick={() => router.push(`/queries/editingApplication?queryId=${queryId}`)}>Редактировать</button>
-            <button className={`${styles.btnRed} ${styles.btnFooter430}`}
-                    onClick={() => {
-                      setModalActive(true);
-                    }}>Удалить</button>
-          </div>
+                <div className={styles.commentContainer}>
+                  <p className={styles.comment}>
+                    Комментарии ({dataComments.length}):
+                  </p>
+                </div>
+                {dataComments.map((comment, index) => (
+                  <CommentBlockAdmin
+                    key={index}
+                    index={index}
+                    comment={comment}
+                    users={users}
+                    applicationData={applicationData}
+                  />
+                ))}
+              </div>
+              <div className={styles.btnContainer}>
+                <button
+                  className={`${styles.btnBlue} ${styles.btnFooter}`}
+                  onClick={() =>
+                    router.push(
+                      `/queries/editingApplication?queryId=${queryId}`,
+                    )
+                  }
+                >
+                  Редактировать данные инициативы
+                </button>
+                <button
+                  className={`${styles.btnRed} ${styles.btnFooter}`}
+                  onClick={() => {
+                    dispatch(changeIsModalSubmitActive(true));
+                  }}
+                >
+                  Удалить инициативу
+                </button>
+              </div>
+
+              <div className={styles.btnContainer430}>
+                <button
+                  className={`${styles.btnBlue} ${styles.btnFooter430}`}
+                  onClick={() =>
+                    router.push(
+                      `/queries/editingApplication?queryId=${queryId}`,
+                    )
+                  }
+                >
+                  Редактировать
+                </button>
+                <button
+                  className={`${styles.btnRed} ${styles.btnFooter430}`}
+                  onClick={() => {
+                    dispatch(changeIsModalSubmitActive(true));
+                  }}
+                >
+                  Удалить
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
-      <Modal
-        active={modalActive} setActive={setModalActive}
-        text1={"Удалить инициативу?"}
-        text2={"Восстановить будет невозможно"}
-        classNameBtn1={styles.btnBlue}
-        textBtn1={"Назад"}
-        classNameBtn2={styles.btnRed}
-        textBtn2={"Удалить инициативу"}
-        onClick1={closeModal}
-        onClick2={handleDeleteIdea}
-        stylesContentModal={styles.contentModal}
+      <ModalAdditionalText
+        text={"Удалить инициативу?"}
+        additionalText={"Восстановить будет невозможно"}
+        handleOk={handleDeleteIdea}
       />
     </>
   );

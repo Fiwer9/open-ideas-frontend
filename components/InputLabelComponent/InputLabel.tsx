@@ -1,10 +1,14 @@
-import React from "react";
+import React, { memo } from "react";
 
-import styles from './styles/InputLabel.module.scss';
+import styles from "./styles/InputLabel.module.scss";
 
+interface InputLabelProps {
+  title: string;
+  className?: any;
+}
 
-export const InputLabel = ({title, label2}: any) => {
-    return (
-        <p className={`${styles.label} ${label2}`}>{title}</p>
-    );
-};
+export const InputLabel: React.FC<InputLabelProps> = memo(
+  ({ title, className }) => {
+    return <p className={`${styles.label} ${className}`}>{title}</p>;
+  }
+);

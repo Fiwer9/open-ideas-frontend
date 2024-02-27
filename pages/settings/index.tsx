@@ -1,13 +1,12 @@
 import React from "react";
-import { Settings } from "../../components/SettingsComponents/Settings";
-
-
+import { PageDevelopment } from "../../components/PageDevelopmentComponent/PageDevelopment";
+import { useCheckStaff } from "../../hooks/useCheckStaff";
 
 export default function Index() {
+  const isStaff = useCheckStaff();
+  return isStaff && <PageDevelopment />;
+}
 
-  return (
-    <div>
-      <Settings />
-    </div>
-  );
+{
+  /*<Settings />*/
 }

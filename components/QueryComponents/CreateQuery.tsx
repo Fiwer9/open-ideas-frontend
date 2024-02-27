@@ -1,221 +1,304 @@
-import React, {useContext, useEffect, useState} from "react";
-import { Form, Select, Card, Input, Upload, Button } from "antd";
-import { InputLabel } from "../InputLabelComponent/InputLabel";
-import { Logo } from "../PicturesComponents/Logo";
-import { Buttons } from "../ButtonComponent/Button";
-
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../redux/authSlice/selectors";
+import { useAppDispatch } from "../../redux/store";
+import {
+  selectOrganizations,
+  selectOrgStatus,
+} from "../../redux/organizationsSlice/selectors";
+import {
+  selectUser,
+  selectUsersStatus,
+} from "../../redux/usersSlice/selectors";
+import {
+  selectDirections,
+  selectStatusDirections,
+} from "../../redux/directionsSlice/selectors";
+import { Status } from "../../redux/queriesSlice/types";
+import { fetchCurrentUser } from "../../redux/usersSlice/asyncActions";
+import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
+import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
+import { Card, Form, Input, Select } from "antd";
 import styles from "./styles/CreateQuery.module.scss";
-import Modal from "../ModalsComponents/Modal";
+import { Logo } from "../PicturesComponents/Logo";
+import {
+  formatDateToServer,
+  getOrganizationName,
+  getOrganizationNameById,
+} from "../../utils/utils";
+import { Buttons } from "../ButtonComponent/Button";
 import router from "next/router";
-import {UserResponse} from "../../models/response/UserResponse";
-import {OrganizationsResponse} from "../../models/response/OrganizationsResponse";
-import OrganizationsService from "../../services/OrganizationsService";
-import UsersService from "../../services/UsersService";
-import {formatDateToServer, getOrganizationId, getOrganizationName} from "../../utils/utils";
-import {Context} from "../../pages/_app";
-import { UploadOutlined } from "@ant-design/icons";
-import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
+import debounce from "lodash.debounce";
+import ModalAntdSubmit from "../ModalsComponents/ModalAntdSubmit";
+import { postQuery } from "../../redux/queriesSlice/asyncActions";
+import TextArea from "antd/lib/input/TextArea";
+import ModalAntdBack from "../ModalsComponents/ModalAntdBack";
+import {
+  changeIsModalResetActive,
+  changeIsModalSubmitActive,
+} from "../../redux/modalsSlice/slice";
+import { MainText } from "../MainTextComponent";
+import { setStatusQueries } from "../../redux/queriesSlice/slice";
+import { setStatusDirections } from "../../redux/directionsSlice/slice";
 
-export const CreateQuery = () => {
-    const [modalActive, setModalActive] = useState(false);
-    const { store } = useContext(Context);
-    const [isLoading, setIsLoading] = useState(false);
-    const [description, setDescription] = useState('')
-    const [effect, setEffect] = useState('')
-    const [directions, setDirections] = FetchDirections.useGetDirections()
-    const [users, setUsers] = useState<UserResponse>(
-        {
-            id: 0,
-            password: '',
-            last_login: '',
-            is_superuser: false,
-            username: '',
-            first_name: '',
-            last_name: '',
-            is_staff: false,
-            is_active: false,
-            date_joined: '',
-            name: '',
-            email: '',
-            department: {
-                id: 0,
-                organization: 0,
-                name: ''
-            },
-            groups: [],
-            user_permissions: [],
-            likes: [],
-            is_verified: false
-        }
-    )
-    const [direction, setDirection] = useState(0)
-    const [organization, setOrganization] = useState<OrganizationsResponse[]>([])
-    const [idea, setIdea] = useState('')
-    const [secondModalActive, setSecondModalActive] = useState(false);
-    const closeModal = () => {
-      setModalActive(false);
-      setSecondModalActive(false);
-    };
+interface PostQueryProps {
+  name: string;
+  description: string;
+  organization: string;
+  initiative_direction: number;
+  implementation_effect: string;
+}
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true)
-            try {
-                const organizations = await OrganizationsService.getOrganizations()
-                const users = await UsersService.getCurrentUser(Number(sessionStorage.getItem("user_id")))
-                setUsers(users.data)
-                setOrganization(organizations.data)
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setIsLoading(false)
-            }
-        }
-        fetchData()
+function NewCreateQuery() {
+  const { user_id } = useSelector(selectCurrentUser);
+  const [form] = Form.useForm<PostQueryProps>();
+  const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const organizations = useSelector(selectOrganizations);
+  const user = useSelector(selectUser);
+  const directions = useSelector(selectDirections);
+  const statusDirections = useSelector(selectStatusDirections);
+  const statusOrganizations = useSelector(selectOrgStatus);
+  const statusUsers = useSelector(selectUsersStatus);
 
-    }, [])
-
-    function getOrganization() {
-        return users.department.organization
+  useEffect(() => {
+    if (
+      statusDirections === Status.SUCCESS &&
+      statusOrganizations === Status.SUCCESS &&
+      statusUsers === Status.SUCCESS
+    ) {
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
     }
+  }, [statusDirections, statusOrganizations, statusUsers]);
 
-    const postQuery = async (date: string, name: string, description: string, initiative_direction: number, status: string,
-                       implementation_effect: string, organization: number, initiator_users: [number])=> {
-        try {
-            await store.postQuery(date, name, description, initiative_direction, status,
-                implementation_effect, organization, initiator_users);
-        } catch (error: any) {
-            console.log(error.response?.data?.message);
-        }
-    }
+  const fetchData = debounce(async () => {
+    await dispatch(fetchCurrentUser({ user_id }));
+    await dispatch(fetchOrganizations());
+    await dispatch(fetchDirections());
+  }, 2000);
 
-    return (
-        <>
-            <Card loading={isLoading} className={styles.card}>
-                <Form className={styles.form}>
-                    <Form.Item className={styles.logo}>
-                        <Logo width={112.73} height={32}/>
-                    </Form.Item>
-                    <Form.Item className={styles.content}>
-                        <div className={styles.title}>
-                            <InputLabel title={"Создание инициативы"} label2={styles.label2}/>
-                        </div>
-                    </Form.Item>
-                    <Form.Item className={styles.formItems}>
-                        <div className={styles.label}>
-                            <InputLabel title={"Ф. И. О."} />
-                        </div>
-                        <Input className={styles.inp} value={users.name} disabled={true}/>
-                    </Form.Item>
-                    <Form.Item className={styles.formItems}>
-                        <div className={styles.label}>
-                            <InputLabel title={"Организация"}/>
-                        </div>
-                        <Input className={styles.inp} value={getOrganizationName(getOrganization(), organization)} disabled={true} />
-                    </Form.Item>
-                    <Form.Item className={styles.formItems}>
-                        <div className={styles.label}>
-                            <InputLabel title={"Инициатива (Идея)"}/>
-                        </div>
-                        <Input className={styles.inp} placeholder={"Напишите название инициативы "} onChange={((e: any) => {
-                            setIdea(e.target.value)
-                        })} value={idea} required/>
-                    </Form.Item>
-                    <Form.Item className={styles.formItems} required={true}>
-                        <div className={styles.label}>
-                            <InputLabel title={"Направление"}/>
-                        </div>
-                        <div className={styles.mySelectContainer}>
-                            <Select
-                                className='select'
-                                style={{height: 40}}
-                                placeholder="Направление инициативы"
-                                options={directions.map((direction) => ({
-                                  value: direction.id,
-                                  label: direction.name
-                                }))}
-                                onChange={(e: any) => {
-                                    setDirection(e)
-                                }}
-                            />
-                        </div>
-                    </Form.Item>
-                    <Form.Item className={styles.formItems}>
-                        <div className={styles.label}>
-                            <InputLabel title={"Описание инициативы"}/>
-                        </div>
-                        <textarea className={styles.textAreaCustom} placeholder={"Напишите описание инициативы"} onChange={(e) => {
-                            setDescription(e.target.value)
-                        }} value={description || ''} required={true}/>
-                    </Form.Item>
-                    <Form.Item className={styles.formItems}>
-                        <div className={styles.label}>
-                            <InputLabel title={"Эффект от доработки"}/>
-                        </div>
-                        <textarea className={styles.textAreaCustom} placeholder={"Напишите ожидаемый эффект от доработки"}
-                                  onChange={(e) => {
-                                      setEffect(e.target.value)
-                                  }} value={effect || ''} required={true}/>
-                    </Form.Item>
-                    {store.isAllowFileAttachment && (
-                        <Form.Item className={styles.formItems}>
-                            <div className={styles.label}>
-                                <InputLabel title={"Загрузка дополнительных файлов"}/>
-                            </div>
-                            <Upload
-                                maxCount={5}
-                                accept=".pdf, .webm, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
-                                multiple
-                                className='upload'
-                            >
-                                <Button className={styles.uploadBtn} icon={<UploadOutlined />}>Загрузить</Button>
-                            </Upload>
-                        </Form.Item>
-                    )}
-                    <div className={styles.containerBtn}>
-                        <div className={styles.btnWhite}>
-                            <Buttons text={"Назад"} onClick={() => {
-                                setSecondModalActive(true);
-                            }}/>
-                        </div>
-                        <div className={styles.btnBlue}>
-                            <Buttons text={"Отправить"} onClick={() => {
-                              setModalActive(true);
-                            }}/>
-                        </div>
-                    </div>
-                </Form>
-            </Card>
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-            <Modal
-                active={modalActive} setActive={setModalActive}
-                text1={"Вы уверены, что хотите зарегистрировать инициативу и внесли все необходимые данные? После регистрации внесение изменений невозможно"}
-                classNameBtn1={styles.btnWhite}
-                textBtn1={"Назад"}
-                classNameBtn2={styles.btnBlue}
-                textBtn2={"Отправить"}
-                onClick1={closeModal}
-                onClick2={() => {
-                    const currentDate = new Date();
-                    const formattedEndDate = formatDateToServer(currentDate, '-');
-                    idea&& description&& direction&& effect&& postQuery(formattedEndDate, idea, description, direction, 'check', effect,
-                        getOrganizationId(getOrganization(), organization), [users.id])
-                    idea&& description&& direction&& effect&& router.push('/queries')
-                    closeModal()
-                }}
-                stylesContentModal={styles.contentModal}
-            />
-            <Modal
-                active={secondModalActive} setActive={setSecondModalActive}
-                text1={"Вы уверены, что хотите отменить создание инициативы? При отмене заявки ранее внесенная информация не будет сохранена"}
-                classNameBtn1={styles.btnWhite}
-                textBtn1={"Назад"}
-                classNameBtn2={styles.btnBlue}
-                textBtn2={"Выйти"}
-                onClick1={closeModal}
-                onClick2={() => router.push('/queries')}
-                stylesContentModal={styles.contentModal}
-            />
-        </>
+  const onSubmit = async (data: PostQueryProps) => {
+    const {
+      name,
+      organization,
+      description,
+      initiative_direction,
+      implementation_effect,
+    } = data;
+    const formattedEndDate = formatDateToServer(new Date(), "-");
+    dispatch(
+      postQuery({
+        name,
+        implementation_effect,
+        date: formattedEndDate,
+        status: "check",
+        initiative_direction,
+        initiator_users: [user_id],
+        description,
+        organization: getOrganizationNameById(organization, organizations),
+      })
     );
-};
+    dispatch(setStatusQueries(Status.WAITING));
+    dispatch(setStatusDirections(Status.WAITING));
+    await router.push("/queries");
+  };
+
+  const onReset = () => {
+    dispatch(setStatusQueries(Status.WAITING));
+    dispatch(setStatusDirections(Status.WAITING));
+    router.push("/queries");
+  };
+
+  return (
+    <>
+      <Card loading={isLoading} className={styles.card}>
+        {user?.department?.organization && organizations.length > 0 && (
+          <>
+            <div className={styles.logo}>
+              <Logo width={112.73} height={32} />
+            </div>
+            <div className={styles.content}>
+              <div className={styles.title}>
+                <MainText text={"Создание инициативы"} />
+              </div>
+            </div>
+
+            <Form
+              initialValues={{
+                initiator_users: user.name,
+                organization: getOrganizationName(
+                  user.department.organization,
+                  organizations
+                ),
+              }}
+              layout={"vertical"}
+              className={styles.form}
+              form={form}
+              onFinish={onSubmit}
+              onReset={onReset}
+              name={"create-query"}
+              id={"create-query"}
+            >
+              <Form.Item
+                className={styles.formItems}
+                name={"initiator_users"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Введите ваше Ф. И. О",
+                  },
+                ]}
+                label={"Ф. И. О."}
+              >
+                <Input className={styles.inp} disabled={true} />
+              </Form.Item>
+              <Form.Item
+                className={styles.formItems}
+                name={"organization"}
+                required={true}
+                label={"Организация"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Напишите свою организацию",
+                  },
+                ]}
+              >
+                <Input className={styles.inp} disabled={true} />
+              </Form.Item>
+              <Form.Item
+                className={styles.formItems}
+                name={"name"}
+                required={true}
+                label={"Инициатива (Идея)"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Напишите название инициативы",
+                  },
+                ]}
+              >
+                <Input
+                  className={styles.inp}
+                  placeholder={"Напишите название инициативы "}
+                />
+              </Form.Item>
+              <Form.Item
+                className={styles.formItems}
+                name={"initiative_direction"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Выберите направление",
+                  },
+                ]}
+                label={"Направление"}
+              >
+                <Select
+                  className={`select ${styles.mySelectContainer}`}
+                  style={{ height: 40 }}
+                  placeholder="Направление инициативы"
+                  options={directions.map((direction) => ({
+                    value: direction.id,
+                    label: direction.name,
+                  }))}
+                />
+              </Form.Item>
+              <Form.Item
+                className={styles.formItems}
+                name={"description"}
+                label={"Описание инициативы"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Напишите описание к инициативе",
+                  },
+                ]}
+              >
+                <TextArea
+                  rows={6}
+                  className={styles.textAreaCustom}
+                  placeholder={"Напишите описание инициативы"}
+                />
+              </Form.Item>
+              <Form.Item
+                className={styles.formItems}
+                name={"implementation_effect"}
+                label={"Эффект от доработки"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Напишите эффект от доработки",
+                  },
+                ]}
+              >
+                <TextArea
+                  rows={6}
+                  className={styles.textAreaCustom}
+                  placeholder={"Напишите ожидаемый эффект от доработки"}
+                />
+              </Form.Item>
+              {/*TODO*/}
+              {/*{store.isAllowFileAttachment && (*/}
+              {/*    <Form.Item className={styles.formItems}>*/}
+              {/*        <div className={styles.label}>*/}
+              {/*            <InputLabel title={"Загрузка дополнительных файлов"}/>*/}
+              {/*        </div>*/}
+              {/*        <Upload*/}
+              {/*            maxCount={5}*/}
+              {/*            accept=".pdf, .webm, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"*/}
+              {/*            multiple*/}
+              {/*            className='upload'*/}
+              {/*        >*/}
+              {/*            <Button className={styles.uploadBtn} icon={<UploadOutlined />}>Загрузить</Button>*/}
+              {/*        </Upload>*/}
+              {/*    </Form.Item>*/}
+              {/*)}*/}
+              <div className={styles.containerBtn}>
+                <div className={styles.btnWhite}>
+                  <Buttons
+                    text={"Назад"}
+                    onClick={() => {
+                      dispatch(changeIsModalResetActive(true));
+                    }}
+                    type={"button"}
+                  />
+                </div>
+                <div className={styles.btnBlue}>
+                  <Buttons
+                    text={"Отправить"}
+                    onClick={() => {
+                      dispatch(changeIsModalSubmitActive(true));
+                    }}
+                    type={"button"}
+                  />
+                </div>
+              </div>
+            </Form>
+          </>
+        )}
+      </Card>
+
+      <ModalAntdSubmit
+        form={"create-query"}
+        text={
+          "Вы уверены, что хотите зарегистрировать инициативу и внесли все необходимые данные? После регистрации внесение изменений невозможно"
+        }
+      />
+      <ModalAntdBack
+        form={"create-query"}
+        text={
+          "Вы уверены, что хотите отменить создание инициативы? При отмене заявки ранее внесенная информация не будет сохранена"
+        }
+      />
+    </>
+  );
+}
+
+export default NewCreateQuery;

@@ -1,43 +1,50 @@
-import React, {useEffect, useState} from "react";
-import {Breadcrumb} from "antd";
+import React, { memo, useEffect, useState } from "react";
+import { Breadcrumb } from "antd";
 import styles from "../styles/Breadcrumb.module.scss";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import Link from "next/link";
-import {getRouteTranslation} from "../../../utils/utils";
-import Cookies from 'js-cookie';
+import { getRouteTranslation } from "../../../utils/utils";
+import { BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb";
+import { useSelector } from "react-redux";
+import {
+  selectMenu,
+  selectSelectedTag,
+} from "../../../redux/menuSlice/selectors";
 
-
-
-export const BreadcrumbBlock = () => {
+export const BreadcrumbBlock: React.FC = memo(() => {
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const pathSegments = router.asPath.split("/").filter(Boolean);
-  const [children, setChildren] = useState(<div></div>)
-  const selectedTag = Cookies.get('selectedTag') || 'Инициативы';
+  const [children, setChildren] = useState(<></>);
+  const selectedTag = useSelector(selectSelectedTag);
+  const { pageName, pageId } = useSelector(selectMenu);
 
-  const breadcrumbItems = [
+  const breadcrumbItems: BreadcrumbItemType[] = [
     {
-      title: selectedTag,
-      link: "",
+      title: <Link href={""}>{selectedTag}</Link>,
     },
     ...pathSegments.map((segment, index) => ({
-      title: getRouteTranslation(segment),
-      link: `/${pathSegments.slice(0, index + 1).join("/")}`,
+      title: (
+        <Link href={`/${pathSegments.slice(0, index + 1).join("/")}`}>
+          {getRouteTranslation(segment, pageName, pageId)}
+        </Link>
+      ),
     })),
   ];
 
   useEffect(() => {
     setChildren(
-      <Breadcrumb className={styles.breadcrumb}>
-        {breadcrumbItems.map((item) => (
-          <Breadcrumb.Item key={item.link}>
-            <Link href={item.link}>{item.title}</Link>
-          </Breadcrumb.Item>
-        ))}
-      </Breadcrumb>
-    )
-  }, [selectedTag, Cookies.get('queryName'), Cookies.get('userName'), Cookies.get('userId')]);
+      <Breadcrumb className={styles.breadcrumb} items={breadcrumbItems} />,
+    );
+  }, [selectedTag, pageName, pageId]);
 
-  return (
-    children
-  );
-};
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return;
+  }
+
+  return children;
+});
