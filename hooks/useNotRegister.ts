@@ -7,7 +7,7 @@ export const useAuthenticatedUser = () => {
 
     useEffect(() => {
         const checkUserStatus = () => {
-            if (!sessionStorage.getItem('user_id')) {
+            if (!sessionStorage.getItem('token_access')) {
                 router.push('/')
                 return false
             } else {

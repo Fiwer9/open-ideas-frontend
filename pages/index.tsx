@@ -1,7 +1,7 @@
 import React, {createContext, useEffect} from "react";
-import {LogIn} from "../components/AuthComponents/LogIn";
 import Store from "../store/store";
 import router from "next/router";
+import NewLogin from "../components/AuthComponents/NewLogin";
 
 interface State {
     store: Store,
@@ -15,13 +15,14 @@ export const Context = createContext<State>({
 
 export default function Index() {
     useEffect(() => {
-        if(sessionStorage.getItem('user_id')) {
+        if(sessionStorage.getItem('token_access')) {
+            store.checkAuth()
             router.push('/queries')
-        }
+            }
     }, [])
     return (
         <div>
-            <LogIn />
+            <NewLogin />
         </div>
     )
 }

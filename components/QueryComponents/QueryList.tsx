@@ -54,8 +54,8 @@ export const QueryList = () => {
 
 
     const items = queriesTableData;
-    const direct = [...new Set(directions.map((item) => item.name))];
-    const status = [...new Set(items.map((item) => getStatusTranslation(item.status)))];
+    const direct = [...new Set(directions?.map((item) => item.name))];
+    const status = [...new Set(items?.map((item) => getStatusTranslation(item.status)))];
 
     const columns = [
         {
@@ -101,7 +101,7 @@ export const QueryList = () => {
                 </>
             ),
             width: "15%",
-            filters: status.map((status) => ({
+            filters: status?.map((status) => ({
                     text: status,
                     value: status,
                 })),
@@ -140,15 +140,15 @@ export const QueryList = () => {
 
     const getData = () => {
         if (isExpert && isArchive) {
-            return queriesTableData.filter((query) => query.expert_users.includes(Number(sessionStorage.getItem('user_id'))) && query.status === 'rejected' || query.status === 'registered')
+            return queriesTableData?.filter((query) => query.expert_users.includes(Number(sessionStorage.getItem('user_id'))) && query.status === 'rejected' || query.status === 'registered')
         }
         if (isExpert) {
-            return queriesTableData.filter((query) => query.expert_users.includes(Number(sessionStorage.getItem('user_id'))))
+            return queriesTableData?.filter((query) => query.expert_users.includes(Number(sessionStorage.getItem('user_id'))))
         }
         if (isArchive) {
-            return queriesTableData.filter((query) => query.status === 'rejected' || query.status === 'registered')
+            return queriesTableData?.filter((query) => query.status === 'rejected' || query.status === 'registered')
         } else if (!isArchive) {
-            return queriesTableData.filter((query) => query.status !== 'rejected' && query.status !== 'registered')
+            return queriesTableData?.filter((query) => query.status !== 'rejected' && query.status !== 'registered')
         } else if (searchTerm) {
             return data.map((item) => item.name)
         } else if (searchNumber) {

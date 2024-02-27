@@ -1,22 +1,41 @@
-import {AxiosResponse} from "axios";
+import { AxiosResponse } from "axios";
 import $api from "../http";
-import {AuthResponse} from "../models/response/AuthResponse";
+import {
+  AuthorizationResponse,
+  AuthResponse,
+} from "../models/response/AuthResponse";
 
 export default class AuthService {
-    static async sendCode(email: string): Promise<AxiosResponse<AuthResponse>> {
-        return $api.post('/auth/login/', { email })
-    }
+  static async sendCode(email: string): Promise<AxiosResponse<AuthResponse>> {
+    return $api.post("/auth/login/", { email });
+  }
 
-    static async confirmEmail( codeStr: string): Promise<AxiosResponse<AuthResponse>> {
-        const code = Number(codeStr)
-        return $api.post<AuthResponse>(`/auth/token/${code}/`, {code})
-    }
+  static async postAuthorization(
+    email: string,
+    password: string
+  ): Promise<AxiosResponse<AuthorizationResponse>> {
+    return $api.post(`/auth/password/`, { email, password });
+  }
 
-    static async logout() {
-        return $api.post<AuthResponse>('/auth/logout/')
-    }
+  static async confirmEmail(
+    codeStr: string
+  ): Promise<AxiosResponse<AuthResponse>> {
+    const code = Number(codeStr);
+    return $api.post<AuthResponse>(`/auth/token/${code}/`);
+  }
 
-    static async putRegistration(name: string, department: number) {
-        return $api.put<AuthResponse>(`/auth/register/`, {name, department})
-    }
+  static async logout() {
+    return $api.post<AuthResponse>("/auth/logout/");
+  }
+
+  static async putRegistration(name: string, department: number) {
+    return $api.put<AuthResponse>(`/auth/register/`, { name, department });
+  }
+
+  static async postRegistration(
+    email: string,
+    password: string
+  ): Promise<AxiosResponse<AuthorizationResponse>> {
+    return $api.post(`/auth/passreg/`, { email, password });
+  }
 }

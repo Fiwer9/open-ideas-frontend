@@ -6,6 +6,9 @@ import LikesService from "../services/LikesService";
 import QueriesService from "../services/QueriesService";
 import UsersService from "../services/UsersService";
 import SettingsService from "../services/SettingsSetvice";
+import axios from "axios";
+import {TokenResponse} from "../models/response/AuthResponse";
+import {API_URL_TOKEN} from "../http";
 
 export default class Store {
     user = {} as IUser;
@@ -38,13 +41,33 @@ export default class Store {
         }
     }
 
+    async postAuthorization (username: string, password: string) {
+        try {
+            const response = await AuthService.postAuthorization(username, password);
+            const user = {
+                user_id : response.data.user_id,
+                email: response.data.email,
+                token_access : response.data.jwt_access,
+                token_refresh: response.data.jwt_refresh
+            }
+            sessionStorage.setItem('token_access', user.token_access)
+            sessionStorage.setItem('token_refresh', user.token_refresh)
+            sessionStorage.setItem('user', JSON.stringify(user))
+            sessionStorage.setItem('user_id', String(user.user_id))
+            this.setAuth(true);
+        } catch (e: any) {
+            console.log(e)
+            return e.response.data.detail
+        }
+    }
+
     async postQuery(date: string, name: string, description: string, initiative_direction: number, status: string,
                     implementation_effect: string, organization: number, initiator_users: [number]){
         try {
             await QueriesService.postQuery(date, name, description, initiative_direction, status,
                 implementation_effect, organization, initiator_users);
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.error(e.message);
         }
     }
 
@@ -55,7 +78,7 @@ export default class Store {
                 implementation_effect, organization, initiator_users, id, expertUsers) : await QueriesService.patchQuery(date, name, description, initiative_direction, status,
               implementation_effect, organization, initiator_users, id)
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.error(e.message);
         }
     }
 
@@ -63,7 +86,7 @@ export default class Store {
         try {
             await UsersService.putUserUpdate(name, email, is_verified, is_staff, is_superuser, id, is_active)
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.error(e.message);
         }
     }
 
@@ -71,7 +94,7 @@ export default class Store {
         try {
             await QueriesService.deleteQuery(id)
         } catch (e: any) {
-            console.error(e.response?.data?.message);
+            console.error(e.message);
         }
     }
 
@@ -79,7 +102,7 @@ export default class Store {
         try {
             await CommentService.sendComment(comment, query, user);
         } catch (e: any) {
-            console.error(e.response?.data?.message);
+            console.error(e.message);
         }
     }
 
@@ -87,7 +110,7 @@ export default class Store {
         try {
             await LikesService.patchLike(id, data);
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.log(e.message);
         }
     }
 
@@ -116,7 +139,7 @@ export default class Store {
         try {
             return await SettingsService.getSettings()
         } catch (e: any) {
-            console.error(e)
+            console.error(e.message)
         }
     }
 
@@ -127,7 +150,38 @@ export default class Store {
             this.setAuth(false);
             this.setUser({} as IUser);
         } catch (e: any) {
-            console.log(e.response?.data?.message);
+            console.log(e.message);
+        }
+    }
+
+    async postRegistration(email: string, password: string) {
+        try {
+            const response = await AuthService.postRegistration(email, password);
+            const user = {
+                user_id : response.data.user_id,
+                email: response.data.email,
+                token_access : response.data.jwt_access,
+                token_refresh: response.data.jwt_refresh
+            }
+            sessionStorage.setItem('token_access', user.token_access)
+            sessionStorage.setItem('token_refresh', user.token_refresh)
+            sessionStorage.setItem('user', JSON.stringify(user))
+            sessionStorage.setItem('user_id', String(user.user_id))
+            this.setAuth(true)
+        }
+        catch (e: any) {
+            return e.response.data.detail
+        }
+    }
+
+    async checkAuth() {
+        const refresh = sessionStorage.getItem('token_refresh')
+        try {
+            const response = await axios.post<TokenResponse>(`${API_URL_TOKEN}/token/refresh/`, {refresh}, {withCredentials: true})
+            localStorage.setItem('token_access', response.data.access)
+            this.setAuth(true)
+        } catch (e) {
+            console.error(e.message)
         }
     }
 }

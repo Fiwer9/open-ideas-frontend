@@ -9,3 +9,17 @@ export interface AuthResponse {
     _csrftoken: string;
     is_verified: boolean;
 }
+
+
+export interface AuthorizationResponse {
+    email: string;
+    user_id: number;
+    username: string;
+    is_verified: boolean;
+    jwt_refresh: string;
+    jwt_access: string;
+}
+
+export interface TokenResponse {
+    access: string
+}
