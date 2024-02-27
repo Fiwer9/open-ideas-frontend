@@ -36,7 +36,6 @@ export const BreadcrumbBlock: React.FC = memo(() => {
     setChildren(
       <Breadcrumb className={styles.breadcrumb} items={breadcrumbItems} />,
     );
-    console.log("Привет!");
   }, [selectedTag, pageName, pageId]);
 
   useEffect(() => {
