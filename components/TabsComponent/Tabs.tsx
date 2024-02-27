@@ -65,6 +65,7 @@ export const Tabs = () => {
                 pointerEvents: isAdministratorTagDisabled ? 'none' : 'auto',
                 opacity: isAdministratorTagDisabled ? 0.5 : 1,
               }}
+              className={styles.tags}
             >
               <p style={{ color: selectedTags.includes(tag) ? '#2F54EB' : '#434343' }}>{tag}</p>
             </CheckableTag>

@@ -28,7 +28,6 @@ import OrganizationsService from "../../services/OrganizationsService";
 import {FilterOutlined, PlusCircleOutlined} from "@ant-design/icons";
 import {Logo} from "../PicturesComponents/Logo";
 import FetchDirections from "../../hooks/fetches/FetchDirections/FetchDirections";
-import FetchQueries from "../../hooks/fetches/FetchQueries/FetchQueries";
 
 
 
@@ -188,9 +187,13 @@ export const QueryList = () => {
     return (
       Cookies.get('selectedTag') === 'Панель администратора' ? (
         <div className={styles.container}>
-            <Slider />
+            <div className={styles.slider}>
+                <Slider />
+            </div>
             <div className={styles.content}>
-                <Header user_name={user?.name ? user.name : ''} organization={organization && organization.name || ''} department={user?.department.name || ''}/>
+                <div className={styles.headerContainer}>
+                    <Header user_name={user?.name} organization={organization && organization.name} department={user?.department.name}/>
+                </div>
                 <Tabs />
                 <MainText text={'Инициативы'}/>
                 <div className={styles.infContainer}>
@@ -198,8 +201,10 @@ export const QueryList = () => {
                                onSearchNumberChange={handleSearchNumberChange}
                                placeholderNum={'Номер'}
                                placeholderQuery={'Поиск по идеям'}/>
-                    <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
-                    <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
+                    <div className={styles.filterContainer}>
+                        <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
+                        <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
+                    </div>
                 </div>
                 <DataTable
                   data={getData()}
@@ -212,7 +217,9 @@ export const QueryList = () => {
         ) : (
         <div className={styles.containerIdeas}>
             <div className={styles.contentIdeas}>
-                <Header user_name={user?.name} organization={organization && organization.name} department={user?.department.name}/>
+                <div className={styles.headerContainer}>
+                    <Header user_name={user?.name} organization={organization && organization.name} department={user?.department.name}/>
+                </div>
                 <div className={styles.header}>
                     <div className={styles.logoHeader}>
                         <Logo width={190} height={53} />
@@ -227,10 +234,18 @@ export const QueryList = () => {
                       onSearchTermChange={handleSearchTermChange}
                       onSearchNumberChange={handleSearchNumberChange}
                       placeholderNum={'Номер'}
-                      placeholderQuery={'Поиск по идеям'}/>
-                    <FilterBar icon={<PlusCircleOutlined />} filterText={'Создать идею'} onClick={handleCreateQuery}/>
-                    <CheckboxBar onToggleArchive={handleToggleExpert} checkboxText={'Я эксперт'}/>
-                    <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
+                      placeholderQuery={'Поиск по идеям'}
+                      stylesSearch={styles.searchBar}
+                    />
+                    <div className={styles.btnHead}>
+                        <div className={styles.btnContainerFilt}>
+                            <FilterBar icon={<PlusCircleOutlined />} filterText={'Создать идею'} onClick={handleCreateQuery}/>
+                            <CheckboxBar onToggleArchive={handleToggleExpert} checkboxText={'Я эксперт'}/>
+                        </div>
+                        <div className={styles.btnContainer}>
+                            <CheckboxBar onToggleArchive={handleToggleArchive} checkboxText={'Архив'}/>
+                        </div>
+                    </div>
                 </div>
                 <DataTable
                   columns={columns}

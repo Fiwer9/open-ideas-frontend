@@ -108,9 +108,13 @@ export const UsersList = () => {
     <>
       {domLoaded && (
         <div className={styles.container}>
-          <Slider/>
+          <div className={styles.slider}>
+            <Slider/>
+          </div>
           <div className={styles.content}>
-            <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+            <div className={styles.headerContainer}>
+              <Header user_name={Cookies.get('user_name')} organization={Cookies.get('organization')} department={Cookies.get('department')}/>
+            </div>
             <Tabs />
             <MainText text={'Пользователи'}/>
             <div className={styles.infContainer}>
@@ -119,7 +123,9 @@ export const UsersList = () => {
                 onSearchNumberChange={handleSearchNumberChange}
                 placeholderNum={'Номер'}
                 placeholderQuery={'Поиск по пользователям'}/>
-              <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
+              <div className={styles.filter}>
+                <FilterBar icon={<FilterOutlined />} filterText={'Фильтры'}/>
+              </div>
             </div>
             <DataTable
               data={data}
