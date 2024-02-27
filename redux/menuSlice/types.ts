@@ -3,4 +3,6 @@ export interface MenuSliceState {
   currentPage: string[];
   selectedTag: string;
   isStaff: boolean;
+  pageName?: string;
+  pageId?: number;
 }

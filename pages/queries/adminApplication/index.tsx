@@ -1,7 +1,8 @@
 import React from "react";
 import { AdminApplicationCard } from "../../../components/QueryComponents/AdminApplicationCard";
-import { useRouter } from "next/router";
+import { useCheckStaff } from "../../../hooks/useCheckStaff";
 
 export default function Index() {
-  return <AdminApplicationCard />;
+  const isStaff = useCheckStaff();
+  return isStaff ? <AdminApplicationCard /> : null;
 }

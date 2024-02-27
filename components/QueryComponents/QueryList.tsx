@@ -17,7 +17,6 @@ import { DataTable } from "../TableComponent/Table";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
 import { useRouter } from "next/router";
-import Cookies from "js-cookie";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Logo } from "../PicturesComponents/Logo";
@@ -144,8 +143,6 @@ export const QueryList: React.FC = memo(() => {
   }, [searchValue]);
 
   const handleRowClick = (queryId: QueriesResponse) => {
-    Cookies.set("queryId", String(queryId.id));
-    Cookies.set("queryName", String(queryId.name));
     router.push(`/queries/adminApplication?queryId=${queryId.id}`);
   };
 
@@ -155,21 +152,21 @@ export const QueryList: React.FC = memo(() => {
         (query) =>
           (query.expert_users.includes(user_id) &&
             query.status === "rejected") ||
-          query.status === "registered"
+          query.status === "registered",
       );
     }
     if (isExpert) {
       return queriesTableData?.filter((query) =>
-        query.expert_users.includes(user_id)
+        query.expert_users.includes(user_id),
       );
     }
     if (isArchive) {
       return queriesTableData?.filter(
-        (query) => query.status === "rejected" || query.status === "registered"
+        (query) => query.status === "rejected" || query.status === "registered",
       );
     } else if (!isArchive) {
       return queriesTableData?.filter(
-        (query) => query.status !== "rejected" && query.status !== "registered"
+        (query) => query.status !== "rejected" && query.status !== "registered",
       );
     }
   };

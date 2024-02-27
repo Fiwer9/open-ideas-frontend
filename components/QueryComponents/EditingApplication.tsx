@@ -38,6 +38,7 @@ import { useRouter } from "next/router";
 import { selectQueryData } from "../../redux/queriesSlice/selectors";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
 import { selectDirections } from "../../redux/directionsSlice/selectors";
+import { setPageId, setPageName } from "../../redux/menuSlice/slice";
 
 interface EditQueryProps {
   name: string;
@@ -68,6 +69,7 @@ export const EditingApplication = () => {
     await dispatch(fetchUpdateUsers());
     await dispatch(fetchDirections());
     await dispatch(fetchOrganizations());
+    dispatch(setPageId(Number(queryId)));
   }, 2000);
 
   useEffect(() => {
@@ -75,11 +77,12 @@ export const EditingApplication = () => {
   }, [queryId]);
 
   useEffect(() => {
+    applicationData.name && dispatch(setPageName(applicationData.name));
     applicationData?.expert_users &&
       dispatch(
-        fetchCurrentUser({ user_id: applicationData?.initiator_users[0] })
+        fetchCurrentUser({ user_id: applicationData?.initiator_users[0] }),
       );
-  }, [applicationData]);
+  }, [applicationData.name]);
 
   useEffect(() => {
     organizationId &&
@@ -88,7 +91,7 @@ export const EditingApplication = () => {
           organization_id: organizationId
             ? organizationId
             : applicationData.organization,
-        })
+        }),
       );
   }, [organizationId]);
 
@@ -120,7 +123,7 @@ export const EditingApplication = () => {
               ? applicationData.expert_users
               : [expert_users]
             : null,
-      })
+      }),
     );
     router.back();
   }
@@ -155,12 +158,12 @@ export const EditingApplication = () => {
                     initiative_direction: applicationData.initiative_direction,
                     organization: getOrganizationName(
                       applicationData.organization,
-                      organizations
+                      organizations,
                     ),
                     department: user?.department?.name,
                     expert_users: getAuthor(
                       applicationData.expert_users,
-                      users
+                      users,
                     ),
                   }}
                 >
@@ -284,21 +287,21 @@ export const EditingApplication = () => {
                           showSearch
                           filterOption={(input, option) =>
                             (option?.label.toLowerCase() ?? "").includes(
-                              input.toLowerCase()
+                              input.toLowerCase(),
                             )
                           }
                           filterSort={(optionA, optionB) =>
                             (optionA?.label ?? "")
                               .toLowerCase()
                               .localeCompare(
-                                (optionB?.label ?? "").toLowerCase()
+                                (optionB?.label ?? "").toLowerCase(),
                               )
                           }
                           className={`${styles.formField} ${styles.inp}`}
                           options={[
                             ...users
                               .filter(
-                                (user) => user.is_active && user.is_verified
+                                (user) => user.is_active && user.is_verified,
                               )
                               .map((user) => ({
                                 value: user.id,

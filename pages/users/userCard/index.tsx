@@ -1,11 +1,12 @@
 import React from "react";
-import { UserCard } from "../../../components/UsersComponents/UserCard";
-import { useAuthenticatedUser } from "../../../hooks/useNotRegister";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { PageDevelopment } from "../../../components/PageDevelopmentComponent/PageDevelopment";
+import { useCheckStaff } from "../../../hooks/useCheckStaff";
 
 export default function Index() {
+  const isStaff = useCheckStaff();
+
   const router = useRouter();
   const { userId } = router.query;
   let id = Array.isArray(userId) ? userId[0] : userId;
@@ -15,7 +16,7 @@ export default function Index() {
   return (
     <div>
       {/*<UserCard userId={id} />*/}
-      <PageDevelopment />
+      {isStaff && <PageDevelopment />}
     </div>
   );
 }

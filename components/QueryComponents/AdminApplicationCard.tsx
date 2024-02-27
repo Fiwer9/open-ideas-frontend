@@ -55,6 +55,7 @@ import styles from "./styles/AdminApplicationCard.module.scss";
 import { changeIsModalSubmitActive } from "../../redux/modalsSlice/slice";
 import ModalAdditionalText from "../ModalsComponents/ModalAdditionalText";
 import { Status } from "../../redux/queriesSlice/types";
+import { setPageId, setPageName } from "../../redux/menuSlice/slice";
 
 const props: UploadProps = {
   defaultFileList: [
@@ -100,6 +101,11 @@ export const AdminApplicationCard = () => {
   const statusDirections = useSelector(selectStatusDirections);
   const statusQuery = useSelector(selectStatusQueries);
   const dispatch = useAppDispatch();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (
@@ -128,8 +134,9 @@ export const AdminApplicationCard = () => {
       await dispatch(fetchDirections());
       await dispatch(fetchOrganizations());
       await dispatch(fetchCommentsById({ queryId }));
+      dispatch(setPageId(Number(queryId)));
     }, 2000),
-    [queryId]
+    [queryId],
   );
 
   useEffect(() => {
@@ -137,11 +144,12 @@ export const AdminApplicationCard = () => {
   }, [queryId]);
 
   useEffect(() => {
+    applicationData.name && dispatch(setPageName(applicationData.name));
     applicationData?.expert_users &&
       dispatch(
-        fetchCurrentUser({ user_id: applicationData?.initiator_users[0] })
+        fetchCurrentUser({ user_id: applicationData?.initiator_users[0] }),
       );
-  }, [applicationData]);
+  }, [applicationData.name]);
 
   const changeStatus = async (status: string) => {
     const currentDate = new Date();
@@ -166,7 +174,7 @@ export const AdminApplicationCard = () => {
         initiator_users,
         implementation_effect,
         organization,
-      })
+      }),
     );
   };
 
@@ -195,8 +203,13 @@ export const AdminApplicationCard = () => {
         }
       }
     }
+
     return like;
   };
+
+  if (!isClient) {
+    return;
+  }
 
   return (
     <>
@@ -227,7 +240,7 @@ export const AdminApplicationCard = () => {
                       {applicationData?.status && (
                         <Select
                           className={`selectInitiative ${statusClassName(
-                            styles
+                            styles,
                           )}`}
                           style={{ width: 250 }}
                           defaultValue={applicationData?.status}
@@ -238,7 +251,7 @@ export const AdminApplicationCard = () => {
                     </div>
                   </div>
                   <p className={styles.data}>{`Дата создания ${formatDateRu(
-                    applicationData?.date
+                    applicationData?.date,
                   )}`}</p>
                 </div>
 
@@ -271,7 +284,7 @@ export const AdminApplicationCard = () => {
                       <p className={styles.rowInf}>
                         {getDirectionName(
                           applicationData?.initiative_direction,
-                          directions
+                          directions,
                         )}
                       </p>
                     </div>
@@ -280,7 +293,7 @@ export const AdminApplicationCard = () => {
                       <p className={styles.rowInf}>
                         {getOrganizationName(
                           applicationData?.organization,
-                          organizations
+                          organizations,
                         )}
                       </p>
                     </div>
@@ -325,7 +338,7 @@ export const AdminApplicationCard = () => {
                   className={`${styles.btnBlue} ${styles.btnFooter}`}
                   onClick={() =>
                     router.push(
-                      `/queries/editingApplication?queryId=${queryId}`
+                      `/queries/editingApplication?queryId=${queryId}`,
                     )
                   }
                 >
@@ -346,7 +359,7 @@ export const AdminApplicationCard = () => {
                   className={`${styles.btnBlue} ${styles.btnFooter430}`}
                   onClick={() =>
                     router.push(
-                      `/queries/editingApplication?queryId=${queryId}`
+                      `/queries/editingApplication?queryId=${queryId}`,
                     )
                   }
                 >

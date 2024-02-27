@@ -9,7 +9,7 @@ export const getMenu = (): MenuSliceState => {
     const selectedTag = sessionStorage.getItem("selectedTag")
       ? sessionStorage.getItem("selectedTag")
       : "Инициативы";
-    const isStaff = sessionStorage.getItem("is_staff") === "true" || false;
+    const isStaff = sessionStorage.getItem("isStaff") === "true" || false;
     return {
       isCollapsed,
       currentPage,

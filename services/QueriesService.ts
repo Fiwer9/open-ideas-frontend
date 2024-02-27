@@ -6,14 +6,14 @@ import { PatchQueryArgs, PostQueryArgs } from "../redux/queriesSlice/types";
 
 export default class QueriesService {
   static async getQueriesTableData(
-    userId?: number
+    userId?: number,
   ): Promise<AxiosResponse<ResponseInterface<QueriesResponse[]>>> {
     return userId
       ? $api.get(`/queries/queries/?expert_users=${userId}`)
       : $api.get(`/queries/queries/`);
   }
   static async getQueriesTableDataById(
-    id: number
+    id: number,
   ): Promise<AxiosResponse<ResponseInterface<QueriesResponse>>> {
     return $api.get(`/queries/queries/${id}/`);
   }
@@ -44,7 +44,7 @@ export default class QueriesService {
 
   static async patchQuery(
     id: number,
-    props: PatchQueryArgs
+    props: PatchQueryArgs,
   ): Promise<AxiosResponse> {
     return $api.patch(`/queries/queries/${id}/`, {
       ...props,
@@ -52,13 +52,13 @@ export default class QueriesService {
   }
 
   static async deleteQuery(
-    id: number
+    id: number,
   ): Promise<AxiosResponse<ResponseInterface<null>>> {
     return $api.delete(`/queries/queries/${id}/`);
   }
 
   static async getQueriesTableDataByName(
-    value: string
+    value: string,
   ): Promise<AxiosResponse<ResponseInterface<QueriesResponse[]>>> {
     return $api.get(`/queries/queries?search=${value}`);
   }

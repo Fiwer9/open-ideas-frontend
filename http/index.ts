@@ -8,7 +8,7 @@ let flag = true;
 export const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export const API_URL_TOKEN = process.env.NEXT_PUBLIC_BASE_URL.substring(
   0,
-  process.env.NEXT_PUBLIC_BASE_URL.length - 4
+  process.env.NEXT_PUBLIC_BASE_URL.length - 4,
 );
 axios.defaults.withCredentials = true;
 
@@ -38,7 +38,7 @@ $api.interceptors.response.use(
       const response = await axios.post<ResponseInterface<TokenResponse>>(
         `${API_URL_TOKEN}/token/refresh/`,
         { refresh },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (response.data?.error?.is_error) {
         flag && router.push("/");
@@ -52,7 +52,7 @@ $api.interceptors.response.use(
       return $api.request(config.config);
     }
     return config;
-  }
+  },
 );
 
 export default $api;

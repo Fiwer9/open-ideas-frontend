@@ -1,10 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { MenuSliceState } from "./types";
 import { getMenu } from "../../utils/getMenu";
-import Cookies from "js-cookie";
-import { fetchUserHeader } from "../headerSlice/asyncActions";
-import { DetailType } from "../../models/response/ResponseInterface";
-import { Status } from "../queriesSlice/types";
 import { fetchUserIsStaff } from "./asyncActions";
 
 const initialState: MenuSliceState = getMenu();
@@ -25,6 +21,12 @@ const menuSlice = createSlice({
       state.selectedTag = action.payload;
       sessionStorage.setItem("selectedTag", action.payload);
     },
+    setPageName: (state, action: PayloadAction<string>) => {
+      state.pageName = action.payload;
+    },
+    setPageId: (state, action: PayloadAction<number>) => {
+      state.pageId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserIsStaff.fulfilled, (state, action) => {
@@ -43,6 +45,11 @@ const menuSlice = createSlice({
   },
 });
 
-export const { changeCollapsed, setCurrentPage, changeSelectedTag } =
-  menuSlice.actions;
+export const {
+  changeCollapsed,
+  setCurrentPage,
+  setPageName,
+  setPageId,
+  changeSelectedTag,
+} = menuSlice.actions;
 export default menuSlice.reducer;
