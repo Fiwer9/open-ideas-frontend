@@ -44,6 +44,7 @@ import { setStatusQueries } from "../../redux/queriesSlice/slice";
 import { setStatusDirections } from "../../redux/directionsSlice/slice";
 import { setStatusOrganizations } from "../../redux/organizationsSlice/slice";
 import debounce from "lodash.debounce";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 export const QueryList: React.FC = memo(() => {
   const router = useRouter();
@@ -190,34 +191,39 @@ export const QueryList: React.FC = memo(() => {
   return (
     <>
       {selectedTag === "Панель администратора" ? (
-        <div className={styles.container}>
-          <div className={styles.slider}>
-            <Slider />
-          </div>
-          <div className={styles.content}>
-            <div className={styles.headerContainer}>
-              <Header />
+        <>
+          <div className={styles.container}>
+            <div className={styles.slider}>
+              <Slider />
             </div>
-            <Tabs />
-            <MainText text={"Инициативы"} />
-            <div className={styles.infContainer}>
-              <SearchBar
-                placeholderNum={"Номер"}
-                placeholderQuery={"Поиск по идеям"}
-              />
-              <div className={styles.filterContainer}>
-                <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
-                <CheckboxBar checkboxText={"Архив"} />
+            <div className={styles.content}>
+              <div className={styles.headerContainer}>
+                <Header />
               </div>
+              <Tabs />
+              <MainText text={"Инициативы"} />
+              <div className={styles.infContainer}>
+                <SearchBar
+                  placeholderNum={"Номер"}
+                  placeholderQuery={"Поиск по идеям"}
+                />
+                <div className={styles.filterContainer}>
+                  <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
+                  <CheckboxBar checkboxText={"Архив"} />
+                </div>
+              </div>
+              <DataTable
+                data={getData() as QueriesResponse[]}
+                columns={getColumns()}
+                isLoading={isLoading}
+                onRowClick={handleRowClick}
+              />
             </div>
-            <DataTable
-              data={getData() as QueriesResponse[]}
-              columns={getColumns()}
-              isLoading={isLoading}
-              onRowClick={handleRowClick}
-            />
+            <div className={styles.sliderSmall}>
+              <SliderSmall />
+            </div>
           </div>
-        </div>
+        </>
       ) : (
         <div className={styles.containerIdeas}>
           <div className={styles.contentIdeas}>

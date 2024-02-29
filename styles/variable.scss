@@ -338,6 +338,40 @@ $color-pule-purple: #F0F5FF;
   }
 }
 
+.menuSmall {
+  line-height: 25px;
+  border-top: 1px solid #F0F0F0;
+
+  .ant-menu-item.ant-menu-item-selected {
+    background-color: #E6F7FF;
+  }
+
+  .ant-menu-item:not(:last-child) {
+    border-right: 1px solid #F0F0F0;
+  }
+
+  .ant-menu-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: {
+      top: 6px;
+      right: 10px;
+      left: 10px
+    };
+    width: 25%;
+
+    .ant-menu-item-icon {
+      justify-content: center;
+    }
+
+    .anticon+span {
+      margin: 0;
+    }
+  }
+}
+
 .statusCheck {
   color: #4b7271;
 }
