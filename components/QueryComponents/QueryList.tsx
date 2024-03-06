@@ -1,7 +1,10 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 
 import styles from "./styles/QueryList.module.scss";
-import { QueriesResponse } from "../../models/response/QueriesResponse";
+import {
+  QueriesResponse,
+  QueryStatus,
+} from "../../models/response/QueriesResponse";
 import {
   getDirectionName,
   getDirections,
@@ -97,16 +100,17 @@ export const QueryList: React.FC = memo(() => {
       render: (directionId: number) =>
         directions.length > 0 && getDirectionName(directionId, directions),
       filters: getDirections(directions).map((direction) => ({
-        text: direction,
-        value: direction,
+        text: direction.name,
+        value: direction.id,
       })),
-      onFilter: (value: any, record: any) => record.name.includes(value),
+      onFilter: (value: number, record: QueriesResponse) =>
+        record.initiative_direction === value,
     },
     {
       title: "Статус заявки",
       dataIndex: "status",
       key: "status",
-      render: (text: string) => (
+      render: (text: QueryStatus) => (
         <>
           {
             <span className={`${getStatusClassName(styles, text)}`}>
@@ -120,8 +124,9 @@ export const QueryList: React.FC = memo(() => {
         text: status,
         value: status,
       })),
-      onFilter: (value: any, record: any) =>
-        statusTranslation[record.status.includes(value)],
+      onFilter: (value: any, record: any) => {
+        return statusTranslation[record.status] === value;
+      },
     },
   ];
 
@@ -162,11 +167,15 @@ export const QueryList: React.FC = memo(() => {
     }
     if (isArchive) {
       return queriesTableData?.filter(
-        (query) => query.status === "rejected" || query.status === "registered",
+        (query) =>
+          query.status === QueryStatus.REJECTED ||
+          query.status === QueryStatus.DONE,
       );
     } else if (!isArchive) {
       return queriesTableData?.filter(
-        (query) => query.status !== "rejected" && query.status !== "registered",
+        (query) =>
+          query.status !== QueryStatus.REJECTED &&
+          query.status !== QueryStatus.DONE,
       );
     }
   };

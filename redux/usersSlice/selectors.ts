@@ -1,17 +1,7 @@
 import { RootState } from "../store";
-import { UserResponse } from "../../models/response/UserResponse";
-import { UsersUpdateResponse } from "../../models/response/UsersUpdateResponse";
 
-export const selectUser = (state: RootState) =>
-  state.users.users as UserResponse;
+export const selectUser = (state: RootState) => state.users.user;
 
-export const selectUsers = (state: RootState) =>
-  state.users.users as UserResponse[];
-
-export const selectUpdateUser = (state: RootState) =>
-  state.users.usersUpdate as UsersUpdateResponse;
-
-export const selectUpdateUsers = (state: RootState) =>
-  state.users.usersUpdate as UsersUpdateResponse[];
+export const selectUsers = (state: RootState) => state.users.users;
 
 export const selectUsersStatus = (state: RootState) => state.users.status;

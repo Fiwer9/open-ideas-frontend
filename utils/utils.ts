@@ -1,10 +1,14 @@
-import { QueriesResponse } from "../models/response/QueriesResponse";
+import {
+  QueriesResponse,
+  QueryStatus,
+  QueryStatusTranslate,
+} from "../models/response/QueriesResponse";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
 import { DirectionResponse } from "../models/response/DirectionResponse";
 import { IDepartment } from "../models/IDepartment";
 import { OrganizationsResponse } from "../models/response/OrganizationsResponse";
-import { UsersUpdateResponse } from "../models/response/UsersUpdateResponse";
+import { UserResponse } from "../models/response/UserResponse";
 
 export function getDepartmentName(
   depId: number | undefined,
@@ -56,21 +60,21 @@ export const statusClassName = (styles: any) => ({
   done: styles.statusDone,
 });
 
-export function getStatusClassName(styles: any, status: string) {
+export function getStatusClassName(styles: any, status: QueryStatus) {
   switch (status) {
-    case "registered":
+    case QueryStatus.REGISTERED:
       return styles.statusRegistered;
-    case "check":
+    case QueryStatus.CHECK:
       return styles.statusCheck;
-    case "analysis":
+    case QueryStatus.ANALYSIS:
       return styles.statusAnalysis;
-    case "accepted":
+    case QueryStatus.ACCEPTED:
       return styles.statusAccepted;
-    case "implementation":
+    case QueryStatus.IMPLEMENTATION:
       return styles.statusImplementation;
-    case "rejected":
+    case QueryStatus.REJECTED:
       return styles.statusRejected;
-    case "done":
+    case QueryStatus.DONE:
       return styles.statusDone;
     default:
       return "";
@@ -99,10 +103,7 @@ export function formatDateToServer(date: Date, separator = ".") {
   return `${year}${separator}${month}${separator}${day}`;
 }
 
-export const getAllUserLikes = (
-  users: UsersUpdateResponse[],
-  user_id: number,
-) => {
+export const getAllUserLikes = (users: UserResponse[], user_id: number) => {
   const { likes } = users.find((user) => user.id === user_id);
   return [...likes];
 };
@@ -120,73 +121,23 @@ export const getDirectionName = (
   }
 };
 
-export const getDirections = (directions: DirectionResponse[]) => [
-  ...new Set(directions.map((item) => item.name)),
-];
+export const getDirections = (directions: DirectionResponse[]) => {
+  const directionsId = [...new Set(directions.map((item) => item.id))];
+  return directions.filter((direction, i) => direction.id === directionsId[i]);
+};
 
 export const getStatus = (queriesTableData: QueriesResponse[]) => [
   ...new Set(queriesTableData.map((item) => statusTranslation[item.status])),
 ];
 
-export const getDirectionTranslation = (direction: string) => {
-  switch (direction) {
-    case "tech_process":
-      return "Технологические процессы";
-    case "business_process":
-      return "Бизнес процессы";
-    case "work_safety":
-      return "Охрана труда";
-    case "workspace":
-      return "Рабочее пространство";
-    default:
-      return "";
-  }
-};
-
 export const statusTranslation = {
-  registered: "Зарегистрирована",
-  check: "На рассмотрении",
-  analysis: "Анализируется экспертом",
-  accepted: "На рассмотрении у руководства",
-  implementation: "Принята к реализации",
-  rejected: "Отклонена",
-  done: "Выполнена",
-};
-
-export const getStatusTranslation = (status: string) => {
-  switch (status) {
-    case "registered":
-      return "Зарегистрирована";
-    case "check":
-      return "На рассмотрении";
-    case "analysis":
-      return "Анализируется экспертом";
-    case "accepted":
-      return "На рассмотрении у руководства";
-    case "implementation":
-      return "Принята к реализации";
-    case "rejected":
-      return "Отклонена";
-    case "done":
-      return "Выполнена";
-    default:
-      return "";
-  }
-};
-
-export const getDirectionTranslationOnEng = (direction: string) => {
-  switch (direction) {
-    case "Технологические процессы":
-      return "tech_process";
-    case "Бизнес процессы":
-      return "business_process";
-    case "Охрана труда":
-      return "work_safety";
-    case "Рабочее пространство":
-      return "workspace";
-    default:
-      return "";
-  }
+  registered: QueryStatusTranslate.REGISTERED,
+  check: QueryStatusTranslate.CHECK,
+  analysis: QueryStatusTranslate.ANALYSIS,
+  accepted: QueryStatusTranslate.ACCEPTED,
+  implementation: QueryStatusTranslate.IMPLEMENTATION,
+  rejected: QueryStatusTranslate.REJECTED,
+  done: QueryStatusTranslate.DONE,
 };
 
 export const checkExpert = (query: QueriesResponse) => {
@@ -242,7 +193,7 @@ export const getRouteTranslation = (
   }
 };
 
-export function getUserName(userId: number, users: UsersUpdateResponse[]) {
+export function getUserName(userId: number, users: UserResponse[]) {
   const user = users.find((user) => user.id === userId);
   if (user) {
     return user.name;
@@ -250,7 +201,7 @@ export function getUserName(userId: number, users: UsersUpdateResponse[]) {
   return "Аноним";
 }
 
-export function getAuthor(users_id: [number], users: UsersUpdateResponse[]) {
+export function getAuthor(users_id: [number], users: UserResponse[]) {
   try {
     const { name } = users.find((user) => user.id === users_id[0]);
     return name;

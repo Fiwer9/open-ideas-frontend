@@ -6,16 +6,12 @@ import {
   selectOrganizations,
   selectOrgStatus,
 } from "../../redux/organizationsSlice/selectors";
-import {
-  selectUser,
-  selectUsersStatus,
-} from "../../redux/usersSlice/selectors";
+import { selectUsersStatus } from "../../redux/usersSlice/selectors";
 import {
   selectDirections,
   selectStatusDirections,
 } from "../../redux/directionsSlice/selectors";
 import { Status } from "../../redux/queriesSlice/types";
-import { fetchCurrentUser } from "../../redux/usersSlice/asyncActions";
 import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
 import { Card, Form, Input, Select } from "antd";
@@ -28,7 +24,6 @@ import {
 } from "../../utils/utils";
 import { Buttons } from "../ButtonComponent/Button";
 import router from "next/router";
-import debounce from "lodash.debounce";
 import ModalAntdSubmit from "../ModalsComponents/ModalAntdSubmit";
 import { postQuery } from "../../redux/queriesSlice/asyncActions";
 import TextArea from "antd/lib/input/TextArea";
@@ -40,6 +35,8 @@ import {
 import { MainText } from "../MainTextComponent";
 import { setStatusQueries } from "../../redux/queriesSlice/slice";
 import { setStatusDirections } from "../../redux/directionsSlice/slice";
+import { selectUserForHeader } from "../../redux/headerSlice/selectors";
+import { fetchUserHeader } from "../../redux/headerSlice/asyncActions";
 
 interface PostQueryProps {
   name: string;
@@ -55,7 +52,7 @@ function NewCreateQuery() {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const organizations = useSelector(selectOrganizations);
-  const user = useSelector(selectUser);
+  const user = useSelector(selectUserForHeader);
   const directions = useSelector(selectDirections);
   const statusDirections = useSelector(selectStatusDirections);
   const statusOrganizations = useSelector(selectOrgStatus);
@@ -73,15 +70,15 @@ function NewCreateQuery() {
     }
   }, [statusDirections, statusOrganizations, statusUsers]);
 
-  const fetchData = debounce(async () => {
-    await dispatch(fetchCurrentUser({ user_id }));
+  const fetchData = async () => {
     await dispatch(fetchOrganizations());
     await dispatch(fetchDirections());
-  }, 2000);
+    await dispatch(fetchUserHeader({ user_id }));
+  };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [user_id]);
 
   const onSubmit = async (data: PostQueryProps) => {
     const {
@@ -102,7 +99,7 @@ function NewCreateQuery() {
         initiator_users: [user_id],
         description,
         organization: getOrganizationNameById(organization, organizations),
-      })
+      }),
     );
     dispatch(setStatusQueries(Status.WAITING));
     dispatch(setStatusDirections(Status.WAITING));
@@ -118,7 +115,7 @@ function NewCreateQuery() {
   return (
     <>
       <Card loading={isLoading} className={styles.card}>
-        {user?.department?.organization && organizations.length > 0 && (
+        {user?.userName && organizations.length > 0 && (
           <>
             <div className={styles.logo}>
               <Logo width={112.73} height={32} />
@@ -131,10 +128,10 @@ function NewCreateQuery() {
 
             <Form
               initialValues={{
-                initiator_users: user.name,
+                initiator_users: user.userName,
                 organization: getOrganizationName(
-                  user.department.organization,
-                  organizations
+                  user.organizationId,
+                  organizations,
                 ),
               }}
               layout={"vertical"}

@@ -2,12 +2,12 @@ import { UsersSliceState } from "./types";
 import { WritableDraft } from "immer/src/types/types-external";
 import { ActionReducerMapBuilder, AsyncThunk } from "@reduxjs/toolkit";
 import { DetailType } from "../../models/response/ResponseInterface";
-import { fetchCurrentUser, patchLikes } from "./asyncActions";
+import { patchLikes } from "./asyncActions";
 import { Status } from "../queriesSlice/types";
 
 export const fetchUsersBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<UsersSliceState>>,
-  fetch: AsyncThunk<any, any, any>
+  fetch: AsyncThunk<any, any, any>,
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
@@ -28,9 +28,9 @@ export const fetchUsersBuilder = (
   });
 };
 
-export const fetchUsersUpdateBuilder = (
+export const fetchUserBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<UsersSliceState>>,
-  fetch: AsyncThunk<any, any, any>
+  fetch: AsyncThunk<any, any, any>,
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
@@ -38,24 +38,24 @@ export const fetchUsersUpdateBuilder = (
       state.status = Status.ERROR;
       return;
     }
-    state.usersUpdate = action.payload.data;
+    state.user = action.payload.data;
     state.status = Status.SUCCESS;
   });
   builder.addCase(fetch.pending, (state) => {
     state.status = Status.LOADING;
-    state.usersUpdate = [];
+    state.user = undefined;
   });
   builder.addCase(fetch.rejected, (state) => {
     state.status = Status.ERROR;
-    state.usersUpdate = [];
+    state.user = undefined;
   });
 };
 
 export const patchLikesBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<UsersSliceState>>,
-  fetch: AsyncThunk<any, any, any>
+  fetch: AsyncThunk<any, any, any>,
 ) => {
-  builder.addCase(patchLikes.fulfilled, (state, action) => {
+  builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
       state.detail = action.payload.error.detail as DetailType;
       state.status = Status.ERROR;

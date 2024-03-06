@@ -31,11 +31,11 @@ import {
 import { useAppDispatch } from "../../redux/store";
 import {
   fetchCurrentUser,
-  fetchUpdateUsers,
+  fetchUsers,
 } from "../../redux/usersSlice/asyncActions";
 import {
-  selectUpdateUsers,
   selectUser,
+  selectUsers,
   selectUsersStatus,
 } from "../../redux/usersSlice/selectors";
 import { statusOptions } from "../../utils/consts";
@@ -45,7 +45,7 @@ import {
   getAuthor,
   getDirectionName,
   getOrganizationName,
-  statusClassName,
+  getStatusClassName,
 } from "../../utils/utils";
 import { Header } from "../HeaderComponents/Header";
 import { Slider } from "../SliderComponents/SliderComponents";
@@ -90,7 +90,7 @@ export const AdminApplicationCard = () => {
   const { queryId } = router.query as { queryId: string };
   const [isLoading, setIsLoading] = useState(true);
   const organizations = useSelector(selectOrganizations);
-  const users = useSelector(selectUpdateUsers);
+  const users = useSelector(selectUsers);
   const user = useSelector(selectUser);
   const dataComments = useSelector(selectComments);
   const directions = useSelector(selectDirections);
@@ -130,7 +130,7 @@ export const AdminApplicationCard = () => {
   const fetchData = useCallback(
     debounce(async () => {
       await dispatch(fetchQueriesById({ id: queryId }));
-      await dispatch(fetchUpdateUsers());
+      await dispatch(fetchUsers());
       await dispatch(fetchDirections());
       await dispatch(fetchOrganizations());
       await dispatch(fetchCommentsById({ queryId }));
@@ -144,12 +144,12 @@ export const AdminApplicationCard = () => {
   }, [queryId]);
 
   useEffect(() => {
-    applicationData.name && dispatch(setPageName(applicationData.name));
+    applicationData?.name && dispatch(setPageName(applicationData.name));
     applicationData?.expert_users &&
       dispatch(
         fetchCurrentUser({ user_id: applicationData?.initiator_users[0] }),
       );
-  }, [applicationData.name]);
+  }, [applicationData?.name]);
 
   const changeStatus = async (status: string) => {
     const currentDate = new Date();
@@ -239,8 +239,9 @@ export const AdminApplicationCard = () => {
                       </div>
                       {applicationData?.status && (
                         <Select
-                          className={`selectInitiative ${statusClassName(
+                          className={`selectInitiative ${getStatusClassName(
                             styles,
+                            applicationData?.status,
                           )}`}
                           style={{ width: 250 }}
                           defaultValue={applicationData?.status}

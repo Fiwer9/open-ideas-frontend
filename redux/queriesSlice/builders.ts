@@ -5,7 +5,7 @@ import { DetailType } from "../../models/response/ResponseInterface";
 
 export const fetchQueriesBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<QueriesSliceState>>,
-  fetch: AsyncThunk<any, any, any>
+  fetch: AsyncThunk<any, any, any>,
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
@@ -24,9 +24,30 @@ export const fetchQueriesBuilder = (
   });
 };
 
+export const fetchQueryBuilder = (
+  builder: ActionReducerMapBuilder<WritableDraft<QueriesSliceState>>,
+  fetch: AsyncThunk<any, any, any>,
+) => {
+  builder.addCase(fetch.fulfilled, (state, action) => {
+    if (action.payload.error.is_error) {
+      state.detail = action.payload.error.detail as DetailType;
+    }
+    state.item = action.payload.data;
+    state.status = Status.SUCCESS;
+  });
+  builder.addCase(fetch.pending, (state) => {
+    state.status = Status.LOADING;
+    state.item = undefined;
+  });
+  builder.addCase(fetch.rejected, (state) => {
+    state.status = Status.ERROR;
+    state.item = undefined;
+  });
+};
+
 export const postQueryBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<QueriesSliceState>>,
-  patch: AsyncThunk<any, any, any>
+  patch: AsyncThunk<any, any, any>,
 ) => {
   builder.addCase(patch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
