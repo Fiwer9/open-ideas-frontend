@@ -47,6 +47,10 @@ import { setStatusQueries } from "../../redux/queriesSlice/slice";
 import { setStatusDirections } from "../../redux/directionsSlice/slice";
 import { setStatusOrganizations } from "../../redux/organizationsSlice/slice";
 import debounce from "lodash.debounce";
+import {
+  getQueryFilterByArchive,
+  getQueryFilterByExpert,
+} from "../../utils/getQueryFilter";
 
 export const QueryList: React.FC = memo(() => {
   const router = useRouter();
@@ -156,28 +160,15 @@ export const QueryList: React.FC = memo(() => {
       return queriesTableData?.filter(
         (query) =>
           (query.expert_users.includes(user_id) &&
-            query.status === "rejected") ||
-          query.status === "registered",
+            query.status === QueryStatus.REJECTED) ||
+          query.status === QueryStatus.DONE,
       );
     }
     if (isExpert) {
-      return queriesTableData?.filter((query) =>
-        query.expert_users.includes(user_id),
-      );
+      return getQueryFilterByExpert(queriesTableData, isExpert, user_id);
     }
-    if (isArchive) {
-      return queriesTableData?.filter(
-        (query) =>
-          query.status === QueryStatus.REJECTED ||
-          query.status === QueryStatus.DONE,
-      );
-    } else if (!isArchive) {
-      return queriesTableData?.filter(
-        (query) =>
-          query.status !== QueryStatus.REJECTED &&
-          query.status !== QueryStatus.DONE,
-      );
-    }
+
+    return getQueryFilterByArchive(queriesTableData, isArchive);
   };
 
   const handleRowClickIdea = (queryId: QueriesResponse) => {
