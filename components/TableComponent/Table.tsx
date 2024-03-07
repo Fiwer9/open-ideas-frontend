@@ -4,7 +4,6 @@ import { Table } from "antd";
 import { DirectionResponse } from "../../models/response/DirectionResponse";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
 import { UserResponse } from "../../models/response/UserResponse";
-import { UsersUpdateResponse } from "../../models/response/UsersUpdateResponse";
 import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
 import type { TableProps as RcTableProps } from "rc-table/lib/Table";
 
@@ -17,7 +16,6 @@ interface DataTable {
     | DirectionResponse[]
     | QueriesResponse[]
     | UserResponse[]
-    | UsersUpdateResponse[]
     | OrganizationsResponse[];
   columns: any;
   isLoading: boolean;
@@ -44,5 +42,5 @@ export const DataTable: React.FC<DataTable> = memo(
         />
       </div>
     );
-  }
+  },
 );

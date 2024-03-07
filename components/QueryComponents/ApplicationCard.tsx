@@ -40,12 +40,9 @@ import {
 } from "../../redux/queriesSlice/selectors";
 import { Status } from "../../redux/queriesSlice/types";
 import { useAppDispatch } from "../../redux/store";
+import { fetchUsers, patchLikes } from "../../redux/usersSlice/asyncActions";
 import {
-  fetchUpdateUsers,
-  patchLikes,
-} from "../../redux/usersSlice/asyncActions";
-import {
-  selectUpdateUsers,
+  selectUsers,
   selectUsersStatus,
 } from "../../redux/usersSlice/selectors";
 import {
@@ -98,7 +95,7 @@ export const ApplicationCard: React.FC = memo(() => {
   const { queryId } = router.query as { queryId: string };
   const [isLoading, setIsLoading] = useState(false);
   const commentValue = useSelector(selectCurrentComment);
-  const users = useSelector(selectUpdateUsers);
+  const users = useSelector(selectUsers);
   const [status, setStatus] = useState("");
   const [isLiked, setIsLiked] = useState(false);
   const dataComment = useSelector(selectComments);
@@ -130,20 +127,20 @@ export const ApplicationCard: React.FC = memo(() => {
     const currentUser = users.find((user) => user.id === user_id);
     setIsLiked(
       Boolean(
-        currentUser.likes.find((query_id) => query_id === Number(queryId))
-      )
+        currentUser.likes.find((query_id) => query_id === Number(queryId)),
+      ),
     );
   };
 
   const fetchData = useCallback(
     debounce(async () => {
       await dispatch(fetchQueriesById({ id: queryId }));
-      await dispatch(fetchUpdateUsers());
+      await dispatch(fetchUsers());
       await dispatch(fetchDirections());
       await dispatch(fetchOrganizations());
       await dispatch(fetchCommentsById({ queryId }));
     }, 2000),
-    [queryId]
+    [queryId],
   );
 
   useEffect(() => {
@@ -155,7 +152,7 @@ export const ApplicationCard: React.FC = memo(() => {
   }, [users]);
 
   useEffect(() => {
-    applicationData.expert_users && setIsExpert(checkExpert(applicationData));
+    applicationData?.expert_users && setIsExpert(checkExpert(applicationData));
   }, [applicationData?.expert_users]);
 
   const getLikes = () => {
@@ -193,13 +190,13 @@ export const ApplicationCard: React.FC = memo(() => {
         initiator_users,
         implementation_effect,
         organization,
-      })
+      }),
     );
   };
 
   const sendComment = async (comment: string) => {
     await dispatch(
-      postComment({ comment, query_id: Number(queryId), user_id })
+      postComment({ comment, query_id: Number(queryId), user_id }),
     );
     const currentDate = new Date();
     const date = formatDateToServer(currentDate, "-");
@@ -213,14 +210,14 @@ export const ApplicationCard: React.FC = memo(() => {
           created_at: date,
           id: dataComment.length + 1,
         },
-      ])
+      ]),
     );
   };
 
   const patchAddLike = async (userId: number) => {
     const likedQueries = [...getAllUserLikes(users, userId), Number(queryId)];
     await dispatch(patchLikes({ userId, likedQueries }));
-    await dispatch(fetchUpdateUsers());
+    await dispatch(fetchUsers());
   };
 
   const patchRemoveLike = async (userId: number) => {
@@ -230,7 +227,7 @@ export const ApplicationCard: React.FC = memo(() => {
       likedQueries.splice(index, 1);
     }
     await dispatch(patchLikes({ userId, likedQueries }));
-    await dispatch(fetchUpdateUsers());
+    await dispatch(fetchUsers());
   };
 
   return (
@@ -269,7 +266,7 @@ export const ApplicationCard: React.FC = memo(() => {
                 <p
                   className={`${styles.statusQuery} ${getStatusClassName(
                     styles,
-                    applicationData?.status
+                    applicationData?.status,
                   )}`}
                 >
                   {statusTranslation[applicationData?.status]}
@@ -280,35 +277,35 @@ export const ApplicationCard: React.FC = memo(() => {
           <Col className={styles.col}>
             <Row className={styles.row}>
               <p className={styles.rowText}>Номер заявки:</p>
-              <p className={styles.rowInf}>{applicationData.id}</p>
+              <p className={styles.rowInf}>{applicationData?.id}</p>
             </Row>
             <Row className={styles.row}>
               <p className={styles.rowText}>Инициатива (Идея):</p>
-              <p className={styles.rowInf}>{applicationData.name}</p>
+              <p className={styles.rowInf}>{applicationData?.name}</p>
             </Row>
             <Row className={styles.row}>
               <p className={styles.rowText}>Описание инициативы:</p>
-              <p className={styles.rowInf}>{applicationData.description}</p>
+              <p className={styles.rowInf}>{applicationData?.description}</p>
             </Row>
             <Row className={styles.row}>
               <p className={styles.rowText}>Направление:</p>
               <p className={styles.rowInf}>
                 {directions.length > 0 &&
-                  applicationData.initiative_direction &&
+                  applicationData?.initiative_direction &&
                   getDirectionName(
-                    applicationData.initiative_direction,
-                    directions
+                    applicationData?.initiative_direction,
+                    directions,
                   )}
               </p>
             </Row>
             <Row className={styles.row}>
               <p className={styles.rowText}>Организация:</p>
               <p className={styles.rowInf}>
-                {applicationData.organization &&
+                {applicationData?.organization &&
                   organizations.length > 0 &&
                   getOrganizationName(
-                    applicationData.organization,
-                    organizations
+                    applicationData?.organization,
+                    organizations,
                   )}
               </p>
             </Row>
