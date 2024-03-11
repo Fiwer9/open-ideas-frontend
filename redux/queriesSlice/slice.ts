@@ -2,15 +2,19 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
 import { QueriesSliceState, Status } from "./types";
 import {
-  fetchQueriesByUser,
+  deleteQuery,
+  fetchQueries,
   fetchQueriesById,
   fetchQueriesByName,
+  fetchQueriesByUser,
   patchQuery,
-  fetchQueries,
   postQuery,
-  deleteQuery,
 } from "./asyncActions";
-import { fetchQueriesBuilder, postQueryBuilder } from "./builders";
+import {
+  fetchQueriesBuilder,
+  fetchQueryBuilder,
+  postQueryBuilder,
+} from "./builders";
 
 const initialState: QueriesSliceState = {
   items: [],
@@ -32,9 +36,9 @@ export const queriesSlice = createSlice({
   extraReducers: (builder) => {
     fetchQueriesBuilder(builder, fetchQueriesByUser);
     fetchQueriesBuilder(builder, fetchQueriesByName);
-    fetchQueriesBuilder(builder, fetchQueriesById);
+    fetchQueryBuilder(builder, fetchQueriesById);
     fetchQueriesBuilder(builder, fetchQueries);
-    fetchQueriesBuilder(builder, patchQuery);
+    fetchQueryBuilder(builder, patchQuery);
     postQueryBuilder(builder, postQuery);
     postQueryBuilder(builder, deleteQuery);
   },

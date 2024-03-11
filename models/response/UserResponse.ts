@@ -1,5 +1,4 @@
 import { IDepartment } from "../IDepartment";
-import { QueriesResponse } from "./QueriesResponse";
 
 interface IGroup {
   id: number;
@@ -8,10 +7,13 @@ interface IGroup {
 }
 
 export interface UserResponse {
-  id: number;
-  is_verified: boolean;
-  name: string;
+  is_staff: boolean;
   email: string;
+  id: number;
+  name: string;
   department: IDepartment;
-  likes: QueriesResponse[];
+  likes: number[];
+  is_verified: boolean;
+  is_active: boolean;
+  is_superuser: boolean;
 }

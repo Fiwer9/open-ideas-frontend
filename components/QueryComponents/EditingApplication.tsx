@@ -12,15 +12,12 @@ import {
   getOrganizationNameById,
 } from "../../utils/utils";
 import { useSelector } from "react-redux";
-import {
-  selectUpdateUsers,
-  selectUser,
-} from "../../redux/usersSlice/selectors";
+import { selectUser, selectUsers } from "../../redux/usersSlice/selectors";
 import debounce from "lodash.debounce";
 import { useAppDispatch } from "../../redux/store";
 import {
   fetchCurrentUser,
-  fetchUpdateUsers,
+  fetchUsers,
 } from "../../redux/usersSlice/asyncActions";
 import {
   fetchDepartments,
@@ -58,7 +55,7 @@ export const EditingApplication = () => {
   const dispatch = useAppDispatch();
 
   const applicationData = useSelector(selectQueryData);
-  const users = useSelector(selectUpdateUsers);
+  const users = useSelector(selectUsers);
   const organizations = useSelector(selectOrganizations);
   const directions = useSelector(selectDirections);
   const user = useSelector(selectUser);
@@ -66,7 +63,7 @@ export const EditingApplication = () => {
 
   const fetchData = debounce(async () => {
     await dispatch(fetchQueriesById({ id: queryId }));
-    await dispatch(fetchUpdateUsers());
+    await dispatch(fetchUsers());
     await dispatch(fetchDirections());
     await dispatch(fetchOrganizations());
     dispatch(setPageId(Number(queryId)));
@@ -77,12 +74,12 @@ export const EditingApplication = () => {
   }, [queryId]);
 
   useEffect(() => {
-    applicationData.name && dispatch(setPageName(applicationData.name));
+    applicationData?.name && dispatch(setPageName(applicationData.name));
     applicationData?.expert_users &&
       dispatch(
         fetchCurrentUser({ user_id: applicationData?.initiator_users[0] }),
       );
-  }, [applicationData.name]);
+  }, [applicationData?.name]);
 
   useEffect(() => {
     organizationId &&
@@ -90,7 +87,7 @@ export const EditingApplication = () => {
         fetchDepartments({
           organization_id: organizationId
             ? organizationId
-            : applicationData.organization,
+            : applicationData?.organization,
         }),
       );
   }, [organizationId]);
@@ -109,18 +106,18 @@ export const EditingApplication = () => {
     dispatch(
       patchQuery({
         date,
-        status: applicationData.status,
+        status: applicationData?.status,
         id: Number(queryId),
         organization: getOrganizationNameById(organization, organizations),
         description,
         name,
         initiative_direction,
         implementation_effect,
-        initiator_users: applicationData.initiator_users,
+        initiator_users: applicationData?.initiator_users,
         expert_users:
           expert_users !== 0
             ? typeof expert_users === "string"
-              ? applicationData.expert_users
+              ? applicationData?.expert_users
               : [expert_users]
             : null,
       }),
@@ -151,18 +148,18 @@ export const EditingApplication = () => {
                   layout="vertical"
                   className={styles.contentContainer}
                   initialValues={{
-                    name: applicationData.name,
-                    description: applicationData.description,
+                    name: applicationData?.name,
+                    description: applicationData?.description,
                     implementation_effect:
-                      applicationData.implementation_effect,
-                    initiative_direction: applicationData.initiative_direction,
+                      applicationData?.implementation_effect,
+                    initiative_direction: applicationData?.initiative_direction,
                     organization: getOrganizationName(
-                      applicationData.organization,
+                      applicationData?.organization,
                       organizations,
                     ),
                     department: user?.department?.name,
                     expert_users: getAuthor(
-                      applicationData.expert_users,
+                      applicationData?.expert_users,
                       users,
                     ),
                   }}

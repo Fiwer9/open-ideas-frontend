@@ -11,29 +11,18 @@ import router from "next/router";
 import styles from "./styles/UsersList.module.scss";
 import { DataTable } from "../TableComponent/Table";
 import { fetchData, getOrganizationName } from "../../utils/utils";
-import UsersService from "../../services/UsersService";
-import { UsersUpdateResponse } from "../../models/response/UsersUpdateResponse";
 import OrganizationsService from "../../services/OrganizationsService";
 import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
-import { useSearchNum } from "../../hooks/useSearchNum";
-import { useSearchQuery } from "../../hooks/useSearchQuery";
-import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-import {
-  selectUpdateUsers,
-  selectUsers,
-} from "../../redux/usersSlice/selectors";
+import { selectUsers } from "../../redux/usersSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
-import {
-  fetchUpdateUsers,
-  fetchUsers,
-} from "../../redux/usersSlice/asyncActions";
+import { fetchUsers } from "../../redux/usersSlice/asyncActions";
 
 export const UsersList = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const usersData = useSelector(selectUpdateUsers);
+  const usersData = useSelector(selectUsers);
   const [organizations, setOrganizations] = useState<OrganizationsResponse[]>(
-    []
+    [],
   );
   const getEmails = () => [...new Set(usersData?.map((user) => user.email))];
   const dispatch = useAppDispatch();
@@ -91,11 +80,11 @@ export const UsersList = () => {
     const delay = 3000;
     const fetchDataWithDelay = async () => {
       await new Promise((resolve) => setTimeout(resolve, delay));
-      await dispatch(fetchUpdateUsers());
+      await dispatch(fetchUsers());
       await fetchData(
         setIsLoading,
         setOrganizations,
-        OrganizationsService.getOrganizations
+        OrganizationsService.getOrganizations,
       );
     };
     setIsLoading(true);
@@ -109,7 +98,7 @@ export const UsersList = () => {
     name: user.name,
     email: user.email,
     organization: user.department
-      ? getOrganizationName(user.department, organizations) //TODO
+      ? getOrganizationName(user.department.id, organizations) //TODO
       : "Не назначено",
   }));
   const handleRowClick = (user: any) => {

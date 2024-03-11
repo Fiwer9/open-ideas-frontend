@@ -3,23 +3,23 @@ import Image from "next/image";
 import { memo } from "react";
 import { CommentResponse } from "../../../../models/response/CommentResponse";
 import { QueriesResponse } from "../../../../models/response/QueriesResponse";
-import { UsersUpdateResponse } from "../../../../models/response/UsersUpdateResponse";
 import avatar from "../../../../public/img/AvatarAratrum.svg";
 import { formatDate, getUserName } from "../../../../utils/utils";
 import styles from "../../styles/ApplicationCard.module.scss";
 import stylesAdmin from "../../styles/AdminApplicationCard.module.scss";
+import { UserResponse } from "../../../../models/response/UserResponse";
 
 type CommentBlockProps = {
   index: number;
   comment: CommentResponse;
-  users: UsersUpdateResponse[];
+  users: UserResponse[];
   applicationData: QueriesResponse;
 };
 
 export const CommentBlock: React.FC<CommentBlockProps> = memo(
   ({ index, comment, users, applicationData }) => {
     const checkExpert = (commentUser: number) =>
-      applicationData.expert_users[0] === commentUser;
+      applicationData?.expert_users[0] === commentUser;
 
     return (
       <Row className={styles.row} key={index}>
@@ -33,7 +33,7 @@ export const CommentBlock: React.FC<CommentBlockProps> = memo(
                 {users.length > 0 && getUserName(comment.user, users)}
               </p>
               <p className={styles.status}>
-                {applicationData.expert_users && checkExpert(comment.user)
+                {applicationData?.expert_users && checkExpert(comment.user)
                   ? "(Эксперт)"
                   : "(Пользователь)"}
               </p>
@@ -44,7 +44,7 @@ export const CommentBlock: React.FC<CommentBlockProps> = memo(
         </div>
       </Row>
     );
-  }
+  },
 );
 
 export const CommentBlockAdmin: React.FC<CommentBlockProps> = memo(
@@ -61,7 +61,7 @@ export const CommentBlockAdmin: React.FC<CommentBlockProps> = memo(
           <div className={stylesAdmin.infComment}>
             <p className={stylesAdmin.name}>{`${getUserName(
               comment.user,
-              users
+              users,
             )} ${
               applicationData?.expert_users && checkExpert(comment.user)
                 ? "(Эксперт)"
@@ -73,5 +73,5 @@ export const CommentBlockAdmin: React.FC<CommentBlockProps> = memo(
         </div>
       </div>
     );
-  }
+  },
 );
