@@ -17,6 +17,7 @@ import type { InputRef } from "antd";
 import FetchSettings from "../../hooks/fetches/FetchSettings/FetchSettings";
 import Cookies from "js-cookie";
 import debounce from "lodash.debounce";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 function SwitchContent({
   maxFileSize,
@@ -322,6 +323,10 @@ export const Settings = () => {
                 />
               </div>
             </div>
+          </div>
+
+          <div className={styles.sliderSmall}>
+            <SliderSmall />
           </div>
         </div>
       )}

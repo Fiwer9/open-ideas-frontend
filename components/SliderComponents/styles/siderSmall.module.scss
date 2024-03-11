@@ -7,5 +7,9 @@
 
   .sider {
     z-index: 2;
+    flex: 1 !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
   }
 }

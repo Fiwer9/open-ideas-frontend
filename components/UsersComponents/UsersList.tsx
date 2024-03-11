@@ -28,6 +28,7 @@ import {
   fetchUpdateUsers,
   fetchUsers,
 } from "../../redux/usersSlice/asyncActions";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 export const UsersList = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -144,6 +145,9 @@ export const UsersList = () => {
               isLoading={isLoading}
               onRowClick={handleRowClick}
             />
+          </div>
+          <div className={styles.sliderSmall}>
+            <SliderSmall />
           </div>
         </div>
       )}

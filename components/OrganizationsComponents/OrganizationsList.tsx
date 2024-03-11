@@ -11,6 +11,7 @@ import { Table, Form, Input } from "antd";
 import styles from "./styles/OrganizationsList.module.scss";
 import router from "next/router";
 import Modal from "../ModalsComponents/Modal";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 function ContentModal() {
   return (
@@ -127,8 +128,11 @@ export const OrganizationsList = () => {
             })}
           />
         </div>
-      </div>
 
+        <div className={styles.sliderSmall}>
+          <SliderSmall />
+        </div>
+      </div>
       <div className={styles.modal}>
         <Modal
           active={modalActive}

@@ -2,7 +2,7 @@ import { DownloadOutlined, HeartOutlined } from "@ant-design/icons";
 import { Col, Select, Upload, UploadProps } from "antd";
 import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { fetchCommentsById } from "../../redux/commentsSlice/asyncActions";
 import {
@@ -56,6 +56,7 @@ import { changeIsModalSubmitActive } from "../../redux/modalsSlice/slice";
 import ModalAdditionalText from "../ModalsComponents/ModalAdditionalText";
 import { Status } from "../../redux/queriesSlice/types";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 const props: UploadProps = {
   defaultFileList: [
@@ -376,6 +377,10 @@ export const AdminApplicationCard = () => {
               </div>
             </>
           )}
+        </div>
+
+        <div className={styles.sliderSmall}>
+          <SliderSmall />
         </div>
       </div>
 

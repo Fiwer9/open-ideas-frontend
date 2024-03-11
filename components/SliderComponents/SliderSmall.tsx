@@ -42,7 +42,6 @@ const items: MenuProps["items"] = [
 ];
 
 export const SliderSmall: React.FC = memo(() => {
-  const collapsed = useSelector(selectMenuIsCollapsed);
   const selectedPage = useSelector(selectCurrentPage);
   const dispatch = useAppDispatch();
 
@@ -62,7 +61,6 @@ export const SliderSmall: React.FC = memo(() => {
         style={{ background: colorBgContainer }}
         collapsedWidth={'100%'}
         trigger={null}
-        collapsed={collapsed}
       >
         <Menu
           mode="horizontal"

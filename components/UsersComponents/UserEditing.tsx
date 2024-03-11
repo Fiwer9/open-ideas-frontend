@@ -26,6 +26,7 @@ import {
 } from "../../redux/usersSlice/asyncActions";
 import { useSelector } from "react-redux";
 import { selectUpdateUser } from "../../redux/usersSlice/selectors";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 interface UserEditingProps {
   userId: string;
@@ -414,6 +415,10 @@ export const UserEditing = ({ userId }: UserEditingProps) => {
               </div>
             </Form>
           )}
+        </div>
+
+        <div className={styles.sliderSmall}>
+          <SliderSmall />
         </div>
       </div>
     </>

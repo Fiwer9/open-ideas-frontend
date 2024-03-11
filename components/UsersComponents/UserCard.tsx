@@ -16,6 +16,7 @@ import { OrganizationsResponse } from "../../models/response/OrganizationsRespon
 import OrganizationsService from "../../services/OrganizationsService";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
 import QueriesService from "../../services/QueriesService";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 interface UserCardProps {
   userId: string;
@@ -128,6 +129,10 @@ export const UserCard = ({ userId }: UserCardProps) => {
               </Button>
             </div>
           </div>
+        </div>
+
+        <div className={styles.sliderSmall}>
+          <SliderSmall />
         </div>
       </div>
     </>

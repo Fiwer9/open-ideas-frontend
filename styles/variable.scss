@@ -91,6 +91,21 @@ $color-pule-purple: #F0F5FF;
   };
 }
 
+@mixin sliderSmallStyles {
+  @media (max-width: 3000px) {
+    display: none;
+  }
+
+  @media (max-width: 430px) {
+    display: block;
+  }
+}
+
+@mixin sliderSmallContent {
+  display: flex;
+  flex-direction: column;
+}
+
 %container {
   z-index: -1;
   width: 100%;

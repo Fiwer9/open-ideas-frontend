@@ -1,7 +1,15 @@
 @import "../../../styles/variable.scss";
 
+.sliderSmall {
+  @include sliderSmallStyles;
+}
+
 .container {
   @include container;
+
+  @media (max-width: 430px) {
+    @include sliderSmallContent;
+  }
 
   .slider {
     @media (max-width: 430px) {
@@ -271,6 +279,7 @@
 
   .btnContainer430 {
     @include btnContainer;
+    margin-bottom: 70px;
 
     @media (max-width: 3000px) {
       display: none;
