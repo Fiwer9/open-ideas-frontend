@@ -13,7 +13,8 @@ export enum Status {
 }
 
 export interface QueriesSliceState {
-  items: QueriesResponse[] | QueriesResponse;
+  items: QueriesResponse[];
+  item?: QueriesResponse;
   status: Status;
   detail: DetailType;
 }

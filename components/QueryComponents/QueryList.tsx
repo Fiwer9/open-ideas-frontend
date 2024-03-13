@@ -1,7 +1,10 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 
 import styles from "./styles/QueryList.module.scss";
-import { QueriesResponse } from "../../models/response/QueriesResponse";
+import {
+  QueriesResponse,
+  QueryStatus,
+} from "../../models/response/QueriesResponse";
 import {
   getDirectionName,
   getDirections,
@@ -45,6 +48,10 @@ import { setStatusDirections } from "../../redux/directionsSlice/slice";
 import { setStatusOrganizations } from "../../redux/organizationsSlice/slice";
 import debounce from "lodash.debounce";
 import { SliderSmall } from "../SliderComponents/SliderSmall";
+import {
+  getQueryFilterByArchive,
+  getQueryFilterByExpert,
+} from "../../utils/getQueryFilter";
 
 export const QueryList: React.FC = memo(() => {
   const router = useRouter();
@@ -98,16 +105,17 @@ export const QueryList: React.FC = memo(() => {
       render: (directionId: number) =>
         directions.length > 0 && getDirectionName(directionId, directions),
       filters: getDirections(directions).map((direction) => ({
-        text: direction,
-        value: direction,
+        text: direction.name,
+        value: direction.id,
       })),
-      onFilter: (value: any, record: any) => record.name.includes(value),
+      onFilter: (value: number, record: QueriesResponse) =>
+        record.initiative_direction === value,
     },
     {
       title: "Статус заявки",
       dataIndex: "status",
       key: "status",
-      render: (text: string) => (
+      render: (text: QueryStatus) => (
         <>
           {
             <span className={`${getStatusClassName(styles, text)}`}>
@@ -121,8 +129,9 @@ export const QueryList: React.FC = memo(() => {
         text: status,
         value: status,
       })),
-      onFilter: (value: any, record: any) =>
-        statusTranslation[record.status.includes(value)],
+      onFilter: (value: any, record: any) => {
+        return statusTranslation[record.status] === value;
+      },
     },
   ];
 
@@ -152,24 +161,15 @@ export const QueryList: React.FC = memo(() => {
       return queriesTableData?.filter(
         (query) =>
           (query.expert_users.includes(user_id) &&
-            query.status === "rejected") ||
-          query.status === "registered",
+            query.status === QueryStatus.REJECTED) ||
+          query.status === QueryStatus.DONE,
       );
     }
     if (isExpert) {
-      return queriesTableData?.filter((query) =>
-        query.expert_users.includes(user_id),
-      );
+      return getQueryFilterByExpert(queriesTableData, isExpert, user_id);
     }
-    if (isArchive) {
-      return queriesTableData?.filter(
-        (query) => query.status === "rejected" || query.status === "registered",
-      );
-    } else if (!isArchive) {
-      return queriesTableData?.filter(
-        (query) => query.status !== "rejected" && query.status !== "registered",
-      );
-    }
+
+    return getQueryFilterByArchive(queriesTableData, isArchive);
   };
 
   const handleRowClickIdea = (queryId: QueriesResponse) => {
