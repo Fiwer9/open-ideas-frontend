@@ -1,22 +1,9 @@
 import React from "react";
-import { useRouter } from "next/router";
-import Cookies from "js-cookie";
-import { PageDevelopment } from "../../../components/PageDevelopmentComponent/PageDevelopment";
 import { useCheckStaff } from "../../../hooks/useCheckStaff";
+import { UserCard } from "../../../components/UsersComponents/UserCard";
 
 export default function Index() {
   const isStaff = useCheckStaff();
 
-  const router = useRouter();
-  const { userId } = router.query;
-  let id = Array.isArray(userId) ? userId[0] : userId;
-  id = id || "";
-  Cookies.set("userId", id);
-
-  return (
-    <div>
-      {/*<UserCard userId={id} />*/}
-      {isStaff && <PageDevelopment />}
-    </div>
-  );
+  return <div>{isStaff && <UserCard />}</div>;
 }

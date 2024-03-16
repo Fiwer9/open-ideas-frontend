@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Slider } from "../SliderComponents/SliderComponents";
 import { Tabs } from "../TabsComponent/Tabs";
 import { Header } from "../HeaderComponents/Header";
@@ -10,29 +10,49 @@ import router from "next/router";
 
 import styles from "./styles/UsersList.module.scss";
 import { DataTable } from "../TableComponent/Table";
-import { fetchData, getOrganizationName } from "../../utils/utils";
-import OrganizationsService from "../../services/OrganizationsService";
-import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
+import {
+  getEmails,
+  getOrganizationName,
+  getOrganizationsFilter,
+} from "../../utils/utils";
 import { useSelector } from "react-redux";
-import { selectUsers } from "../../redux/usersSlice/selectors";
+import {
+  selectUsers,
+  selectUsersStatus,
+} from "../../redux/usersSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
-import { fetchUsers } from "../../redux/usersSlice/asyncActions";
+import {
+  fetchUsers,
+  fetchUsersByName,
+} from "../../redux/usersSlice/asyncActions";
+import debounce from "lodash.debounce";
+import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
+import { selectFilters } from "../../redux/filterSlice/selectors";
+import {
+  selectOrganizations,
+  selectOrgStatus,
+} from "../../redux/organizationsSlice/selectors";
+import { Status } from "../../redux/queriesSlice/types";
 
-export const UsersList = () => {
-  const [isLoading, setIsLoading] = useState(false);
+export const UsersList: React.FC = memo(() => {
+  const [isLoading, setIsLoading] = useState(true);
   const usersData = useSelector(selectUsers);
-  const [organizations, setOrganizations] = useState<OrganizationsResponse[]>(
-    [],
-  );
-  const getEmails = () => [...new Set(usersData?.map((user) => user.email))];
+  const organizations = useSelector(selectOrganizations);
+  const organizationsStatus = useSelector(selectOrgStatus);
+  const usersStatus = useSelector(selectUsersStatus);
   const dispatch = useAppDispatch();
-  const getNames = () => [...new Set(usersData?.map((user) => user.name))];
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchNumber, setSearchNumber] = useState("");
-  const getOrganizationsFilter = () => [
-    ...new Set(organizations?.map((organization) => organization.name)),
-  ];
-  const [domLoaded, setDomLoaded] = useState(false);
+  const { searchValue } = useSelector(selectFilters);
+
+  useEffect(() => {
+    if (
+      organizationsStatus === Status.SUCCESS &&
+      usersStatus === Status.SUCCESS
+    ) {
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }, [organizationsStatus, usersStatus]);
   const columns: any = [
     {
       title: "Номер",
@@ -54,7 +74,7 @@ export const UsersList = () => {
       dataIndex: "email",
       key: "email",
       width: "20%",
-      filters: getEmails().map((email) => ({
+      filters: getEmails(usersData).map((email) => ({
         text: email,
         value: email,
       })),
@@ -67,7 +87,7 @@ export const UsersList = () => {
       width: "20%",
       filters:
         organizations.length > 0 &&
-        getOrganizationsFilter().map((organization) => ({
+        getOrganizationsFilter(organizations).map((organization) => ({
           text: organization,
           value: organization,
         })),
@@ -76,66 +96,67 @@ export const UsersList = () => {
     },
   ];
 
+  const fetchData = debounce(async () => {
+    await dispatch(fetchUsers());
+    await dispatch(fetchOrganizations());
+  }, 2000);
+
+  const fetchDataByName = async () => {
+    await dispatch(fetchUsersByName({ value: searchValue }));
+  };
+
   useEffect(() => {
-    const delay = 3000;
-    const fetchDataWithDelay = async () => {
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      await dispatch(fetchUsers());
-      await fetchData(
-        setIsLoading,
-        setOrganizations,
-        OrganizationsService.getOrganizations,
-      );
-    };
-    setIsLoading(true);
-    fetchDataWithDelay();
-    setIsLoading(false);
-    setDomLoaded(true);
+    fetchData();
   }, []);
 
-  const data = usersData.map((user) => ({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    organization: user.department
-      ? getOrganizationName(user.department.id, organizations) //TODO
-      : "Не назначено",
-  }));
+  useEffect(() => {
+    fetchDataByName();
+  }, [searchValue]);
+
+  const getData = () =>
+    usersData.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      organization: user.department
+        ? getOrganizationName(user.department.id, organizations)
+        : "Не назначено",
+    }));
+
   const handleRowClick = (user: any) => {
     router.push(`/users/userCard?userId=${user.id}`);
   };
 
   return (
     <>
-      {domLoaded && (
-        <div className={styles.container}>
-          <div className={styles.slider}>
-            <Slider />
-          </div>
-          <div className={styles.content}>
-            <div className={styles.headerContainer}>
-              <Header />
-            </div>
-            <Tabs />
-            <MainText text={"Пользователи"} />
-            <div className={styles.infContainer}>
-              <SearchBar
-                placeholderNum={"Номер"}
-                placeholderQuery={"Поиск по пользователям"}
-              />
-              <div className={styles.filter}>
-                <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
-              </div>
-            </div>
-            <DataTable
-              data={data}
-              columns={columns}
-              isLoading={isLoading}
-              onRowClick={handleRowClick}
-            />
-          </div>
+      <div className={styles.container}>
+        <div className={styles.slider}>
+          <Slider />
         </div>
-      )}
+        <div className={styles.content}>
+          <div className={styles.headerContainer}>
+            <Header />
+          </div>
+          <Tabs />
+          <MainText text={"Пользователи"} />
+          <div className={styles.infContainer}>
+            <SearchBar
+              placeholderNum={"Номер"}
+              placeholderQuery={"Поиск по пользователям"}
+            />
+            <div className={styles.filter}>
+              <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
+            </div>
+          </div>
+          <DataTable
+            data={getData()}
+            columns={columns}
+            isLoading={isLoading}
+            onRowClick={handleRowClick}
+            locale={"Ещё нет пользователей"}
+          />
+        </div>
+      </div>
     </>
   );
-};
+});

@@ -11,18 +11,11 @@ import {
 } from "./types";
 import { ResponseInterface } from "../../models/response/ResponseInterface";
 
-export const fetchQueriesByUser = createAsyncThunk<
+export const fetchQueries = createAsyncThunk<
   ResponseInterface<QueriesResponse[]>,
   FetchQueriesArgs
->("queries/fetchQueriesByUser", async ({ user_id }) => {
-  const { data } = await QueriesService.getQueriesTableData(user_id);
-  return data;
-});
-
-export const fetchQueries = createAsyncThunk<
-  ResponseInterface<QueriesResponse[]>
->("queries/fetchQueries", async () => {
-  const { data } = await QueriesService.getQueriesTableData();
+>("queries/fetchQueries", async ({ user_id }) => {
+  const { data } = await QueriesService.getQueriesTableData(Number(user_id));
   return data;
 });
 

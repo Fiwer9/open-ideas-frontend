@@ -1,7 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../queriesSlice/types";
 import { UserResponse } from "../../models/response/UserResponse";
-import { fetchCurrentUser, fetchUsers, patchLikes } from "./asyncActions";
+import {
+  fetchCurrentUser,
+  fetchUsers,
+  fetchUsersByName,
+  patchLikes,
+  patchUser,
+} from "./asyncActions";
 import { UsersSliceState } from "./types";
 import {
   fetchUserBuilder,
@@ -29,7 +35,9 @@ export const usersSlice = createSlice({
   extraReducers: (builder) => {
     fetchUserBuilder(builder, fetchCurrentUser);
     fetchUsersBuilder(builder, fetchUsers);
+    fetchUsersBuilder(builder, fetchUsersByName);
     patchLikesBuilder(builder, patchLikes);
+    fetchUsersBuilder(builder, patchUser);
   },
 });
 
