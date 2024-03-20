@@ -74,10 +74,12 @@ export const UsersList: React.FC = memo(() => {
       dataIndex: "email",
       key: "email",
       width: "20%",
-      filters: getEmails(usersData).map((email) => ({
-        text: email,
-        value: email,
-      })),
+      filters:
+        usersData.length > 0 &&
+        getEmails(usersData).map((email) => ({
+          text: email,
+          value: email,
+        })),
       onFilter: (value: any, record: any) => record.email.includes(value),
     },
     {
@@ -114,7 +116,8 @@ export const UsersList: React.FC = memo(() => {
   }, [searchValue]);
 
   const getData = () =>
-    usersData.map((user) => ({
+    usersData.length > 0 &&
+    usersData?.map((user) => ({
       id: user.id,
       name: user.name,
       email: user.email,
