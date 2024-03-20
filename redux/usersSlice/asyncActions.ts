@@ -47,7 +47,6 @@ export const patchUser = createAsyncThunk<
   ResponseInterface<UserResponse>,
   PatchUserArgs
 >("users/patchUser", async (props) => {
-  console.log(props);
   const { data } = await UsersService.patchUser(props);
   return data;
 });
