@@ -21,7 +21,6 @@ import {
   fetchUsers,
 } from "../../redux/usersSlice/asyncActions";
 import { SliderSmall } from "../SliderComponents/SliderSmall";
-import { fetchUsers } from "../../redux/usersSlice/asyncActions";
 
 export const UsersList = () => {
   const [isLoading, setIsLoading] = useState(false);
