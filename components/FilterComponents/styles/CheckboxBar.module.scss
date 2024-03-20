@@ -8,6 +8,10 @@
   border-radius: 2px;
   border: 1px solid rgba(0, 0, 0, 0.2);
 
+  .formItem {
+    margin: 0;
+  }
+
   .checkboxHint {
     .ant-checkbox-inner {
       width: 24px;
@@ -15,17 +19,6 @@
       border-radius: 2px;
       border-color: rgba($color-black, 0.6);
     }
-  }
-
-  .hintText {
-    margin: 0;
-    margin-top: 5px;
-    font: {
-      family: RobotoLight, sans-serif;
-      weight: 400;
-      size: 14px;
-    };
-    color: #7E7E7E;
   }
 
   @media (max-width: 720px) {
@@ -42,7 +35,16 @@
     gap: 0;
   }
 }
-
+.hintText {
+  margin: 0;
+  margin-top: 5px;
+  font: {
+    family: RobotoLight, sans-serif;
+    weight: 400;
+    size: 14px;
+  };
+  color: #7E7E7E;
+}
 .checkboxContainer {
   display: flex;
   flex-direction: column;

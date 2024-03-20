@@ -7,10 +7,6 @@ import { UserResponse } from "../../models/response/UserResponse";
 import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
 import type { TableProps as RcTableProps } from "rc-table/lib/Table";
 
-const locale = {
-  emptyText: "Тут ещё нет идей",
-};
-
 interface DataTable {
   data:
     | DirectionResponse[]
@@ -20,10 +16,11 @@ interface DataTable {
   columns: any;
   isLoading: boolean;
   onRowClick: (element: typeof this.data) => void;
+  locale: string;
 }
 
 export const DataTable: React.FC<DataTable> = memo(
-  ({ data, columns, isLoading, onRowClick }) => {
+  ({ data, columns, isLoading, onRowClick, locale }) => {
     return (
       <div className={styles.tableContainer}>
         <Table
@@ -37,8 +34,9 @@ export const DataTable: React.FC<DataTable> = memo(
             },
           })}
           rowKey="id"
-          locale={locale}
+          locale={{ emptyText: locale }}
           bordered
+          pagination={{ pageSize: 8 }}
         />
       </div>
     );

@@ -5,7 +5,7 @@ import { Tabs } from "../TabsComponent/Tabs";
 import { MainText } from "../MainTextComponent";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
-import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
+import FilterCheckboxBar from "../FilterComponents/blocks/FilterCheckboxBar";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import router from "next/router";
 import { Table } from "antd";
@@ -98,8 +98,8 @@ export const IdeasList = () => {
             icon={<PlusCircleOutlined />}
             filterText={"Создать идею"}
           />
-          <CheckboxBar checkboxText={"Я эксперт"} />
-          <CheckboxBar checkboxText={"Архив"} />
+          <FilterCheckboxBar checkboxText={"Я эксперт"} />
+          <FilterCheckboxBar checkboxText={"Архив"} />
         </div>
         <Table
           className={styles.table}

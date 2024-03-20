@@ -2,7 +2,7 @@ import { DownloadOutlined, HeartOutlined } from "@ant-design/icons";
 import { Col, Select, Upload, UploadProps } from "antd";
 import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { fetchCommentsById } from "../../redux/commentsSlice/asyncActions";
 import {
@@ -101,11 +101,6 @@ export const AdminApplicationCard = () => {
   const statusDirections = useSelector(selectStatusDirections);
   const statusQuery = useSelector(selectStatusQueries);
   const dispatch = useAppDispatch();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   useEffect(() => {
     if (
@@ -127,17 +122,14 @@ export const AdminApplicationCard = () => {
     statusQuery,
   ]);
 
-  const fetchData = useCallback(
-    debounce(async () => {
-      await dispatch(fetchQueriesById({ id: queryId }));
-      await dispatch(fetchUsers());
-      await dispatch(fetchDirections());
-      await dispatch(fetchOrganizations());
-      await dispatch(fetchCommentsById({ queryId }));
-      dispatch(setPageId(Number(queryId)));
-    }, 2000),
-    [queryId],
-  );
+  const fetchData = debounce(async () => {
+    await dispatch(fetchQueriesById({ id: queryId }));
+    await dispatch(fetchUsers());
+    await dispatch(fetchDirections());
+    await dispatch(fetchOrganizations());
+    await dispatch(fetchCommentsById({ queryId }));
+    dispatch(setPageId(Number(queryId)));
+  }, 1000);
 
   useEffect(() => {
     queryId && fetchData();
@@ -207,7 +199,7 @@ export const AdminApplicationCard = () => {
     return like;
   };
 
-  if (!isClient) {
+  if (isLoading) {
     return;
   }
 
@@ -221,162 +213,154 @@ export const AdminApplicationCard = () => {
           <div className={styles.headerContainer}>
             <Header />
           </div>
-          {!isLoading && (
-            <>
-              <Tabs />
-              <div>
-                <div className={styles.ideaInfContainer}>
-                  <div className={styles.headerContainerIdea}>
-                    <p className={styles.nameInitiative}>
-                      {applicationData?.name}
-                    </p>
-                    <div className={styles.btnHeader}>
-                      <div className={styles.likesContainer}>
-                        <HeartOutlined width={20} height={20} />
-                        <p className={styles.numberLikes}>
-                          {users.length > 0 && getLikes()}
-                        </p>
-                      </div>
-                      {applicationData?.status && (
-                        <Select
-                          className={`selectInitiative ${getStatusClassName(
-                            styles,
-                            applicationData?.status,
-                          )}`}
-                          style={{ width: 250 }}
-                          defaultValue={applicationData?.status}
-                          options={statusOptions}
-                          onChange={(value) => changeStatus(value)}
-                        />
-                      )}
-                    </div>
-                  </div>
-                  <p className={styles.data}>{`Дата создания ${formatDateRu(
-                    applicationData?.date,
-                  )}`}</p>
-                </div>
-
-                <Col className={styles.column}>
-                  <div className={styles.rightContent}>
-                    <div className={styles.row}>
-                      <p className={styles.rowText}>Получено от:</p>
-                      <p className={styles.rowInf}>
-                        {getAuthor(applicationData?.initiator_users, users)}
-                      </p>
-                    </div>
-                    <div className={styles.row}>
-                      <p className={styles.rowText}>Инициатива (Идея):</p>
-                      <p className={styles.rowInf}>{applicationData?.name}</p>
-                    </div>
-                    <div className={styles.row}>
-                      <p className={styles.rowText}>Описание инициативы:</p>
-                      <p className={styles.rowInf}>
-                        {applicationData?.description}
-                      </p>
-                    </div>
-                    <div className={styles.row}>
-                      <p className={styles.rowText}>Эффект от доработки:</p>
-                      <p className={styles.rowInf}>
-                        {applicationData?.implementation_effect}
-                      </p>
-                    </div>
-                    <div className={styles.row}>
-                      <p className={styles.rowText}>Направление:</p>
-                      <p className={styles.rowInf}>
-                        {getDirectionName(
-                          applicationData?.initiative_direction,
-                          directions,
-                        )}
-                      </p>
-                    </div>
-                    <div className={styles.row}>
-                      <p className={styles.rowText}>Организация:</p>
-                      <p className={styles.rowInf}>
-                        {getOrganizationName(
-                          applicationData?.organization,
-                          organizations,
-                        )}
-                      </p>
-                    </div>
-                    <div className={styles.row}>
-                      <p className={styles.rowText}>Отдел:</p>
-                      <p className={styles.rowInf}>
-                        {user?.department?.name && user.department.name}
-                      </p>
-                    </div>
-                    <div className={styles.row}>
-                      <p className={styles.rowText}>Назначенный эксперт:</p>
-                      <p className={styles.rowInf}>
-                        {getExpert(applicationData?.expert_users)}
-                      </p>
-                    </div>
-                  </div>
-                  <div className={styles.rows}>
-                    <div className={styles.files}>
-                      <p className={styles.rowTexts}>Прикреплённые файлы:</p>
-                      <Upload {...props} className="uploadFile"></Upload>
-                    </div>
-                  </div>
-                </Col>
-
-                <div className={styles.commentContainer}>
-                  <p className={styles.comment}>
-                    Комментарии ({dataComments.length}):
+          <>
+            <Tabs />
+            <div>
+              <div className={styles.ideaInfContainer}>
+                <div className={styles.headerContainerIdea}>
+                  <p className={styles.nameInitiative}>
+                    {applicationData?.name}
                   </p>
+                  <div className={styles.btnHeader}>
+                    <div className={styles.likesContainer}>
+                      <HeartOutlined width={20} height={20} />
+                      <p className={styles.numberLikes}>
+                        {users.length > 0 && getLikes()}
+                      </p>
+                    </div>
+                    <Select
+                      className={`selectInitiative ${getStatusClassName(
+                        styles,
+                        applicationData?.status,
+                      )}`}
+                      style={{ width: 250 }}
+                      defaultValue={applicationData?.status}
+                      options={statusOptions}
+                      onChange={(value) => changeStatus(value)}
+                    />
+                  </div>
                 </div>
-                {dataComments.map((comment, index) => (
-                  <CommentBlockAdmin
-                    key={index}
-                    index={index}
-                    comment={comment}
-                    users={users}
-                    applicationData={applicationData}
-                  />
-                ))}
-              </div>
-              <div className={styles.btnContainer}>
-                <button
-                  className={`${styles.btnBlue} ${styles.btnFooter}`}
-                  onClick={() =>
-                    router.push(
-                      `/queries/editingApplication?queryId=${queryId}`,
-                    )
-                  }
-                >
-                  Редактировать данные инициативы
-                </button>
-                <button
-                  className={`${styles.btnRed} ${styles.btnFooter}`}
-                  onClick={() => {
-                    dispatch(changeIsModalSubmitActive(true));
-                  }}
-                >
-                  Удалить инициативу
-                </button>
+                <p className={styles.data}>{`Дата создания ${formatDateRu(
+                  applicationData?.date,
+                )}`}</p>
               </div>
 
-              <div className={styles.btnContainer430}>
-                <button
-                  className={`${styles.btnBlue} ${styles.btnFooter430}`}
-                  onClick={() =>
-                    router.push(
-                      `/queries/editingApplication?queryId=${queryId}`,
-                    )
-                  }
-                >
-                  Редактировать
-                </button>
-                <button
-                  className={`${styles.btnRed} ${styles.btnFooter430}`}
-                  onClick={() => {
-                    dispatch(changeIsModalSubmitActive(true));
-                  }}
-                >
-                  Удалить
-                </button>
+              <Col className={styles.column}>
+                <div className={styles.rightContent}>
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Получено от:</p>
+                    <p className={styles.rowInf}>
+                      {getAuthor(applicationData?.initiator_users, users)}
+                    </p>
+                  </div>
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Инициатива (Идея):</p>
+                    <p className={styles.rowInf}>{applicationData?.name}</p>
+                  </div>
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Описание инициативы:</p>
+                    <p className={styles.rowInf}>
+                      {applicationData?.description}
+                    </p>
+                  </div>
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Эффект от доработки:</p>
+                    <p className={styles.rowInf}>
+                      {applicationData?.implementation_effect}
+                    </p>
+                  </div>
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Направление:</p>
+                    <p className={styles.rowInf}>
+                      {getDirectionName(
+                        applicationData?.initiative_direction,
+                        directions,
+                      )}
+                    </p>
+                  </div>
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Организация:</p>
+                    <p className={styles.rowInf}>
+                      {getOrganizationName(
+                        applicationData?.organization,
+                        organizations,
+                      )}
+                    </p>
+                  </div>
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Отдел:</p>
+                    <p className={styles.rowInf}>
+                      {user?.department?.name && user.department.name}
+                    </p>
+                  </div>
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Назначенный эксперт:</p>
+                    <p className={styles.rowInf}>
+                      {getExpert(applicationData?.expert_users)}
+                    </p>
+                  </div>
+                </div>
+                <div className={styles.rows}>
+                  <div className={styles.files}>
+                    <p className={styles.rowTexts}>Прикреплённые файлы:</p>
+                    <Upload {...props} className="uploadFile"></Upload>
+                  </div>
+                </div>
+              </Col>
+
+              <div className={styles.commentContainer}>
+                <p className={styles.comment}>
+                  Комментарии ({dataComments.length}):
+                </p>
               </div>
-            </>
-          )}
+              {dataComments.map((comment, index) => (
+                <CommentBlockAdmin
+                  key={index}
+                  index={index}
+                  comment={comment}
+                  users={users}
+                  applicationData={applicationData}
+                />
+              ))}
+            </div>
+            <div className={styles.btnContainer}>
+              <button
+                className={`${styles.btnBlue} ${styles.btnFooter}`}
+                onClick={() =>
+                  router.push(`/queries/editingApplication?queryId=${queryId}`)
+                }
+              >
+                Редактировать данные инициативы
+              </button>
+              <button
+                className={`${styles.btnRed} ${styles.btnFooter}`}
+                onClick={() => {
+                  dispatch(changeIsModalSubmitActive(true));
+                }}
+              >
+                Удалить инициативу
+              </button>
+            </div>
+
+            <div className={styles.btnContainer430}>
+              <button
+                className={`${styles.btnBlue} ${styles.btnFooter430}`}
+                onClick={() =>
+                  router.push(`/queries/editingApplication?queryId=${queryId}`)
+                }
+              >
+                Редактировать
+              </button>
+              <button
+                className={`${styles.btnRed} ${styles.btnFooter430}`}
+                onClick={() => {
+                  dispatch(changeIsModalSubmitActive(true));
+                }}
+              >
+                Удалить
+              </button>
+            </div>
+          </>
         </div>
       </div>
 
