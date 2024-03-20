@@ -18,7 +18,7 @@ import { Tabs } from "../TabsComponent/Tabs";
 import { MainText } from "../MainTextComponent";
 import { DataTable } from "../TableComponent/Table";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
-import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
+import FilterCheckboxBar from "../FilterComponents/blocks/FilterCheckboxBar";
 import { useRouter } from "next/router";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
@@ -137,7 +137,7 @@ export const QueryList: React.FC = memo(() => {
 
   const fetchData = debounce(async () => {
     await dispatch(fetchDirections());
-    await dispatch(fetchQueries());
+    await dispatch(fetchQueries({}));
   }, 4000);
 
   const fetchDataByName = useCallback(async () => {
@@ -209,19 +209,20 @@ export const QueryList: React.FC = memo(() => {
                 />
                 <div className={styles.filterContainer}>
                   <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
-                  <CheckboxBar checkboxText={"Архив"} />
+                  <FilterCheckboxBar checkboxText={"Архив"} />
                 </div>
+               </div>
+                <DataTable
+                  data={getData() as QueriesResponse[]}
+                  columns={getColumns()}
+                  isLoading={isLoading}
+                  onRowClick={handleRowClick}
+                  locale={"Тут ещё нет идей"}
+                />
               </div>
-              <DataTable
-                data={getData() as QueriesResponse[]}
-                columns={getColumns()}
-                isLoading={isLoading}
-                onRowClick={handleRowClick}
-              />
-            </div>
-            <div className={styles.sliderSmall}>
-              <SliderSmall />
-            </div>
+              <div className={styles.sliderSmall}>
+                <SliderSmall />
+              </div>
           </div>
         </>
       ) : (
@@ -252,10 +253,10 @@ export const QueryList: React.FC = memo(() => {
                     filterText={"Создать идею"}
                     onClick={handleCreateQuery}
                   />
-                  <CheckboxBar checkboxText={"Я эксперт"} />
+                  <FilterCheckboxBar checkboxText={"Я эксперт"} />
                 </div>
                 <div className={styles.btnContainer}>
-                  <CheckboxBar checkboxText={"Архив"} />
+                  <FilterCheckboxBar checkboxText={"Архив"} />
                 </div>
               </div>
             </div>
@@ -264,6 +265,7 @@ export const QueryList: React.FC = memo(() => {
               data={getData() as QueriesResponse[]}
               onRowClick={handleRowClickIdea}
               isLoading={isLoading}
+              locale={"Тут ещё нет идей"}
             />
           </div>
         </div>

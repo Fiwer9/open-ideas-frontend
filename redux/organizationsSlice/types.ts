@@ -11,7 +11,7 @@ export type OrganizationsSliceState = {
 };
 
 export type FetchDepartmentsArgs = {
-  organization_id: number;
+  organization_id?: number;
 };
 
 export type FetchOrganizationByIdArgs = {

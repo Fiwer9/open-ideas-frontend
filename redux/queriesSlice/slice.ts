@@ -6,7 +6,6 @@ import {
   fetchQueries,
   fetchQueriesById,
   fetchQueriesByName,
-  fetchQueriesByUser,
   patchQuery,
   postQuery,
 } from "./asyncActions";
@@ -34,7 +33,6 @@ export const queriesSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    fetchQueriesBuilder(builder, fetchQueriesByUser);
     fetchQueriesBuilder(builder, fetchQueriesByName);
     fetchQueryBuilder(builder, fetchQueriesById);
     fetchQueriesBuilder(builder, fetchQueries);

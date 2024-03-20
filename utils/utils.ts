@@ -20,6 +20,21 @@ export function getDepartmentName(
     }
   }
 }
+
+export const getNames = (users: UserResponse[]) => [
+  ...new Set(users?.map((user) => user.name)),
+];
+
+export const getEmails = (users: UserResponse[]) => [
+  ...new Set(users?.map((user) => user.email)),
+];
+export function getQueriesByNumber(queries: QueriesResponse[]) {
+  return queries.map((query) => `№${query.id}`);
+}
+
+export const getOrganizationsFilter = (
+  organizations: OrganizationsResponse[],
+) => [...new Set(organizations?.map((organization) => organization.name))];
 export function getOrganizationName(
   id: number,
   organizations: OrganizationsResponse[],

@@ -2,7 +2,7 @@ import { QueriesResponse } from "../../models/response/QueriesResponse";
 import { DetailType } from "../../models/response/ResponseInterface";
 
 export type FetchQueriesArgs = {
-  user_id?: number;
+  user_id?: string | number;
 };
 
 export enum Status {

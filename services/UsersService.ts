@@ -2,6 +2,7 @@ import $api from "../http";
 import { AxiosResponse } from "axios";
 import { UserResponse } from "../models/response/UserResponse";
 import { ResponseInterface } from "../models/response/ResponseInterface";
+import { PatchUserArgs } from "../redux/usersSlice/types";
 
 export default class UsersService {
   static async getUsers(): Promise<
@@ -10,27 +11,19 @@ export default class UsersService {
     return $api.get("/users/users/");
   }
 
+  static async getUsersByName(
+    value: string,
+  ): Promise<AxiosResponse<ResponseInterface<UserResponse[]>>> {
+    return $api.get(`/users/users?search=${value}`);
+  }
+
   static async getCurrentUser(
     id: number,
   ): Promise<AxiosResponse<ResponseInterface<UserResponse>>> {
     return $api.get(`/users/users/${id}/`);
   }
-  static async putUserUpdate(
-    name: string,
-    email: string,
-    is_verified: boolean,
-    is_staff: boolean,
-    is_superuser: boolean,
-    id: number,
-    is_active: boolean,
-  ) {
-    return $api.put(`/users/update/${id}/`, {
-      name,
-      email,
-      is_active,
-      is_staff,
-      is_superuser,
-      is_verified,
-    });
+  static async patchUser(props: PatchUserArgs) {
+    console.log(props);
+    return $api.patch(`/users/users/${props.id}/`, { ...props });
   }
 }

@@ -8,5 +8,5 @@ export default function Index() {
 
   Cookies.remove("userId");
   Cookies.remove("userName");
-  return <div>{isStaff && <UsersList />}</div>;
+  return isStaff && <UsersList />;
 }

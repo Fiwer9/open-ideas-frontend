@@ -5,12 +5,13 @@ import router from "next/router";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/authSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
-import { changeSelectedTag } from "../../redux/menuSlice/slice";
+import { changeSelectedTag, setCurrentPage } from "../../redux/menuSlice/slice";
 import {
   selectIsStaff,
   selectSelectedTag,
 } from "../../redux/menuSlice/selectors";
 import { fetchUserIsStaff } from "../../redux/menuSlice/asyncActions";
+
 const { CheckableTag } = Tag;
 
 const tagsData = ["Инициативы", "Панель администратора"];
@@ -31,6 +32,7 @@ export const Tabs: React.FC = memo(() => {
       : tagsData.filter((t) => t === tag);
     dispatch(changeSelectedTag(nextSelectedTags[0]));
     sessionStorage.setItem("selectedTag", tag);
+    dispatch(setCurrentPage("/queries"));
     tag !== selectedTags && router.push("/queries");
   };
 

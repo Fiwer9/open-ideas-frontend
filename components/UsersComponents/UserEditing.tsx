@@ -1,151 +1,182 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Slider } from "../SliderComponents/SliderComponents";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
-import CheckboxBar from "../FilterComponents/blocks/CheckboxBar";
+import { CheckboxBlock } from "../FilterComponents/blocks/FilterCheckboxBar";
 import { Button, Form, Input, Select } from "antd";
 
 import styles from "./styles/UserEditing.module.scss";
-import Cookies from "js-cookie";
-import { UserResponse } from "../../models/response/UserResponse";
-import {
-  fetchData,
-  getDepartmentName,
-  getOrganizationName,
-} from "../../utils/utils";
-import UsersService from "../../services/UsersService";
-import QueriesService from "../../services/QueriesService";
-import { QueriesResponse } from "../../models/response/QueriesResponse";
-import OrganizationsService from "../../services/OrganizationsService";
-import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
-import { IDepartment } from "../../models/IDepartment";
 import { useAppDispatch } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import { selectUser } from "../../redux/usersSlice/selectors";
 import {
-  fetchCurrentUpdateUser,
-  fetchUpdateUsers,
+  fetchCurrentUser,
+  patchUser,
 } from "../../redux/usersSlice/asyncActions";
 import { useSelector } from "react-redux";
 import { selectUpdateUser } from "../../redux/usersSlice/selectors";
 import { SliderSmall } from "../SliderComponents/SliderSmall";
+import { selectQueriesData } from "../../redux/queriesSlice/selectors";
+import {
+  selectDepartments,
+  selectOrganizations,
+} from "../../redux/organizationsSlice/selectors";
+import { fetchQueries } from "../../redux/queriesSlice/asyncActions";
+import {
+  fetchDepartments,
+  fetchOrganizations,
+} from "../../redux/organizationsSlice/asyncActions";
+import { getOrganizationName } from "../../utils/utils";
+import { setPageId, setPageName } from "../../redux/menuSlice/slice";
 
-interface UserEditingProps {
-  userId: string;
+interface EditUserProps {
+  userName: string;
+  email: string;
+  organization: {
+    value: number;
+    label: string;
+  };
+  department: {
+    value: number;
+    label: string;
+  };
+  initiatives: InitiativesArgs[];
+  active: boolean;
+  personal: boolean;
+  superuser: boolean;
+  verification: boolean;
 }
 
-export const UserEditing = ({ userId }: UserEditingProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const user = useSelector(selectUpdateUser);
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [expertInitiatives, setExpertInitiatives] = useState<string>("");
+type InitiativesArgs = {
+  value: number;
+  label: string;
+};
+
+export const UserEditing = () => {
+  const router = useRouter();
+  const { userId } = router.query as { userId: string };
+  const [form] = Form.useForm<EditUserProps>();
+  const [initValues, setInitialValues] = useState<EditUserProps>(null);
+  const user = useSelector(selectUser);
+  const queries = useSelector(selectQueriesData);
+  const organizations = useSelector(selectOrganizations);
+  const departments = useSelector(selectDepartments);
   const [organization, setOrganization] = useState(0);
-  const [department, setDepartment] = useState<number | undefined>();
-  const [groups, setGroups] = useState([]);
-  const [isVerified, setIsVerified] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-  const [isStaff, setIsStaff] = useState(false);
-  const [isSuperUser, setIsSuperUser] = useState(false);
-  const [queries, setQueries] = useState<QueriesResponse[]>([]);
-  const [organizations, setOrganizations] = useState<OrganizationsResponse[]>(
-    []
-  );
-  const [departments, setDepartments] = useState<IDepartment[]>([]);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(fetchCurrentUpdateUser({ user_id: Number(userId) })); // Сделал так чтобы если данные не прогрузились отбрасывало на предыдущую пока так;
-    fetchData(setIsLoading, setQueries, QueriesService.getQueriesTableData);
-    fetchData(
-      setIsLoading,
-      setOrganizations,
-      OrganizationsService.getOrganizations
-    );
-    fetchData(
-      setIsLoading,
-      setDepartments,
-      OrganizationsService.getDepartments
-    );
-  }, []);
-
-  function handleChangeApplicationVar(
-    event: any,
-    setData: React.SetStateAction<any>
-  ): void {
-    setData(event.target.value);
-  }
-
-  function handleChangeApplicationSelect(
-    event: any[],
-    setData: React.SetStateAction<any>
-  ): void {
-    setData(event);
-  }
+  const fetchData = async () => {
+    dispatch(setPageId(Number(userId)));
+    await dispatch(fetchCurrentUser({ user_id: userId }));
+    await dispatch(fetchQueries({}));
+    await dispatch(fetchOrganizations());
+    await dispatch(fetchDepartments({}));
+  };
 
   useEffect(() => {
-    if (user) {
-      setUserName(user.name);
-      setEmail(user.email);
-      setIsSuperUser(user?.is_superuser);
-      setIsActive(user?.is_active);
-      setIsStaff(user?.is_staff);
-      setIsVerified(user?.is_verified);
-    }
-  }, [user]);
+    userId && fetchData();
+  }, [userId]);
 
-  function getQueries() {
-    const res = [];
-    for (let query of queries) {
-      for (let user of query.expert_users) {
-        if (user === Number(userId)) {
-          res.push(`№${query.id}`);
-        }
-      }
+  useEffect(() => {
+    user?.name && dispatch(setPageName(user.name));
+  }, [user?.name]);
+
+  const getData = (organizationId?: number): EditUserProps => ({
+    userName: user?.name,
+    email: user?.email,
+    organization: {
+      value: user?.department.organization,
+      label:
+        organizations.length > 0 &&
+        getOrganizationName(user?.department.organization, organizations),
+    },
+    initiatives: getQueries(),
+    department: {
+      value: !organizationId ? user?.department.id : null,
+      label: !organizationId ? user?.department.name : "",
+    },
+    active: user?.is_active,
+    personal: user?.is_staff,
+    superuser: user?.is_superuser,
+    verification: user?.is_verified,
+  });
+
+  useEffect(() => {
+    if (user?.name && queries?.length > 0 && organizations?.length > 0) {
+      setInitialValues(getData());
     }
-    return res;
+  }, [user?.name, queries?.length, organizations?.length]);
+
+  function getQueries(): InitiativesArgs[] {
+    return queries
+      .filter((query) => query.expert_users.find((id) => Number(userId) === id))
+      .map((query) => ({
+        value: query.id,
+        label: `№${query.id}`,
+      }));
   }
 
-  const handleVerification = (e: any) => {
-    setIsVerified(e);
+  const onChangeOrganization = (id: number) => {
+    setOrganization(id);
+    const departmentForOrg = departments.find((dep) => dep.organization === id);
+    form.setFieldsValue({
+      department: {
+        value: departmentForOrg.id,
+        label: departmentForOrg.name,
+      },
+    });
   };
 
-  const handleActive = (e: any) => {
-    setIsActive(e);
+  const handleSaveButton = async (data: EditUserProps) => {
+    const {
+      department,
+      superuser,
+      email,
+      initiatives,
+      organization,
+      userName,
+      active,
+      personal,
+      verification,
+    } = data;
+    const depart = departments.find(
+      (_department) => _department.id === department.value,
+    );
+    dispatch(
+      patchUser({
+        id: Number(userId),
+        department: depart,
+        email,
+        name: userName,
+        is_active: active,
+        is_staff: personal,
+        is_superuser: superuser,
+        is_verified: verification,
+      }),
+    );
+    router.back();
   };
 
-  const handleStaff = (e: any) => {
-    setIsStaff(e);
+  const getDepOptions = () => {
+    return departments
+      .filter((dep) =>
+        organization
+          ? dep.organization === organization
+          : user?.department
+            ? dep.organization === user?.department.id
+            : "Не назначено",
+      )
+      .map((department) => {
+        return {
+          value: department.id,
+          label: department.name,
+        };
+      });
   };
 
-  const handleSuperUser = (e: any) => {
-    setIsSuperUser(e);
-  };
-
-  const handleSaveButton = () => {
-    // try {
-    //   store.putUserUpdate(
-    //     userName,
-    //     email,
-    //     isVerified,
-    //     isActive,
-    //     isStaff,
-    //     isSuperUser,
-    //     Number(userId)
-    //   );
-    //   department && store.putRegistration(userName, department);
-    //   Cookies.set(
-    //     "department",
-    //     getDepartmentName(department, departments) as string
-    //   );
-    //   Cookies.set(
-    //     "organization",
-    //     getOrganizationName(organization, organizations)
-    //   );
-    //   Cookies.set("user_name", userName);
-    //   window.history.back();
-    // } catch (e) {
-    //   console.error(e);
-    // }
-  };
+  if (!initValues) {
+    return;
+  }
 
   return (
     <>
@@ -158,263 +189,192 @@ export const UserEditing = ({ userId }: UserEditingProps) => {
             <Header />
           </div>
           <Tabs />
-          {user.name && (
-            <Form
-              layout="vertical"
-              initialValues={{
-                userName: user.name,
-                email: user.email,
-                organization: user.department && user.department, //Todo
-                department: department,
-                active: user.is_active,
-                personal: user.is_staff,
-                superuser: user.is_superuser,
-                verification: user.is_verified,
-              }}
-              className={styles.contentContainer}
-            >
-              <div className={styles.editing}>
-                <p className={styles.heading}>Редактирование профиля</p>
+          <Form
+            name={"editing-user"}
+            form={form}
+            onFinish={handleSaveButton}
+            layout="vertical"
+            initialValues={initValues}
+            className={styles.contentContainer}
+          >
+            <div className={styles.editing}>
+              <p className={styles.heading}>Редактирование профиля</p>
 
-                <div className={styles.formContainer}>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"Ф. И. О."}
-                    name={"userName"}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Введите Ф. И. О. пользователя",
-                      },
-                    ]}
-                  >
-                    <Input
-                      className={styles.inp}
-                      style={{ height: 40, borderRadius: 2 }}
-                      onChange={(evt) =>
-                        handleChangeApplicationVar(evt, setUserName)
-                      }
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"E-mail"}
-                    name={"email"}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Введите почту пользователя",
-                      },
-                    ]}
-                  >
-                    <Input
-                      className={styles.inp}
-                      style={{ height: 40, borderRadius: 2 }}
-                      onChange={(evt) =>
-                        handleChangeApplicationVar(evt, setEmail)
-                      }
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"Назначить эксперта на инициативы"}
-                    name={"initiatives"}
-                  >
-                    <Select
-                      disabled={true}
-                      className="select"
-                      placeholder={"Выберете инициативы"}
-                      style={{ height: 40 }}
-                      mode={"multiple"}
-                      defaultValue={getQueries()}
-                      options={queries.map((query) => ({
-                        value: query.id,
-                        label: `№${query.id}`,
-                      }))}
-                      aria-required={true}
-                      onChange={(e) =>
-                        e
-                          ? handleChangeApplicationSelect(
-                              [e],
-                              setExpertInitiatives
-                            )
-                          : handleChangeApplicationSelect(
-                              [],
-                              setExpertInitiatives
-                            )
-                      }
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"Организация"}
-                    name={"organization"}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Введите организацию",
-                      },
-                    ]}
-                  >
-                    <Select
-                      className="select"
-                      disabled={true}
-                      placeholder={"Выберете организацию"}
-                      style={{ height: 40 }}
-                      options={organizations.map((organization) => ({
-                        value: organization.id,
-                        label: organization.name,
-                      }))}
-                      onChange={(e) => {
-                        handleChangeApplicationSelect(e, setOrganization);
-                        handleChangeApplicationSelect([], setDepartment);
-                      }}
-                      aria-required={true}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    className={styles.formItem}
-                    label={"Отдел"}
-                    name={"department"}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Выберете отдел",
-                      },
-                    ]}
-                  >
-                    <Select
-                      className="select"
-                      disabled={true}
-                      style={{ height: 40, marginBottom: 60 }}
-                      placeholder={"Выберете отдел"}
-                      options={departments
-                        .filter((dep) =>
-                          organization
-                            ? dep.organization === organization
-                            : user.department
-                            ? dep.organization === user.department //Todo
-                            : "Не назначено"
-                        )
-                        .map((department) => ({
-                          value: department.id,
-                          label: department.name,
-                        }))}
-                      onChange={(e) =>
-                        handleChangeApplicationSelect(e, setDepartment)
-                      }
-                      aria-required={true}
-                    />
-                  </Form.Item>
-                  <div className={styles.btnContainer}>
-                    <Button
-                      className={styles.btnFooter}
-                      onClick={handleSaveButton}
-                    >
-                      <span>Сохранить изменения</span>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.rightsGroopContainer}>
-                <div className={styles.rigths}>
-                  <p className={styles.heading}>Права доступа</p>
-
-                  <div className={styles.checkboxContainer}>
-                    <Form.Item className={styles.checkboxItem} name={"active"}>
-                      <CheckboxBar
-                        // defaultChecked={user.is_active}
-                        checkboxText={"Активный"}
-                        // hintText={
-                        //   "Отметьте, если пользователь должен считаться активным. Уберите эту отметку вместо удаления учётной записи."
-                        // }
-                        // onToggleArchive={handleActive}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      className={styles.checkboxItem}
-                      name={"personal"}
-                    >
-                      <CheckboxBar
-                        // defaultChecked={user.is_staff}
-                        checkboxText={"Статус персонала"}
-                        // hintText={
-                        //   "Отметьте, если пользователь может входить в административную часть сайта."
-                        // }
-                        // onToggleArchive={handleStaff}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      className={styles.checkboxItem}
-                      name={"superuser"}
-                    >
-                      <CheckboxBar
-                        // defaultChecked={user.is_superuser}
-                        checkboxText={"Статус суперпользователя"}
-                        // hintText={
-                        //   "Указывает, что пользователь имеет все права без явного их назначения"
-                        // }
-                        // onToggleArchive={handleSuperUser}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      className={styles.checkboxItem}
-                      name={"verification"}
-                    >
-                      <CheckboxBar
-                        // defaultChecked={user.is_verified}
-                        checkboxText={"Верифицированный"}
-                        // hintText={
-                        //   "Указывает, что пользователь закончил регистрацию"
-                        // }
-                        // onToggleArchive={handleVerification}
-                      />
-                    </Form.Item>
-                  </div>
-                </div>
-
-                <div className={styles.group}>
-                  <p className={styles.heading}>Группы</p>
-
-                  <Form.Item
-                    className={`${styles.formItem} ${styles.groupForm}`}
-                    label={
-                      "Выберете группу в которой будет находится пользователь"
-                    }
-                    name={"group"}
-                  >
-                    <Select
-                      disabled={true}
-                      mode="multiple"
-                      placeholder={"Выберете группы"}
-                      allowClear
-                      className="select"
-                      // defaultValue={user.groups.map((group) => group.name)}
-                      style={{ height: 40 }}
-                      options={[
-                        { value: "1", label: "User" },
-                        { value: "2", label: "Expert" },
-                      ]}
-                      aria-required={true}
-                      onChange={(e) =>
-                        handleChangeApplicationSelect(e, setGroups)
-                      }
-                    />
-                  </Form.Item>
-                </div>
-
-                <div className={styles.btnContainer1440}>
+              <div className={styles.formContainer}>
+                <Form.Item
+                  className={styles.formItem}
+                  label={"Ф. И. О."}
+                  name={"userName"}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Введите Ф. И. О. пользователя",
+                    },
+                  ]}
+                >
+                  <Input
+                    className={styles.inp}
+                    style={{ height: 40, borderRadius: 2 }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  className={styles.formItem}
+                  label={"E-mail"}
+                  name={"email"}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Введите почту пользователя",
+                    },
+                  ]}
+                >
+                  <Input
+                    className={styles.inp}
+                    style={{ height: 40, borderRadius: 2 }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  className={styles.formItem}
+                  label={"Назначить эксперта на инициативы"}
+                  name={"initiatives"}
+                >
+                  <Select
+                    disabled={true}
+                    className="select"
+                    placeholder={"Выберете инициативы"}
+                    style={{ height: 40 }}
+                    mode={"multiple"}
+                    options={queries.map((query) => ({
+                      value: query.id,
+                      label: `№${query.id}`,
+                    }))}
+                  />
+                </Form.Item>
+                <Form.Item
+                  className={styles.formItem}
+                  label={"Организация"}
+                  name={"organization"}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Введите организацию",
+                    },
+                  ]}
+                >
+                  <Select
+                    className="select"
+                    placeholder={"Выберете организацию"}
+                    style={{ height: 40 }}
+                    options={organizations.map((organization) => ({
+                      value: organization.id,
+                      label: organization.name,
+                    }))}
+                    onChange={onChangeOrganization}
+                  />
+                </Form.Item>
+                <Form.Item
+                  className={styles.formItem}
+                  label={"Отдел"}
+                  name={"department"}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Выберете отдел",
+                    },
+                  ]}
+                >
+                  <Select
+                    className="select"
+                    style={{ height: 40, marginBottom: 60 }}
+                    placeholder={"Выберете отдел"}
+                    options={getDepOptions()}
+                  />
+                </Form.Item>
+                <div className={styles.btnContainer}>
                   <Button
-                    className={styles.btnFooter1440}
-                    onClick={handleSaveButton}
+                    form={"editing-user"}
+                    htmlType={"submit"}
+                    className={styles.btnFooter}
                   >
                     <span>Сохранить изменения</span>
                   </Button>
                 </div>
               </div>
-            </Form>
-          )}
+            </div>
+
+            <div className={styles.rightsGroopContainer}>
+              <div className={styles.rigths}>
+                <p className={styles.heading}>Права доступа</p>
+
+                <div className={styles.checkboxContainer}>
+                  <CheckboxBlock
+                    name={"active"}
+                    checkboxText={"Активный"}
+                    hintText={
+                      "Отметьте, если пользователь должен считаться активным. Уберите эту отметку вместо удаления учётной записи."
+                    }
+                  />
+                  <CheckboxBlock
+                    name={"personal"}
+                    checkboxText={"Статус персонала"}
+                    hintText={
+                      "Отметьте, если пользователь может входить в административную часть сайта."
+                    }
+                  />
+                  <CheckboxBlock
+                    name={"superuser"}
+                    checkboxText={"Статус суперпользователя"}
+                    hintText={
+                      "Указывает, что пользователь имеет все права без явного их назначения"
+                    }
+                  />
+                  <CheckboxBlock
+                    name={"verification"}
+                    checkboxText={"Верифицированный"}
+                    hintText={
+                      "Указывает, что пользователь закончил регистрацию"
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className={styles.group}>
+                <p className={styles.heading}>Группы</p>
+
+                <Form.Item
+                  className={`${styles.formItem} ${styles.groupForm}`}
+                  label={
+                    "Выберете группу в которой будет находится пользователь"
+                  }
+                >
+                  <Select
+                    disabled={true}
+                    mode="multiple"
+                    placeholder={"Выберете группы"}
+                    allowClear
+                    className="select"
+                    // defaultValue={user.groups.map((group) => group.name)}
+                    style={{ height: 40 }}
+                    options={[
+                      { value: "1", label: "User" },
+                      { value: "2", label: "Expert" },
+                    ]}
+                    aria-required={true}
+                  />
+                </Form.Item>
+              </div>
+
+              <div className={styles.btnContainer1440}>
+                <Button
+                  className={styles.btnFooter1440}
+                  form={"editing-user"}
+                  htmlType={"submit"}
+                >
+                  <span>Сохранить изменения</span>
+                </Button>
+              </div>
+            </div>
+          </Form>
         </div>
 
         <div className={styles.sliderSmall}>
