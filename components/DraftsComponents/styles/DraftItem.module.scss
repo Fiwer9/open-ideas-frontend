@@ -1,0 +1,74 @@
+@import "../../../styles/variable.scss";
+
+.container {
+  max-width: 800px;
+
+  .headerDraft {
+    display: flex;
+    justify-content: space-between;
+    background-color: #434343CC;
+    border-radius: 7px 7px 0 0;
+    border: #434343CC solid 1px;
+    line-height: 26px;
+    padding: {
+      left: 20px;
+      right: 20px;
+    };
+
+    .nameDraft {
+      font: {
+        family: Poppins, sans-serif;
+        weight: 400;
+        size: 16px;
+      }
+      color: #F5F5F5;
+    }
+
+    .dateDraft {
+      font: {
+        family: Poppins, sans-serif;
+        weight: 400;
+        size: 16px;
+      }
+      color: #F5F5F5;
+    }
+  }
+
+  .infDraft {
+    display: flex;
+    justify-content: space-between;
+    border-radius: 0 0 7px 7px;
+    border: #F5F5F5 solid 1px;
+    padding: {
+      left: 20px;
+      right: 20px;
+    };
+
+    .textDraft {
+      font: {
+        family: Roboto, sans-serif;
+        weight: 400;
+        size: 14px;
+      }
+      line-height: 30px;
+    }
+
+    .btnContainer {
+      top: 0;
+      bottom: 0;
+      margin: auto 0;
+
+      .btnDraft:not(:last-child) {
+        padding-right: 29px;
+      }
+
+      .btnDraft {
+        padding: 0;
+        border: none;
+        font: inherit;
+        background-color: transparent;
+        cursor: pointer;
+      }
+    }
+  }
+}
