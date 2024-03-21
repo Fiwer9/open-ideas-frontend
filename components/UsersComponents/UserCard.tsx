@@ -7,14 +7,6 @@ import avatar from "../../public/img/AvatarAratrum.svg";
 
 import styles from "./styles/UserCard.module.scss";
 import { Button, Col } from "antd";
-import Cookies from "js-cookie";
-import { UserResponse } from "../../models/response/UserResponse";
-import { fetchData, getOrganizationName } from "../../utils/utils";
-import UsersService from "../../services/UsersService";
-import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
-import OrganizationsService from "../../services/OrganizationsService";
-import { QueriesResponse } from "../../models/response/QueriesResponse";
-import QueriesService from "../../services/QueriesService";
 import { SliderSmall } from "../SliderComponents/SliderSmall";
 import { useRouter } from "next/router";
 import { getOrganizationName, getQueriesByNumber } from "../../utils/utils";
