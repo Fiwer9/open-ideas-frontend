@@ -21,10 +21,8 @@ import {
   selectUsersStatus,
 } from "../../redux/usersSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
-import {
-  fetchUpdateUsers,
-} from "../../redux/usersSlice/asyncActions";
 import { SliderSmall } from "../SliderComponents/SliderSmall";
+import {
   fetchUsers,
   fetchUsersByName,
 } from "../../redux/usersSlice/asyncActions";
@@ -151,7 +149,7 @@ export const UsersList: React.FC = memo(() => {
               <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
             </div>
           </div>
-         
+
           <DataTable
             data={getData()}
             columns={columns}
