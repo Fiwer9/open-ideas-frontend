@@ -9,6 +9,7 @@ $color-white-gray: #F5F5F5;
 $color-gray: #D9D9D9;
 $color-gray-select: #BFBFBF;
 $color-gray-43: #434343;
+$color-gray-43-80: #434343CC;
 $color-gray-26: #262626;
 $color-black-gray: #00000066;
 $color-violet: #2400FF;
@@ -89,6 +90,14 @@ $color-pule-purple: #F0F5FF;
     weight: 400;
     size: 16px;
   };
+}
+
+@mixin btnResetStyles {
+  padding: 0;
+  border: none;
+  font: inherit;
+  background-color: transparent;
+  cursor: pointer;
 }
 
 %container {

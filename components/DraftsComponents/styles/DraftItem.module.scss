@@ -1,48 +1,46 @@
 @import "../../../styles/variable.scss";
 
+@mixin contentDraftStyles {
+  display: flex;
+  justify-content: space-between;
+  padding: {
+    left: 20px;
+    right: 20px;
+  };
+}
+
+@mixin fontsHeader {
+  font: {
+    family: Poppins, sans-serif;
+    weight: 400;
+    size: 16px;
+  }
+  color: $color-white-gray;
+}
+
 .container {
   max-width: 800px;
 
   .headerDraft {
-    display: flex;
-    justify-content: space-between;
-    background-color: #434343CC;
+    @include contentDraftStyles;
+    background-color: $color-gray-43-80;
     border-radius: 7px 7px 0 0;
-    border: #434343CC solid 1px;
+    border: $color-gray-43-80 solid 1px;
     line-height: 26px;
-    padding: {
-      left: 20px;
-      right: 20px;
-    };
 
     .nameDraft {
-      font: {
-        family: Poppins, sans-serif;
-        weight: 400;
-        size: 16px;
-      }
-      color: #F5F5F5;
+      @include fontsHeader;
     }
 
     .dateDraft {
-      font: {
-        family: Poppins, sans-serif;
-        weight: 400;
-        size: 16px;
-      }
-      color: #F5F5F5;
+      @include fontsHeader;
     }
   }
 
   .infDraft {
-    display: flex;
-    justify-content: space-between;
+    @include contentDraftStyles;
     border-radius: 0 0 7px 7px;
-    border: #F5F5F5 solid 1px;
-    padding: {
-      left: 20px;
-      right: 20px;
-    };
+    border: $color-white-gray solid 1px;
 
     .textDraft {
       font: {
@@ -63,11 +61,7 @@
       }
 
       .btnDraft {
-        padding: 0;
-        border: none;
-        font: inherit;
-        background-color: transparent;
-        cursor: pointer;
+        @include btnResetStyles;
       }
     }
   }
