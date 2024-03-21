@@ -11,16 +11,14 @@ export default class OrganizationsService {
     return $api.get("/organizations/organizations/");
   }
   static async getOrganizationsById(
-    id: number
+    id: number,
   ): Promise<AxiosResponse<ResponseInterface<OrganizationsResponse>>> {
     return $api.get(`/organizations/organizations/${id}`);
   }
 
   static async getDepartments(
-    organization_id: number
+    organization_id: number,
   ): Promise<AxiosResponse<ResponseInterface<IDepartment[]>>> {
-    return $api.get(
-      `/organizations/departments/?organization=${organization_id}`
-    );
+    return $api.get(`/organizations/departments/?search=${organization_id}`);
   }
 }

@@ -23,7 +23,6 @@ export default class UsersService {
     return $api.get(`/users/users/${id}/`);
   }
   static async patchUser(props: PatchUserArgs) {
-    console.log(props);
     return $api.patch(`/users/users/${props.id}/`, { ...props });
   }
 }

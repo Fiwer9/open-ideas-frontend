@@ -23,7 +23,7 @@ import { putRegistration } from "../../redux/authSlice/asyncActions";
 export const Registration = () => {
   const [name, setName] = useState<string>("");
   const [organizationId, setOrganizationId] = useState<number>(0);
-  const [departmentId, setDepartmentId] = useState(0);
+  const [departmentId, setDepartmentId] = useState<number>();
   const departments = useSelector(selectDepartments);
   const organizations = useSelector(selectOrganizations);
   const dispatch = useAppDispatch();
@@ -44,6 +44,7 @@ export const Registration = () => {
   }, []);
 
   useEffect(() => {
+    organizationId && setDepartmentId(null);
     organizationId &&
       dispatch(fetchDepartments({ organization_id: organizationId }));
   }, [organizationId]);
@@ -58,7 +59,7 @@ export const Registration = () => {
         putRegistration({
           name,
           departmentId,
-        })
+        }),
       );
     } catch (error: any) {
       console.error(error.response.data.message);
@@ -143,6 +144,7 @@ export const Registration = () => {
                 onChange={(e: any) => {
                   setDepartmentId(e);
                 }}
+                value={departmentId}
               />
             </div>
           </Form.Item>
