@@ -21,6 +21,16 @@
   margin: 0 9px;
 }
 
+.modalContentDrafts {
+  max-width: 840px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 2px 6px 8px 2px rgba(0, 0, 0, 0.15);
+  background-color: $color-white;
+  transition: 0.4s all;
+  width: 100%;
+  margin: 0 9px;
+}
 
 .modalForm {
   width: 100%;
@@ -70,6 +80,46 @@
         size: 20px;
       };
     }
+  }
+
+
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: #00000033 solid 1px;
+
+    .nameModal {
+      .textDrafts {
+        margin: 0;
+        font: {
+          family: Poppins, sans-serif;
+          weight: 400;
+          size: 16px;
+        }
+      }
+    }
+
+    .contentHeader {
+      .btnDrafts {
+        display: flex;
+
+        .deleteDrafts {
+          @include btnResetStyles;
+          border: 1px solid #00000033;
+          padding: {
+            left: 20px;
+            right: 20px;
+          };
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+  .draftItem {
+    text-align: center;
   }
 
   .btnContainer {

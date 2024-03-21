@@ -51,6 +51,7 @@ import {
   getQueryFilterByArchive,
   getQueryFilterByExpert,
 } from "../../utils/getQueryFilter";
+import ModalDrafts from "../ModalsComponents/ModalDrafts";
 
 export const QueryList: React.FC = memo(() => {
   const router = useRouter();
@@ -64,6 +65,11 @@ export const QueryList: React.FC = memo(() => {
   const selectedTag = useSelector(selectSelectedTag);
   const { searchValue, isArchive, isExpert } = useSelector(selectFilters);
   const [isClient, setIsClient] = useState(false);
+  const [modalActive, setModalActive] = useState(false);
+
+  const closeModal = () => {
+    setModalActive(false);
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -220,48 +226,64 @@ export const QueryList: React.FC = memo(() => {
           </div>
         </div>
       ) : (
-        <div className={styles.containerIdeas}>
-          <div className={styles.contentIdeas}>
-            <div className={styles.headerContainer}>
-              <Header />
-            </div>
-            <div className={styles.header}>
-              <div className={styles.logoHeader}>
-                <Logo width={190} height={53} />
+        <div>
+          <div className={styles.containerIdeas}>
+            <div className={styles.contentIdeas}>
+              <div className={styles.headerContainer}>
+                <Header />
               </div>
-              <div className={styles.tabs}>
-                <Tabs />
+              <div className={styles.header}>
+                <div className={styles.logoHeader}>
+                  <Logo width={190} height={53} />
+                </div>
+                <div className={styles.tabs}>
+                  <Tabs />
+                </div>
               </div>
-            </div>
-            <MainText text={"Инициативы"} />
-            <div className={styles.infContainer}>
-              <SearchBar
-                placeholderNum={"Номер"}
-                placeholderQuery={"Поиск по идеям"}
-                stylesSearch={styles.searchBar}
+              <MainText text={"Инициативы"} />
+              <div className={styles.infContainer}>
+                <SearchBar
+                  placeholderNum={"Номер"}
+                  placeholderQuery={"Поиск по идеям"}
+                  stylesSearch={styles.searchBar}
+                />
+                <div className={styles.btnHead}>
+                  <div className={styles.btnContainerFilt}>
+                    <FilterBar
+                      icon={<PlusCircleOutlined />}
+                      filterText={"Создать идею"}
+                      onClick={handleCreateQuery}
+                    />
+                    <FilterBar
+                      filterText={"Мои черновики"}
+                      onClick={() => {
+                        setModalActive(true);
+                      }}
+                    />
+                    <FilterCheckboxBar checkboxText={"Я эксперт"} />
+                  </div>
+                  <div className={styles.btnContainer}>
+                    <FilterCheckboxBar checkboxText={"Архив"} />
+                  </div>
+                </div>
+              </div>
+              <DataTable
+                columns={directions.length > 0 && getColumns()}
+                data={getData() as QueriesResponse[]}
+                onRowClick={handleRowClickIdea}
+                isLoading={isLoading}
+                locale={"Тут ещё нет идей"}
               />
-              <div className={styles.btnHead}>
-                <div className={styles.btnContainerFilt}>
-                  <FilterBar
-                    icon={<PlusCircleOutlined />}
-                    filterText={"Создать идею"}
-                    onClick={handleCreateQuery}
-                  />
-                  <FilterCheckboxBar checkboxText={"Я эксперт"} />
-                </div>
-                <div className={styles.btnContainer}>
-                  <FilterCheckboxBar checkboxText={"Архив"} />
-                </div>
-              </div>
             </div>
-            <DataTable
-              columns={directions.length > 0 && getColumns()}
-              data={getData() as QueriesResponse[]}
-              onRowClick={handleRowClickIdea}
-              isLoading={isLoading}
-              locale={"Тут ещё нет идей"}
-            />
           </div>
+          <ModalDrafts
+            active={modalActive}
+            setActive={setModalActive}
+            text={"Мои черновики"}
+            classNameBtn={styles.btnBlueBorder}
+            textBtn={"Назад"}
+            onClick={closeModal}
+          />
         </div>
       )}
     </>

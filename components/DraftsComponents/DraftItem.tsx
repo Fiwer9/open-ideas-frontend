@@ -16,9 +16,9 @@ export const DraftItem = () => {
           <div className={styles.infDraft}>
             <p className={styles.textDraft}>Сделать так, чтобы не скрипела дверь в кабинете 203</p>
             <div className={styles.btnContainer}>
-              <button className={styles.btnDraft}><EditOutlined style={{color: '#00A71B'}} /></button>
-              <button className={styles.btnDraft}><DeleteOutlined style={{color: '#EC0B4E'}} /></button>
-              <Checkbox className={styles.btnDraft} />
+              <button className={styles.btnDraft}><EditOutlined style={{color: '#00A71B', fontSize: 24}} /></button>
+              <button className={styles.btnDraft}><DeleteOutlined style={{color: '#EC0B4E', fontSize: 24}} /></button>
+              <Checkbox className={styles.checkboxDraft} />
             </div>
           </div>
         </div>

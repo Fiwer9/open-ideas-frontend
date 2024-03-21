@@ -19,7 +19,7 @@
 }
 
 .container {
-  max-width: 800px;
+  max-width: 840px;
 
   .headerDraft {
     @include contentDraftStyles;
@@ -40,7 +40,7 @@
   .infDraft {
     @include contentDraftStyles;
     border-radius: 0 0 7px 7px;
-    border: $color-white-gray solid 1px;
+    border: 1px solid #00000033;
 
     .textDraft {
       font: {
@@ -62,6 +62,12 @@
 
       .btnDraft {
         @include btnResetStyles;
+      }
+
+      .checkboxDraft {
+        padding-bottom: 7px;
+        width: 24px;
+        height: 24px;
       }
     }
   }

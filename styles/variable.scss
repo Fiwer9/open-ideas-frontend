@@ -216,6 +216,19 @@ $color-pule-purple: #F0F5FF;
   cursor: pointer;
 }
 
+.btnBlueBorder {
+  font: {
+    family: RobotoRegular, sans-serif;
+    weight: 400;
+    size: 16px;
+  };
+  border: 1px solid $color-blue;
+  display: inline-block;
+  color: $color-blue;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
 .btnWhite {
   background-color: $color-white;
   display: inline-block;
