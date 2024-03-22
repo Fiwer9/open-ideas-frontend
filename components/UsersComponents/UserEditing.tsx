@@ -238,7 +238,7 @@ export const UserEditing = () => {
                   <Select
                     disabled={true}
                     className="select"
-                    placeholder={"Выберете инициативы"}
+                    placeholder={"Выберите инициативы"}
                     style={{ height: 40 }}
                     mode={"multiple"}
                     options={queries.map((query) => ({
@@ -260,7 +260,7 @@ export const UserEditing = () => {
                 >
                   <Select
                     className="select"
-                    placeholder={"Выберете организацию"}
+                    placeholder={"Выберите организацию"}
                     style={{ height: 40 }}
                     options={organizations.map((organization) => ({
                       value: organization.id,
@@ -276,14 +276,14 @@ export const UserEditing = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Выберете отдел",
+                      message: "Выберите отдел",
                     },
                   ]}
                 >
                   <Select
                     className="select"
                     style={{ height: 40, marginBottom: 60 }}
-                    placeholder={"Выберете отдел"}
+                    placeholder={"Выберите отдел"}
                     options={getDepOptions()}
                   />
                 </Form.Item>

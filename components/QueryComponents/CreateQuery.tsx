@@ -6,7 +6,6 @@ import {
   selectOrganizations,
   selectOrgStatus,
 } from "../../redux/organizationsSlice/selectors";
-import { selectUsersStatus } from "../../redux/usersSlice/selectors";
 import {
   selectDirections,
   selectStatusDirections,
@@ -56,19 +55,18 @@ function NewCreateQuery() {
   const directions = useSelector(selectDirections);
   const statusDirections = useSelector(selectStatusDirections);
   const statusOrganizations = useSelector(selectOrgStatus);
-  const statusUsers = useSelector(selectUsersStatus);
 
   useEffect(() => {
     if (
       statusDirections === Status.SUCCESS &&
       statusOrganizations === Status.SUCCESS &&
-      statusUsers === Status.SUCCESS
+      user.status === Status.SUCCESS
     ) {
       setIsLoading(false);
     } else {
       setIsLoading(true);
     }
-  }, [statusDirections, statusOrganizations, statusUsers]);
+  }, [statusDirections, statusOrganizations, user.status]);
 
   const fetchData = async () => {
     await dispatch(fetchOrganizations());
