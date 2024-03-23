@@ -1,70 +1,27 @@
 import { Slider } from "../SliderComponents/SliderComponents";
 import styles from "./styles/Settings.module.scss";
-import { Col, Space, Tag, theme, Tooltip, InputNumber, Input } from "antd";
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import type { InputRef } from "antd";
+import { Col, Input, Space, Tag, theme, Tooltip } from "antd";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
 import { MainText } from "../MainTextComponent";
 import SwitchBar from "../FilterComponents/blocks/SwitchBar";
 import { PlusOutlined } from "@ant-design/icons";
-import type { InputRef } from "antd";
 import FetchSettings from "../../hooks/fetches/FetchSettings/FetchSettings";
-import Cookies from "js-cookie";
-import debounce from "lodash.debounce";
+import SwitchContent from "../SwitchContent";
+import { useSelector } from "react-redux";
+import { RootState, useAppDispatch } from "../../redux/store";
+import { setDomains } from "../../redux/settingsSlice/slice";
+import { fetchDomains } from "../../redux/settingsSlice/asyncActions";
 
-function SwitchContent({
-  maxFileSize,
-  maxFilesAttached,
-  onChangeSize,
-  onChangeCount,
-}: any) {
-  return (
-    <div className={styles.contentSwitch}>
-      <div className={styles.switchRow}>
-        <p className={styles.textSwitch}>
-          Максимальное число загружаемых файлов
-        </p>
-        <InputNumber
-          className={"inputNumber"}
-          min={0}
-          onChange={useCallback(
-            debounce((num) => {
-              onChangeCount(num);
-            }, 1000),
-            []
-          )}
-          defaultValue={maxFilesAttached}
-          max={7}
-        />
-      </div>
-      <div className={`${styles.switchRow} ${styles.text}`}>
-        <p className={styles.textSwitch}>Максимальный размер файла</p>
-        <InputNumber
-          className={"inputNumber"}
-          min={0}
-          defaultValue={maxFileSize}
-          onChange={useCallback(
-            debounce((num) => {
-              onChangeSize(num);
-            }, 1000),
-            []
-          )}
-          max={5000}
-        />
-      </div>
-    </div>
-  );
-}
-
-export const Settings = () => {
+export const Settings = memo(() => {
   const { token } = theme.useToken();
-  const [tags, setTags] = FetchSettings.useGetDomains();
+  const select = useSelector((state: RootState) => ({
+    tags: state.settings.domains,
+    settings: state.settings.settings[0],
+  }));
+  const dispatch = useAppDispatch();
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [editInputIndex, setEditInputIndex] = useState(-1);
@@ -72,11 +29,18 @@ export const Settings = () => {
   const [loadedDOM, setLoadedDOM] = useState(false);
   const inputRef = useRef<InputRef>(null);
   const editInputRef = useRef<InputRef>(null);
-  const [settings, setSettings] = FetchSettings.useGetSettings();
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [allowFileAttachment, setAllowFileAttachment] = useState(false);
   const [maxFileSize, setMaxFileSize] = useState(1024);
   const [maxFilesAttached, setMaxFilesAttached] = useState(3);
+
+  const fetchData = async () => {
+    await dispatch(fetchDomains());
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (inputVisible) {
@@ -90,8 +54,8 @@ export const Settings = () => {
 
   const handleClose = (removedTag: number) => {
     FetchSettings.useRemoveDomains(removedTag);
-    const newTags = tags.filter((tag) => tag.id !== removedTag);
-    setTags(newTags);
+    const newTags = select.tags.filter((tag) => tag.id !== removedTag);
+    dispatch(setDomains(newTags));
   };
 
   const showInput = () => {
@@ -104,14 +68,14 @@ export const Settings = () => {
 
   const handleInputConfirm = () => {
     let id = 0;
-    for (let tag of tags) {
+    for (let tag of select.tags) {
       id += 1;
       if (tag.domain.includes(inputValue)) {
-        return setTags([...tags]);
+        return dispatch(setDomains([...select.tags]));
       }
     }
     FetchSettings.usePostDomain(inputValue);
-    setTags([...tags, { id: id, domain: inputValue }]);
+    dispatch(setDomains([...select.tags, { id: id, domain: inputValue }]));
     setInputVisible(false);
     setInputValue("");
   };
@@ -121,10 +85,10 @@ export const Settings = () => {
   };
 
   const handleEditInputConfirm = (tagId: number) => {
-    const newTags = [...tags];
+    const newTags = [...select.tags];
     newTags[editInputIndex].domain = editInputValue;
     FetchSettings.usePutDomain(tagId, editInputValue);
-    setTags(newTags);
+    dispatch(setDomains(newTags));
     setEditInputIndex(-1);
     setEditInputValue("");
     window.location.reload();
@@ -147,40 +111,40 @@ export const Settings = () => {
 
   useEffect(() => {
     setLoadedDOM(true);
-  }, [tags]);
+  }, [select.tags]);
 
   useEffect(() => {
-    if (settings[0]) {
-      setAllowFileAttachment(settings[0].allow_file_attachment);
-      setMaxFileSize(settings[0].max_file_size);
-      setMaxFilesAttached(settings[0].max_files_attached);
-      setIsAnonymous(settings[0].anonymous_status);
+    if (select.settings) {
+      setAllowFileAttachment(select.settings.allow_file_attachment);
+      setMaxFileSize(select.settings.max_file_size);
+      setMaxFilesAttached(select.settings.max_files_attached);
+      setIsAnonymous(select.settings.anonymous_status);
       // store.isAllowFileAttachment = settings[0].allow_file_attachment;
       // store.isAnonymous = settings[0].anonymous_status;
     }
-  }, [settings]);
+  }, [select.settings]);
 
   const changeAllowFileAttachment = (bool: boolean) => {
-    settings[0] &&
+    select.settings &&
       FetchSettings.usePutSettings(
         1,
         bool,
         maxFileSize,
         maxFilesAttached,
-        isAnonymous
+        isAnonymous,
       );
     setAllowFileAttachment(bool);
     // store.isAllowFileAttachment = bool;
   };
 
   const changeAnonymousStatus = (bool: boolean) => {
-    settings[0] &&
+    select.settings &&
       FetchSettings.usePutSettings(
         1,
         allowFileAttachment,
         maxFileSize,
         maxFilesAttached,
-        bool
+        bool,
       );
     setIsAnonymous(bool);
     // store.isAnonymous = bool;
@@ -226,7 +190,7 @@ export const Settings = () => {
                 <div className={styles.row}>
                   <p className={styles.rowText}>Почта</p>
                   <Space size={[0, 8]} wrap className={styles.tag}>
-                    {tags.map((tag, index) => {
+                    {select.tags.map((tag, index) => {
                       if (editInputIndex === index) {
                         return (
                           <Input
@@ -299,7 +263,7 @@ export const Settings = () => {
                   hintText={
                     "Возможность изменять поле Ф. И. О. при создании инициативы"
                   }
-                  // isChecked={settings[0].anonymous_status}
+                  isChecked={select.settings?.anonymous_status}
                   onChangeSwitch={changeAnonymousStatus}
                 />
                 <SwitchBar
@@ -307,12 +271,12 @@ export const Settings = () => {
                   hintText={
                     "Возможность прикладывать файлы при создании инициативы"
                   }
-                  // isChecked={settings[0].allow_file_attachment}
+                  isChecked={select.settings?.allow_file_attachment}
                   layout={
                     allowFileAttachment && (
                       <SwitchContent
-                        // maxFileSize={settings[0].max_file_size}
-                        // maxFilesAttached={settings[0].max_files_attached}
+                        maxFileSize={select.settings?.max_file_size}
+                        maxFilesAttached={select.settings?.max_files_attached}
                         onChangeSize={changeMaxFileSize}
                         onChangeCount={chaneMaxFilesAttached}
                       />
@@ -327,4 +291,4 @@ export const Settings = () => {
       )}
     </>
   );
-};
+});

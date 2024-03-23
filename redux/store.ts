@@ -1,15 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
-import auth from "./authSlice/slice";
-import queries from "./queriesSlice/slice";
-import organizations from "./organizationsSlice/slice";
-import directions from "./directionsSlice/slice";
-import users from "./usersSlice/slice";
-import filter from "./filterSlice/slice";
-import menu from "./menuSlice/slice";
-import comments from "./commentsSlice/slice";
-import modals from "./modalsSlice/slice";
-import header from "./headerSlice/slice";
+import {
+  auth,
+  comments,
+  directions,
+  filter,
+  header,
+  menu,
+  modals,
+  organizations,
+  queries,
+  settings,
+  users,
+} from "./exports";
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +26,7 @@ export const store = configureStore({
     comments,
     modals,
     header,
+    settings,
   },
 });
 
