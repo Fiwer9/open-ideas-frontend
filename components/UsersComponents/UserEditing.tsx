@@ -14,8 +14,6 @@ import {
   fetchCurrentUser,
   patchUser,
 } from "../../redux/usersSlice/asyncActions";
-import { useSelector } from "react-redux";
-import { selectUpdateUser } from "../../redux/usersSlice/selectors";
 import { SliderSmall } from "../SliderComponents/SliderSmall";
 import { selectQueriesData } from "../../redux/queriesSlice/selectors";
 import {
