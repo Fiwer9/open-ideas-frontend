@@ -44,7 +44,7 @@ const ModalDrafts = ({
 
               <div className={styles.content}>
                 <Form.Item className={styles.nameModal}>
-                  <p className={styles.textDrafts}>Черновики сохраняются хх часов. После <br/> этого времени они будут удалены.</p>
+                  <p className={styles.textDrafts}>Черновики сохраняются 30 дней. <br/> После этого времени они будут удалены.</p>
                 </Form.Item>
 
                 <Form.Item className={styles.contentHeader}>
