@@ -52,6 +52,7 @@ import {
   getQueryFilterByExpert,
 } from "../../utils/getQueryFilter";
 import ModalDrafts from "../ModalsComponents/ModalDrafts";
+import Modal from "../ModalsComponents/Modal";
 
 export const QueryList: React.FC = memo(() => {
   const router = useRouter();
@@ -66,9 +67,11 @@ export const QueryList: React.FC = memo(() => {
   const { searchValue, isArchive, isExpert } = useSelector(selectFilters);
   const [isClient, setIsClient] = useState(false);
   const [modalActive, setModalActive] = useState(false);
+  const [secondModalActive, setSecondModalActive] = useState(false);
 
   const closeModal = () => {
     setModalActive(false);
+    setSecondModalActive(false);
   };
 
   useEffect(() => {
@@ -185,10 +188,6 @@ export const QueryList: React.FC = memo(() => {
     dispatch(setStatusOrganizations(Status.WAITING));
   };
 
-  const handleCreateQuery = () => {
-    router.push("/queries/create");
-  };
-
   if (!isClient) {
     return;
   }
@@ -252,7 +251,9 @@ export const QueryList: React.FC = memo(() => {
                     <FilterBar
                       icon={<PlusCircleOutlined />}
                       filterText={"Создать идею"}
-                      onClick={handleCreateQuery}
+                      onClick={() => {
+                        setSecondModalActive(true);
+                      }}
                     />
                     <FilterBar
                       filterText={"Мои черновики"}
@@ -276,6 +277,21 @@ export const QueryList: React.FC = memo(() => {
               />
             </div>
           </div>
+          <Modal
+            active={secondModalActive}
+            setActive={setSecondModalActive}
+            text1={"Создание идеи"}
+            text2={"Ранее вы создавали идею, хотите продолжить заполнение старой или создать новую?"}
+            classNameBtn1={styles.btnWhite}
+            textBtn1={"Создать новую"}
+            classNameBtn2={styles.btnBlue}
+            textBtn2={"Мои черновики"}
+            onClick1={() => router.push("/queries/create")}
+            onClick2={() => {
+              setModalActive(true);
+              setSecondModalActive(false);
+            }}
+          />
           <ModalDrafts
             active={modalActive}
             setActive={setModalActive}
