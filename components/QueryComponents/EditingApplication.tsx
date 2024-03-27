@@ -36,6 +36,7 @@ import { selectQueryData } from "../../redux/queriesSlice/selectors";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
 import { selectDirections } from "../../redux/directionsSlice/selectors";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 interface EditQueryProps {
   name: string;
@@ -338,6 +339,10 @@ export const EditingApplication = () => {
                 </div>
               </>
             )}
+        </div>
+
+        <div className={styles.sliderSmall}>
+          <SliderSmall />
         </div>
       </div>
     </>

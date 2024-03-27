@@ -47,6 +47,7 @@ import { setStatusQueries } from "../../redux/queriesSlice/slice";
 import { setStatusDirections } from "../../redux/directionsSlice/slice";
 import { setStatusOrganizations } from "../../redux/organizationsSlice/slice";
 import debounce from "lodash.debounce";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 import {
   getQueryFilterByArchive,
   getQueryFilterByExpert,
@@ -190,35 +191,40 @@ export const QueryList: React.FC = memo(() => {
   return (
     <>
       {selectedTag === "Панель администратора" ? (
-        <div className={styles.container}>
-          <div className={styles.slider}>
-            <Slider />
-          </div>
-          <div className={styles.content}>
-            <div className={styles.headerContainer}>
-              <Header />
+        <>
+          <div className={styles.container}>
+            <div className={styles.slider}>
+              <Slider />
             </div>
-            <Tabs />
-            <MainText text={"Инициативы"} />
-            <div className={styles.infContainer}>
-              <SearchBar
-                placeholderNum={"Номер"}
-                placeholderQuery={"Поиск по идеям"}
-              />
-              <div className={styles.filterContainer}>
-                <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
-                <FilterCheckboxBar checkboxText={"Архив"} />
+            <div className={styles.content}>
+              <div className={styles.headerContainer}>
+                <Header />
               </div>
-            </div>
-            <DataTable
-              data={getData() as QueriesResponse[]}
-              columns={getColumns()}
-              isLoading={isLoading}
-              onRowClick={handleRowClick}
-              locale={"Тут ещё нет идей"}
-            />
+              <Tabs />
+              <MainText text={"Инициативы"} />
+              <div className={styles.infContainer}>
+                <SearchBar
+                  placeholderNum={"Номер"}
+                  placeholderQuery={"Поиск по идеям"}
+                />
+                <div className={styles.filterContainer}>
+                  <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
+                  <FilterCheckboxBar checkboxText={"Архив"} />
+                </div>
+               </div>
+                <DataTable
+                  data={getData() as QueriesResponse[]}
+                  columns={getColumns()}
+                  isLoading={isLoading}
+                  onRowClick={handleRowClick}
+                  locale={"Тут ещё нет идей"}
+                />
+              </div>
+              <div className={styles.sliderSmall}>
+                <SliderSmall />
+              </div>
           </div>
-        </div>
+        </>
       ) : (
         <div className={styles.containerIdeas}>
           <div className={styles.contentIdeas}>

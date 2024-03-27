@@ -7,8 +7,16 @@
   }
 }
 
+.sliderSmall {
+  @include sliderSmallStyles;
+}
+
 .container {
   @include container;
+
+  @media (max-width: 430px) {
+    @include sliderSmallContent;
+  }
 
   .slider {
     @media (max-width: 430px) {

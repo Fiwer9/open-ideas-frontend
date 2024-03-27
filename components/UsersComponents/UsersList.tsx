@@ -21,6 +21,7 @@ import {
   selectUsersStatus,
 } from "../../redux/usersSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 import {
   fetchUsers,
   fetchUsersByName,
@@ -151,6 +152,7 @@ export const UsersList: React.FC = memo(() => {
               <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
             </div>
           </div>
+
           <DataTable
             data={getData()}
             columns={columns}
@@ -158,6 +160,9 @@ export const UsersList: React.FC = memo(() => {
             onRowClick={handleRowClick}
             locale={"Ещё нет пользователей"}
           />
+        </div>
+        <div className={styles.sliderSmall}>
+            <SliderSmall />
         </div>
       </div>
     </>
