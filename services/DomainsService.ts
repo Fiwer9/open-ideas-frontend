@@ -10,7 +10,9 @@ export default class DomainsService {
     return $api.get("/domain/domains/");
   }
 
-  static async deleteDomain(id: number): Promise<void> {
+  static async deleteDomain(
+    id: number | string,
+  ): Promise<AxiosResponse<ResponseInterface<DomainsResponse>>> {
     return $api.delete(`/domain/domains/${id}`);
   }
 
@@ -20,7 +22,7 @@ export default class DomainsService {
     return $api.post(`/domain/domains/`, { domain });
   }
 
-  static putDomain(id: number, domain: string) {
-    return $api.put(`/domain/domains/${id}/`, { domain });
+  static patchDomain(id: number | string, domain: string) {
+    return $api.patch(`/domain/domains/${id}/`, { domain });
   }
 }

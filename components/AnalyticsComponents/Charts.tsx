@@ -6,17 +6,19 @@ import { MainText } from "../MainTextComponent";
 import { StatisticsCard } from "./StatisticsCard";
 import Filter from "../FilterComponents/blocks/Filter";
 import {
-  Chart as ChartJS,
   CategoryScale,
+  Chart as ChartJS,
+  Legend,
   LinearScale,
-  PointElement,
   LineElement,
+  PointElement,
   Title,
   Tooltip,
-  Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import faker from "faker";
+import styles from "./styles/Charts.module.scss";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -24,10 +26,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
-
-import styles from "./styles/Charts.module.scss";
 
 export const options = {
   responsive: true,

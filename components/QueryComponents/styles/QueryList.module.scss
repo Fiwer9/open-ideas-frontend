@@ -1,205 +1,73 @@
 @import "../../../styles/variable.scss";
 
-.container {
-  @include container;
+.infContainer {
+  @include infContainerTable;
 
-  .slider {
-    @media (max-width: 430px) {
-      display: none;
+  .searchBar {
+    margin-right: 20px;
+
+    @media (max-width: 630px) {
+      margin-right: -7px;
     }
   }
 
-  .content {
-   @include content;
+  .btnHead {
+    display: flex;
+    gap: 20px;
 
-    @media (max-width: 768px) {
-      padding-left: 110px;
+    @media (max-width: 738px) {
+      gap: 10px;
     }
 
-    @media (max-width: 685px) {
-      padding: {
-        right: 4px;
-      };
+    @media (max-width: 540px) {
+      gap: 5px;
     }
 
-    @media (max-width: 430px) {
-      padding: {
-        left: 10px;
-        right: 10px;
-      };
+    @media (max-width: 378px) {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
     }
 
-    .headerContainer {
-      @media (max-width: 640px) {
-        display: none;
-      }
-    }
+    .btnContainerFilt {
+      display: flex;
+      gap: 20px;
 
-    .infContainer {
-      @include infContainerTable;
-
-      @media (max-width: 430px) {
-        display: flex;
-        flex-direction: column-reverse;
-      }
-
-      .filterContainer {
-        display: flex;
+      @media (max-width: 738px) {
         gap: 10px;
+      }
 
-        @media (max-width: 1440px) {
-          margin-left: 100px;
-        }
-
-        @media (max-width: 768px) {
-          margin-left: 50px;
-        }
-
-        @media (max-width: 430px) {
-          margin-left: 0;
-        }
+      @media (max-width: 540px) {
+        gap: 5px;
       }
     }
 
-    @media (max-width: 420px) {
-      margin: 0;
+    .btnContainer {
+      @media (max-width: 378px) {
+        display: flex;
+        margin: 0;
+        padding: 0;
+      }
     }
+  }
+
+  @media (max-width: 540px) {
+    display: flex;
+    flex-direction: column-reverse;
+    text-align: left;
   }
 }
 
-
-.containerIdeas {
-  @include container;
-
-  @media (max-width: 511px) {
-    overflow-x: hidden;
+.table {
+  margin-top: 17px;
+  overflow: {
+    x: auto;
+    y: hidden;
   }
-
-  .contentIdeas {
-    @include content;
-
-    .headerContainer {
-      @media (max-width: 540px) {
-        display: none;
-      }
-    }
-
-    @media (max-width: 1000px) {
-      padding: {
-        top: 130px;
-        left: 20px;
-        right: 20px;
-      };
-    }
-
-    .header {
-      @media (max-width: 720px) {
-        padding: {
-          top: 115px;
-        };
-      }
-
-      @media (max-width: 540px) {
-        padding: {
-          top: 55px;
-        };
-      }
-
-      .logoHeader {
-        margin-top: 50px;
-        position: absolute;
-        top: 12.5px;
-        left: 24px;
-
-        @media (max-width: 540px) {
-          margin-top: 0;
-        }
-      }
-
-      .tabs {
-        margin-right: auto;
-        margin-left: auto;
-      }
-    }
-
-    .infContainer {
-      @include infContainerTable;
-
-      .searchBar {
-        margin-right: 20px;
-
-        @media (max-width: 630px) {
-          margin-right: -7px;
-        }
-      }
-
-      .btnHead {
-        display: flex;
-        gap: 20px;
-
-        @media (max-width: 738px) {
-          gap: 10px;
-        }
-
-        @media (max-width: 540px) {
-          gap: 5px;
-        }
-
-        @media (max-width: 378px) {
-          display: flex;
-          flex-direction: column;
-          gap: 0;
-        }
-
-        .btnContainerFilt {
-          display: flex;
-          gap: 20px;
-
-          @media (max-width: 738px) {
-            gap: 10px;
-          }
-
-          @media (max-width: 540px) {
-            gap: 5px;
-          }
-        }
-
-        .btnContainer {
-          @media (max-width: 378px) {
-            display: flex;
-            margin: 0;
-            padding: 0;
-          }
-        }
-      }
-
-      @media (max-width: 540px) {
-        display: flex;
-        flex-direction: column-reverse;
-        text-align: left;
-      }
-    }
-
-    .table {
-      margin-top: 17px;
-      overflow: {
-        x: auto;
-        y: hidden;
-      }
-      flex: 1;
-      table {
-        border: 1px solid rgba(0, 0, 0, 0.20);
-        border-radius: 0;
-      }
-    }
-
-
-    @media (max-width: 720px) {
-      padding: 16px;
-    }
-    @media (max-width: 420px) {
-      margin: 0;
-    }
+  flex: 1;
+  table {
+    border: 1px solid rgba(0, 0, 0, 0.20);
+    border-radius: 0;
   }
 }
 

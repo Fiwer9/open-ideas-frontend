@@ -12,17 +12,13 @@ import {
   getStatusClassName,
   statusTranslation,
 } from "../../utils/utils";
-import { Slider } from "../SliderComponents/SliderComponents";
-import { Header } from "../HeaderComponents/Header";
-import { Tabs } from "../TabsComponent/Tabs";
 import { MainText } from "../MainTextComponent";
 import { DataTable } from "../TableComponent/Table";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import FilterCheckboxBar from "../FilterComponents/blocks/FilterCheckboxBar";
 import { useRouter } from "next/router";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
-import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Logo } from "../PicturesComponents/Logo";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/authSlice/selectors";
 import {
@@ -51,6 +47,9 @@ import {
   getQueryFilterByArchive,
   getQueryFilterByExpert,
 } from "../../utils/getQueryFilter";
+import AdminPageLayout from "../AdminPageLayout";
+import FilterContainer from "../../containers/FilterContainer";
+import PageLayout from "../PageLayout";
 
 export const QueryList: React.FC = memo(() => {
   const router = useRouter();
@@ -190,79 +189,48 @@ export const QueryList: React.FC = memo(() => {
   return (
     <>
       {selectedTag === "Панель администратора" ? (
-        <div className={styles.container}>
-          <div className={styles.slider}>
-            <Slider />
-          </div>
-          <div className={styles.content}>
-            <div className={styles.headerContainer}>
-              <Header />
-            </div>
-            <Tabs />
-            <MainText text={"Инициативы"} />
-            <div className={styles.infContainer}>
-              <SearchBar
-                placeholderNum={"Номер"}
-                placeholderQuery={"Поиск по идеям"}
-              />
-              <div className={styles.filterContainer}>
-                <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
+        <AdminPageLayout>
+          <MainText text={"Инициативы"} />
+          <FilterContainer />
+          <DataTable
+            data={getData() as QueriesResponse[]}
+            columns={getColumns()}
+            isLoading={isLoading}
+            onRowClick={handleRowClick}
+            locale={"Тут ещё нет идей"}
+          />
+        </AdminPageLayout>
+      ) : (
+        <PageLayout>
+          <MainText text={"Инициативы"} />
+          <div className={styles.infContainer}>
+            <SearchBar
+              placeholderNum={"Номер"}
+              placeholderQuery={"Поиск по идеям"}
+              stylesSearch={styles.searchBar}
+            />
+            <div className={styles.btnHead}>
+              <div className={styles.btnContainerFilt}>
+                <FilterBar
+                  icon={<PlusCircleOutlined />}
+                  filterText={"Создать идею"}
+                  onClick={handleCreateQuery}
+                />
+                <FilterCheckboxBar checkboxText={"Я эксперт"} />
+              </div>
+              <div className={styles.btnContainer}>
                 <FilterCheckboxBar checkboxText={"Архив"} />
               </div>
             </div>
-            <DataTable
-              data={getData() as QueriesResponse[]}
-              columns={getColumns()}
-              isLoading={isLoading}
-              onRowClick={handleRowClick}
-              locale={"Тут ещё нет идей"}
-            />
           </div>
-        </div>
-      ) : (
-        <div className={styles.containerIdeas}>
-          <div className={styles.contentIdeas}>
-            <div className={styles.headerContainer}>
-              <Header />
-            </div>
-            <div className={styles.header}>
-              <div className={styles.logoHeader}>
-                <Logo width={190} height={53} />
-              </div>
-              <div className={styles.tabs}>
-                <Tabs />
-              </div>
-            </div>
-            <MainText text={"Инициативы"} />
-            <div className={styles.infContainer}>
-              <SearchBar
-                placeholderNum={"Номер"}
-                placeholderQuery={"Поиск по идеям"}
-                stylesSearch={styles.searchBar}
-              />
-              <div className={styles.btnHead}>
-                <div className={styles.btnContainerFilt}>
-                  <FilterBar
-                    icon={<PlusCircleOutlined />}
-                    filterText={"Создать идею"}
-                    onClick={handleCreateQuery}
-                  />
-                  <FilterCheckboxBar checkboxText={"Я эксперт"} />
-                </div>
-                <div className={styles.btnContainer}>
-                  <FilterCheckboxBar checkboxText={"Архив"} />
-                </div>
-              </div>
-            </div>
-            <DataTable
-              columns={directions.length > 0 && getColumns()}
-              data={getData() as QueriesResponse[]}
-              onRowClick={handleRowClickIdea}
-              isLoading={isLoading}
-              locale={"Тут ещё нет идей"}
-            />
-          </div>
-        </div>
+          <DataTable
+            columns={directions.length > 0 && getColumns()}
+            data={getData() as QueriesResponse[]}
+            onRowClick={handleRowClickIdea}
+            isLoading={isLoading}
+            locale={"Тут ещё нет идей"}
+          />
+        </PageLayout>
       )}
     </>
   );

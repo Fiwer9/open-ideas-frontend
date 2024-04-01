@@ -3,8 +3,20 @@ import { Status } from "../queriesSlice/types";
 import { SettingsSliceState } from "./types";
 import { DomainsResponse } from "../../models/response/DomainsResponse";
 import { SettingsResponse } from "../../models/response/SettingsResponse";
-import { fetchDomainsBuilder, fetchSettingsBuilder } from "./builders";
-import { fetchDomains, fetchSettings } from "./asyncActions";
+import {
+  deleteDomainBuilder,
+  fetchDomainsBuilder,
+  fetchSettingsBuilder,
+  patchDomainBuilder,
+  postDomainBuilder,
+} from "./builders";
+import {
+  deleteDomain,
+  fetchDomains,
+  fetchSettings,
+  patchDomain,
+  postDomain,
+} from "./asyncActions";
 
 const initialState: SettingsSliceState = {
   domains: [],
@@ -27,6 +39,9 @@ export const settingsSlice = createSlice({
   extraReducers: (builder) => {
     fetchDomainsBuilder(builder, fetchDomains);
     fetchSettingsBuilder(builder, fetchSettings);
+    postDomainBuilder(builder, postDomain);
+    patchDomainBuilder(builder, patchDomain);
+    deleteDomainBuilder(builder, deleteDomain);
   },
 });
 
