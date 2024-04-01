@@ -3,13 +3,14 @@ import SwitchBar from "../../components/FilterComponents/blocks/SwitchBar";
 import SwitchContent from "../../components/SwitchContent";
 import React, { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import FetchSettings from "../../hooks/fetches/FetchSettings/FetchSettings";
+import { RootState, useAppDispatch } from "../../redux/store";
+import { putSettings } from "../../redux/settingsSlice/asyncActions";
 
 const SettingsContainer = () => {
   const select = useSelector((state: RootState) => ({
     settings: state.settings.settings,
   }));
+  const dispatch = useAppDispatch();
 
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [allowFileAttachment, setAllowFileAttachment] = useState(false);
@@ -28,55 +29,23 @@ const SettingsContainer = () => {
   }, [select.settings]);
 
   const changeAllowFileAttachment = (bool: boolean) => {
-    select.settings &&
-      FetchSettings.usePutSettings(
-        1,
-        bool,
-        maxFileSize,
-        maxFilesAttached,
-        isAnonymous,
-      );
     setAllowFileAttachment(bool);
-    // store.isAllowFileAttachment = bool;
+    dispatch(putSettings({ id: 1, allow_file_attachment: bool }));
   };
 
   const changeAnonymousStatus = (bool: boolean) => {
-    select.settings &&
-      FetchSettings.usePutSettings(
-        1,
-        allowFileAttachment,
-        maxFileSize,
-        maxFilesAttached,
-        bool,
-      );
     setIsAnonymous(bool);
-    // store.isAnonymous = bool;
+    dispatch(putSettings({ id: 1, anonymous_status: bool }));
   };
 
   const changeMaxFileSize = (num: number) => {
-    // settings[0] &&
-    //   FetchSettings.usePutSettings(
-    //     1,
-    //     store.isAllowFileAttachment,
-    //     num,
-    //     store.maxFilesAttached,
-    //     store.isAnonymous
-    //   );
-    // setMaxFileSize(num);
-    // store.maxFileSize = num;
+    setMaxFileSize(num);
+    dispatch(putSettings({ id: 1, max_file_size: num }));
   };
 
   const chaneMaxFilesAttached = (num: number) => {
-    // settings[0] &&
-    //   FetchSettings.usePutSettings(
-    //     1,
-    //     store.isAllowFileAttachment,
-    //     store.maxFileSize,
-    //     num,
-    //     store.isAnonymous
-    //   );
-    // setMaxFilesAttached(num);
-    // store.maxFilesAttached = num;
+    setMaxFilesAttached(num);
+    dispatch(putSettings({ id: 1, max_files_attached: num }));
   };
 
   return (
@@ -84,18 +53,18 @@ const SettingsContainer = () => {
       <SwitchBar
         checkboxText={"Анонимные инициативы"}
         hintText={"Возможность изменять поле Ф. И. О. при создании инициативы"}
-        isChecked={select.settings?.anonymous_status}
+        isChecked={isAnonymous}
         onChangeSwitch={changeAnonymousStatus}
       />
       <SwitchBar
         checkboxText={"Прикладывание файлов"}
         hintText={"Возможность прикладывать файлы при создании инициативы"}
-        isChecked={select.settings?.allow_file_attachment}
+        isChecked={allowFileAttachment}
         layout={
           allowFileAttachment && (
             <SwitchContent
-              maxFileSize={select.settings?.max_file_size}
-              maxFilesAttached={select.settings?.max_files_attached}
+              maxFileSize={maxFileSize}
+              maxFilesAttached={maxFilesAttached}
               onChangeSize={changeMaxFileSize}
               onChangeCount={chaneMaxFilesAttached}
             />

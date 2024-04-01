@@ -191,7 +191,7 @@ export const QueryList: React.FC = memo(() => {
       {selectedTag === "Панель администратора" ? (
         <AdminPageLayout>
           <MainText text={"Инициативы"} />
-          <FilterContainer />
+          <FilterContainer placeholder={"Поиск по идеям"} />
           <DataTable
             data={getData() as QueriesResponse[]}
             columns={getColumns()}

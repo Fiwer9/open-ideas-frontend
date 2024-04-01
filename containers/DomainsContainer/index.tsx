@@ -1,9 +1,9 @@
 import styles from "./styles.module.scss";
 import { Col, Input, type InputRef, Space, Tag, theme, Tooltip } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState, useAppDispatch } from "../../redux/store";
+import { RootState, store, useAppDispatch } from "../../redux/store";
 import {
   deleteDomain,
   patchDomain,
@@ -24,6 +24,37 @@ const DomainsContainer = () => {
   const inputRef = useRef<InputRef>(null);
   const editInputRef = useRef<InputRef>(null);
 
+  const callbacks = {
+    handleEditInputConfirm: useCallback(
+      (tagId: number) => {
+        dispatch(patchDomain({ domain: editInputValue, id: tagId }));
+        setEditInputIndex(-1);
+        setEditInputValue("");
+      },
+      [editInputValue, store],
+    ),
+    handleClose: useCallback(
+      (removedTag: number) => {
+        dispatch(deleteDomain({ id: removedTag }));
+        const newTags = select.tags.filter((tag) => tag.id !== removedTag);
+        dispatch(setDomains(newTags));
+      },
+      [select.tags, store],
+    ),
+    handleInputConfirm: useCallback(() => {
+      let id = 0;
+      for (let tag of select.tags) {
+        id += 1;
+        if (tag.domain.includes(inputValue)) {
+          return dispatch(setDomains([...select.tags]));
+        }
+      }
+      dispatch(postDomain({ domain: inputValue }));
+      setInputVisible(false);
+      setInputValue("");
+    }, [inputValue, select.tags]),
+  };
+
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
@@ -34,12 +65,6 @@ const DomainsContainer = () => {
     editInputRef.current?.focus();
   }, [editInputValue]);
 
-  const handleClose = (removedTag: number) => {
-    dispatch(deleteDomain({ id: removedTag }));
-    const newTags = select.tags.filter((tag) => tag.id !== removedTag);
-    dispatch(setDomains(newTags));
-  };
-
   const showInput = () => {
     setInputVisible(true);
   };
@@ -48,27 +73,8 @@ const DomainsContainer = () => {
     setInputValue(e.target.value);
   };
 
-  const handleInputConfirm = () => {
-    let id = 0;
-    for (let tag of select.tags) {
-      id += 1;
-      if (tag.domain.includes(inputValue)) {
-        return dispatch(setDomains([...select.tags]));
-      }
-    }
-    dispatch(postDomain({ domain: inputValue }));
-    setInputVisible(false);
-    setInputValue("");
-  };
-
   const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditInputValue(e.target.value);
-  };
-
-  const handleEditInputConfirm = (tagId: number) => {
-    dispatch(patchDomain({ domain: editInputValue, id: tagId }));
-    setEditInputIndex(-1);
-    setEditInputValue("");
   };
 
   const tagInputStyle: React.CSSProperties = {
@@ -101,8 +107,8 @@ const DomainsContainer = () => {
                   style={tagInputStyle}
                   value={editInputValue}
                   onChange={handleEditInputChange}
-                  onBlur={() => handleEditInputConfirm(tag.id)}
-                  onPressEnter={() => handleEditInputConfirm(tag.id)}
+                  onBlur={() => callbacks.handleEditInputConfirm(tag.id)}
+                  onPressEnter={() => callbacks.handleEditInputConfirm(tag.id)}
                 />
               );
             }
@@ -112,7 +118,7 @@ const DomainsContainer = () => {
                 key={tag.id}
                 closable={index >= 0}
                 style={{ userSelect: "none" }}
-                onClose={() => handleClose(tag.id)}
+                onClose={() => callbacks.handleClose(tag.id)}
               >
                 <span
                   onDoubleClick={(e) => {
@@ -141,8 +147,8 @@ const DomainsContainer = () => {
               style={tagInputStyle}
               value={inputValue}
               onChange={handleInputChange}
-              onBlur={handleInputConfirm}
-              onPressEnter={handleInputConfirm}
+              onBlur={callbacks.handleInputConfirm}
+              onPressEnter={callbacks.handleInputConfirm}
             />
           ) : (
             <Tag

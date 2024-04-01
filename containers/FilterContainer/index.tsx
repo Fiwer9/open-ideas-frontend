@@ -5,10 +5,14 @@ import { FilterOutlined } from "@ant-design/icons";
 import FilterCheckboxBar from "../../components/FilterComponents/blocks/FilterCheckboxBar";
 import React, { memo } from "react";
 
-const FilterContainer = () => {
+interface FilterContainerProps {
+  placeholder: string;
+}
+
+const FilterContainer: React.FC<FilterContainerProps> = ({ placeholder }) => {
   return (
     <div className={styles.infContainer}>
-      <SearchBar placeholderNum={"Номер"} placeholderQuery={"Поиск по идеям"} />
+      <SearchBar placeholderNum={"Номер"} placeholderQuery={placeholder} />
       <div className={styles.filterContainer}>
         <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
         <FilterCheckboxBar checkboxText={"Архив"} />

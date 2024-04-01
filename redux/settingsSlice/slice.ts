@@ -9,6 +9,7 @@ import {
   fetchSettingsBuilder,
   patchDomainBuilder,
   postDomainBuilder,
+  putSettingsBuilder,
 } from "./builders";
 import {
   deleteDomain,
@@ -16,11 +17,13 @@ import {
   fetchSettings,
   patchDomain,
   postDomain,
+  putSettings,
 } from "./asyncActions";
+import { getSettings } from "../../utils/getSettings";
 
 const initialState: SettingsSliceState = {
   domains: [],
-  settings: null,
+  settings: getSettings(),
   detail: {},
   status: Status.WAITING,
 };
@@ -42,6 +45,7 @@ export const settingsSlice = createSlice({
     postDomainBuilder(builder, postDomain);
     patchDomainBuilder(builder, patchDomain);
     deleteDomainBuilder(builder, deleteDomain);
+    putSettingsBuilder(builder, putSettings);
   },
 });
 

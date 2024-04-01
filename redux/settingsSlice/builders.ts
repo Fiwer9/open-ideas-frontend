@@ -93,14 +93,36 @@ export const fetchSettingsBuilder = (
       state.detail = action.payload.error.detail as DetailType;
     }
     state.settings = action.payload.data[0];
+    localStorage.setItem("settings", JSON.stringify(state.settings));
     state.status = Status.SUCCESS;
   });
   builder.addCase(fetch.pending, (state) => {
     state.status = Status.LOADING;
-    state.settings = [];
+    state.settings = null;
   });
   builder.addCase(fetch.rejected, (state) => {
     state.status = Status.ERROR;
-    state.settings = [];
+    state.settings = null;
+  });
+};
+
+export const putSettingsBuilder = (
+  builder: ActionReducerMapBuilder<WritableDraft<SettingsSliceState>>,
+  fetch: AsyncThunk<any, any, any>,
+) => {
+  builder.addCase(fetch.fulfilled, (state, action) => {
+    if (action.payload.error.is_error) {
+      state.detail = action.payload.error.detail as DetailType;
+    }
+    state.settings = action.payload.data;
+    localStorage.setItem("settings", JSON.stringify(state.settings));
+    state.status = Status.SUCCESS;
+  });
+  builder.addCase(fetch.pending, (state) => {
+    state.status = Status.LOADING;
+  });
+  builder.addCase(fetch.rejected, (state) => {
+    state.status = Status.ERROR;
+    state.settings = null;
   });
 };
