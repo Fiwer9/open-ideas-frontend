@@ -7,6 +7,7 @@ import avatar from "../../public/img/AvatarAratrum.svg";
 
 import styles from "./styles/UserCard.module.scss";
 import { Button, Col } from "antd";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 import { useRouter } from "next/router";
 import { getOrganizationName, getQueriesByNumber } from "../../utils/utils";
 import { useSelector } from "react-redux";
@@ -149,6 +150,10 @@ export const UserCard: React.FC = memo(() => {
               </Button>
             </div>
           </div>
+        </div>
+
+        <div className={styles.sliderSmall}>
+          <SliderSmall />
         </div>
       </div>
     </>

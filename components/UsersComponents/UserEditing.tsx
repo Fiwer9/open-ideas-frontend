@@ -14,6 +14,7 @@ import {
   fetchCurrentUser,
   patchUser,
 } from "../../redux/usersSlice/asyncActions";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 import { selectQueriesData } from "../../redux/queriesSlice/selectors";
 import {
   selectDepartments,
@@ -372,6 +373,10 @@ export const UserEditing = () => {
               </div>
             </div>
           </Form>
+        </div>
+
+        <div className={styles.sliderSmall}>
+          <SliderSmall />
         </div>
       </div>
     </>

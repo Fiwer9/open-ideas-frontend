@@ -10,6 +10,7 @@ import Modal from "../ModalsComponents/Modal";
 import React, { useState } from "react";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import { PlusCircleOutlined } from "@ant-design/icons";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 function ContentModal() {
   return (
@@ -107,6 +108,10 @@ export const OrganizationCard = () => {
               Удалить
             </button>
           </div>
+        </div>
+
+        <div className={styles.sliderSmall}>
+          <SliderSmall />
         </div>
       </div>
 
