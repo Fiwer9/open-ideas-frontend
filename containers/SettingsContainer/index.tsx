@@ -8,7 +8,7 @@ import FetchSettings from "../../hooks/fetches/FetchSettings/FetchSettings";
 
 const SettingsContainer = () => {
   const select = useSelector((state: RootState) => ({
-    settings: state.settings.settings[0],
+    settings: state.settings.settings,
   }));
 
   const [isAnonymous, setIsAnonymous] = useState(false);

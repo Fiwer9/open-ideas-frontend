@@ -3,6 +3,7 @@ import { Slider } from "../SliderComponents/SliderComponents";
 import { Tabs } from "../TabsComponent/Tabs";
 import { Header } from "../HeaderComponents/Header";
 import styles from "./styles.module.scss";
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 interface AdminPageLayoutProps {
   children: ReactNode;
@@ -20,6 +21,9 @@ const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({ children }) => {
         </div>
         <Tabs />
         {children}
+      </div>
+      <div className={styles.sliderSmall}>
+        <SliderSmall />
       </div>
     </div>
   );

@@ -92,7 +92,7 @@ export const fetchSettingsBuilder = (
     if (action.payload.error.is_error) {
       state.detail = action.payload.error.detail as DetailType;
     }
-    state.settings = action.payload.data;
+    state.settings = action.payload.data[0];
     state.status = Status.SUCCESS;
   });
   builder.addCase(fetch.pending, (state) => {

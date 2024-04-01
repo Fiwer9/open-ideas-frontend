@@ -20,7 +20,7 @@ import {
 
 const initialState: SettingsSliceState = {
   domains: [],
-  settings: [],
+  settings: null,
   detail: {},
   status: Status.WAITING,
 };
@@ -32,7 +32,7 @@ export const settingsSlice = createSlice({
     setDomains: (state, action: PayloadAction<DomainsResponse[]>) => {
       state.domains = action.payload;
     },
-    setSettings: (state, action: PayloadAction<SettingsResponse[]>) => {
+    setSettings: (state, action: PayloadAction<SettingsResponse>) => {
       state.settings = action.payload;
     },
   },

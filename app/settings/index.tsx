@@ -1,7 +1,10 @@
 import React, { memo, useEffect } from "react";
 import { MainText } from "../../components/MainTextComponent";
 import { useAppDispatch } from "../../redux/store";
-import { fetchDomains } from "../../redux/settingsSlice/asyncActions";
+import {
+  fetchDomains,
+  fetchSettings,
+} from "../../redux/settingsSlice/asyncActions";
 import AdminPageLayout from "../../components/AdminPageLayout";
 import DomainsContainer from "../../containers/DomainsContainer";
 import { Flex } from "antd";
@@ -12,6 +15,7 @@ const Settings = () => {
 
   const fetchData = async () => {
     await dispatch(fetchDomains());
+    await dispatch(fetchSettings());
   };
 
   useEffect(() => {

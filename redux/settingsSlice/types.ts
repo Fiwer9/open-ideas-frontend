@@ -5,7 +5,7 @@ import { Status } from "../queriesSlice/types";
 
 export interface SettingsSliceState {
   domains: DomainsResponse[];
-  settings: SettingsResponse[];
+  settings: SettingsResponse;
   detail: DetailType;
   status: Status;
 }
