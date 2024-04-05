@@ -39,6 +39,7 @@ import { fetchUserHeader } from "../../redux/headerSlice/asyncActions";
 import { selectSettings } from "../../redux/settingsSlice/selectors";
 import { InputLabel } from "../InputLabelComponent/InputLabel";
 import { UploadOutlined } from "@ant-design/icons";
+import { fetchSettings } from "../../redux/settingsSlice/asyncActions";
 
 interface PostQueryProps {
   name: string;
@@ -73,6 +74,7 @@ function NewCreateQuery() {
   }, [statusDirections, statusOrganizations, user.status]);
 
   const fetchData = async () => {
+    await dispatch(fetchSettings());
     await dispatch(fetchOrganizations());
     await dispatch(fetchDirections());
     await dispatch(fetchUserHeader({ user_id }));
@@ -243,7 +245,7 @@ function NewCreateQuery() {
                   placeholder={"Напишите ожидаемый эффект от доработки"}
                 />
               </Form.Item>
-              {settings.allow_file_attachment && (
+              {settings?.allow_file_attachment && (
                 <Form.Item className={styles.formItems}>
                   <div className={styles.label}>
                     <InputLabel title={"Загрузка дополнительных файлов"} />

@@ -33,7 +33,6 @@ import { selectQueryData } from "../../redux/queriesSlice/selectors";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
 import { selectDirections } from "../../redux/directionsSlice/selectors";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
-import { selectSettings } from "../../redux/settingsSlice/selectors";
 import { UploadOutlined } from "@ant-design/icons";
 import AdminPageLayout from "../AdminPageLayout";
 
@@ -54,7 +53,6 @@ export const EditingApplication = () => {
 
   const dispatch = useAppDispatch();
 
-  const settings = useSelector(selectSettings);
   const applicationData = useSelector(selectQueryData);
   const users = useSelector(selectUsers);
   const organizations = useSelector(selectOrganizations);
@@ -291,24 +289,22 @@ export const EditingApplication = () => {
                     />
                   </Form.Item>
                 </div>
-                {settings.allow_file_attachment && (
-                  <div className={styles.files}>
-                    <Form.Item
-                      className={styles.formItem}
-                      label={"Дополнительные файлы"}
-                      name={"file"}
+                <div className={styles.files}>
+                  <Form.Item
+                    className={styles.formItem}
+                    label={"Дополнительные файлы"}
+                    name={"file"}
+                  >
+                    <Upload
+                      maxCount={5}
+                      accept=".webm, .pdf, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
+                      multiple
+                      className="upload"
                     >
-                      <Upload
-                        maxCount={5}
-                        accept=".webm, .pdf, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
-                        multiple
-                        className="upload"
-                      >
-                        <Button icon={<UploadOutlined />}>Загрузить</Button>
-                      </Upload>
-                    </Form.Item>
-                  </div>
-                )}
+                      <Button icon={<UploadOutlined />}>Загрузить</Button>
+                    </Upload>
+                  </Form.Item>
+                </div>
               </div>
             </Form>
             <div className={styles.btnContainer}>

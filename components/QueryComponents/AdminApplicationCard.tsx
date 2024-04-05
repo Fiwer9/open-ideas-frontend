@@ -53,7 +53,6 @@ import { changeIsModalSubmitActive } from "../../redux/modalsSlice/slice";
 import ModalAdditionalText from "../ModalsComponents/ModalAdditionalText";
 import { Status } from "../../redux/queriesSlice/types";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
-import { selectSettings } from "../../redux/settingsSlice/selectors";
 import AdminPageLayout from "../AdminPageLayout";
 
 const props: UploadProps = {
@@ -100,7 +99,6 @@ export const AdminApplicationCard = () => {
   const statusDirections = useSelector(selectStatusDirections);
   const statusQuery = useSelector(selectStatusQueries);
   const dispatch = useAppDispatch();
-  const settings = useSelector(selectSettings);
 
   useEffect(() => {
     if (
@@ -287,14 +285,12 @@ export const AdminApplicationCard = () => {
                 </p>
               </div>
             </div>
-            {settings.allow_file_attachment && (
-              <div className={styles.rows}>
-                <div className={styles.files}>
-                  <p className={styles.rowTexts}>Прикреплённые файлы:</p>
-                  <Upload {...props} className="uploadFile"></Upload>
-                </div>
+            <div className={styles.rows}>
+              <div className={styles.files}>
+                <p className={styles.rowTexts}>Прикреплённые файлы:</p>
+                <Upload {...props} className="uploadFile"></Upload>
               </div>
-            )}
+            </div>
           </Col>
 
           <div className={styles.commentContainer}>

@@ -60,7 +60,6 @@ import styles from "./styles/ApplicationCard.module.scss";
 import { CommentBlock } from "./blocks/CommentBlock";
 import { setStatusQueries } from "../../redux/queriesSlice/slice";
 import { setStatusDirections } from "../../redux/directionsSlice/slice";
-import { selectSettings } from "../../redux/settingsSlice/selectors";
 
 const props: UploadProps = {
   defaultFileList: [
@@ -109,7 +108,6 @@ export const ApplicationCard: React.FC = memo(() => {
   const { user_id } = useSelector(selectCurrentUser);
   const [isExpert, setIsExpert] = useState(false);
   const dispatch = useAppDispatch();
-  const settings = useSelector(selectSettings);
 
   useEffect(() => {
     if (
@@ -310,14 +308,12 @@ export const ApplicationCard: React.FC = memo(() => {
                   )}
               </p>
             </Row>
-            {settings.allow_file_attachment && (
-              <Row className={styles.row}>
-                <div className={styles.files}>
-                  <p className={styles.rowText}>Прикреплённые файлы:</p>
-                  <Upload {...props} className="uploadFile"></Upload>
-                </div>
-              </Row>
-            )}
+            <Row className={styles.row}>
+              <div className={styles.files}>
+                <p className={styles.rowText}>Прикреплённые файлы:</p>
+                <Upload {...props} className="uploadFile"></Upload>
+              </div>
+            </Row>
             <Row className={styles.row}>
               <p className={`${styles.rowText} ${styles.comments}`}>
                 Комментарии ({dataComment.length}
