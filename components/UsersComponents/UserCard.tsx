@@ -1,13 +1,9 @@
 import React, { memo, useEffect, useState } from "react";
-import { Slider } from "../SliderComponents/SliderComponents";
-import { Tabs } from "../TabsComponent/Tabs";
-import { Header } from "../HeaderComponents/Header";
 import Image from "next/image";
 import avatar from "../../public/img/AvatarAratrum.svg";
 
 import styles from "./styles/UserCard.module.scss";
 import { Button, Col } from "antd";
-import { SliderSmall } from "../SliderComponents/SliderSmall";
 import { useRouter } from "next/router";
 import { getOrganizationName, getQueriesByNumber } from "../../utils/utils";
 import { useSelector } from "react-redux";
@@ -29,6 +25,7 @@ import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions"
 import { fetchQueries } from "../../redux/queriesSlice/asyncActions";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
 import { Status } from "../../redux/queriesSlice/types";
+import AdminPageLayout from "../AdminPageLayout";
 
 export const UserCard: React.FC = memo(() => {
   const router = useRouter();
@@ -74,88 +71,69 @@ export const UserCard: React.FC = memo(() => {
   }
 
   return (
-    <>
-      <div className={styles.container}>
-        <div className={styles.slider}>
-          <Slider />
-        </div>
-        <div className={styles.content}>
-          <div className={styles.headerContainer}>
-            <Header />
-          </div>
-          <Tabs />
-          <div className={styles.userContainer}>
-            <Image
-              src={avatar}
-              alt={"Аватар"}
-              width={190}
-              height={190}
-              className={styles.avatar}
-            />
+    <AdminPageLayout>
+      <div className={styles.userContainer}>
+        <Image
+          src={avatar}
+          alt={"Аватар"}
+          width={190}
+          height={190}
+          className={styles.avatar}
+        />
 
-            <div className={styles.infUser}>
-              <p className={styles.nameUser}>{user?.name}</p>
+        <div className={styles.infUser}>
+          <p className={styles.nameUser}>{user?.name}</p>
 
-              <Col className={styles.column}>
-                <div>
-                  <div className={styles.row}>
-                    <p className={styles.rowText}>E-mail:</p>
-                    <p className={styles.rowInf}>{user?.email}</p>
-                  </div>
+          <Col className={styles.column}>
+            <div>
+              <div className={styles.row}>
+                <p className={styles.rowText}>E-mail:</p>
+                <p className={styles.rowInf}>{user?.email}</p>
+              </div>
 
-                  <div className={styles.row}>
-                    <p className={styles.rowText}>Эксперт по инициативам:</p>
-                    <p className={styles.rowInf}>
-                      {queries
-                        ? getQueriesByNumber(queries)
-                            .toString()
-                            .replaceAll(",", ", ")
-                        : ""}
-                    </p>
-                  </div>
+              <div className={styles.row}>
+                <p className={styles.rowText}>Эксперт по инициативам:</p>
+                <p className={styles.rowInf}>
+                  {queries
+                    ? getQueriesByNumber(queries)
+                        .toString()
+                        .replaceAll(",", ", ")
+                    : ""}
+                </p>
+              </div>
 
-                  <div className={styles.rowOrgAdapt}>
-                    <div className={`${styles.row} ${styles.rowOrg}`}>
-                      <p className={styles.rowText}>Организация:</p>
-                      <p className={styles.rowInf}>
-                        {organizations && user?.department
-                          ? getOrganizationName(
-                              user?.department.organization,
-                              organizations,
-                            )
-                          : "Не назначено"}
-                      </p>
-                    </div>
-
-                    <div className={styles.row}>
-                      <p className={styles.rowText}>Отдел:</p>
-                      <p className={styles.rowInf}>
-                        {user?.department
-                          ? user?.department.name
-                          : "Не назначено"}
-                      </p>
-                    </div>
-                  </div>
+              <div className={styles.rowOrgAdapt}>
+                <div className={`${styles.row} ${styles.rowOrg}`}>
+                  <p className={styles.rowText}>Организация:</p>
+                  <p className={styles.rowInf}>
+                    {organizations && user?.department
+                      ? getOrganizationName(
+                          user?.department.organization,
+                          organizations,
+                        )
+                      : "Не назначено"}
+                  </p>
                 </div>
-              </Col>
 
-              <Button
-                className={styles.btnFooter}
-                type="primary"
-                onClick={() =>
-                  router.push(`/users/editingUser?userId=${userId}`)
-                }
-              >
-                <span>Редактировать профиль</span>
-              </Button>
+                <div className={styles.row}>
+                  <p className={styles.rowText}>Отдел:</p>
+                  <p className={styles.rowInf}>
+                    {user?.department ? user?.department.name : "Не назначено"}
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </Col>
 
-        <div className={styles.sliderSmall}>
-          <SliderSmall />
+          <Button
+            className={styles.btnFooter}
+            type="primary"
+            onClick={() => router.push(`/users/editingUser?userId=${userId}`)}
+          >
+            <span>Редактировать профиль</span>
+          </Button>
         </div>
       </div>
-    </>
+    </AdminPageLayout>
   );
 });

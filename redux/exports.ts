@@ -1,0 +1,11 @@
+export { default as auth } from "./authSlice/slice";
+export { default as queries } from "./queriesSlice/slice";
+export { default as organizations } from "./organizationsSlice/slice";
+export { default as directions } from "./directionsSlice/slice";
+export { default as users } from "./usersSlice/slice";
+export { default as filter } from "./filterSlice/slice";
+export { default as menu } from "./menuSlice/slice";
+export { default as comments } from "./commentsSlice/slice";
+export { default as modals } from "./modalsSlice/slice";
+export { default as header } from "./headerSlice/slice";
+export { default as settings } from "./settingsSlice/slice";

@@ -18,7 +18,7 @@ export default class UsersService {
   }
 
   static async getCurrentUser(
-    id: number,
+    id: number | string,
   ): Promise<AxiosResponse<ResponseInterface<UserResponse>>> {
     return $api.get(`/users/users/${id}/`);
   }

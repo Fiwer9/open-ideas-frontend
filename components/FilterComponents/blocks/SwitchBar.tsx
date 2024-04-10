@@ -17,6 +17,7 @@ const SwitchBar = ({
           <Switch
             size="small"
             defaultChecked={isChecked}
+            checked={isChecked}
             onChange={onChangeSwitch}
           />
           <p className={styles.switch}>{checkboxText}</p>

@@ -1,155 +1,117 @@
 @import "../../../styles/variable.scss";
 
-.sliderSmall {
-  @include sliderSmallStyles;
-}
+.userContainer {
+  display: flex;
+  margin-top: 40px;
 
-.container {
-  @include container;
-
-  @media (max-width: 430px) {
-    @include sliderSmallContent;
+  @media (max-width: 560px) {
+    margin-top: 0;
   }
 
-  .slider {
-    @media (max-width: 430px) {
-      display: none;
+  .avatar {
+    @media (max-width: 560px) {
+      display: inline-block;
+      width: 100px;
+      height: 100px;
     }
   }
 
-  .content {
-    @include content;
+  .infUser {
+    margin-left: 70px;
 
-    @media (max-width: 768px) {
-      padding-left: 120px;
-      padding-right: 20px;
+    @media (max-width: 560px) {
+      margin-left: 20px;
     }
 
-    @media (max-width: 430px) {
-      padding-left: 25px;
-      padding-right: 20px;
-    }
-
-    .headerContainer {
-      @media (max-width: 685px) {
-        display: none;
-      }
-    }
-
-    .userContainer {
-      display: flex;
-      margin-top: 40px;
+    .nameUser {
+      margin: 0;
+      @include pageTitle;
 
       @media (max-width: 560px) {
-        margin-top: 0;
+        font-size: 20px;
+        text-align: center;
+        margin-top: 25px;
+      }
+    }
+
+    .column {
+      display: flex;
+      margin-top: 20px;
+
+      @media (max-width: 560px) {
+        margin-left: 1em;
       }
 
-      .avatar {
-        @media (max-width: 560px) {
-          display: inline-block;
-          width: 100px;
-          height: 100px;
-        }
-      }
+      .row {
+        display: flex;
+        flex-direction: row;
+        width: 793px;
 
-      .infUser {
-        margin-left: 70px;
-
-        @media (max-width: 560px) {
-          margin-left: 20px;
+        @media (max-width: 1035px) {
+          display: unset;
         }
 
-        .nameUser {
+        .rowText {
+          flex: 0 0 40%;
           margin: 0;
-          @include pageTitle;
-
-          @media (max-width: 560px) {
-            font-size: 20px;
-            text-align: center;
-            margin-top: 25px;
-          }
-        }
-
-        .column {
-          display: flex;
           margin-top: 20px;
+          font: {
+            family: RobotoRegular, sans-serif;
+            weight: 600;
+            size: 20px;
+          };
+          color: rgba($color-gray-43, 0.8);
 
           @media (max-width: 560px) {
-            margin-left: 1em;
-          }
-
-          .row {
-            display: flex;
-            flex-direction: row;
-            width: 793px;
-
-            @media (max-width: 1035px) {
-              display: unset;
-            }
-
-            .rowText {
-              flex: 0 0 40%;
-              margin: 0;
-              margin-top: 20px;
-              font: {
-                family: RobotoRegular, sans-serif;
-                weight: 600;
-                size: 20px;
-              };
-              color: rgba($color-gray-43, 0.8);
-
-              @media (max-width: 560px) {
-                font-size: 14px;
-              }
-            }
-
-            .rowInf {
-              margin: 0;
-              margin-top: 20px;
-              font: {
-                family: RobotoRegular, sans-serif;
-                weight: 600;
-                size: 20px;
-              };
-              color: $color-black-22;
-
-              @media (max-width: 560px) {
-                font-size: 14px;
-                margin-top: 10px;
-              }
-            }
-          }
-
-          .rowOrg {
-            margin-top: 30px;
-          }
-
-          .rowOrgAdapt {
-            @media (max-width: 768px) {
-              margin-top: 50px;
-            }
-
-            @media (max-width: 560px) {
-              margin-top: 30px;
-            }
-          }
-        }
-
-        .btnFooter {
-          margin-top: 50px;
-          height: 35px;
-          border-radius: 1px;
-          background-color: $color-blue;
-          font-size: 16px;
-
-
-          @media (max-width: 560px) {
-            margin-top: 21px;
-            margin-left: 1em;
-            padding: 1px 10px;
             font-size: 14px;
           }
         }
+
+        .rowInf {
+          margin: 0;
+          margin-top: 20px;
+          font: {
+            family: RobotoRegular, sans-serif;
+            weight: 600;
+            size: 20px;
+          };
+          color: $color-black-22;
+
+          @media (max-width: 560px) {
+            font-size: 14px;
+            margin-top: 10px;
+          }
+        }
+      }
+
+      .rowOrg {
+        margin-top: 30px;
+      }
+
+      .rowOrgAdapt {
+        @media (max-width: 768px) {
+          margin-top: 50px;
+        }
+
+        @media (max-width: 560px) {
+          margin-top: 30px;
+        }
+      }
+    }
+
+    .btnFooter {
+      margin-top: 50px;
+      height: 35px;
+      border-radius: 1px;
+      background-color: $color-blue;
+      font-size: 16px;
+
+
+      @media (max-width: 560px) {
+        margin-top: 21px;
+        margin-left: 1em;
+        padding: 1px 10px;
+        font-size: 14px;
       }
     }
   }

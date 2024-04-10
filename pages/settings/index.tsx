@@ -1,12 +1,8 @@
 import React from "react";
-import { PageDevelopment } from "../../components/PageDevelopmentComponent/PageDevelopment";
 import { useCheckStaff } from "../../hooks/useCheckStaff";
+import Settings from "../../app/settings";
 
 export default function Index() {
   const isStaff = useCheckStaff();
-  return isStaff && <PageDevelopment />;
-}
-
-{
-  /*<Settings />*/
+  return isStaff && <Settings />;
 }

@@ -2,7 +2,7 @@ import { DownloadOutlined, HeartOutlined } from "@ant-design/icons";
 import { Col, Select, Upload, UploadProps } from "antd";
 import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { fetchCommentsById } from "../../redux/commentsSlice/asyncActions";
 import {
@@ -47,16 +47,13 @@ import {
   getOrganizationName,
   getStatusClassName,
 } from "../../utils/utils";
-import { Header } from "../HeaderComponents/Header";
-import { Slider } from "../SliderComponents/SliderComponents";
-import { Tabs } from "../TabsComponent/Tabs";
 import { CommentBlockAdmin } from "./blocks/CommentBlock";
 import styles from "./styles/AdminApplicationCard.module.scss";
 import { changeIsModalSubmitActive } from "../../redux/modalsSlice/slice";
 import ModalAdditionalText from "../ModalsComponents/ModalAdditionalText";
 import { Status } from "../../redux/queriesSlice/types";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
-import { SliderSmall } from "../SliderComponents/SliderSmall";
+import AdminPageLayout from "../AdminPageLayout";
 
 const props: UploadProps = {
   defaultFileList: [
@@ -206,168 +203,149 @@ export const AdminApplicationCard = () => {
 
   return (
     <>
-      <div className={styles.container}>
-        <div className={styles.slider}>
-          <Slider />
-        </div>
-        <div className={styles.content}>
-          <div className={styles.headerContainer}>
-            <Header />
-          </div>
-          <>
-            <Tabs />
-            <div>
-              <div className={styles.ideaInfContainer}>
-                <div className={styles.headerContainerIdea}>
-                  <p className={styles.nameInitiative}>
-                    {applicationData?.name}
+      <AdminPageLayout>
+        <div>
+          <div className={styles.ideaInfContainer}>
+            <div className={styles.headerContainerIdea}>
+              <p className={styles.nameInitiative}>{applicationData?.name}</p>
+              <div className={styles.btnHeader}>
+                <div className={styles.likesContainer}>
+                  <HeartOutlined width={20} height={20} />
+                  <p className={styles.numberLikes}>
+                    {users.length > 0 && getLikes()}
                   </p>
-                  <div className={styles.btnHeader}>
-                    <div className={styles.likesContainer}>
-                      <HeartOutlined width={20} height={20} />
-                      <p className={styles.numberLikes}>
-                        {users.length > 0 && getLikes()}
-                      </p>
-                    </div>
-                    <Select
-                      className={`selectInitiative ${getStatusClassName(
-                        styles,
-                        applicationData?.status,
-                      )}`}
-                      style={{ width: 250 }}
-                      defaultValue={applicationData?.status}
-                      options={statusOptions}
-                      onChange={(value) => changeStatus(value)}
-                    />
-                  </div>
                 </div>
-                <p className={styles.data}>{`Дата создания ${formatDateRu(
-                  applicationData?.date,
-                )}`}</p>
+                <Select
+                  className={`selectInitiative ${getStatusClassName(
+                    styles,
+                    applicationData?.status,
+                  )}`}
+                  style={{ width: 250 }}
+                  defaultValue={applicationData?.status}
+                  options={statusOptions}
+                  onChange={(value) => changeStatus(value)}
+                />
               </div>
+            </div>
+            <p className={styles.data}>{`Дата создания ${formatDateRu(
+              applicationData?.date,
+            )}`}</p>
+          </div>
 
-              <Col className={styles.column}>
-                <div className={styles.rightContent}>
-                  <div className={styles.row}>
-                    <p className={styles.rowText}>Получено от:</p>
-                    <p className={styles.rowInf}>
-                      {getAuthor(applicationData?.initiator_users, users)}
-                    </p>
-                  </div>
-                  <div className={styles.row}>
-                    <p className={styles.rowText}>Инициатива (Идея):</p>
-                    <p className={styles.rowInf}>{applicationData?.name}</p>
-                  </div>
-                  <div className={styles.row}>
-                    <p className={styles.rowText}>Описание инициативы:</p>
-                    <p className={styles.rowInf}>
-                      {applicationData?.description}
-                    </p>
-                  </div>
-                  <div className={styles.row}>
-                    <p className={styles.rowText}>Эффект от доработки:</p>
-                    <p className={styles.rowInf}>
-                      {applicationData?.implementation_effect}
-                    </p>
-                  </div>
-                  <div className={styles.row}>
-                    <p className={styles.rowText}>Направление:</p>
-                    <p className={styles.rowInf}>
-                      {getDirectionName(
-                        applicationData?.initiative_direction,
-                        directions,
-                      )}
-                    </p>
-                  </div>
-                  <div className={styles.row}>
-                    <p className={styles.rowText}>Организация:</p>
-                    <p className={styles.rowInf}>
-                      {getOrganizationName(
-                        applicationData?.organization,
-                        organizations,
-                      )}
-                    </p>
-                  </div>
-                  <div className={styles.row}>
-                    <p className={styles.rowText}>Отдел:</p>
-                    <p className={styles.rowInf}>
-                      {user?.department?.name && user.department.name}
-                    </p>
-                  </div>
-                  <div className={styles.row}>
-                    <p className={styles.rowText}>Назначенный эксперт:</p>
-                    <p className={styles.rowInf}>
-                      {getExpert(applicationData?.expert_users)}
-                    </p>
-                  </div>
-                </div>
-                <div className={styles.rows}>
-                  <div className={styles.files}>
-                    <p className={styles.rowTexts}>Прикреплённые файлы:</p>
-                    <Upload {...props} className="uploadFile"></Upload>
-                  </div>
-                </div>
-              </Col>
-
-              <div className={styles.commentContainer}>
-                <p className={styles.comment}>
-                  Комментарии ({dataComments.length}):
+          <Col className={styles.column}>
+            <div className={styles.rightContent}>
+              <div className={styles.row}>
+                <p className={styles.rowText}>Получено от:</p>
+                <p className={styles.rowInf}>
+                  {getAuthor(applicationData?.initiator_users, users)}
                 </p>
               </div>
-              {dataComments.map((comment, index) => (
-                <CommentBlockAdmin
-                  key={index}
-                  index={index}
-                  comment={comment}
-                  users={users}
-                  applicationData={applicationData}
-                />
-              ))}
+              <div className={styles.row}>
+                <p className={styles.rowText}>Инициатива (Идея):</p>
+                <p className={styles.rowInf}>{applicationData?.name}</p>
+              </div>
+              <div className={styles.row}>
+                <p className={styles.rowText}>Описание инициативы:</p>
+                <p className={styles.rowInf}>{applicationData?.description}</p>
+              </div>
+              <div className={styles.row}>
+                <p className={styles.rowText}>Эффект от доработки:</p>
+                <p className={styles.rowInf}>
+                  {applicationData?.implementation_effect}
+                </p>
+              </div>
+              <div className={styles.row}>
+                <p className={styles.rowText}>Направление:</p>
+                <p className={styles.rowInf}>
+                  {getDirectionName(
+                    applicationData?.initiative_direction,
+                    directions,
+                  )}
+                </p>
+              </div>
+              <div className={styles.row}>
+                <p className={styles.rowText}>Организация:</p>
+                <p className={styles.rowInf}>
+                  {getOrganizationName(
+                    applicationData?.organization,
+                    organizations,
+                  )}
+                </p>
+              </div>
+              <div className={styles.row}>
+                <p className={styles.rowText}>Отдел:</p>
+                <p className={styles.rowInf}>
+                  {user?.department?.name && user.department.name}
+                </p>
+              </div>
+              <div className={styles.row}>
+                <p className={styles.rowText}>Назначенный эксперт:</p>
+                <p className={styles.rowInf}>
+                  {getExpert(applicationData?.expert_users)}
+                </p>
+              </div>
             </div>
-            <div className={styles.btnContainer}>
-              <button
-                className={`${styles.btnBlue} ${styles.btnFooter}`}
-                onClick={() =>
-                  router.push(`/queries/editingApplication?queryId=${queryId}`)
-                }
-              >
-                Редактировать данные инициативы
-              </button>
-              <button
-                className={`${styles.btnRed} ${styles.btnFooter}`}
-                onClick={() => {
-                  dispatch(changeIsModalSubmitActive(true));
-                }}
-              >
-                Удалить инициативу
-              </button>
+            <div className={styles.rows}>
+              <div className={styles.files}>
+                <p className={styles.rowTexts}>Прикреплённые файлы:</p>
+                <Upload {...props} className="uploadFile"></Upload>
+              </div>
             </div>
+          </Col>
 
-            <div className={styles.btnContainer430}>
-              <button
-                className={`${styles.btnBlue} ${styles.btnFooter430}`}
-                onClick={() =>
-                  router.push(`/queries/editingApplication?queryId=${queryId}`)
-                }
-              >
-                Редактировать
-              </button>
-              <button
-                className={`${styles.btnRed} ${styles.btnFooter430}`}
-                onClick={() => {
-                  dispatch(changeIsModalSubmitActive(true));
-                }}
-              >
-                Удалить
-              </button>
-            </div>
-          </>
+          <div className={styles.commentContainer}>
+            <p className={styles.comment}>
+              Комментарии ({dataComments.length}):
+            </p>
+          </div>
+          {dataComments.map((comment, index) => (
+            <CommentBlockAdmin
+              key={index}
+              index={index}
+              comment={comment}
+              users={users}
+              applicationData={applicationData}
+            />
+          ))}
+        </div>
+        <div className={styles.btnContainer}>
+          <button
+            className={`${styles.btnBlue} ${styles.btnFooter}`}
+            onClick={() =>
+              router.push(`/queries/editingApplication?queryId=${queryId}`)
+            }
+          >
+            Редактировать данные инициативы
+          </button>
+          <button
+            className={`${styles.btnRed} ${styles.btnFooter}`}
+            onClick={() => {
+              dispatch(changeIsModalSubmitActive(true));
+            }}
+          >
+            Удалить инициативу
+          </button>
         </div>
 
-        <div className={styles.sliderSmall}>
-          <SliderSmall />
+        <div className={styles.btnContainer430}>
+          <button
+            className={`${styles.btnBlue} ${styles.btnFooter430}`}
+            onClick={() =>
+              router.push(`/queries/editingApplication?queryId=${queryId}`)
+            }
+          >
+            Редактировать
+          </button>
+          <button
+            className={`${styles.btnRed} ${styles.btnFooter430}`}
+            onClick={() => {
+              dispatch(changeIsModalSubmitActive(true));
+            }}
+          >
+            Удалить
+          </button>
         </div>
-      </div>
+      </AdminPageLayout>
 
       <ModalAdditionalText
         text={"Удалить инициативу?"}
