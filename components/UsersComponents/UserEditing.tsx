@@ -122,7 +122,7 @@ export const UserEditing = () => {
     });
   };
 
-  const handleSaveButton = async (data: EditUserProps) => {
+  const handleSaveButton = (data: EditUserProps) => {
     const {
       department,
       superuser,

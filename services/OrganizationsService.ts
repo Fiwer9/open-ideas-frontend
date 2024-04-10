@@ -17,8 +17,10 @@ export default class OrganizationsService {
   }
 
   static async getDepartments(
-    organization_id: number,
+    organization_id?: number,
   ): Promise<AxiosResponse<ResponseInterface<IDepartment[]>>> {
-    return $api.get(`/organizations/departments/?search=${organization_id}`);
+    return $api.get(
+      `/organizations/departments/?search=${organization_id ? organization_id : ""}`,
+    );
   }
 }
