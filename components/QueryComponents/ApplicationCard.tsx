@@ -3,8 +3,7 @@ import {
   HeartFilled,
   HeartOutlined,
 } from "@ant-design/icons";
-import type { UploadProps } from "antd";
-import { Card, Col, Flex, Radio, Row } from "antd";
+import { Card, Col, Flex, Radio, Row, Upload, UploadProps } from "antd";
 import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
 import React, { memo, useCallback, useEffect, useState } from "react";
@@ -309,12 +308,12 @@ export const ApplicationCard: React.FC = memo(() => {
                   )}
               </p>
             </Row>
-            {/*<Row className={styles.row}>*/}
-            {/*  <div className={styles.files}>*/}
-            {/*    <p className={styles.rowText}>Прикреплённые файлы:</p>*/}
-            {/*    <Upload {...props} className="uploadFile"></Upload>*/}
-            {/*  </div>*/}
-            {/*</Row>*/}
+            <Row className={styles.row}>
+              <div className={styles.files}>
+                <p className={styles.rowText}>Прикреплённые файлы:</p>
+                <Upload {...props} className="uploadFile"></Upload>
+              </div>
+            </Row>
             <Row className={styles.row}>
               <p className={`${styles.rowText} ${styles.comments}`}>
                 Комментарии ({dataComment.length}

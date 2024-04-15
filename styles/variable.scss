@@ -74,7 +74,6 @@ $color-pule-purple: #F0F5FF;
 }
 
 @mixin btnContainer {
-  position: sticky;
   bottom: 0;
   margin-top: 25px;
   padding: 20px 20px;
@@ -98,6 +97,20 @@ $color-pule-purple: #F0F5FF;
   font: inherit;
   background-color: transparent;
   cursor: pointer;
+  
+@mixin sliderSmallStyles {
+  @media (max-width: 3000px) {
+    display: none;
+  }
+
+  @media (max-width: 430px) {
+    display: block;
+  }
+}
+
+@mixin sliderSmallContent {
+  display: flex;
+  flex-direction: column;
 }
 
 %container {
@@ -357,6 +370,40 @@ $color-pule-purple: #F0F5FF;
 .ant-table-pagination-right {
   @media (max-width: 500px) {
     float: left;
+  }
+}
+
+.menuSmall {
+  line-height: 25px;
+  border-top: 1px solid #F0F0F0;
+
+  .ant-menu-item.ant-menu-item-selected {
+    background-color: #E6F7FF;
+  }
+
+  .ant-menu-item:not(:last-child) {
+    border-right: 1px solid #F0F0F0;
+  }
+
+  .ant-menu-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: {
+      top: 6px;
+      right: 10px;
+      left: 10px
+    };
+    width: 25%;
+
+    .ant-menu-item-icon {
+      justify-content: center;
+    }
+
+    .anticon+span {
+      margin: 0;
+    }
   }
 }
 

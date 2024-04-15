@@ -26,6 +26,7 @@ import {
 } from "../../redux/organizationsSlice/asyncActions";
 import { getOrganizationName } from "../../utils/utils";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
+import AdminPageLayout from "../AdminPageLayout";
 
 interface EditUserProps {
   userName: string;
@@ -124,13 +125,12 @@ export const UserEditing = () => {
     });
   };
 
-  const handleSaveButton = async (data: EditUserProps) => {
+  const handleSaveButton = (data: EditUserProps) => {
     const {
       department,
       superuser,
       email,
       initiatives,
-      organization,
       userName,
       active,
       personal,
@@ -176,132 +176,123 @@ export const UserEditing = () => {
   }
 
   return (
-    <>
-      <div className={styles.container}>
-        <div className={styles.slider}>
-          <Slider />
-        </div>
-        <div className={styles.content}>
-          <div className={styles.headerContainer}>
-            <Header />
-          </div>
-          <Tabs />
-          <Form
-            name={"editing-user"}
-            form={form}
-            onFinish={handleSaveButton}
-            layout="vertical"
-            initialValues={initValues}
-            className={styles.contentContainer}
-          >
-            <div className={styles.editing}>
-              <p className={styles.heading}>Редактирование профиля</p>
+    <AdminPageLayout>
+      <Form
+        name={"editing-user"}
+        form={form}
+        onFinish={handleSaveButton}
+        layout="vertical"
+        initialValues={initValues}
+        className={styles.contentContainer}
+      >
+        <div className={styles.editing}>
+          <p className={styles.heading}>Редактирование профиля</p>
 
-              <div className={styles.formContainer}>
-                <Form.Item
-                  className={styles.formItem}
-                  label={"Ф. И. О."}
-                  name={"userName"}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Введите Ф. И. О. пользователя",
-                    },
-                  ]}
-                >
-                  <Input
-                    className={styles.inp}
-                    style={{ height: 40, borderRadius: 2 }}
-                  />
-                </Form.Item>
-                <Form.Item
-                  className={styles.formItem}
-                  label={"E-mail"}
-                  name={"email"}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Введите почту пользователя",
-                    },
-                  ]}
-                >
-                  <Input
-                    className={styles.inp}
-                    style={{ height: 40, borderRadius: 2 }}
-                  />
-                </Form.Item>
-                <Form.Item
-                  className={styles.formItem}
-                  label={"Назначить эксперта на инициативы"}
-                  name={"initiatives"}
-                >
-                  <Select
-                    disabled={true}
-                    className="select"
-                    placeholder={"Выберете инициативы"}
-                    style={{ height: 40 }}
-                    mode={"multiple"}
-                    options={queries.map((query) => ({
-                      value: query.id,
-                      label: `№${query.id}`,
-                    }))}
-                  />
-                </Form.Item>
-                <Form.Item
-                  className={styles.formItem}
-                  label={"Организация"}
-                  name={"organization"}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Введите организацию",
-                    },
-                  ]}
-                >
-                  <Select
-                    className="select"
-                    placeholder={"Выберете организацию"}
-                    style={{ height: 40 }}
-                    options={organizations.map((organization) => ({
-                      value: organization.id,
-                      label: organization.name,
-                    }))}
-                    onChange={onChangeOrganization}
-                  />
-                </Form.Item>
-                <Form.Item
-                  className={styles.formItem}
-                  label={"Отдел"}
-                  name={"department"}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Выберете отдел",
-                    },
-                  ]}
-                >
-                  <Select
-                    className="select"
-                    style={{ height: 40, marginBottom: 60 }}
-                    placeholder={"Выберете отдел"}
-                    options={getDepOptions()}
-                  />
-                </Form.Item>
-                <div className={styles.btnContainer}>
-                  <Button
-                    form={"editing-user"}
-                    htmlType={"submit"}
-                    className={styles.btnFooter}
-                  >
-                    <span>Сохранить изменения</span>
-                  </Button>
-                </div>
-              </div>
+          <div className={styles.formContainer}>
+            <Form.Item
+              className={styles.formItem}
+              label={"Ф. И. О."}
+              name={"userName"}
+              rules={[
+                {
+                  required: true,
+                  message: "Введите Ф. И. О. пользователя",
+                },
+              ]}
+            >
+              <Input
+                className={styles.inp}
+                style={{ height: 40, borderRadius: 2 }}
+              />
+            </Form.Item>
+            <Form.Item
+              className={styles.formItem}
+              label={"E-mail"}
+              name={"email"}
+              rules={[
+                {
+                  required: true,
+                  message: "Введите почту пользователя",
+                },
+              ]}
+            >
+              <Input
+                className={styles.inp}
+                style={{ height: 40, borderRadius: 2 }}
+              />
+            </Form.Item>
+            <Form.Item
+              className={styles.formItem}
+              label={"Назначить эксперта на инициативы"}
+              name={"initiatives"}
+            >
+              <Select
+                disabled={true}
+                className="select"
+                placeholder={"Выберите инициативы"}
+                style={{ height: 40 }}
+                mode={"multiple"}
+                options={queries.map((query) => ({
+                  value: query.id,
+                  label: `№${query.id}`,
+                }))}
+              />
+            </Form.Item>
+            <Form.Item
+              className={styles.formItem}
+              label={"Организация"}
+              name={"organization"}
+              rules={[
+                {
+                  required: true,
+                  message: "Введите организацию",
+                },
+              ]}
+            >
+              <Select
+                className="select"
+                placeholder={"Выберите организацию"}
+                style={{ height: 40 }}
+                options={organizations.map((organization) => ({
+                  value: organization.id,
+                  label: organization.name,
+                }))}
+                onChange={onChangeOrganization}
+              />
+            </Form.Item>
+            <Form.Item
+              className={styles.formItem}
+              label={"Отдел"}
+              name={"department"}
+              rules={[
+                {
+                  required: true,
+                  message: "Выберите отдел",
+                },
+              ]}
+            >
+              <Select
+                className="select"
+                style={{ height: 40, marginBottom: 60 }}
+                placeholder={"Выберите отдел"}
+                options={getDepOptions()}
+              />
+            </Form.Item>
+            <div className={styles.btnContainer}>
+              <Button
+                form={"editing-user"}
+                htmlType={"submit"}
+                className={styles.btnFooter}
+              >
+                <span>Сохранить изменения</span>
+              </Button>
             </div>
+          </div>
+        </div>
 
-            <div className={styles.rightsGroopContainer}>
-              <div className={styles.rigths}>
-                <p className={styles.heading}>Права доступа</p>
+        <div className={styles.rightsGroopContainer}>
+          <div className={styles.rigths}>
+            <p className={styles.heading}>Права доступа</p>
 
                 <div className={styles.checkboxContainer}>
                   <CheckboxBlock
@@ -338,46 +329,43 @@ export const UserEditing = () => {
                   />
                 </div>
               </div>
+          </div>
 
-              <div className={styles.group}>
-                <p className={styles.heading}>Группы</p>
+          <div className={styles.group}>
+            <p className={styles.heading}>Группы</p>
 
-                <Form.Item
-                  className={`${styles.formItem} ${styles.groupForm}`}
-                  label={
-                    "Выберете группу в которой будет находится пользователь"
-                  }
-                >
-                  <Select
-                    disabled={true}
-                    mode="multiple"
-                    placeholder={"Выберете группы"}
-                    allowClear
-                    className="select"
-                    // defaultValue={user.groups.map((group) => group.name)}
-                    style={{ height: 40 }}
-                    options={[
-                      { value: "1", label: "User" },
-                      { value: "2", label: "Expert" },
-                    ]}
-                    aria-required={true}
-                  />
-                </Form.Item>
-              </div>
+            <Form.Item
+              className={`${styles.formItem} ${styles.groupForm}`}
+              label={"Выберете группу в которой будет находится пользователь"}
+            >
+              <Select
+                disabled={true}
+                mode="multiple"
+                placeholder={"Выберете группы"}
+                allowClear
+                className="select"
+                // defaultValue={user.groups.map((group) => group.name)}
+                style={{ height: 40 }}
+                options={[
+                  { value: "1", label: "User" },
+                  { value: "2", label: "Expert" },
+                ]}
+                aria-required={true}
+              />
+            </Form.Item>
+          </div>
 
-              <div className={styles.btnContainer1440}>
-                <Button
-                  className={styles.btnFooter1440}
-                  form={"editing-user"}
-                  htmlType={"submit"}
-                >
-                  <span>Сохранить изменения</span>
-                </Button>
-              </div>
-            </div>
-          </Form>
+          <div className={styles.btnContainer1440}>
+            <Button
+              className={styles.btnFooter1440}
+              form={"editing-user"}
+              htmlType={"submit"}
+            >
+              <span>Сохранить изменения</span>
+            </Button>
+          </div>
         </div>
-      </div>
-    </>
+      </Form>
+    </AdminPageLayout>
   );
 };

@@ -6,7 +6,6 @@ import {
   selectOrganizations,
   selectOrgStatus,
 } from "../../redux/organizationsSlice/selectors";
-import { selectUsersStatus } from "../../redux/usersSlice/selectors";
 import {
   selectDirections,
   selectStatusDirections,
@@ -14,7 +13,7 @@ import {
 import { Status } from "../../redux/queriesSlice/types";
 import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
-import { Card, Form, Input, Select } from "antd";
+import { Button, Card, Form, Input, Select, Upload } from "antd";
 import styles from "./styles/CreateQuery.module.scss";
 import { Logo } from "../PicturesComponents/Logo";
 import {
@@ -37,6 +36,10 @@ import { setStatusQueries } from "../../redux/queriesSlice/slice";
 import { setStatusDirections } from "../../redux/directionsSlice/slice";
 import { selectUserForHeader } from "../../redux/headerSlice/selectors";
 import { fetchUserHeader } from "../../redux/headerSlice/asyncActions";
+import { selectSettings } from "../../redux/settingsSlice/selectors";
+import { InputLabel } from "../InputLabelComponent/InputLabel";
+import { UploadOutlined } from "@ant-design/icons";
+import { fetchSettings } from "../../redux/settingsSlice/asyncActions";
 
 interface PostQueryProps {
   name: string;
@@ -56,21 +59,22 @@ function NewCreateQuery() {
   const directions = useSelector(selectDirections);
   const statusDirections = useSelector(selectStatusDirections);
   const statusOrganizations = useSelector(selectOrgStatus);
-  const statusUsers = useSelector(selectUsersStatus);
+  const settings = useSelector(selectSettings);
 
   useEffect(() => {
     if (
       statusDirections === Status.SUCCESS &&
       statusOrganizations === Status.SUCCESS &&
-      statusUsers === Status.SUCCESS
+      user.status === Status.SUCCESS
     ) {
       setIsLoading(false);
     } else {
       setIsLoading(true);
     }
-  }, [statusDirections, statusOrganizations, statusUsers]);
+  }, [statusDirections, statusOrganizations, user.status]);
 
   const fetchData = async () => {
+    await dispatch(fetchSettings());
     await dispatch(fetchOrganizations());
     await dispatch(fetchDirections());
     await dispatch(fetchUserHeader({ user_id }));
@@ -241,22 +245,26 @@ function NewCreateQuery() {
                   placeholder={"Напишите ожидаемый эффект от доработки"}
                 />
               </Form.Item>
-              {/*TODO*/}
-              {/*{store.isAllowFileAttachment && (*/}
-              {/*    <Form.Item className={styles.formItems}>*/}
-              {/*        <div className={styles.label}>*/}
-              {/*            <InputLabel title={"Загрузка дополнительных файлов"}/>*/}
-              {/*        </div>*/}
-              {/*        <Upload*/}
-              {/*            maxCount={5}*/}
-              {/*            accept=".pdf, .webm, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"*/}
-              {/*            multiple*/}
-              {/*            className='upload'*/}
-              {/*        >*/}
-              {/*            <Button className={styles.uploadBtn} icon={<UploadOutlined />}>Загрузить</Button>*/}
-              {/*        </Upload>*/}
-              {/*    </Form.Item>*/}
-              {/*)}*/}
+              {settings?.allow_file_attachment && (
+                <Form.Item className={styles.formItems}>
+                  <div className={styles.label}>
+                    <InputLabel title={"Загрузка дополнительных файлов"} />
+                  </div>
+                  <Upload
+                    maxCount={5}
+                    accept=".pdf, .webm, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
+                    multiple
+                    className="upload"
+                  >
+                    <Button
+                      className={styles.uploadBtn}
+                      icon={<UploadOutlined />}
+                    >
+                      Загрузить
+                    </Button>
+                  </Upload>
+                </Form.Item>
+              )}
               <div className={styles.containerBtn}>
                 <div className={styles.btnWhite}>
                   <Buttons

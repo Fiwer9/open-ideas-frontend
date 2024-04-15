@@ -12,17 +12,13 @@ import {
   getStatusClassName,
   statusTranslation,
 } from "../../utils/utils";
-import { Slider } from "../SliderComponents/SliderComponents";
-import { Header } from "../HeaderComponents/Header";
-import { Tabs } from "../TabsComponent/Tabs";
 import { MainText } from "../MainTextComponent";
 import { DataTable } from "../TableComponent/Table";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import FilterCheckboxBar from "../FilterComponents/blocks/FilterCheckboxBar";
 import { useRouter } from "next/router";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
-import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Logo } from "../PicturesComponents/Logo";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/authSlice/selectors";
 import {
@@ -53,6 +49,9 @@ import {
 } from "../../utils/getQueryFilter";
 import ModalDrafts from "../ModalsComponents/ModalDrafts";
 import Modal from "../ModalsComponents/Modal";
+import AdminPageLayout from "../AdminPageLayout";
+import FilterContainer from "../../containers/FilterContainer";
+import PageLayout from "../PageLayout";
 
 export const QueryList: React.FC = memo(() => {
   const router = useRouter();
@@ -195,50 +194,19 @@ export const QueryList: React.FC = memo(() => {
   return (
     <>
       {selectedTag === "Панель администратора" ? (
-        <div className={styles.container}>
-          <div className={styles.slider}>
-            <Slider />
-          </div>
-          <div className={styles.content}>
-            <div className={styles.headerContainer}>
-              <Header />
-            </div>
-            <Tabs />
-            <MainText text={"Инициативы"} />
-            <div className={styles.infContainer}>
-              <SearchBar
-                placeholderNum={"Номер"}
-                placeholderQuery={"Поиск по идеям"}
-              />
-              <div className={styles.filterContainer}>
-                <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
-                <FilterCheckboxBar checkboxText={"Архив"} />
-              </div>
-            </div>
-            <DataTable
-              data={getData() as QueriesResponse[]}
-              columns={getColumns()}
-              isLoading={isLoading}
-              onRowClick={handleRowClick}
-              locale={"Тут ещё нет идей"}
-            />
-          </div>
-        </div>
+        <AdminPageLayout>
+          <MainText text={"Инициативы"} />
+          <FilterContainer placeholder={"Поиск по идеям"} />
+          <DataTable
+            data={getData() as QueriesResponse[]}
+            columns={getColumns()}
+            isLoading={isLoading}
+            onRowClick={handleRowClick}
+            locale={"Тут ещё нет идей"}
+          />
+        </AdminPageLayout>
       ) : (
-        <div>
-          <div className={styles.containerIdeas}>
-            <div className={styles.contentIdeas}>
-              <div className={styles.headerContainer}>
-                <Header />
-              </div>
-              <div className={styles.header}>
-                <div className={styles.logoHeader}>
-                  <Logo width={190} height={53} />
-                </div>
-                <div className={styles.tabs}>
-                  <Tabs />
-                </div>
-              </div>
+        <PageLayout>
               <MainText text={"Инициативы"} />
               <div className={styles.infContainer}>
                 <SearchBar
@@ -300,7 +268,7 @@ export const QueryList: React.FC = memo(() => {
             textBtn={"Назад"}
             onClick={closeModal}
           />
-        </div>
+        </PageLayout>
       )}
     </>
   );

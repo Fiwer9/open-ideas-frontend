@@ -1,15 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { Slider } from "../SliderComponents/SliderComponents";
-import { Tabs } from "../TabsComponent/Tabs";
-import { Header } from "../HeaderComponents/Header";
-import { MainText } from "../MainTextComponent";
-import SearchBar from "../FilterComponents/blocks/SearchBar";
-import FilterBar from "../FilterComponents/blocks/FilterBar";
-import { FilterOutlined } from "@ant-design/icons";
 import router from "next/router";
-
-import styles from "./styles/UsersList.module.scss";
-import { DataTable } from "../TableComponent/Table";
 import {
   getEmails,
   getOrganizationName,
@@ -33,8 +23,12 @@ import {
   selectOrgStatus,
 } from "../../redux/organizationsSlice/selectors";
 import { Status } from "../../redux/queriesSlice/types";
+import FilterContainer from "../../containers/FilterContainer";
+import AdminPageLayout from "../../components/AdminPageLayout";
+import { DataTable } from "../../components/TableComponent/Table";
+import { MainText } from "../../components/MainTextComponent";
 
-export const UsersList: React.FC = memo(() => {
+const UsersList: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const usersData = useSelector(selectUsers);
   const organizations = useSelector(selectOrganizations);
@@ -74,10 +68,12 @@ export const UsersList: React.FC = memo(() => {
       dataIndex: "email",
       key: "email",
       width: "20%",
-      filters: getEmails(usersData).map((email) => ({
-        text: email,
-        value: email,
-      })),
+      filters:
+        usersData.length > 0 &&
+        getEmails(usersData).map((email) => ({
+          text: email,
+          value: email,
+        })),
       onFilter: (value: any, record: any) => record.email.includes(value),
     },
     {
@@ -114,7 +110,8 @@ export const UsersList: React.FC = memo(() => {
   }, [searchValue]);
 
   const getData = () =>
-    usersData.map((user) => ({
+    usersData.length > 0 &&
+    usersData?.map((user) => ({
       id: user.id,
       name: user.name,
       email: user.email,
@@ -128,35 +125,18 @@ export const UsersList: React.FC = memo(() => {
   };
 
   return (
-    <>
-      <div className={styles.container}>
-        <div className={styles.slider}>
-          <Slider />
-        </div>
-        <div className={styles.content}>
-          <div className={styles.headerContainer}>
-            <Header />
-          </div>
-          <Tabs />
-          <MainText text={"Пользователи"} />
-          <div className={styles.infContainer}>
-            <SearchBar
-              placeholderNum={"Номер"}
-              placeholderQuery={"Поиск по пользователям"}
-            />
-            <div className={styles.filter}>
-              <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
-            </div>
-          </div>
-          <DataTable
-            data={getData()}
-            columns={columns}
-            isLoading={isLoading}
-            onRowClick={handleRowClick}
-            locale={"Ещё нет пользователей"}
-          />
-        </div>
-      </div>
-    </>
+    <AdminPageLayout>
+      <MainText text={"Пользователи"} />
+      <FilterContainer placeholder={"Поиск по пользователям"} />
+      <DataTable
+        data={getData()}
+        columns={columns}
+        isLoading={isLoading}
+        onRowClick={handleRowClick}
+        locale={"Ещё нет пользователей"}
+      />
+    </AdminPageLayout>
   );
-});
+};
+
+export default memo(UsersList);

@@ -1,55 +1,14 @@
 @import "../../../styles/variable.scss";
 
-.container {
-  @include container;
+.infContainer {
+  @include infContainerTable;
 
-  .slider {
-    @media (max-width: 420px) {
-      display: none;
-    }
-  }
+  .filter {
+    margin-left: 300px;
 
-  .content {
-    @include content;
-
-    @media (max-width: 768px) {
-      padding-left: 110px;
-    }
-
-    @media (max-width: 420px) {
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-
-    .headerContainer {
-      @media (max-width: 640px) {
-        display: none;
-      }
-    }
-
-    .infContainer {
-      @include infContainerTable;
-
-      .filter {
-        margin-left: 300px;
-
-        @media (max-width: 1300px) {
-          margin-left: 19px;
-        }
-      }
-    }
-
-    .table {
-      margin-top: 17px;
-      overflow: {
-        x: auto;
-        y: hidden;
-      }
-      flex: 1;
-      table {
-        border: 1px solid rgba(0, 0, 0, 0.20);
-        border-radius: 0;
-      }
+    @media (max-width: 1300px) {
+      margin-left: 19px;
     }
   }
 }
+

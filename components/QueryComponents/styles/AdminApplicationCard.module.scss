@@ -1,43 +1,5 @@
 @import "../../../styles/variable.scss";
 
-.container {
-  @include container;
-
-  .slider {
-    @media (max-width: 430px) {
-      display: none;
-    }
-  }
-
-  .content {
-    @include content;
-
-    @media (max-width: 900px) {
-      padding: {
-        top: 50px;
-        left: 20px;
-        right: 1px;
-      };
-    }
-
-    @media (max-width: 768px) {
-      padding-left: 110px;
-    }
-
-    @media (max-width: 430px) {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-
-    @media (max-width: 280px) {
-      width: auto;
-    }
-
-    .headerContainer {
-      @media (max-width: 640px) {
-        display: none;
-      }
-    }
 
     .ideaInfContainer {
       @media (max-width: 540px) {
@@ -106,7 +68,6 @@
         }
       }
     }
-  }
 
   .column {
     display: flex;
@@ -271,6 +232,7 @@
 
   .btnContainer430 {
     @include btnContainer;
+    margin-bottom: 70px;
 
     @media (max-width: 3000px) {
       display: none;
@@ -284,7 +246,6 @@
       @include btnFooter;
     }
   }
-}
 
 .contentModal {
   margin: 25px 40px 40px 0;
