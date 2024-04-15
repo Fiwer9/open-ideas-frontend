@@ -1,9 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 import styles from './styles/DraftItem.module.scss'
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Checkbox } from "antd";
 
-export const DraftItem = () => {
+const DraftItem = () => {
   return (
     <>
       <div className={styles.container}>
@@ -26,3 +26,5 @@ export const DraftItem = () => {
     </>
   );
 };
+
+export default memo(DraftItem)

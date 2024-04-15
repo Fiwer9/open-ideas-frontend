@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Slider } from "../SliderComponents/SliderComponents";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
-import { CheckboxBlock } from "../FilterComponents/blocks/FilterCheckboxBar";
+import { CheckboxBlock } from "../FilterComponents/blocks/CheckboxBlock";
 import { Button, Form, Input, Select } from "antd";
 
 import styles from "./styles/UserEditing.module.scss";
@@ -310,6 +310,7 @@ export const UserEditing = () => {
                     hintText={
                       "Отметьте, если пользователь должен считаться активным. Уберите эту отметку вместо удаления учётной записи."
                     }
+                    paddings={10}
                   />
                   <CheckboxBlock
                     name={"personal"}
@@ -317,6 +318,7 @@ export const UserEditing = () => {
                     hintText={
                       "Отметьте, если пользователь может входить в административную часть сайта."
                     }
+                    paddings={10}
                   />
                   <CheckboxBlock
                     name={"superuser"}
@@ -324,6 +326,7 @@ export const UserEditing = () => {
                     hintText={
                       "Указывает, что пользователь имеет все права без явного их назначения"
                     }
+                    paddings={10}
                   />
                   <CheckboxBlock
                     name={"verification"}
@@ -331,6 +334,7 @@ export const UserEditing = () => {
                     hintText={
                       "Указывает, что пользователь закончил регистрацию"
                     }
+                    paddings={10}
                   />
                 </div>
               </div>

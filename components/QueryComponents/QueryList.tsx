@@ -66,12 +66,12 @@ export const QueryList: React.FC = memo(() => {
   const selectedTag = useSelector(selectSelectedTag);
   const { searchValue, isArchive, isExpert } = useSelector(selectFilters);
   const [isClient, setIsClient] = useState(false);
-  const [modalActive, setModalActive] = useState(false);
-  const [secondModalActive, setSecondModalActive] = useState(false);
+  const [modalDrafts, setModalDrafts] = useState(false);
+  const [modalCreateQuery, setModalCreateQuery] = useState(false);
 
   const closeModal = () => {
-    setModalActive(false);
-    setSecondModalActive(false);
+    setModalDrafts(false);
+    setModalCreateQuery(false);
   };
 
   useEffect(() => {
@@ -252,13 +252,13 @@ export const QueryList: React.FC = memo(() => {
                       icon={<PlusCircleOutlined />}
                       filterText={"Создать идею"}
                       onClick={() => {
-                        setSecondModalActive(true);
+                        setModalCreateQuery(true);
                       }}
                     />
                     <FilterBar
                       filterText={"Мои черновики"}
                       onClick={() => {
-                        setModalActive(true);
+                        setModalDrafts(true);
                       }}
                     />
                     <FilterCheckboxBar checkboxText={"Я эксперт"} />
@@ -278,8 +278,8 @@ export const QueryList: React.FC = memo(() => {
             </div>
           </div>
           <Modal
-            active={secondModalActive}
-            setActive={setSecondModalActive}
+            active={modalCreateQuery}
+            setActive={setModalCreateQuery}
             text1={"Создание идеи"}
             text2={"Ранее вы создавали идею, хотите продолжить заполнение старой или создать новую?"}
             classNameBtn1={styles.btnWhite}
@@ -288,13 +288,13 @@ export const QueryList: React.FC = memo(() => {
             textBtn2={"Мои черновики"}
             onClick1={() => router.push("/queries/create")}
             onClick2={() => {
-              setModalActive(true);
-              setSecondModalActive(false);
+              setModalDrafts(true);
+              setModalCreateQuery(false);
             }}
           />
           <ModalDrafts
-            active={modalActive}
-            setActive={setModalActive}
+            active={modalDrafts}
+            setActive={setModalDrafts}
             text={"Мои черновики"}
             classNameBtn={styles.btnBlueBorder}
             textBtn={"Назад"}

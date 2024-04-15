@@ -3,10 +3,11 @@ import { Buttons } from '../ButtonComponent/Button'
 import { Logo } from '../PicturesComponents/Logo'
 
 import styles from './styles/Modal.module.scss'
-import React from "react";
+import React, { memo } from "react";
 import FilterCheckboxBar from "../FilterComponents/blocks/FilterCheckboxBar";
 import { DeleteOutlined } from "@ant-design/icons";
-import { DraftItem } from "../DraftsComponents/DraftItem";
+import DraftItem from "../DraftsComponents/DraftItem";
+import { CheckboxBlock } from "../FilterComponents/blocks/CheckboxBlock";
 
 interface ModalProps {
   active: any
@@ -25,32 +26,40 @@ const ModalDrafts = ({
                  onClick,
                  classNameBtn,
                }: ModalProps) => {
+
+                if (!active) {
+                  return;
+                }
+
   return (
     <>
-      {active ? (
-        <div className={styles.modal} onClick={() => setActive(false)}>
+      <div className={styles.modal} onClick={() => setActive(false)}>
           <div
             className={styles.modalContentDrafts}
             onClick={e => e.stopPropagation()}
           >
             <Form className={styles.modalForm}>
-              <Form.Item className={styles.logo}>
+              <div className={styles.logo}>
                 <Logo width={126.82} height={36} />
-              </Form.Item>
+              </div>
 
-              <Form.Item className={styles.modelText}>
+              <div className={styles.modelText}>
                 <p className={styles.text}>{text}</p>
-              </Form.Item>
+              </div>
 
               <div className={styles.content}>
-                <Form.Item className={styles.nameModal}>
+                <div className={styles.nameModal}>
                   <p className={styles.textDrafts}>Черновики сохраняются 30 дней. <br/> После этого времени они будут удалены.</p>
-                </Form.Item>
+                </div>
 
                 <Form.Item className={styles.contentHeader}>
                   <div className={styles.btnDrafts}>
                     <button className={styles.deleteDrafts}><DeleteOutlined style={{color: '#EC0B4E', fontSize: 21}} /></button>
-                    <FilterCheckboxBar checkboxText={"Выбрать все черновики"} />
+                    <CheckboxBlock
+                      name={"drafts"}
+                      checkboxText={"Выбрать все черновики"}
+                      paddings={0}
+                    />
                   </div>
                 </Form.Item>
               </div>
@@ -76,11 +85,8 @@ const ModalDrafts = ({
             </Form>
           </div>
         </div>
-      ) : (
-        <></>
-      )}
     </>
   )
 }
 
-export default ModalDrafts
+export default memo(ModalDrafts)
