@@ -55,11 +55,7 @@ export const OrganizationCard = () => {
         </div>
         <div className={styles.content}>
           <div className={styles.headerContainer}>
-            <Header
-              user_name={"Иванов Иван Иванович"}
-              organization={"Aratrum"}
-              department={"Отдел"}
-            />
+            <Header />
           </div>
           <Tabs />
           <MainText text={"Aratreum"} />

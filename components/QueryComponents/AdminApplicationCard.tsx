@@ -1,5 +1,5 @@
 import { DownloadOutlined, HeartOutlined } from "@ant-design/icons";
-import { Col, Select, Upload, UploadProps } from "antd";
+import { Col, Select, UploadProps } from "antd";
 import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -285,12 +285,12 @@ export const AdminApplicationCard = () => {
                 </p>
               </div>
             </div>
-            <div className={styles.rows}>
-              <div className={styles.files}>
-                <p className={styles.rowTexts}>Прикреплённые файлы:</p>
-                <Upload {...props} className="uploadFile"></Upload>
-              </div>
-            </div>
+            {/*<div className={styles.rows}>*/}
+            {/*  <div className={styles.files}>*/}
+            {/*    <p className={styles.rowTexts}>Прикреплённые файлы:</p>*/}
+            {/*    <Upload {...props} className="uploadFile"></Upload>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
           </Col>
 
           <div className={styles.commentContainer}>

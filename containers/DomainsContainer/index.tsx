@@ -3,19 +3,18 @@ import { Col, Input, type InputRef, Space, Tag, theme, Tooltip } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState, store, useAppDispatch } from "../../redux/store";
+import { store, useAppDispatch } from "../../redux/store";
 import {
   deleteDomain,
   patchDomain,
   postDomain,
 } from "../../redux/settingsSlice/asyncActions";
 import { setDomains } from "../../redux/settingsSlice/slice";
+import { selectDomains } from "../../redux/settingsSlice/selectors";
 
 const DomainsContainer = () => {
   const { token } = theme.useToken();
-  const select = useSelector((state: RootState) => ({
-    tags: state.settings.domains,
-  }));
+  const tags = useSelector(selectDomains);
   const dispatch = useAppDispatch();
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -36,23 +35,23 @@ const DomainsContainer = () => {
     handleClose: useCallback(
       (removedTag: number) => {
         dispatch(deleteDomain({ id: removedTag }));
-        const newTags = select.tags.filter((tag) => tag.id !== removedTag);
+        const newTags = tags.filter((tag) => tag.id !== removedTag);
         dispatch(setDomains(newTags));
       },
-      [select.tags, store],
+      [tags, store],
     ),
     handleInputConfirm: useCallback(() => {
       let id = 0;
-      for (let tag of select.tags) {
+      for (let tag of tags) {
         id += 1;
         if (tag.domain.includes(inputValue)) {
-          return dispatch(setDomains([...select.tags]));
+          return dispatch(setDomains([...tags]));
         }
       }
       dispatch(postDomain({ domain: inputValue }));
       setInputVisible(false);
       setInputValue("");
-    }, [inputValue, select.tags]),
+    }, [inputValue, tags]),
   };
 
   useEffect(() => {
@@ -97,7 +96,7 @@ const DomainsContainer = () => {
       <div className={styles.row}>
         <p className={styles.rowText}>Почта</p>
         <Space size={[0, 8]} wrap className={styles.tag}>
-          {select.tags.map((tag, index) => {
+          {tags.map((tag, index) => {
             if (editInputIndex === index) {
               return (
                 <Input

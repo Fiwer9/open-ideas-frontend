@@ -88,11 +88,7 @@ export const Charts = () => {
       <div className={styles.container}>
         <Slider />
         <div className={styles.content}>
-          <Header
-            userName={"Иванов Иван Иванович"}
-            organization={"Aratrum"}
-            department={"Отдел"}
-          />
+          <Header />
           <Tabs />
           <MainText text={"Аналитика"} />
 
