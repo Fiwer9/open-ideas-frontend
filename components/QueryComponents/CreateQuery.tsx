@@ -13,18 +13,13 @@ import {
 import { Status } from "../../redux/queriesSlice/types";
 import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
-import { Button, Card, Form, Input, Select, Upload } from "antd";
+import { Button, Card, Form, Input, message, Select, Upload } from "antd";
 import styles from "./styles/CreateQuery.module.scss";
 import { Logo } from "../PicturesComponents/Logo";
-import {
-  formatDateToServer,
-  getOrganizationName,
-  getOrganizationNameById,
-} from "../../utils/utils";
+import { formatDateToServer, getOrganizationName } from "../../utils/utils";
 import { Buttons } from "../ButtonComponent/Button";
 import router from "next/router";
 import ModalAntdSubmit from "../ModalsComponents/ModalAntdSubmit";
-import { postQuery } from "../../redux/queriesSlice/asyncActions";
 import TextArea from "antd/lib/input/TextArea";
 import ModalAntdBack from "../ModalsComponents/ModalAntdBack";
 import {
@@ -37,7 +32,6 @@ import { setStatusDirections } from "../../redux/directionsSlice/slice";
 import { selectUserForHeader } from "../../redux/headerSlice/selectors";
 import { fetchUserHeader } from "../../redux/headerSlice/asyncActions";
 import { selectSettings } from "../../redux/settingsSlice/selectors";
-import { InputLabel } from "../InputLabelComponent/InputLabel";
 import { UploadOutlined } from "@ant-design/icons";
 import { fetchSettings } from "../../redux/settingsSlice/asyncActions";
 
@@ -47,6 +41,7 @@ interface PostQueryProps {
   organization: string;
   initiative_direction: number;
   implementation_effect: string;
+  files: string;
 }
 
 function NewCreateQuery() {
@@ -91,23 +86,25 @@ function NewCreateQuery() {
       description,
       initiative_direction,
       implementation_effect,
+      files,
     } = data;
     const formattedEndDate = formatDateToServer(new Date(), "-");
-    dispatch(
-      postQuery({
-        name,
-        implementation_effect,
-        date: formattedEndDate,
-        status: "check",
-        initiative_direction,
-        initiator_users: [user_id],
-        description,
-        organization: getOrganizationNameById(organization, organizations),
-      }),
-    );
-    dispatch(setStatusQueries(Status.WAITING));
-    dispatch(setStatusDirections(Status.WAITING));
-    await router.push("/queries");
+    console.log(data);
+    // dispatch(
+    //   postQuery({
+    //     name,
+    //     implementation_effect,
+    //     date: formattedEndDate,
+    //     status: "check",
+    //     initiative_direction,
+    //     initiator_users: [user_id],
+    //     description,
+    //     organization: getOrganizationNameById(organization, organizations),
+    //   }),
+    // );
+    // dispatch(setStatusQueries(Status.WAITING));
+    // dispatch(setStatusDirections(Status.WAITING));
+    // await router.push("/queries");
   };
 
   const onReset = () => {
@@ -246,15 +243,46 @@ function NewCreateQuery() {
                 />
               </Form.Item>
               {settings?.allow_file_attachment && (
-                <Form.Item className={styles.formItems}>
-                  <div className={styles.label}>
-                    <InputLabel title={"Загрузка дополнительных файлов"} />
-                  </div>
+                <Form.Item
+                  className={styles.formItems}
+                  name={"file"}
+                  valuePropName={"fileList"}
+                  getValueFromEvent={(event) => {
+                    return event?.fileList;
+                  }}
+                  label={"Загрузка дополнительных файлов"}
+                  rules={[
+                    {
+                      validator(_, fileList) {
+                        return new Promise((resolve, reject) => {
+                          if (
+                            fileList &&
+                            fileList[0].size > settings?.max_file_size
+                          ) {
+                            reject("Размер файла превышен!");
+                          } else {
+                            resolve("Файл загружен!");
+                          }
+                        });
+                      },
+                    },
+                  ]}
+                >
                   <Upload
-                    maxCount={5}
+                    maxCount={settings?.max_files_attached}
                     accept=".pdf, .webm, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
                     multiple
                     className="upload"
+                    beforeUpload={(file) => {
+                      return new Promise((resolve, reject) => {
+                        if (file.size > settings?.max_file_size) {
+                          reject("Размер файла превышен!");
+                          message.error("Размер файла превышен!");
+                        } else {
+                          resolve("Файл загружен!");
+                        }
+                      });
+                    }}
                   >
                     <Button
                       className={styles.uploadBtn}
