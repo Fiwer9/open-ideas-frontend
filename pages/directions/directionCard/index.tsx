@@ -1,9 +1,9 @@
 import React from "react";
 import { useCheckStaff } from "../../../hooks/useCheckStaff";
-import { DirectionEditing } from "../../../components/DirectionsComponents/DirectionEditing";
+import { DirectionCard } from "../../../components/DirectionsComponents/DirectionCard";
 
 export default function Index() {
   const isStaff = useCheckStaff();
 
-  return <div>{isStaff && <DirectionEditing />}</div>;
+  return <div>{isStaff && <DirectionCard />}</div>;
 }
