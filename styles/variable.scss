@@ -23,14 +23,13 @@ $color-pule-purple: #F0F5FF;
 @mixin container {
   display: flex;
   justify-content: space-between;
-  height: 100%;
+  height: 100vh;
 }
 
 @mixin content {
   position: relative;
   width: 100%;
   display: flex;
-  justify-content: center;
   flex-direction: column;
   padding: {
     top: 50px;
@@ -210,7 +209,7 @@ $color-pule-purple: #F0F5FF;
 
 .btnBlue {
   font: {
-    family: RobotoRegular, sans-serif;
+    family: Poppins, sans-serif;
     weight: 400;
     size: 16px;
   };
@@ -223,6 +222,11 @@ $color-pule-purple: #F0F5FF;
 }
 
 .btnWhite {
+  font: {
+    family: Poppins, sans-serif;
+    weight: 400;
+    size: 16px;
+  };
   background-color: $color-white;
   display: inline-block;
   border: 1px solid $color-gray;

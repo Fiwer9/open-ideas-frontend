@@ -58,7 +58,9 @@
 }
 
 .btnContainer {
-    @include btnContainer;
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 40px;
 
     .btnFooter {
         @include btnFooter;

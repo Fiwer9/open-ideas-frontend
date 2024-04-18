@@ -9,13 +9,14 @@ interface DirectionItemProps {
     textDescr: string;
     titleExperts: string;
     textExperts: string;
+    onClickCard: () => void;
 }
 
-export const DirectionItem: React.FC<DirectionItemProps> = memo(({ nameDirection, titleDescr, textDescr, titleExperts, textExperts }) => {
+export const DirectionItem: React.FC<DirectionItemProps> = memo(({ nameDirection, titleDescr, textDescr, titleExperts, textExperts, onClickCard }) => {
   
     return (
       <>
-        <div className={styles.directionItem}>
+        <div className={styles.directionItem} onClick={onClickCard}>
             <div className={styles.headerDirectionItem}>
                 <ProjectOutlined style={{ fontSize: "150%", color: '#434343CC' }} />
                 <p className={styles.nameDirection}>{nameDirection}</p>

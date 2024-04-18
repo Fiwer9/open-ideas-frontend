@@ -1,11 +1,20 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import AdminPageLayout from "../AdminPageLayout";
-
-import styles from './styles/DirectionCard.module.scss'
 import { Col } from "antd";
 import router from "next/router";
+import { changeIsModalSubmitActive } from "../../redux/modalsSlice/slice";
+import { useAppDispatch } from "../../redux/store";
+import ModalAdditionalText from "../ModalsComponents/ModalAdditionalText";
+
+import styles from './styles/DirectionCard.module.scss'
 
 export const DirectionCard: React.FC = memo(() => {
+    const dispatch = useAppDispatch();
+
+    const handleDeleteDirection = async () => {
+        dispatch(changeIsModalSubmitActive(false));
+        await router.push("/directions");
+    };
   
     return (
       <>
@@ -39,22 +48,24 @@ export const DirectionCard: React.FC = memo(() => {
             <div className={styles.btnContainer}>
                 <button
                     className={`${styles.btnBlue} ${styles.btnFooter}`}
-                    onClick={() =>
-                        router.push(``)
-                    }
+                    onClick={() => {router.push(`/directions/editingDirection`)}}
                 >
                     Редактировать данные инициативы
                 </button>
                 <button
                     className={`${styles.btnRed} ${styles.btnFooter}`}
-                    onClick={() =>
-                        router.push(``)
-                    }
+                    onClick={() => {dispatch(changeIsModalSubmitActive(true))}}
                 >
                     Удалить инициативу
                 </button>
             </div>
         </AdminPageLayout>
+
+        <ModalAdditionalText
+            text={"Удалить направление?"}
+            additionalText={"Восстановить будет невозможно"}
+            handleOk={handleDeleteDirection}
+        />
       </>
     );
   });

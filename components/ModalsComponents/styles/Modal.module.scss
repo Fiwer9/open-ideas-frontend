@@ -72,6 +72,11 @@
     }
   }
 
+  .formItem {
+    margin: 0;
+    margin-top: 32px;
+  }
+
   .btnContainer {
     text-align: center !important;
     display: flex;
@@ -91,5 +96,8 @@
       align-items: center;
     }
 
+    .btnFooter {
+      padding: 8px 16px;
+    }
   }
 }

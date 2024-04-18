@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import AdminPageLayout from "../AdminPageLayout";
 import { Button, Form, Input, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import router from "next/router";
 
 import styles from './styles/DirectionEditing.module.scss'
 
@@ -30,7 +31,7 @@ export const DirectionEditing: React.FC = memo(() => {
                                     message: "Введите название направления",
                                 },
                             ]}
-                            >
+                        >
                                 <Input
                                     className={styles.inp}
                                     style={{ height: 40, borderRadius: 2 }}
@@ -47,12 +48,12 @@ export const DirectionEditing: React.FC = memo(() => {
                                     message: "Введите описане направления",
                                 },
                             ]}
-                            >
+                        >
                                 <TextArea 
                                     className={styles.textArea} 
                                     rows={5} 
                                     style={{ borderRadius: 2 }}
-                                    placeholder={'Введите описание напрваления'} 
+                                    placeholder={'Опишите направление, чем оно занимается\за что ответственно'} 
                                 />
                         </Form.Item>
                         <Form.Item
@@ -65,11 +66,11 @@ export const DirectionEditing: React.FC = memo(() => {
                                     message: "Выберите эксперта",
                                 },
                             ]}
-                            >
+                        >
                                 <Select
                                     className="select"
                                     style={{ height: 40, marginBottom: 60 }}
-                                    placeholder={"Направление инициативы"}
+                                    placeholder={"Выберите экспертов, отвечающих за данное направление"}
                                     options={[
                                         { value: '1', label: 'Экономические' },
                                         { value: '2', label: 'Технологическое' },
@@ -87,6 +88,7 @@ export const DirectionEditing: React.FC = memo(() => {
                 className={`${styles.btnDefault} ${styles.btnFooter}`}
                 form={"edit-query"}
                 htmlType={"submit"}
+                onClick={() => {router.push(`/directions/directionCard`)}}
               >
                 <span>Сохранить изменения</span>
               </Button>
