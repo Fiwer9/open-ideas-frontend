@@ -197,13 +197,15 @@ export const QueryList: React.FC = memo(() => {
         <AdminPageLayout>
           <MainText text={"Инициативы"} />
           <FilterContainer placeholder={"Поиск по идеям"} />
-          <DataTable
-            data={getData() as QueriesResponse[]}
-            columns={getColumns()}
-            isLoading={isLoading}
-            onRowClick={handleRowClick}
-            locale={"Тут ещё нет идей"}
-          />
+          <div className={styles.table}>
+            <DataTable
+              data={getData() as QueriesResponse[]}
+              columns={getColumns()}
+              isLoading={isLoading}
+              onRowClick={handleRowClick}
+              locale={"Тут ещё нет идей"}
+            />
+          </div>
         </AdminPageLayout>
       ) : (
         <PageLayout>
@@ -243,32 +245,30 @@ export const QueryList: React.FC = memo(() => {
                 isLoading={isLoading}
                 locale={"Тут ещё нет идей"}
               />
-            </div>
-          </div>
-          <Modal
-            active={modalCreateQuery}
-            setActive={setModalCreateQuery}
-            text1={"Создание идеи"}
-            text2={"Ранее вы создавали идею, хотите продолжить заполнение старой или создать новую?"}
-            classNameBtn1={styles.btnWhite}
-            textBtn1={"Создать новую"}
-            classNameBtn2={styles.btnBlue}
-            textBtn2={"Мои черновики"}
-            onClick1={() => router.push("/queries/create")}
-            onClick2={() => {
-              setModalDrafts(true);
-              setModalCreateQuery(false);
-            }}
-          />
-          <ModalDrafts
-            active={modalDrafts}
-            setActive={setModalDrafts}
-            text={"Мои черновики"}
-            classNameBtn={styles.btnBlueBorder}
-            textBtn={"Назад"}
-            onClick={closeModal}
-          />
-        </PageLayout>
+              <Modal
+                active={modalCreateQuery}
+                setActive={setModalCreateQuery}
+                text1={"Создание идеи"}
+                text2={"Ранее вы создавали идею, хотите продолжить заполнение старой или создать новую?"}
+                classNameBtn1={styles.btnWhite}
+                textBtn1={"Создать новую"}
+                classNameBtn2={styles.btnBlue}
+                textBtn2={"Мои черновики"}
+                onClick1={() => router.push("/queries/create")}
+                onClick2={() => {
+                  setModalDrafts(true);
+                  setModalCreateQuery(false);
+                }}
+              />
+              <ModalDrafts
+                active={modalDrafts}
+                setActive={setModalDrafts}
+                text={"Мои черновики"}
+                classNameBtn={styles.btnBlueBorder}
+                textBtn={"Назад"}
+                onClick={closeModal}
+              />
+          </PageLayout>
       )}
     </>
   );

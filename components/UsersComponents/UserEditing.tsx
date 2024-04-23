@@ -328,7 +328,6 @@ export const UserEditing = () => {
                     paddings={10}
                   />
                 </div>
-              </div>
           </div>
 
           <div className={styles.group}>
