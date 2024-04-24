@@ -75,11 +75,7 @@ export const IdeasList = () => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <Header
-          userName={"Иванов Иван Иванович"}
-          organization={"Aratrum"}
-          department={"Отдел"}
-        />
+        <Header />
         <div className={styles.header}>
           <div className={styles.logoHeader}>
             <Logo width={190} height={53} />
