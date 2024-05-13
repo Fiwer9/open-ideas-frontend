@@ -12,7 +12,7 @@ interface DirectionItemProps {
     onClickCard: () => void;
 }
 
-export const DirectionItem: React.FC<DirectionItemProps> = memo(({ nameDirection, titleDescr, textDescr, titleExperts, textExperts, onClickCard }) => {
+export default const DirectionItem: React.FC<DirectionItemProps> = memo(({ nameDirection, titleDescr, textDescr, titleExperts, textExperts, onClickCard }) => {
   
     return (
       <>
