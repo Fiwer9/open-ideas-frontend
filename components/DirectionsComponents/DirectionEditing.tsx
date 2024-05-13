@@ -7,7 +7,7 @@ import router from "next/router";
 import styles from './styles/DirectionEditing.module.scss'
 
 
-export const DirectionEditing: React.FC = memo(() => {
+export default const DirectionEditing: React.FC = memo(() => {
   
     return (
       <>
