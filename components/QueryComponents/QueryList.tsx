@@ -197,15 +197,13 @@ export const QueryList: React.FC = memo(() => {
         <AdminPageLayout>
           <MainText text={"Инициативы"} />
           <FilterContainer placeholder={"Поиск по идеям"} />
-          <div className={styles.table}>
-            <DataTable
-              data={getData() as QueriesResponse[]}
-              columns={getColumns()}
-              isLoading={isLoading}
-              onRowClick={handleRowClick}
-              locale={"Тут ещё нет идей"}
-            />
-          </div>
+          <DataTable
+            data={getData() as QueriesResponse[]}
+            columns={getColumns()}
+            isLoading={isLoading}
+            onRowClick={handleRowClick}
+            locale={"Тут ещё нет идей"}
+          />
         </AdminPageLayout>
       ) : (
         <PageLayout>
