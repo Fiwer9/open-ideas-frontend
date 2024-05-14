@@ -8,7 +8,7 @@ import ModalAdditionalText from "../ModalsComponents/ModalAdditionalText";
 
 import styles from './styles/DirectionCard.module.scss'
 
-export const DirectionCard: React.FC = memo(() => {
+export default const DirectionCard: React.FC = memo(() => {
     const dispatch = useAppDispatch();
 
     const handleDeleteDirection = async () => {

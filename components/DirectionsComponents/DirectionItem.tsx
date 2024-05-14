@@ -14,7 +14,7 @@ interface DirectionItemProps {
     }
 }
 
-export const DirectionItem: React.FC<DirectionItemProps> = memo(({ onClickCard, directionsInf }) => {
+export default const DirectionItem: React.FC<DirectionItemProps> = memo(({ onClickCard, directionsInf }) => {
   
     return (
       <>
