@@ -85,12 +85,12 @@ export const DirectionEditing: React.FC = memo(() => {
 
             <div className={styles.btnContainer}>
               <Button
-                className={`${styles.btnDefault} ${styles.btnFooter}`}
+                className={styles.btnFooter}
                 form={"edit-query"}
                 htmlType={"submit"}
                 onClick={() => {router.push(`/directions/directionCard`)}}
               >
-                <span>Сохранить изменения</span>
+                Сохранить изменения
               </Button>
             </div>
         </AdminPageLayout>

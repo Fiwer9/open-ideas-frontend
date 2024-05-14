@@ -9,6 +9,22 @@ import ModalCreateDirection from "../ModalsComponents/ModalCreateDirection";
 
 import styles from './styles/DirectionsPage.module.scss'
 
+interface directionsProps {
+	nameDirection: string
+	titleDescr: string
+	textDescr: string
+	titleExperts: string
+	textExperts: string
+};
+
+const directionsInf: directionsProps = {
+    nameDirection: 'Производственное',
+    titleDescr: 'Описание направления',
+    textDescr: 'Направление занимающийся планово - экономическим обоснованием деятельности производства. Направление занимающийся планово - экономическим обоснованием деятельности производства.Направление занимающийся планово - экономическим обоснованием деятельности производства.Направление занимающийся планово - экономическим обоснованием деятельности производства.',
+    titleExperts:  'Прикреплённые эксперты',
+    textExperts: 'Иванов И. И., Бабушкин Б.Б., Иванов И. И., Бабушкин Б.Б.,Бабушкин Б.Б.,'
+};
+
 export const DirectionsPage: React.FC = memo(() => {
     const [modalCreateDirection, setModalCreateDirection] = useState(false);
 
@@ -31,27 +47,15 @@ export const DirectionsPage: React.FC = memo(() => {
             </div>
             <div className={styles.directionsPage}>
                 <DirectionItem 
-                    nameDirection={'Производственное'}
-                    titleDescr={'Описание направления'}
-                    textDescr={'Направление занимающийся планово - экономическим обоснованием деятельности производства. Направление занимающийся планово - экономическим обоснованием деятельности производства.Направление занимающийся планово - экономическим обоснованием деятельности производства.Направление занимающийся планово - экономическим обоснованием деятельности производства.'}
-                    titleExperts={'Прикреплённые эксперты'}
-                    textExperts={'Иванов И. И., Бабушкин Б.Б., Иванов И. И., Бабушкин Б.Б.,Бабушкин Б.Б.,'}
+                    directionsInf = {directionsInf}
                     onClickCard={() => router.push(`/directions/directionCard`)}
                 />
                 <DirectionItem 
-                    nameDirection={'Производственное'}
-                    titleDescr={'Описание направления'}
-                    textDescr={'Направление занимающийся планово - экономическим обоснованием деятельности производства. Направление занимающийся планово - экономическим обоснованием деятельности производства.Направление занимающийся планово - экономическим обоснованием деятельности производства.Направление занимающийся планово - экономическим обоснованием деятельности производства.'}
-                    titleExperts={'Прикреплённые эксперты'}
-                    textExperts={'Иванов И. И., Бабушкин Б.Б., Иванов И. И., Бабушкин Б.Б.,Бабушкин Б.Б.,'}
+                    directionsInf = {directionsInf}
                     onClickCard={() => router.push(`/directions/directionCard`)}
                 />
                 <DirectionItem 
-                    nameDirection={'Производственное'}
-                    titleDescr={'Описание направления'}
-                    textDescr={'Направление занимающийся планово - экономическим обоснованием деятельности производства. Направление занимающийся планово - экономическим обоснованием деятельности производства.Направление занимающийся планово - экономическим обоснованием деятельности производства.Направление занимающийся планово - экономическим обоснованием деятельности производства.'}
-                    titleExperts={'Прикреплённые эксперты'}
-                    textExperts={'Иванов И. И., Бабушкин Б.Б., Иванов И. И., Бабушкин Б.Б.,Бабушкин Б.Б.,'}
+                    directionsInf = {directionsInf}
                     onClickCard={() => router.push(`/directions/directionCard`)}
                 />
             </div>

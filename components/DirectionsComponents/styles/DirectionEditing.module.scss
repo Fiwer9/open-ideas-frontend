@@ -22,16 +22,12 @@
     }
 }
 
-.btnContainer {
-    margin: 0;
 
-    .btnFooter {
-        height: 40px;
-        border-radius: 2px;
-        font: {
-            family: RobotoRegular, sans-serif;
-            weight: 400;
-            size: 16px;
-        };
-    }
+.btnFooter {
+    border-radius: 2px;
+    height: 40px;
+    font: {
+        family: RobotoRegular, sans-serif;
+        size: 16px;
+    };
 }

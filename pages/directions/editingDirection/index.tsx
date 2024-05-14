@@ -5,5 +5,5 @@ import { DirectionEditing } from "../../../components/DirectionsComponents/Direc
 export default function Index() {
   const isStaff = useCheckStaff();
 
-  return <div>{isStaff && <DirectionEditing />}</div>;
+  return isStaff && <DirectionEditing />;
 }

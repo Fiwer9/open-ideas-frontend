@@ -1,6 +1,6 @@
 import React, { memo, useState } from "react";
 import AdminPageLayout from "../AdminPageLayout";
-import { Col } from "antd";
+import { Button } from "antd";
 import router from "next/router";
 import { changeIsModalSubmitActive } from "../../redux/modalsSlice/slice";
 import { useAppDispatch } from "../../redux/store";
@@ -25,39 +25,39 @@ export const DirectionCard: React.FC = memo(() => {
                     <p className={styles.date}>Дата создания 25 ноября 2022 г. в 15:25</p>
                 </div>
 
-                <Col className={styles.column}>
-                    <div className={styles.infContent}>
-                        <div className={styles.row}>
-                            <p className={styles.rowText}>Описание направления</p>
-                            <p className={styles.rowInf}>
-                                Направление занимающийся планово - экономическим обоснованием деятельности производства. 
-                                Направление занимающийся планово - экономическим обоснованием деятельности производства.
-                                Направление занимающийся планово - экономическим обоснованием деятельности производства.
-                                Направление занимающийся планово - экономическим обоснованием деятельности производства.
-                            </p>
-                        </div>
-
-                        <div className={styles.row}>
-                            <p className={styles.rowText}>Прикреплённые эксперты</p>
-                            <p className={styles.rowInf}>Иванов И. И., Бабушкин Б.Б., Иванов И. И., Бабушкин Б.Б.,Бабушкин Б.Б.,</p>
-                        </div>
+                <div className={styles.infContent}>
+                    <div className={styles.row}>
+                        <p className={styles.rowText}>Описание направления</p>
+                        <p className={styles.rowInf}>
+                            Направление занимающийся планово - экономическим обоснованием деятельности производства. 
+                            Направление занимающийся планово - экономическим обоснованием деятельности производства.
+                            Направление занимающийся планово - экономическим обоснованием деятельности производства.
+                            Направление занимающийся планово - экономическим обоснованием деятельности производства.
+                        </p>
                     </div>
-                </Col>
+
+                    <div className={styles.row}>
+                        <p className={styles.rowText}>Прикреплённые эксперты</p>
+                        <p className={styles.rowInf}>Иванов И. И., Бабушкин Б.Б., Иванов И. И., Бабушкин Б.Б.,Бабушкин Б.Б.,</p>
+                    </div>
+                </div>
             </div>
 
             <div className={styles.btnContainer}>
-                <button
-                    className={`${styles.btnBlue} ${styles.btnFooter}`}
+                <Button
+                    type="primary"
+                    className={styles.btnBlue}
                     onClick={() => {router.push(`/directions/editingDirection`)}}
                 >
                     Редактировать данные инициативы
-                </button>
-                <button
-                    className={`${styles.btnRed} ${styles.btnFooter}`}
+                </Button>
+                <Button
+                    danger
+                    className={styles.btnRed}
                     onClick={() => {dispatch(changeIsModalSubmitActive(true))}}
                 >
                     Удалить инициативу
-                </button>
+                </Button>
             </div>
         </AdminPageLayout>
 

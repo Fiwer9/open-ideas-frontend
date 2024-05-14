@@ -5,5 +5,5 @@ import { DirectionCard } from "../../../components/DirectionsComponents/Directio
 export default function Index() {
   const isStaff = useCheckStaff();
 
-  return <div>{isStaff && <DirectionCard />}</div>;
+  return isStaff && <DirectionCard />;
 }

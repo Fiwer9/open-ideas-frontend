@@ -5,5 +5,5 @@ import { DirectionsPage } from "../../components/DirectionsComponents/Directions
 export default function Index() {
   const isStaff = useCheckStaff();
 
-  return <div>{isStaff && <DirectionsPage />}</div>;
+  return isStaff && <DirectionsPage />;
 }

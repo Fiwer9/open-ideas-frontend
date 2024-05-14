@@ -21,37 +21,36 @@
         }
     }
 
-    .column {
+
+    .infContent {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: space-between;
 
-        .infContent {
-            .row {
-                display: flex;
-                flex-direction: row;
-                margin-top: 38px;
+        .row {
+            display: flex;
+            flex-direction: row;
+            margin-top: 38px;
 
-                .rowText {
-                    flex: 0 0 45%;
-                    margin: 0;
-                    font: {
-                        family: Poppins, sans-serif;
-                        weight: 600;
-                        size: 20px;
-                    };
-                    color: rgba($color-gray-43, 0.8);
-                }
+            .rowText {
+                flex: 0 0 45%;
+                margin: 0;
+                font: {
+                    family: Poppins, sans-serif;
+                    weight: 600;
+                    size: 20px;
+                };
+                color: rgba($color-gray-43, 0.8);
+            }
 
-                .rowInf {
-                    margin: 0;
-                    font: {
-                        family: Poppins, sans-serif;
-                        weight: 600;
-                        size: 20px;
-                    };
-                    color: $color-black-22;
-                }
+            .rowInf {
+                margin: 0;
+                font: {
+                    family: Poppins, sans-serif;
+                    weight: 600;
+                    size: 20px;
+                };
+                color: $color-black-22;
             }
         }
     }
@@ -61,8 +60,4 @@
     position: absolute;
     bottom: 0;
     margin-bottom: 40px;
-
-    .btnFooter {
-        @include btnFooter;
-    }
 }
