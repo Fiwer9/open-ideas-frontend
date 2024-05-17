@@ -1,5 +1,4 @@
 import React, { memo, useState } from "react";
-import { DirectionItem } from "./DirectionItem";
 import AdminPageLayout from "../AdminPageLayout";
 import { MainText } from "../MainTextComponent";
 import { PlusCircleOutlined } from "@ant-design/icons";
@@ -8,6 +7,7 @@ import router from "next/router";
 import ModalCreateDirection from "../ModalsComponents/ModalCreateDirection";
 
 import styles from './styles/DirectionsPage.module.scss'
+import DirectionItem from "./DirectionItem";
 
 interface directionsProps {
 	nameDirection: string
@@ -25,7 +25,7 @@ const directionsInf: directionsProps = {
     textExperts: 'Иванов И. И., Бабушкин Б.Б., Иванов И. И., Бабушкин Б.Б.,Бабушкин Б.Б.,'
 };
 
-export const DirectionsPage: React.FC = memo(() => {
+const DirectionsPage: React.FC = memo(() => {
     const [modalCreateDirection, setModalCreateDirection] = useState(false);
 
     const closeModal = () => {
@@ -70,3 +70,5 @@ export const DirectionsPage: React.FC = memo(() => {
       </>
     );
   });
+
+  export default DirectionsPage;
