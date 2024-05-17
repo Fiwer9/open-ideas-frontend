@@ -11,7 +11,7 @@ interface CheckboxBlockProps {
   paddings?: number;
 }
 
-export default const CheckboxBlock: React.FC<CheckboxBlockProps> = memo(
+const CheckboxBlock: React.FC<CheckboxBlockProps> = memo(
   ({ checkboxText, hintText, name, paddings }) => {
     return (
       <div className={styles.checkboxContainerHint} style={{padding: paddings}}>
@@ -29,3 +29,5 @@ export default const CheckboxBlock: React.FC<CheckboxBlockProps> = memo(
     );
   },
 );
+
+export default CheckboxBlock;
