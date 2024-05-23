@@ -1,9 +1,8 @@
 import React from "react";
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-
 import styles from "./styles/StatisticsCard.module.scss";
-import {StatisticItem} from "../../utils/getAnalytics";
+import { StatisticItem } from "../../utils/getAnalytics";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

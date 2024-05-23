@@ -19,16 +19,16 @@ import { Line } from "react-chartjs-2";
 import styles from "./styles/Charts.module.scss";
 import { AnalyticType, getAnalyticsForPieChart, getAnalyticsForGraphic, StatisticItem } from "../../utils/getAnalytics";
 import { monthLabels, statusOptions } from "../../utils/consts";
-import {Status} from "../../redux/queriesSlice/types";
-import {useSelector} from "react-redux";
-import {selectOrganizations, selectOrgStatus} from "../../redux/organizationsSlice/selectors";
-import {selectDirections, selectStatusDirections} from "../../redux/directionsSlice/selectors";
-import {selectQueriesData, selectStatusQueries} from "../../redux/queriesSlice/selectors";
-import {fetchDirections} from "../../redux/directionsSlice/asyncActions";
-import {fetchOrganizations} from "../../redux/organizationsSlice/asyncActions";
+import { Status } from "../../redux/queriesSlice/types";
+import { useSelector } from "react-redux";
+import { selectOrganizations, selectOrgStatus } from "../../redux/organizationsSlice/selectors";
+import { selectDirections, selectStatusDirections } from "../../redux/directionsSlice/selectors";
+import { selectQueriesData, selectStatusQueries } from "../../redux/queriesSlice/selectors";
+import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
+import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
 import debounce from "lodash.debounce";
-import {fetchQueries} from "../../redux/queriesSlice/asyncActions";
-import {useAppDispatch} from "../../redux/store";
+import { fetchQueries } from "../../redux/queriesSlice/asyncActions";
+import { useAppDispatch } from "../../redux/store";
 
 ChartJS.register(
   CategoryScale,
@@ -118,14 +118,19 @@ export const Charts: React.FC = memo(() => {
 	}, 1000);
 
 	useEffect(() => {
-		fetchData()
 		const dataForGraphic = getAnalyticsForGraphic(queries)
 		const updatedDataset =  dataset.map((dataItem) =>
 		{ return { ...dataItem, data: dataForGraphic.get(dataItem.label) } })
-		setData({...data, datasets: updatedDataset})
-		setDataDirection(getAnalyticsForPieChart(initiativeDirections, directions, AnalyticType.DIRECTION))
-		setDataOrganization(getAnalyticsForPieChart(initiativeOrganizations, organizations, AnalyticType.ORGANIZATION))
-		setDataStatus(getAnalyticsForPieChart(initiativeStatuses, statusOptions, AnalyticType.QUERYSTATUS))
+		if (organizations) {
+			setData({...data, datasets: updatedDataset})
+			setDataDirection(getAnalyticsForPieChart(initiativeDirections, directions, AnalyticType.DIRECTION))
+			setDataOrganization(getAnalyticsForPieChart(initiativeOrganizations, organizations, AnalyticType.ORGANIZATION))
+			setDataStatus(getAnalyticsForPieChart(initiativeStatuses, statusOptions, AnalyticType.QUERYSTATUS))
+		}
+	}, [ organizations, directions, queries ])
+
+	useEffect(() => {
+		fetchData()
 	}, [])
 
 	if (isLoading) {

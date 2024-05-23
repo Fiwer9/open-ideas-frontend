@@ -1,5 +1,5 @@
-import {getDirectionName, getOrganizationName, statusTranslation} from "./utils";
-import {QueriesResponse} from "../models/response/QueriesResponse";
+import { getDirectionName, getOrganizationName, statusTranslation } from "./utils";
+import { QueriesResponse } from "../models/response/QueriesResponse";
 
 export enum AnalyticType {
 	DIRECTION,
