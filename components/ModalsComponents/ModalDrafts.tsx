@@ -4,10 +4,9 @@ import { Logo } from '../PicturesComponents/Logo'
 
 import styles from './styles/Modal.module.scss'
 import React, { memo } from "react";
-import FilterCheckboxBar from "../FilterComponents/blocks/FilterCheckboxBar";
 import { DeleteOutlined } from "@ant-design/icons";
 import DraftItem from "../DraftsComponents/DraftItem";
-import { CheckboxBlock } from "../FilterComponents/blocks/CheckboxBlock";
+import CheckboxBlock from "../FilterComponents/blocks/CheckboxBlock";
 
 interface ModalProps {
   active: any
