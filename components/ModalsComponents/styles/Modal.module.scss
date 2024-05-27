@@ -83,7 +83,10 @@
     }
   }
 
-
+  .formItem {
+    margin: 0;
+    margin-top: 32px;
+  }
 
   .content {
     display: flex;
@@ -142,5 +145,8 @@
       align-items: center;
     }
 
+    .btnFooter {
+      padding: 8px 16px;
+    }
   }
 }
