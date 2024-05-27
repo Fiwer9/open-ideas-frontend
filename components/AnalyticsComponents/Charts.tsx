@@ -1,7 +1,4 @@
 import React, {memo, useEffect, useState} from "react";
-import { Slider } from "../SliderComponents/SliderComponents";
-import { Tabs } from "../TabsComponent/Tabs";
-import { Header } from "../HeaderComponents/Header";
 import { MainText } from "../MainTextComponent";
 import { StatisticsCard } from "./StatisticsCard";
 import Filter from "../FilterComponents/blocks/Filter";
@@ -29,6 +26,7 @@ import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions"
 import debounce from "lodash.debounce";
 import { fetchQueries } from "../../redux/queriesSlice/asyncActions";
 import { useAppDispatch } from "../../redux/store";
+import AdminPageLayout from "../AdminPageLayout";
 
 ChartJS.register(
   CategoryScale,
@@ -138,14 +136,10 @@ export const Charts: React.FC = memo(() => {
 	}
 
   return (
-    <>
+		<AdminPageLayout>
       <div className={styles.container}>
-        <Slider />
         <div className={styles.content}>
-          <Header />
-          <Tabs />
           <MainText text={"Аналитика"} />
-
           <div className={styles.contentStatic}>
             <div className={styles.headerContent}>
               <p className={`${styles.numberInitiatives} ${styles.headerItem}`}>
@@ -155,11 +149,9 @@ export const Charts: React.FC = memo(() => {
                 <Filter />
               </div>
             </div>
-
             <div className={styles.lineCharts}>
               <Line options={options} data={data} />
             </div>
-
             <div className={styles.statisticsCard}>
               <div className={styles.statisticsCardItem}>
                 <StatisticsCard
@@ -174,7 +166,6 @@ export const Charts: React.FC = memo(() => {
                   color3={"rgba(191, 191, 191, 0.2)"}
                 />
               </div>
-
               <div className={styles.statisticsCardItem}>
                 <StatisticsCard
                   title={"Инициативы по компаниям"}
@@ -188,7 +179,6 @@ export const Charts: React.FC = memo(() => {
                   color3={"rgba(51, 139, 167, 0.6)"}
                 />
               </div>
-
               <div>
                 <StatisticsCard
                   title={"Инициативы по статусам"}
@@ -206,6 +196,6 @@ export const Charts: React.FC = memo(() => {
           </div>
         </div>
       </div>
-    </>
+		</AdminPageLayout>
   );
 });
