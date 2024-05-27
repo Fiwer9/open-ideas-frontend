@@ -4,7 +4,7 @@ import styles from "../styles/FilterBar.module.scss";
 
 interface FilterBarProps {
   filterText: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   onClick?: () => void;
 }
 

@@ -1,0 +1,74 @@
+@import "../../../styles/variable.scss";
+
+@mixin contentDraftStyles {
+  display: flex;
+  justify-content: space-between;
+  padding: {
+    left: 20px;
+    right: 20px;
+  };
+}
+
+@mixin fontsHeader {
+  font: {
+    family: Poppins, sans-serif;
+    weight: 400;
+    size: 16px;
+  }
+  color: $color-white-gray;
+}
+
+.container {
+  max-width: 840px;
+
+  .headerDraft {
+    @include contentDraftStyles;
+    background-color: $color-gray-43-80;
+    border-radius: 7px 7px 0 0;
+    border: $color-gray-43-80 solid 1px;
+    line-height: 26px;
+
+    .nameDraft {
+      @include fontsHeader;
+    }
+
+    .dateDraft {
+      @include fontsHeader;
+    }
+  }
+
+  .infDraft {
+    @include contentDraftStyles;
+    border-radius: 0 0 7px 7px;
+    border: 1px solid #00000033;
+
+    .textDraft {
+      font: {
+        family: Roboto, sans-serif;
+        weight: 400;
+        size: 14px;
+      }
+      line-height: 30px;
+    }
+
+    .btnContainer {
+      top: 0;
+      bottom: 0;
+      margin: auto 0;
+
+      .btnDraft:not(:last-child) {
+        padding-right: 29px;
+      }
+
+      .btnDraft {
+        @include btnResetStyles;
+      }
+
+      .checkboxDraft {
+        padding-bottom: 7px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+}

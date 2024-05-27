@@ -6,6 +6,10 @@
   }
   flex: 1;
 
+  @media (max-width: 430px) {
+    margin-bottom: 65px;
+  }
+
   .table {
     table {
       border: 1px solid rgba(0, 0, 0, 0.20);
