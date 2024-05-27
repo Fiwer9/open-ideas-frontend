@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import { Checkbox, Form } from "antd";
+import { Checkbox } from "antd";
 
 import styles from "../styles/CheckboxBar.module.scss";
 import { useAppDispatch } from "../../../redux/store";
@@ -9,28 +9,6 @@ import {
   changeIsExpert,
 } from "../../../redux/filterSlice/slice";
 
-interface CheckboxBlockProps {
-  checkboxText: string;
-  hintText?: string;
-  name: string;
-}
-
-export const CheckboxBlock: React.FC<CheckboxBlockProps> = memo(
-  ({ checkboxText, hintText, name }) => {
-    return (
-      <div className={styles.checkboxContainerHint}>
-        <Form.Item
-          name={name}
-          valuePropName={"checked"}
-          className={styles.formItem}
-        >
-          <Checkbox className="checkbox">{checkboxText}</Checkbox>
-        </Form.Item>
-        <span className={styles.hintText}>{hintText}</span>
-      </div>
-    );
-  },
-);
 
 interface CheckboxBarProps {
   checkboxText: string;

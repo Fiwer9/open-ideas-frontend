@@ -90,6 +90,14 @@ $color-pule-purple: #F0F5FF;
   };
 }
 
+@mixin btnResetStyles {
+  padding: 0;
+  border: none;
+  font: inherit;
+  background-color: transparent;
+  cursor: pointer;
+}
+  
 @mixin sliderSmallStyles {
   @media (max-width: 3000px) {
     display: none;
@@ -216,6 +224,19 @@ $color-pule-purple: #F0F5FF;
   display: inline-block;
   background-color: $color-blue;
   color: $color-white;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.btnBlueBorder {
+  font: {
+    family: RobotoRegular, sans-serif;
+    weight: 400;
+    size: 16px;
+  };
+  border: 1px solid $color-blue;
+  display: inline-block;
+  color: $color-blue;
   border-radius: 2px;
   cursor: pointer;
 }

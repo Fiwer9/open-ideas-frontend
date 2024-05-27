@@ -47,6 +47,8 @@ import {
   getQueryFilterByArchive,
   getQueryFilterByExpert,
 } from "../../utils/getQueryFilter";
+import ModalDrafts from "../ModalsComponents/ModalDrafts";
+import Modal from "../ModalsComponents/Modal";
 import AdminPageLayout from "../AdminPageLayout";
 import FilterContainer from "../../containers/FilterContainer";
 import PageLayout from "../PageLayout";
@@ -63,6 +65,13 @@ export const QueryList: React.FC = memo(() => {
   const selectedTag = useSelector(selectSelectedTag);
   const { searchValue, isArchive, isExpert } = useSelector(selectFilters);
   const [isClient, setIsClient] = useState(false);
+  const [modalDrafts, setModalDrafts] = useState(false);
+  const [modalCreateQuery, setModalCreateQuery] = useState(false);
+
+  const closeModal = () => {
+    setModalDrafts(false);
+    setModalCreateQuery(false);
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -178,10 +187,6 @@ export const QueryList: React.FC = memo(() => {
     dispatch(setStatusOrganizations(Status.WAITING));
   };
 
-  const handleCreateQuery = () => {
-    router.push("/queries/create");
-  };
-
   if (!isClient) {
     return;
   }
@@ -202,35 +207,66 @@ export const QueryList: React.FC = memo(() => {
         </AdminPageLayout>
       ) : (
         <PageLayout>
-          <MainText text={"Инициативы"} />
-          <div className={styles.infContainer}>
-            <SearchBar
-              placeholderNum={"Номер"}
-              placeholderQuery={"Поиск по идеям"}
-              stylesSearch={styles.searchBar}
-            />
-            <div className={styles.btnHead}>
-              <div className={styles.btnContainerFilt}>
-                <FilterBar
-                  icon={<PlusCircleOutlined />}
-                  filterText={"Создать идею"}
-                  onClick={handleCreateQuery}
+              <MainText text={"Инициативы"} />
+              <div className={styles.infContainer}>
+                <SearchBar
+                  placeholderNum={"Номер"}
+                  placeholderQuery={"Поиск по идеям"}
+                  stylesSearch={styles.searchBar}
                 />
-                <FilterCheckboxBar checkboxText={"Я эксперт"} />
+                <div className={styles.btnHead}>
+                  <div className={styles.btnContainerFilt}>
+                    <FilterBar
+                      icon={<PlusCircleOutlined />}
+                      filterText={"Создать идею"}
+                      onClick={() => {
+                        setModalCreateQuery(true);
+                      }}
+                    />
+                    <FilterBar
+                      filterText={"Мои черновики"}
+                      onClick={() => {
+                        setModalDrafts(true);
+                      }}
+                    />
+                    <FilterCheckboxBar checkboxText={"Я эксперт"} />
+                  </div>
+                  <div className={styles.btnContainer}>
+                    <FilterCheckboxBar checkboxText={"Архив"} />
+                  </div>
+                </div>
               </div>
-              <div className={styles.btnContainer}>
-                <FilterCheckboxBar checkboxText={"Архив"} />
-              </div>
-            </div>
-          </div>
-          <DataTable
-            columns={directions.length > 0 && getColumns()}
-            data={getData() as QueriesResponse[]}
-            onRowClick={handleRowClickIdea}
-            isLoading={isLoading}
-            locale={"Тут ещё нет идей"}
-          />
-        </PageLayout>
+              <DataTable
+                columns={directions.length > 0 && getColumns()}
+                data={getData() as QueriesResponse[]}
+                onRowClick={handleRowClickIdea}
+                isLoading={isLoading}
+                locale={"Тут ещё нет идей"}
+              />
+              <Modal
+                active={modalCreateQuery}
+                setActive={setModalCreateQuery}
+                text1={"Создание идеи"}
+                text2={"Ранее вы создавали идею, хотите продолжить заполнение старой или создать новую?"}
+                classNameBtn1={styles.btnWhite}
+                textBtn1={"Создать новую"}
+                classNameBtn2={styles.btnBlue}
+                textBtn2={"Мои черновики"}
+                onClick1={() => router.push("/queries/create")}
+                onClick2={() => {
+                  setModalDrafts(true);
+                  setModalCreateQuery(false);
+                }}
+              />
+              <ModalDrafts
+                active={modalDrafts}
+                setActive={setModalDrafts}
+                text={"Мои черновики"}
+                classNameBtn={styles.btnBlueBorder}
+                textBtn={"Назад"}
+                onClick={closeModal}
+              />
+          </PageLayout>
       )}
     </>
   );

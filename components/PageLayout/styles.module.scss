@@ -17,14 +17,6 @@
       }
     }
 
-    @media (max-width: 1000px) {
-      padding: {
-        top: 130px;
-        left: 20px;
-        right: 20px;
-      };
-    }
-
     .header {
       @media (max-width: 720px) {
         padding: {
@@ -55,10 +47,19 @@
       }
     }
 
+    @media (max-width: 1000px) {
+      padding: {
+        top: 130px;
+        left: 20px;
+        right: 20px;
+      };
+    }
+
     @media (max-width: 720px) {
       padding: 16px;
     }
-    @media (max-width: 420px) {
+
+    @media (max-width: 430px) {
       margin: 0;
     }
   }

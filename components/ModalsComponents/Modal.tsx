@@ -16,7 +16,7 @@ interface ModalProps {
 	classNameBtn1: any
 	classNameBtn2: any
 	layout?: any
-	stylesContentModal: any
+	stylesContentModal?: any
 }
 
 const Modal = ({

@@ -3,13 +3,13 @@ import SwitchBar from "../../components/FilterComponents/blocks/SwitchBar";
 import SwitchContent from "../../components/SwitchContent";
 import React, { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState, useAppDispatch } from "../../redux/store";
+import { useAppDispatch } from "../../redux/store";
 import { putSettings } from "../../redux/settingsSlice/asyncActions";
+import { selectSettings } from "../../redux/settingsSlice/selectors";
 
 const SettingsContainer = () => {
-  const select = useSelector((state: RootState) => ({
-    settings: state.settings.settings,
-  }));
+  const settings = useSelector(selectSettings);
+
   const dispatch = useAppDispatch();
 
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -18,15 +18,13 @@ const SettingsContainer = () => {
   const [maxFilesAttached, setMaxFilesAttached] = useState(3);
 
   useEffect(() => {
-    if (select.settings) {
-      setAllowFileAttachment(select.settings.allow_file_attachment);
-      setMaxFileSize(select.settings.max_file_size);
-      setMaxFilesAttached(select.settings.max_files_attached);
-      setIsAnonymous(select.settings.anonymous_status);
-      // store.isAllowFileAttachment = settings[0].allow_file_attachment;
-      // store.isAnonymous = settings[0].anonymous_status;
+    if (settings) {
+      setAllowFileAttachment(settings.allow_file_attachment);
+      setMaxFileSize(settings.max_file_size);
+      setMaxFilesAttached(settings.max_files_attached);
+      setIsAnonymous(settings.anonymous_status);
     }
-  }, [select.settings]);
+  }, [settings]);
 
   const changeAllowFileAttachment = (bool: boolean) => {
     setAllowFileAttachment(bool);
