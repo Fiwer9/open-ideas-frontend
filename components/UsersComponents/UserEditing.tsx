@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Slider } from "../SliderComponents/SliderComponents";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
-import { CheckboxBlock } from "../FilterComponents/blocks/CheckboxBlock";
+import CheckboxBlock from "../FilterComponents/blocks/CheckboxBlock";
 import { Button, Form, Input, Select } from "antd";
 
 import styles from "./styles/UserEditing.module.scss";
