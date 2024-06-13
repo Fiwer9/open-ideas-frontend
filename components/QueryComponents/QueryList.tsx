@@ -83,8 +83,6 @@ export const QueryList: React.FC = memo(() => {
       queriesStatus === Status.SUCCESS
     ) {
       setIsLoading(false);
-    } else {
-      setIsLoading(true);
     }
   }, [directionsStatus, queriesStatus]);
 
@@ -207,66 +205,68 @@ export const QueryList: React.FC = memo(() => {
         </AdminPageLayout>
       ) : (
         <PageLayout>
-              <MainText text={"Инициативы"} />
-              <div className={styles.infContainer}>
-                <SearchBar
-                  placeholderNum={"Номер"}
-                  placeholderQuery={"Поиск по идеям"}
-                  stylesSearch={styles.searchBar}
+          <MainText text={"Инициативы"} />
+          <div className={styles.infContainer}>
+            <SearchBar
+              placeholderNum={"Номер"}
+              placeholderQuery={"Поиск по идеям"}
+              stylesSearch={styles.searchBar}
+            />
+            <div className={styles.btnHead}>
+              <div className={styles.btnContainerFilt}>
+                <FilterBar
+                  icon={<PlusCircleOutlined />}
+                  filterText={"Создать идею"}
+                  onClick={() => {
+                    setModalCreateQuery(true);
+                  }}
                 />
-                <div className={styles.btnHead}>
-                  <div className={styles.btnContainerFilt}>
-                    <FilterBar
-                      icon={<PlusCircleOutlined />}
-                      filterText={"Создать идею"}
-                      onClick={() => {
-                        setModalCreateQuery(true);
-                      }}
-                    />
-                    <FilterBar
-                      filterText={"Мои черновики"}
-                      onClick={() => {
-                        setModalDrafts(true);
-                      }}
-                    />
-                    <FilterCheckboxBar checkboxText={"Я эксперт"} />
-                  </div>
-                  <div className={styles.btnContainer}>
-                    <FilterCheckboxBar checkboxText={"Архив"} />
-                  </div>
-                </div>
+                <FilterBar
+                  filterText={"Мои черновики"}
+                  onClick={() => {
+                    setModalDrafts(true);
+                  }}
+                />
+                <FilterCheckboxBar checkboxText={"Я эксперт"} />
               </div>
-              <DataTable
-                columns={directions.length > 0 && getColumns()}
-                data={getData() as QueriesResponse[]}
-                onRowClick={handleRowClickIdea}
-                isLoading={isLoading}
-                locale={"Тут ещё нет идей"}
-              />
-              <Modal
-                active={modalCreateQuery}
-                setActive={setModalCreateQuery}
-                text1={"Создание идеи"}
-                text2={"Ранее вы создавали идею, хотите продолжить заполнение старой или создать новую?"}
-                classNameBtn1={styles.btnWhite}
-                textBtn1={"Создать новую"}
-                classNameBtn2={styles.btnBlue}
-                textBtn2={"Мои черновики"}
-                onClick1={() => router.push("/queries/create")}
-                onClick2={() => {
-                  setModalDrafts(true);
-                  setModalCreateQuery(false);
-                }}
-              />
-              <ModalDrafts
-                active={modalDrafts}
-                setActive={setModalDrafts}
-                text={"Мои черновики"}
-                classNameBtn={styles.btnBlueBorder}
-                textBtn={"Назад"}
-                onClick={closeModal}
-              />
-          </PageLayout>
+              <div className={styles.btnContainer}>
+                <FilterCheckboxBar checkboxText={"Архив"} />
+              </div>
+            </div>
+          </div>
+          <DataTable
+            columns={directions.length > 0 && getColumns()}
+            data={getData() as QueriesResponse[]}
+            onRowClick={handleRowClickIdea}
+            isLoading={isLoading}
+            locale={"Тут ещё нет идей"}
+          />
+          <Modal
+            active={modalCreateQuery}
+            setActive={setModalCreateQuery}
+            text1={"Создание идеи"}
+            text2={
+              "Ранее вы создавали идею, хотите продолжить заполнение старой или создать новую?"
+            }
+            classNameBtn1={styles.btnWhite}
+            textBtn1={"Создать новую"}
+            classNameBtn2={styles.btnBlue}
+            textBtn2={"Мои черновики"}
+            onClick1={() => router.push("/queries/create")}
+            onClick2={() => {
+              setModalDrafts(true);
+              setModalCreateQuery(false);
+            }}
+          />
+          <ModalDrafts
+            active={modalDrafts}
+            setActive={setModalDrafts}
+            text={"Мои черновики"}
+            classNameBtn={styles.btnBlueBorder}
+            textBtn={"Назад"}
+            onClick={closeModal}
+          />
+        </PageLayout>
       )}
     </>
   );

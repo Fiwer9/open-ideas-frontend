@@ -4,9 +4,8 @@ import {
   HeartOutlined,
 } from "@ant-design/icons";
 import { Card, Col, Flex, Radio, Row, UploadProps } from "antd";
-import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../redux/authSlice/selectors";
 import {
@@ -92,7 +91,7 @@ const props: UploadProps = {
 export const ApplicationCard: React.FC = memo(() => {
   const router = useRouter();
   const { queryId } = router.query as { queryId: string };
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const commentValue = useSelector(selectCurrentComment);
   const users = useSelector(selectUsers);
   const [status, setStatus] = useState("");
@@ -106,21 +105,22 @@ export const ApplicationCard: React.FC = memo(() => {
   const statusComments = useSelector(selectStatusComments);
   const statusQuery = useSelector(selectStatusQueries);
   const { user_id } = useSelector(selectCurrentUser);
+  const [like, setLike] = useState<number>();
   const [isExpert, setIsExpert] = useState(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (
-      statusDirections === Status.SUCCESS &&
-      statusUsers === Status.SUCCESS &&
-      statusQuery === Status.SUCCESS &&
-      statusComments === Status.SUCCESS
-    ) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-    }
-  }, [statusDirections, statusUsers, statusQuery, statusComments]);
+    setTimeout(() => {
+      if (
+        statusComments === Status.SUCCESS &&
+        statusQuery === Status.SUCCESS &&
+        statusDirections === Status.SUCCESS &&
+        statusUsers === Status.SUCCESS
+      ) {
+        setIsLoading(false);
+      }
+    }, 1000);
+  }, [statusQuery, statusComments, statusDirections, statusUsers]);
 
   const getIsLiked = () => {
     const currentUser = users.find((user) => user.id === user_id);
@@ -131,23 +131,24 @@ export const ApplicationCard: React.FC = memo(() => {
     );
   };
 
-  const fetchData = useCallback(
-    debounce(async () => {
-      await dispatch(fetchQueriesById({ id: queryId }));
-      await dispatch(fetchUsers());
-      await dispatch(fetchDirections());
-      await dispatch(fetchOrganizations());
-      await dispatch(fetchCommentsById({ queryId }));
-    }, 2000),
-    [queryId],
-  );
+  const fetchData = async () => {
+    await dispatch(fetchQueriesById({ id: queryId }));
+    await dispatch(fetchUsers());
+    await dispatch(fetchDirections());
+    await dispatch(fetchOrganizations());
+    await dispatch(fetchCommentsById({ queryId }));
+  };
 
   useEffect(() => {
     queryId && fetchData();
   }, [queryId]);
 
   useEffect(() => {
-    users.length > 0 && getIsLiked();
+    if (users.length === 0) {
+      return;
+    }
+    getIsLiked();
+    getLikes();
   }, [users]);
 
   useEffect(() => {
@@ -163,7 +164,7 @@ export const ApplicationCard: React.FC = memo(() => {
         }
       }
     }
-    return like;
+    setLike(like);
   };
 
   const changeStatus = async (status: string) => {
@@ -216,7 +217,7 @@ export const ApplicationCard: React.FC = memo(() => {
   const patchAddLike = async (userId: number) => {
     const likedQueries = [...getAllUserLikes(users, userId), Number(queryId)];
     await dispatch(patchLikes({ userId, likedQueries }));
-    await dispatch(fetchUsers());
+    setLike(like + 1);
   };
 
   const patchRemoveLike = async (userId: number) => {
@@ -226,7 +227,7 @@ export const ApplicationCard: React.FC = memo(() => {
       likedQueries.splice(index, 1);
     }
     await dispatch(patchLikes({ userId, likedQueries }));
-    await dispatch(fetchUsers());
+    setLike(like - 1);
   };
 
   return (
@@ -259,7 +260,7 @@ export const ApplicationCard: React.FC = memo(() => {
                     />
                   )}
                   <p className={styles.numberLikes}>
-                    {users.length > 0 && getLikes()}
+                    {users.length > 0 && like}
                   </p>
                 </div>
                 <p

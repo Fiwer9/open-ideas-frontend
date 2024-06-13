@@ -53,7 +53,7 @@ function NewCreateQuery() {
   const { user_id } = useSelector(selectCurrentUser);
   const [form] = Form.useForm<PostQueryProps>();
   const dispatch = useAppDispatch();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const organizations = useSelector(selectOrganizations);
   const user = useSelector(selectUserForHeader);
   const directions = useSelector(selectDirections);
@@ -62,16 +62,16 @@ function NewCreateQuery() {
   const settings = useSelector(selectSettings);
 
   useEffect(() => {
-    if (
-      statusDirections === Status.SUCCESS &&
-      statusOrganizations === Status.SUCCESS &&
-      user.status === Status.SUCCESS
-    ) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-    }
-  }, [statusDirections, statusOrganizations, user.status]);
+    setTimeout(() => {
+      if (
+        user.status === Status.SUCCESS &&
+        statusDirections === Status.SUCCESS &&
+        statusOrganizations === Status.SUCCESS
+      ) {
+        setIsLoading(false);
+      }
+    }, 1000);
+  }, [user.status, statusDirections, statusOrganizations]);
 
   const fetchData = async () => {
     await dispatch(fetchSettings());
@@ -81,7 +81,7 @@ function NewCreateQuery() {
   };
 
   useEffect(() => {
-    fetchData();
+    user_id && fetchData();
   }, [user_id]);
 
   const onSubmit = async (data: PostQueryProps) => {
