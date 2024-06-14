@@ -7,8 +7,8 @@ import router from "next/router";
 import { useAppDispatch } from "../../redux/store";
 import { useSelector } from "react-redux";
 import {
-  selectDetail,
   selectAuthStatus,
+  selectDetail,
 } from "../../redux/authSlice/selectors";
 import { postCodeConfirmation } from "../../redux/authSlice/asyncActions";
 import { Status } from "../../redux/queriesSlice/types";
@@ -33,7 +33,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
     dispatch(
       postCodeConfirmation({
         code,
-      })
+      }),
     );
   };
 
