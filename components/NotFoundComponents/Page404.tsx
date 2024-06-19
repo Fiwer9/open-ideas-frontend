@@ -4,10 +4,18 @@ import { Logo } from "../PicturesComponents/Logo";
 import { Button } from "antd";
 import Standart404 from '../../public/img/404.svg'
 import router from "next/router";
+import { useAppDispatch } from "../../redux/store";
+import { setCurrentPage } from "../../redux/menuSlice/slice";
 
 import styles from './styles/Page404.module.scss'
 
 const Page404: React.FC = memo(() => {
+    const dispatch = useAppDispatch();
+
+    const redirect = () => {
+        dispatch(setCurrentPage(`/queries`));
+        router.push(`/queries`);
+    }
   
     return (
       <>
@@ -30,7 +38,7 @@ const Page404: React.FC = memo(() => {
                         className={styles.btn404} 
                         type="primary"
                         size="large"
-                        onClick={() => {router.push(`/queries`)}}
+                        onClick={redirect}
                     >
                             Вернуться на главную
                     </Button>
