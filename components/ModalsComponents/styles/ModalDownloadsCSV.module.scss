@@ -1,0 +1,51 @@
+@import "../../../styles/variable";
+
+.modal {
+    .logo {
+        margin: 0;
+    }
+
+    .titleCSV {
+        margin: 0;
+        margin-top: 20px;
+        font: {
+            family: 'Poppins', sans-serif;
+            weight: 600;
+            size: 20px;
+        }
+        text-align: center;
+    }
+
+    .textCSV {
+        margin: 0;
+        margin-top: 20px;
+        font: {
+            family: 'Poppins', sans-serif;
+            weight: 400;
+            size: 16px;
+        }
+        text-align: center;
+    }
+
+    .tableContainerCSV {
+        margin-top: 20px;
+    }
+
+    .upload {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .btnContainer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+
+        .btnBack {
+            border: 1px solid #1890FF;
+            span {
+                color: #1890FF;
+            }
+        }
+    }
+}
