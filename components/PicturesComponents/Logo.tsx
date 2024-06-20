@@ -11,9 +11,10 @@ interface LogoProps {
   height: number;
   min?: boolean;
   big?: boolean;
+  className?: any;
 }
 
-export const Logo: React.FC<LogoProps> = memo(({ width, height, min, big }) => {
+export const Logo: React.FC<LogoProps> = memo(({ width, height, min, big, className }) => {
   return (
     <>
       {big ? (
@@ -22,6 +23,7 @@ export const Logo: React.FC<LogoProps> = memo(({ width, height, min, big }) => {
           height={height}
           src={logoBig}
           alt="Открытые идеи"
+          className={className}
         />
       ) : (
         <div className={styles.logoContainer}>
@@ -31,7 +33,7 @@ export const Logo: React.FC<LogoProps> = memo(({ width, height, min, big }) => {
               height={height}
               src={logoMin}
               alt="Открытые идеи"
-              className={styles.logoMin}
+              className={`${styles.logoMin} ${className}`}
             />
           ) : (
             <Image
@@ -39,7 +41,7 @@ export const Logo: React.FC<LogoProps> = memo(({ width, height, min, big }) => {
               height={height}
               src={logo}
               alt="Открытые идеи"
-              className={styles.logo}
+              className={`${styles.logo} ${className}`}
             />
           )}
         </div>
