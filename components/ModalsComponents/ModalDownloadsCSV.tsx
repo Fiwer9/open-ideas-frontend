@@ -1,17 +1,16 @@
-import { Form, Input, Select, Button, Modal, Upload } from 'antd'
+import { Button, Modal, Upload } from 'antd'
 import { Logo } from '../PicturesComponents/Logo'
-import TextArea from 'antd/lib/input/TextArea'
 import { memo } from 'react'
 import { Table } from 'antd';
-import type { TableColumnsType, TableProps } from 'antd';
+import type { TableColumnsType } from 'antd';
 import { UploadOutlined } from "@ant-design/icons";
 
 import styles from './styles/ModalDownloadsCSV.module.scss'
-import { Buttons } from '../ButtonComponent/Button';
 
 interface ModalDownloadsCSV {
-	isModalOpen: any;
-    handleCancel: any;
+	isModalOpen: boolean;
+    handleCancel: () => any;
+    handleOk: () => any;
 }
 
 interface DataType {
@@ -22,8 +21,8 @@ interface DataType {
     department: string;
 }
 
-const ModalCreateDirection = ({
-	isModalOpen, handleCancel
+const ModalDownloadsCSV = ({
+	isModalOpen, handleCancel, handleOk
 }: ModalDownloadsCSV) => {
     if (!isModalOpen) {
         return;
@@ -110,12 +109,23 @@ const ModalCreateDirection = ({
                     </Upload>
                 </div>
                 <div className={styles.btnContainer}>
-                    <Button className={styles.btnBack}>Назад</Button>
-                    <Button className={styles.btnDownload} type="primary">Загрузить</Button>
+                    <Button 
+                        className={styles.btnBack}
+                        onClick={handleCancel}
+                    >
+                        Назад
+                    </Button>
+                    <Button 
+                        className={styles.btnDownload} 
+                        type="primary"
+                        onClick={handleOk}
+                    >
+                        Загрузить
+                    </Button>
                 </div>
             </Modal>
 		</>
 	)
 }
 
-export default memo(ModalCreateDirection)
+export default memo(ModalDownloadsCSV)
