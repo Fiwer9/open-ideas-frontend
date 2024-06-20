@@ -127,7 +127,7 @@ const UsersList: React.FC = () => {
   return (
     <AdminPageLayout>
       <MainText text={"Пользователи"} />
-      <FilterContainer placeholder={"Поиск по пользователям"} />
+      <FilterContainer placeholder={"Поиск по пользователям"} downloadBtn={true} />
       <DataTable
         data={getData()}
         columns={columns}
