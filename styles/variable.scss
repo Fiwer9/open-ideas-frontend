@@ -346,6 +346,7 @@ $color-pule-purple: #F0F5FF;
   .ant-upload-list-item {
     padding: 20px 10px;
     border: 1px solid $color-gray;
+    text-align: left;
   }
 }
 
@@ -443,5 +444,11 @@ $color-pule-purple: #F0F5FF;
 .ant-dropdown-menu-title-content {
   span {
     white-space: normal !important;
+  }
+}
+
+.tableCSV {
+  .ant-table-cell {
+    color: #434343CC;
   }
 }
