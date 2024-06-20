@@ -100,9 +100,8 @@ const ModalDownloadsCSV = ({
                 </div>
                 <div className={styles.upload}>
                     <Upload
-                        maxCount={5}
+                        maxCount={1}
                         accept=".csv"
-                        multiple
                         className="upload"
                     >
                         <Button icon={<UploadOutlined />}>Выбрать csv-файл</Button>
