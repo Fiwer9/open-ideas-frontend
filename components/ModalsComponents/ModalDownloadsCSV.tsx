@@ -9,8 +9,8 @@ import styles from './styles/ModalDownloadsCSV.module.scss'
 
 interface ModalDownloadsCSV {
 	isModalOpen: boolean;
-    handleCancel: () => any;
-    handleOk: () => any;
+    handleCancel: () => void;
+    handleOk: () => void;
 }
 
 interface DataType {
@@ -74,7 +74,6 @@ const ModalDownloadsCSV = ({
     ];
 
 	return (
-		<>
             <Modal 
                 open={isModalOpen} 
                 onCancel={handleCancel} 
@@ -123,7 +122,6 @@ const ModalDownloadsCSV = ({
                     </Button>
                 </div>
             </Modal>
-		</>
 	)
 }
 
