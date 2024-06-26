@@ -27,7 +27,7 @@ const FilterContainer: React.FC<FilterContainerProps> = ({ placeholder, download
     <div className={styles.infContainer}>
       <SearchBar placeholderNum={"Номер"} placeholderQuery={placeholder} />
       <div className={styles.filterContainer}>
-        {downloadBtn ? (
+        {downloadBtn && (
             <div>
               <FilterBar
                 filterText={"Загрузить"}
@@ -37,7 +37,7 @@ const FilterContainer: React.FC<FilterContainerProps> = ({ placeholder, download
 
               <ModalDownloadsCSV isModalOpen={isModalOpen} handleCancel={handleCancel} handleOk={handleOk} />
             </div>
-          ) : (<></>)}
+          )}
         <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
         <FilterCheckboxBar checkboxText={"Архив"} />
       </div>
