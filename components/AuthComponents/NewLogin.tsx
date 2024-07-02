@@ -84,128 +84,130 @@ function NewLogin() {
       <Card
         className={selectedTag === "Вход" ? styles.cardLog : styles.cardReg}
       >
-        <div className={styles.logo}>
-          <Logo width={200} height={50} />
-        </div>
-        <div className={styles.tags}>
-          <CheckableTag
-            className={styles.tag}
-            key={0}
-            checked={selectedTag.includes("Регистрация")}
-            onChange={() => handleChange("Регистрация")}
-          >
-            Регистрация
-          </CheckableTag>
-          <em></em>
-          <CheckableTag
-            key={1}
-            className={styles.tag}
-            checked={selectedTag.includes("Вход")}
-            onChange={() => handleChange("Вход")}
-          >
-            Вход
-          </CheckableTag>
-        </div>
-        <Form>
-          <Form.Item>
-            <div className={styles.title}>
-              <InputLabel title={"Почта"} />
-            </div>
-            <Input
-              onChange={(evt) => handleInputChange(evt, setEmail)}
-              status={status === Status.ERROR ? "error" : undefined}
-              value={status !== Status.ERROR ? email : ""}
-              placeholder={"Введите почту"}
-              required
-            />
-            {status === Status.ERROR && (
-              <div className={styles.error}>{detail.email}</div>
-            )}
-          </Form.Item>
-          <Form.Item className={selectedTag === "Вход" ? styles.content : ""}>
-            <div className={styles.title}>
-              <InputLabel title={"Пароль"} />
-            </div>
-            <Input.Password
-              iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
-              onChange={(evt) => handleInputChange(evt, setPassword)}
-              status={status === Status.ERROR ? "error" : undefined}
-              value={status !== Status.ERROR ? password : ""}
-              placeholder={"Введите пароль"}
-              required
-            />
-            {status === Status.ERROR && selectedTag === "Вход" && (
-              <div className={styles.error}>
-                {detail.password || "Неверный пароль"}
-              </div>
-            )}
-          </Form.Item>
-          {selectedTag === "Регистрация" && (
-            <Form.Item className={styles.content}>
-              <div className={styles.title}>
-                <InputLabel title={"Повторите пароль"} />
-              </div>
-              <div className={styles.input}>
-                <Input.Password
-                  iconRender={(visible) =>
-                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                  }
-                  onChange={(evt) => handleInputChange(evt, setPasswordRepeat)}
-                  status={status === Status.ERROR ? "error" : undefined}
-                  value={status !== Status.ERROR ? passwordRepeat : ""}
-                  placeholder={"Введите пароль"}
-                  required
-                />
-                {passwordRepeat !== password && passwordRepeat && (
-                  <div className={styles.error}>Пароли не совпадают!</div>
-                )}
-                {status === Status.ERROR && (
-                  <div className={styles.error}>{detail.password}</div>
-                )}
-              </div>
-            </Form.Item>
-          )}
-          {selectedTag === "Вход" && (
-            <Form.Item className={styles.content}>
-              <Link className={styles.link} href={""}>
-                Забыли пароль?
-              </Link>
-            </Form.Item>
-          )}
-          <div className={styles.buttonContainer}>
-            {selectedTag === "Вход" ? (
-              <Button
-                className={styles.button}
-                type="primary"
-                htmlType="submit"
-                loading={status === Status.LOADING}
-                onClick={() => {
-                  if (email && password) {
-                    postAuth();
-                  }
-                }}
-              >
-                Вход
-              </Button>
-            ) : (
-              <Button
-                className={styles.button}
-                type="primary"
-                htmlType="submit"
-                loading={status === Status.LOADING}
-                onClick={() => {
-                  if (email && password && passwordRepeat) {
-                    sendCode();
-                  }
-                }}
-              >
-                Вход
-              </Button>
-            )}
+        <div className={styles.regContent}>
+          <div className={styles.logo}>
+            <Logo width={200} height={50} />
           </div>
-        </Form>
+          <div className={styles.tags}>
+            <CheckableTag
+              className={styles.tag}
+              key={0}
+              checked={selectedTag.includes("Регистрация")}
+              onChange={() => handleChange("Регистрация")}
+            >
+              Регистрация
+            </CheckableTag>
+            <em></em>
+            <CheckableTag
+              key={1}
+              className={styles.tag}
+              checked={selectedTag.includes("Вход")}
+              onChange={() => handleChange("Вход")}
+            >
+              Вход
+            </CheckableTag>
+          </div>
+          <Form>
+            <Form.Item>
+              <div className={styles.title}>
+                <InputLabel title={"Почта"} />
+              </div>
+              <Input
+                onChange={(evt) => handleInputChange(evt, setEmail)}
+                status={status === Status.ERROR ? "error" : undefined}
+                value={status !== Status.ERROR ? email : ""}
+                placeholder={"Введите почту"}
+                required
+              />
+              {status === Status.ERROR && (
+                <div className={styles.error}>{detail.email}</div>
+              )}
+            </Form.Item>
+            <Form.Item className={selectedTag === "Вход" ? styles.content : ""}>
+              <div className={styles.title}>
+                <InputLabel title={"Пароль"} />
+              </div>
+              <Input.Password
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+                onChange={(evt) => handleInputChange(evt, setPassword)}
+                status={status === Status.ERROR ? "error" : undefined}
+                value={status !== Status.ERROR ? password : ""}
+                placeholder={"Введите пароль"}
+                required
+              />
+              {status === Status.ERROR && selectedTag === "Вход" && (
+                <div className={styles.error}>
+                  {detail.password || "Неверный пароль"}
+                </div>
+              )}
+            </Form.Item>
+            {selectedTag === "Регистрация" && (
+              <Form.Item className={styles.content}>
+                <div className={styles.title}>
+                  <InputLabel title={"Повторите пароль"} />
+                </div>
+                <div className={styles.input}>
+                  <Input.Password
+                    iconRender={(visible) =>
+                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                    }
+                    onChange={(evt) => handleInputChange(evt, setPasswordRepeat)}
+                    status={status === Status.ERROR ? "error" : undefined}
+                    value={status !== Status.ERROR ? passwordRepeat : ""}
+                    placeholder={"Введите пароль"}
+                    required
+                  />
+                  {passwordRepeat !== password && passwordRepeat && (
+                    <div className={styles.error}>Пароли не совпадают!</div>
+                  )}
+                  {status === Status.ERROR && (
+                    <div className={styles.error}>{detail.password}</div>
+                  )}
+                </div>
+              </Form.Item>
+            )}
+            {selectedTag === "Вход" && (
+              <Form.Item className={styles.content}>
+                <Link className={styles.link} href={""}>
+                  Забыли пароль?
+                </Link>
+              </Form.Item>
+            )}
+            <div className={styles.buttonContainer}>
+              {selectedTag === "Вход" ? (
+                <Button
+                  className={styles.button}
+                  type="primary"
+                  htmlType="submit"
+                  loading={status === Status.LOADING}
+                  onClick={() => {
+                    if (email && password) {
+                      postAuth();
+                    }
+                  }}
+                >
+                  Вход
+                </Button>
+              ) : (
+                <Button
+                  className={styles.button}
+                  type="primary"
+                  htmlType="submit"
+                  loading={status === Status.LOADING}
+                  onClick={() => {
+                    if (email && password && passwordRepeat) {
+                      sendCode();
+                    }
+                  }}
+                >
+                  Вход
+                </Button>
+              )}
+            </div>
+          </Form>
+        </div>
       </Card>
     </div>
   );

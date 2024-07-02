@@ -199,6 +199,8 @@ export const getRouteTranslation = (
       return `${pageName} (Редактирование)`;
     case "users":
       return "Таблица пользователей";
+		case "charts":
+			return "Графики";
     case `userCard?userId=${pageId}`:
       return pageName;
     case `editingUser?userId=${pageId}`:

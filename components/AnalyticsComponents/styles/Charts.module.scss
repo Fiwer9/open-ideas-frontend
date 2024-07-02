@@ -4,11 +4,6 @@
   @include container;
 
   .content {
-    @include content;
-    padding: {
-      right: 65px;
-    };
-
     .contentStatic {
       .headerContent {
         display: flex;
@@ -20,10 +15,6 @@
           .statusItem:not(:last-child) {
             margin-right: 20px;
           }
-        }
-
-        .calendar {
-
         }
 
         .headerItem {

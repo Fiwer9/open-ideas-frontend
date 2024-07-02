@@ -26,6 +26,7 @@ import { fetchQueries } from "../../redux/queriesSlice/asyncActions";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
 import { Status } from "../../redux/queriesSlice/types";
 import AdminPageLayout from "../AdminPageLayout";
+import UsersSkeleton from "../SkeletonComponents/UsersSkeleton";
 
 export const UserCard: React.FC = memo(() => {
   const router = useRouter();
@@ -40,15 +41,15 @@ export const UserCard: React.FC = memo(() => {
   const queriesStatus = useSelector(selectStatusQueries);
 
   useEffect(() => {
-    if (
-      organizationStatus === Status.SUCCESS &&
-      userStatus === Status.SUCCESS &&
-      queriesStatus === Status.SUCCESS
-    ) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-    }
+    setTimeout(() => {
+      if (
+        organizationStatus === Status.SUCCESS &&
+        userStatus === Status.SUCCESS &&
+        queriesStatus === Status.SUCCESS
+      ) {
+        setIsLoading(false);
+      }
+    }, 1000);
   }, [organizationStatus, userStatus, queriesStatus]);
 
   const fetchData = async () => {
@@ -66,74 +67,76 @@ export const UserCard: React.FC = memo(() => {
     user?.name && dispatch(setPageName(user.name));
   }, [user?.name]);
 
-  if (isLoading) {
-    return;
-  }
-
   return (
     <AdminPageLayout>
-      <div className={styles.userContainer}>
-        <Image
-          src={avatar}
-          alt={"Аватар"}
-          width={190}
-          height={190}
-          className={styles.avatar}
-        />
+      {!isLoading ? (
+        <div className={styles.userContainer}>
+          <Image
+            src={avatar}
+            alt={"Аватар"}
+            width={190}
+            height={190}
+            className={styles.avatar}
+          />
 
-        <div className={styles.infUser}>
-          <p className={styles.nameUser}>{user?.name}</p>
+          <div className={styles.infUser}>
+            <p className={styles.nameUser}>{user?.name}</p>
 
-          <Col className={styles.column}>
-            <div>
-              <div className={styles.row}>
-                <p className={styles.rowText}>E-mail:</p>
-                <p className={styles.rowInf}>{user?.email}</p>
-              </div>
-
-              <div className={styles.row}>
-                <p className={styles.rowText}>Эксперт по инициативам:</p>
-                <p className={styles.rowInf}>
-                  {queries
-                    ? getQueriesByNumber(queries)
-                        .toString()
-                        .replaceAll(",", ", ")
-                    : ""}
-                </p>
-              </div>
-
-              <div className={styles.rowOrgAdapt}>
-                <div className={`${styles.row} ${styles.rowOrg}`}>
-                  <p className={styles.rowText}>Организация:</p>
-                  <p className={styles.rowInf}>
-                    {organizations && user?.department
-                      ? getOrganizationName(
-                          user?.department.organization,
-                          organizations,
-                        )
-                      : "Не назначено"}
-                  </p>
+            <Col className={styles.column}>
+              <div>
+                <div className={styles.row}>
+                  <p className={styles.rowText}>E-mail:</p>
+                  <p className={styles.rowInf}>{user?.email}</p>
                 </div>
 
                 <div className={styles.row}>
-                  <p className={styles.rowText}>Отдел:</p>
+                  <p className={styles.rowText}>Эксперт по инициативам:</p>
                   <p className={styles.rowInf}>
-                    {user?.department ? user?.department.name : "Не назначено"}
+                    {queries
+                      ? getQueriesByNumber(queries)
+                          .toString()
+                          .replaceAll(",", ", ")
+                      : ""}
                   </p>
                 </div>
-              </div>
-            </div>
-          </Col>
 
-          <Button
-            className={styles.btnFooter}
-            type="primary"
-            onClick={() => router.push(`/users/editingUser?userId=${userId}`)}
-          >
-            <span>Редактировать профиль</span>
-          </Button>
+                <div className={styles.rowOrgAdapt}>
+                  <div className={`${styles.row} ${styles.rowOrg}`}>
+                    <p className={styles.rowText}>Организация:</p>
+                    <p className={styles.rowInf}>
+                      {organizations && user?.department
+                        ? getOrganizationName(
+                            user?.department.organization,
+                            organizations,
+                          )
+                        : "Не назначено"}
+                    </p>
+                  </div>
+
+                  <div className={styles.row}>
+                    <p className={styles.rowText}>Отдел:</p>
+                    <p className={styles.rowInf}>
+                      {user?.department
+                        ? user?.department.name
+                        : "Не назначено"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Col>
+
+            <Button
+              className={styles.btnFooter}
+              type="primary"
+              onClick={() => router.push(`/users/editingUser?userId=${userId}`)}
+            >
+              <span>Редактировать профиль</span>
+            </Button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <UsersSkeleton />
+      )}
     </AdminPageLayout>
   );
 });

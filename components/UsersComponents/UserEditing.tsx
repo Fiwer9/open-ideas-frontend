@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { CheckboxBlock } from "../FilterComponents/blocks/FilterCheckboxBar";
+import CheckboxBlock from "../FilterComponents/blocks/CheckboxBlock";
 import { Button, Form, Input, Select } from "antd";
 
 import styles from "./styles/UserEditing.module.scss";
 import { useAppDispatch } from "../../redux/store";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { selectUser } from "../../redux/usersSlice/selectors";
+import {
+  selectUser,
+  selectUsersStatus,
+} from "../../redux/usersSlice/selectors";
 import {
   fetchCurrentUser,
   patchUser,
 } from "../../redux/usersSlice/asyncActions";
-import { selectQueriesData } from "../../redux/queriesSlice/selectors";
+import {
+  selectQueriesData,
+  selectStatusQueries,
+} from "../../redux/queriesSlice/selectors";
 import {
   selectDepartments,
   selectOrganizations,
+  selectOrgStatus,
 } from "../../redux/organizationsSlice/selectors";
 import { fetchQueries } from "../../redux/queriesSlice/asyncActions";
 import {
@@ -24,6 +31,8 @@ import {
 import { getOrganizationName } from "../../utils/utils";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
 import AdminPageLayout from "../AdminPageLayout";
+import { Status } from "../../redux/queriesSlice/types";
+import AdminQuerySkeleton from "../SkeletonComponents/AdminQuerySkeleton";
 
 interface EditUserProps {
   userName: string;
@@ -51,6 +60,7 @@ type InitiativesArgs = {
 export const UserEditing = () => {
   const router = useRouter();
   const { userId } = router.query as { userId: string };
+  const [isLoading, setIsLoading] = useState(true);
   const [form] = Form.useForm<EditUserProps>();
   const [initValues, setInitialValues] = useState<EditUserProps>(null);
   const user = useSelector(selectUser);
@@ -58,6 +68,9 @@ export const UserEditing = () => {
   const organizations = useSelector(selectOrganizations);
   const departments = useSelector(selectDepartments);
   const [organization, setOrganization] = useState(0);
+  const organizationStatus = useSelector(selectOrgStatus);
+  const userStatus = useSelector(selectUsersStatus);
+  const queriesStatus = useSelector(selectStatusQueries);
   const dispatch = useAppDispatch();
 
   const fetchData = async () => {
@@ -67,6 +80,18 @@ export const UserEditing = () => {
     await dispatch(fetchOrganizations());
     await dispatch(fetchDepartments({}));
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (
+        organizationStatus === Status.SUCCESS &&
+        userStatus === Status.SUCCESS &&
+        queriesStatus === Status.SUCCESS
+      ) {
+        setIsLoading(false);
+      }
+    }, 1000);
+  }, [organizationStatus, userStatus, queriesStatus]);
 
   useEffect(() => {
     userId && fetchData();
@@ -174,188 +199,196 @@ export const UserEditing = () => {
 
   return (
     <AdminPageLayout>
-      <Form
-        name={"editing-user"}
-        form={form}
-        onFinish={handleSaveButton}
-        layout="vertical"
-        initialValues={initValues}
-        className={styles.contentContainer}
-      >
-        <div className={styles.editing}>
-          <p className={styles.heading}>Редактирование профиля</p>
+      {!isLoading ? (
+        <Form
+          name={"editing-user"}
+          form={form}
+          onFinish={handleSaveButton}
+          layout="vertical"
+          initialValues={initValues}
+          className={styles.contentContainer}
+        >
+          <div className={styles.editing}>
+            <p className={styles.heading}>Редактирование профиля</p>
 
-          <div className={styles.formContainer}>
-            <Form.Item
-              className={styles.formItem}
-              label={"Ф. И. О."}
-              name={"userName"}
-              rules={[
-                {
-                  required: true,
-                  message: "Введите Ф. И. О. пользователя",
-                },
-              ]}
-            >
-              <Input
-                className={styles.inp}
-                style={{ height: 40, borderRadius: 2 }}
-              />
-            </Form.Item>
-            <Form.Item
-              className={styles.formItem}
-              label={"E-mail"}
-              name={"email"}
-              rules={[
-                {
-                  required: true,
-                  message: "Введите почту пользователя",
-                },
-              ]}
-            >
-              <Input
-                className={styles.inp}
-                style={{ height: 40, borderRadius: 2 }}
-              />
-            </Form.Item>
-            <Form.Item
-              className={styles.formItem}
-              label={"Назначить эксперта на инициативы"}
-              name={"initiatives"}
-            >
-              <Select
-                disabled={true}
-                className="select"
-                placeholder={"Выберите инициативы"}
-                style={{ height: 40 }}
-                mode={"multiple"}
-                options={queries.map((query) => ({
-                  value: query.id,
-                  label: `№${query.id}`,
-                }))}
-              />
-            </Form.Item>
-            <Form.Item
-              className={styles.formItem}
-              label={"Организация"}
-              name={"organization"}
-              rules={[
-                {
-                  required: true,
-                  message: "Введите организацию",
-                },
-              ]}
-            >
-              <Select
-                className="select"
-                placeholder={"Выберите организацию"}
-                style={{ height: 40 }}
-                options={organizations.map((organization) => ({
-                  value: organization.id,
-                  label: organization.name,
-                }))}
-                onChange={onChangeOrganization}
-              />
-            </Form.Item>
-            <Form.Item
-              className={styles.formItem}
-              label={"Отдел"}
-              name={"department"}
-              rules={[
-                {
-                  required: true,
-                  message: "Выберите отдел",
-                },
-              ]}
-            >
-              <Select
-                className="select"
-                style={{ height: 40, marginBottom: 60 }}
-                placeholder={"Выберите отдел"}
-                options={getDepOptions()}
-              />
-            </Form.Item>
-            <div className={styles.btnContainer}>
+            <div className={styles.formContainer}>
+              <Form.Item
+                className={styles.formItem}
+                label={"Ф. И. О."}
+                name={"userName"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Введите Ф. И. О. пользователя",
+                  },
+                ]}
+              >
+                <Input
+                  className={styles.inp}
+                  style={{ height: 40, borderRadius: 2 }}
+                />
+              </Form.Item>
+              <Form.Item
+                className={styles.formItem}
+                label={"E-mail"}
+                name={"email"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Введите почту пользователя",
+                  },
+                ]}
+              >
+                <Input
+                  className={styles.inp}
+                  style={{ height: 40, borderRadius: 2 }}
+                />
+              </Form.Item>
+              <Form.Item
+                className={styles.formItem}
+                label={"Назначить эксперта на инициативы"}
+                name={"initiatives"}
+              >
+                <Select
+                  disabled={true}
+                  className="select"
+                  placeholder={"Выберите инициативы"}
+                  style={{ height: 40 }}
+                  mode={"multiple"}
+                  options={queries.map((query) => ({
+                    value: query.id,
+                    label: `№${query.id}`,
+                  }))}
+                />
+              </Form.Item>
+              <Form.Item
+                className={styles.formItem}
+                label={"Организация"}
+                name={"organization"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Введите организацию",
+                  },
+                ]}
+              >
+                <Select
+                  className="select"
+                  placeholder={"Выберите организацию"}
+                  style={{ height: 40 }}
+                  options={organizations.map((organization) => ({
+                    value: organization.id,
+                    label: organization.name,
+                  }))}
+                  onChange={onChangeOrganization}
+                />
+              </Form.Item>
+              <Form.Item
+                className={styles.formItem}
+                label={"Отдел"}
+                name={"department"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Выберите отдел",
+                  },
+                ]}
+              >
+                <Select
+                  className="select"
+                  style={{ height: 40, marginBottom: 60 }}
+                  placeholder={"Выберите отдел"}
+                  options={getDepOptions()}
+                />
+              </Form.Item>
+              <div className={styles.btnContainer}>
+                <Button
+                  form={"editing-user"}
+                  htmlType={"submit"}
+                  className={styles.btnFooter}
+                >
+                  <span>Сохранить изменения</span>
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.rightsGroopContainer}>
+            <div className={styles.rigths}>
+              <p className={styles.heading}>Права доступа</p>
+
+              <div className={styles.checkboxContainer}>
+                <CheckboxBlock
+                  name={"active"}
+                  checkboxText={"Активный"}
+                  hintText={
+                    "Отметьте, если пользователь должен считаться активным. Уберите эту отметку вместо удаления учётной записи."
+                  }
+                  paddings={10}
+                />
+                <CheckboxBlock
+                  name={"personal"}
+                  checkboxText={"Статус персонала"}
+                  hintText={
+                    "Отметьте, если пользователь может входить в административную часть сайта."
+                  }
+                  paddings={10}
+                />
+                <CheckboxBlock
+                  name={"superuser"}
+                  checkboxText={"Статус суперпользователя"}
+                  hintText={
+                    "Указывает, что пользователь имеет все права без явного их назначения"
+                  }
+                  paddings={10}
+                />
+                <CheckboxBlock
+                  name={"verification"}
+                  checkboxText={"Верифицированный"}
+                  hintText={"Указывает, что пользователь закончил регистрацию"}
+                  paddings={10}
+                />
+              </div>
+            </div>
+
+            <div className={styles.group}>
+              <p className={styles.heading}>Группы</p>
+
+              <Form.Item
+                className={`${styles.formItem} ${styles.groupForm}`}
+                label={"Выберете группу в которой будет находится пользователь"}
+              >
+                <Select
+                  disabled={true}
+                  mode="multiple"
+                  placeholder={"Выберете группы"}
+                  allowClear
+                  className="select"
+                  // defaultValue={user.groups.map((group) => group.name)}
+                  style={{ height: 40 }}
+                  options={[
+                    { value: "1", label: "User" },
+                    { value: "2", label: "Expert" },
+                  ]}
+                  aria-required={true}
+                />
+              </Form.Item>
+            </div>
+
+            <div className={styles.btnContainer1440}>
               <Button
+                className={styles.btnFooter1440}
                 form={"editing-user"}
                 htmlType={"submit"}
-                className={styles.btnFooter}
               >
                 <span>Сохранить изменения</span>
               </Button>
             </div>
           </div>
-        </div>
-
-        <div className={styles.rightsGroopContainer}>
-          <div className={styles.rigths}>
-            <p className={styles.heading}>Права доступа</p>
-
-            <div className={styles.checkboxContainer}>
-              <CheckboxBlock
-                name={"active"}
-                checkboxText={"Активный"}
-                hintText={
-                  "Отметьте, если пользователь должен считаться активным. Уберите эту отметку вместо удаления учётной записи."
-                }
-              />
-              <CheckboxBlock
-                name={"personal"}
-                checkboxText={"Статус персонала"}
-                hintText={
-                  "Отметьте, если пользователь может входить в административную часть сайта."
-                }
-              />
-              <CheckboxBlock
-                name={"superuser"}
-                checkboxText={"Статус суперпользователя"}
-                hintText={
-                  "Указывает, что пользователь имеет все права без явного их назначения"
-                }
-              />
-              <CheckboxBlock
-                name={"verification"}
-                checkboxText={"Верифицированный"}
-                hintText={"Указывает, что пользователь закончил регистрацию"}
-              />
-            </div>
-          </div>
-
-          <div className={styles.group}>
-            <p className={styles.heading}>Группы</p>
-
-            <Form.Item
-              className={`${styles.formItem} ${styles.groupForm}`}
-              label={"Выберете группу в которой будет находится пользователь"}
-            >
-              <Select
-                disabled={true}
-                mode="multiple"
-                placeholder={"Выберете группы"}
-                allowClear
-                className="select"
-                // defaultValue={user.groups.map((group) => group.name)}
-                style={{ height: 40 }}
-                options={[
-                  { value: "1", label: "User" },
-                  { value: "2", label: "Expert" },
-                ]}
-                aria-required={true}
-              />
-            </Form.Item>
-          </div>
-
-          <div className={styles.btnContainer1440}>
-            <Button
-              className={styles.btnFooter1440}
-              form={"editing-user"}
-              htmlType={"submit"}
-            >
-              <span>Сохранить изменения</span>
-            </Button>
-          </div>
-        </div>
-      </Form>
+        </Form>
+      ) : (
+        <AdminQuerySkeleton />
+      )}
     </AdminPageLayout>
   );
 };
