@@ -107,7 +107,7 @@ function NewCreateQuery() {
     );
     dispatch(setStatusQueries(Status.WAITING));
     dispatch(setStatusDirections(Status.WAITING));
-    await router.push("/queries");
+    await router.push("/queries/thanks");
   };
 
   const onReset = () => {
