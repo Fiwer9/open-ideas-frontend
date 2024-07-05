@@ -20,6 +20,7 @@ export default class QueriesService {
 
   static async postQuery({
     date,
+    planned_implementation_date,
     name,
     description,
     initiative_direction,
@@ -32,6 +33,7 @@ export default class QueriesService {
   > {
     return $api.post(`/queries/queries/`, {
       date,
+      planned_implementation_date,
       name,
       description,
       initiative_direction,

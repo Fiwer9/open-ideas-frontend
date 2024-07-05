@@ -47,6 +47,7 @@ export interface PostQueryArgs {
   initiative_direction: number;
   status: string;
   implementation_effect: string;
+  planned_implementation_date: string;
   organization: number;
   initiator_users: [number];
 }

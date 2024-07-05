@@ -1,39 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/authSlice/selectors";
-import { useAppDispatch } from "../../redux/store";
-import {
-  selectOrganizations,
-  selectOrgStatus,
-} from "../../redux/organizationsSlice/selectors";
-import {
-  selectDirections,
-  selectStatusDirections,
-} from "../../redux/directionsSlice/selectors";
-import { Status } from "../../redux/queriesSlice/types";
-import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
-import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
-import { Button, Card, Form, Input, message, Select, Upload } from "antd";
+import React, {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
+import {selectCurrentUser} from "../../redux/authSlice/selectors";
+import {useAppDispatch} from "../../redux/store";
+import {selectOrganizations, selectOrgStatus,} from "../../redux/organizationsSlice/selectors";
+import {selectDirections, selectStatusDirections,} from "../../redux/directionsSlice/selectors";
+import {Status} from "../../redux/queriesSlice/types";
+import {fetchOrganizations} from "../../redux/organizationsSlice/asyncActions";
+import {fetchDirections} from "../../redux/directionsSlice/asyncActions";
+import {Button, Card, Form, Input, message, Select, Upload, UploadFile} from "antd";
 import styles from "./styles/CreateQuery.module.scss";
-import { Logo } from "../PicturesComponents/Logo";
-import { formatDateToServer, getOrganizationName } from "../../utils/utils";
-import { Buttons } from "../ButtonComponent/Button";
+import {Logo} from "../PicturesComponents/Logo";
+import {formatDateToServer, getOrganizationName, getOrganizationNameById} from "../../utils/utils";
+import {Buttons} from "../ButtonComponent/Button";
 import router from "next/router";
 import ModalAntdSubmit from "../ModalsComponents/ModalAntdSubmit";
 import TextArea from "antd/lib/input/TextArea";
 import ModalAntdBack from "../ModalsComponents/ModalAntdBack";
-import {
-  changeIsModalResetActive,
-  changeIsModalSubmitActive,
-} from "../../redux/modalsSlice/slice";
-import { MainText } from "../MainTextComponent";
-import { setStatusQueries } from "../../redux/queriesSlice/slice";
-import { setStatusDirections } from "../../redux/directionsSlice/slice";
-import { selectUserForHeader } from "../../redux/headerSlice/selectors";
-import { fetchUserHeader } from "../../redux/headerSlice/asyncActions";
-import { selectSettings } from "../../redux/settingsSlice/selectors";
-import { UploadOutlined } from "@ant-design/icons";
-import { fetchSettings } from "../../redux/settingsSlice/asyncActions";
+import {changeIsModalResetActive, changeIsModalSubmitActive,} from "../../redux/modalsSlice/slice";
+import {MainText} from "../MainTextComponent";
+import {setStatusQueries} from "../../redux/queriesSlice/slice";
+import {setStatusDirections} from "../../redux/directionsSlice/slice";
+import {selectUserForHeader} from "../../redux/headerSlice/selectors";
+import {fetchUserHeader} from "../../redux/headerSlice/asyncActions";
+import {selectSettings} from "../../redux/settingsSlice/selectors";
+import {UploadOutlined} from "@ant-design/icons";
+import {fetchSettings} from "../../redux/settingsSlice/asyncActions";
+import {postQuery} from "../../redux/queriesSlice/asyncActions";
+import {selectQueryData} from "../../redux/queriesSlice/selectors";
+import {postFiles} from "../../redux/filesSlice/asyncActions";
 
 interface PostQueryProps {
   name: string;
@@ -41,7 +35,7 @@ interface PostQueryProps {
   organization: string;
   initiative_direction: number;
   implementation_effect: string;
-  files: string;
+  files: UploadFile<any>[];
 }
 
 function NewCreateQuery() {
@@ -55,6 +49,8 @@ function NewCreateQuery() {
   const statusDirections = useSelector(selectStatusDirections);
   const statusOrganizations = useSelector(selectOrgStatus);
   const settings = useSelector(selectSettings);
+  const currentQuery = useSelector(selectQueryData);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadFile<any>[]>([]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -79,6 +75,16 @@ function NewCreateQuery() {
     user_id && fetchData();
   }, [user_id]);
 
+  useEffect(() => {
+    if (uploadedFiles.length !== 0) {
+      const formFileData = new FormData()
+      formFileData.append('query', currentQuery.id.toString())
+      formFileData.append('query_draft', '')
+      uploadedFiles.map((file) => formFileData.append('file', file.originFileObj))
+      dispatch(postFiles(formFileData))
+    }
+  }, [currentQuery])
+
   const onSubmit = async (data: PostQueryProps) => {
     const {
       name,
@@ -86,25 +92,28 @@ function NewCreateQuery() {
       description,
       initiative_direction,
       implementation_effect,
-      files,
+      files
     } = data;
+    setUploadedFiles(files)
     const formattedEndDate = formatDateToServer(new Date(), "-");
-    console.log(data);
-    // dispatch(
-    //   postQuery({
-    //     name,
-    //     implementation_effect,
-    //     date: formattedEndDate,
-    //     status: "check",
-    //     initiative_direction,
-    //     initiator_users: [user_id],
-    //     description,
-    //     organization: getOrganizationNameById(organization, organizations),
-    //   }),
-    // );
-    // dispatch(setStatusQueries(Status.WAITING));
-    // dispatch(setStatusDirections(Status.WAITING));
-    // await router.push("/queries");
+    console.log(data)
+    console.log(files)
+    await dispatch(
+      postQuery({
+        name,
+        description,
+        implementation_effect,
+        initiative_direction,
+        date: formattedEndDate,
+        planned_implementation_date: formattedEndDate,
+        status: "check",
+        initiator_users: [user_id],
+        organization: getOrganizationNameById(organization, organizations),
+      }),
+    );
+    dispatch(setStatusQueries(Status.WAITING));
+    dispatch(setStatusDirections(Status.WAITING));
+    await router.push("/queries");
   };
 
   const onReset = () => {
@@ -245,7 +254,7 @@ function NewCreateQuery() {
               {settings?.allow_file_attachment && (
                 <Form.Item
                   className={styles.formItems}
-                  name={"file"}
+                  name={"files"}
                   valuePropName={"fileList"}
                   getValueFromEvent={(event) => {
                     return event?.fileList;
@@ -257,7 +266,7 @@ function NewCreateQuery() {
                         return new Promise((resolve, reject) => {
                           if (
                             fileList &&
-                            fileList[0].size > settings?.max_file_size
+                            fileList[0].size > 5000
                           ) {
                             reject("Размер файла превышен!");
                           } else {
@@ -275,7 +284,7 @@ function NewCreateQuery() {
                     className="upload"
                     beforeUpload={(file) => {
                       return new Promise((resolve, reject) => {
-                        if (file.size > settings?.max_file_size) {
+                        if (file.size > 5000) {
                           reject("Размер файла превышен!");
                           message.error("Размер файла превышен!");
                         } else {

@@ -17,6 +17,7 @@ import {
 
 const initialState: QueriesSliceState = {
   items: [],
+  item: {} as QueriesResponse,
   status: Status.WAITING,
   detail: {},
 };
