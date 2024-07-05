@@ -1,48 +1,22 @@
-import {
-  DownloadOutlined,
-  HeartFilled,
-  HeartOutlined,
-} from "@ant-design/icons";
-import { Card, Col, Flex, Radio, Row, Upload, UploadProps } from "antd";
-import { useRouter } from "next/router";
-import React, { memo, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/authSlice/selectors";
-import {
-  fetchCommentsById,
-  postComment,
-} from "../../redux/commentsSlice/asyncActions";
-import {
-  selectComments,
-  selectCurrentComment,
-  selectStatusComments,
-} from "../../redux/commentsSlice/selectors";
-import {
-  setComments,
-  setCurrentComment,
-} from "../../redux/commentsSlice/slice";
-import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
-import {
-  selectDirections,
-  selectStatusDirections,
-} from "../../redux/directionsSlice/selectors";
-import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
-import { selectOrganizations } from "../../redux/organizationsSlice/selectors";
-import {
-  fetchQueriesById,
-  patchQuery,
-} from "../../redux/queriesSlice/asyncActions";
-import {
-  selectQueryData,
-  selectStatusQueries,
-} from "../../redux/queriesSlice/selectors";
-import { Status } from "../../redux/queriesSlice/types";
-import { useAppDispatch } from "../../redux/store";
-import { fetchUsers, patchLikes } from "../../redux/usersSlice/asyncActions";
-import {
-  selectUsers,
-  selectUsersStatus,
-} from "../../redux/usersSlice/selectors";
+import {DownloadOutlined, HeartFilled, HeartOutlined,} from "@ant-design/icons";
+import {Card, Col, Flex, Radio, Row, Upload, UploadProps} from "antd";
+import {useRouter} from "next/router";
+import React, {memo, useEffect, useState} from "react";
+import {useSelector} from "react-redux";
+import {selectCurrentUser} from "../../redux/authSlice/selectors";
+import {fetchCommentsById, postComment,} from "../../redux/commentsSlice/asyncActions";
+import {selectComments, selectCurrentComment, selectStatusComments,} from "../../redux/commentsSlice/selectors";
+import {setComments, setCurrentComment,} from "../../redux/commentsSlice/slice";
+import {fetchDirections} from "../../redux/directionsSlice/asyncActions";
+import {selectDirections, selectStatusDirections,} from "../../redux/directionsSlice/selectors";
+import {fetchOrganizations} from "../../redux/organizationsSlice/asyncActions";
+import {selectOrganizations} from "../../redux/organizationsSlice/selectors";
+import {fetchQueriesById, patchQuery,} from "../../redux/queriesSlice/asyncActions";
+import {selectQueryData, selectStatusQueries,} from "../../redux/queriesSlice/selectors";
+import {Status} from "../../redux/queriesSlice/types";
+import {useAppDispatch} from "../../redux/store";
+import {fetchUsers, patchLikes} from "../../redux/usersSlice/asyncActions";
+import {selectUsers, selectUsersStatus,} from "../../redux/usersSlice/selectors";
 import {
   checkExpert,
   formatDateToServer,
@@ -52,41 +26,15 @@ import {
   getStatusClassName,
   statusTranslation,
 } from "../../utils/utils";
-import { Buttons } from "../ButtonComponent/Button";
-import { Logo } from "../PicturesComponents/Logo";
-import { TextAreas } from "../TextAreaComponent/TextArea";
+import {Buttons} from "../ButtonComponent/Button";
+import {Logo} from "../PicturesComponents/Logo";
+import {TextAreas} from "../TextAreaComponent/TextArea";
 import styles from "./styles/ApplicationCard.module.scss";
-import { CommentBlock } from "./blocks/CommentBlock";
-import { setStatusQueries } from "../../redux/queriesSlice/slice";
-import { setStatusDirections } from "../../redux/directionsSlice/slice";
-
-const props: UploadProps = {
-  defaultFileList: [
-    {
-      uid: "1",
-      name: "xxx.png",
-      status: "done",
-      url: "",
-    },
-    {
-      uid: "2",
-      name: "xxx.png",
-      status: "done",
-      url: "",
-    },
-    {
-      uid: "3",
-      name: "xxx.png",
-      status: "done",
-      url: "",
-    },
-  ],
-  showUploadList: {
-    showDownloadIcon: true,
-    downloadIcon: <DownloadOutlined />,
-    showRemoveIcon: false,
-  },
-};
+import {CommentBlock} from "./blocks/CommentBlock";
+import {setStatusQueries} from "../../redux/queriesSlice/slice";
+import {setStatusDirections} from "../../redux/directionsSlice/slice";
+import {selectFilesData, selectStatusFiles} from "../../redux/filesSlice/selectors";
+import {fetchFiles} from "../../redux/filesSlice/asyncActions";
 
 export const ApplicationCard: React.FC = memo(() => {
   const router = useRouter();
@@ -100,10 +48,12 @@ export const ApplicationCard: React.FC = memo(() => {
   const directions = useSelector(selectDirections);
   const organizations = useSelector(selectOrganizations);
   const applicationData = useSelector(selectQueryData);
+  const files = useSelector(selectFilesData);
   const statusDirections = useSelector(selectStatusDirections);
   const statusUsers = useSelector(selectUsersStatus);
   const statusComments = useSelector(selectStatusComments);
   const statusQuery = useSelector(selectStatusQueries);
+  const statusFiles = useSelector(selectStatusFiles);
   const { user_id } = useSelector(selectCurrentUser);
   const [like, setLike] = useState<number>();
   const [isExpert, setIsExpert] = useState(false);
@@ -115,12 +65,13 @@ export const ApplicationCard: React.FC = memo(() => {
         statusComments === Status.SUCCESS &&
         statusQuery === Status.SUCCESS &&
         statusDirections === Status.SUCCESS &&
+        statusFiles === Status.SUCCESS &&
         statusUsers === Status.SUCCESS
       ) {
         setIsLoading(false);
       }
     }, 1000);
-  }, [statusQuery, statusComments, statusDirections, statusUsers]);
+  }, [statusQuery, statusComments, statusDirections, statusFiles, statusUsers]);
 
   const getIsLiked = () => {
     const currentUser = users.find((user) => user.id === user_id);
@@ -136,6 +87,7 @@ export const ApplicationCard: React.FC = memo(() => {
     await dispatch(fetchUsers());
     await dispatch(fetchDirections());
     await dispatch(fetchOrganizations());
+    await dispatch(fetchFiles());
     await dispatch(fetchCommentsById({ queryId }));
   };
 
@@ -229,7 +181,24 @@ export const ApplicationCard: React.FC = memo(() => {
     await dispatch(patchLikes({ userId, likedQueries }));
     setLike(like - 1);
   };
-
+  
+  const props: UploadProps = {
+    defaultFileList: files.filter((file) => file.query === Number(queryId))
+      .map((file, count) => {
+      return {
+        uid: count.toString(),
+        name: file.file.split('/')[5],
+        status: "done",
+        url: file.file
+      }
+    }),
+    showUploadList: {
+      showDownloadIcon: true,
+      downloadIcon: <DownloadOutlined />,
+      showRemoveIcon: false,
+    },
+  };
+  
   return (
     <>
       <Card className={styles.card} loading={isLoading}>

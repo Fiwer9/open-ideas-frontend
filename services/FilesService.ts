@@ -10,7 +10,7 @@ export default class FilesService {
         return $api.post("/queries/files/", formFileData);
     }
 
-    static async getFiles(): Promise<AxiosResponse<ResponseInterface<FilesResponse>>> {
+    static async getFiles(): Promise<AxiosResponse<ResponseInterface<FilesResponse[]>>> {
         return $api.get("/queries/files/")
     }
 }

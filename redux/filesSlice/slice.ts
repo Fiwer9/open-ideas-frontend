@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { FilesSliceState } from "./types";
 import { Status } from "../queriesSlice/types";
 import { FilesResponse } from "../../models/response/FilesResponse";
-import { postFiles } from "./asyncActions";
+import { fetchFiles, postFiles } from "./asyncActions";
 import { DetailType } from "../../models/response/ResponseInterface";
 
 const initialState: FilesSliceState = {
@@ -21,16 +21,30 @@ export const filesSlice = createSlice({
             if (action.payload.error.is_error) {
                 state.detail = action.payload.error.detail as DetailType
                 state.status = Status.ERROR
-                return
+                return;
             }
-            state.status = Status.SUCCESS
-            console.log(action.payload.data)
+            state.status = Status.SUCCESS;
         })
         builder.addCase(postFiles.pending, state => {
-            state.status = Status.LOADING
+            state.status = Status.LOADING;
         })
         builder.addCase(postFiles.rejected, state => {
-            state.status = Status.ERROR
+            state.status = Status.ERROR;
+        })
+        builder.addCase(fetchFiles.fulfilled, (state, action) => {
+            if (action.payload.error.is_error) {
+                state.detail = action.payload.error.detail as DetailType
+                state.status = Status.ERROR
+                return;
+            }
+            state.files = action.payload.data
+            state.status = Status.SUCCESS;
+        })
+        builder.addCase(fetchFiles.pending, state => {
+            state.status = Status.LOADING;
+        })
+        builder.addCase(fetchFiles.rejected, state => {
+            state.status = Status.ERROR;
         })
     }
 })

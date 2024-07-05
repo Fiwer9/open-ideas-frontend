@@ -96,8 +96,6 @@ function NewCreateQuery() {
     } = data;
     setUploadedFiles(files)
     const formattedEndDate = formatDateToServer(new Date(), "-");
-    console.log(data)
-    console.log(files)
     await dispatch(
       postQuery({
         name,
@@ -266,7 +264,7 @@ function NewCreateQuery() {
                         return new Promise((resolve, reject) => {
                           if (
                             fileList &&
-                            fileList[0].size > 5000
+                            fileList[0].size > settings?.max_file_size
                           ) {
                             reject("Размер файла превышен!");
                           } else {
@@ -284,7 +282,7 @@ function NewCreateQuery() {
                     className="upload"
                     beforeUpload={(file) => {
                       return new Promise((resolve, reject) => {
-                        if (file.size > 5000) {
+                        if (file.size > settings?.max_file_size) {
                           reject("Размер файла превышен!");
                           message.error("Размер файла превышен!");
                         } else {
