@@ -9,4 +9,8 @@ export default class DirectionsService {
   > {
     return $api.get("/queries/directions/");
   }
+  
+  static async getDirectionById(id: string): Promise<AxiosResponse<ResponseInterface<DirectionResponse>>> {
+    return $api.get(`/queries/directions/${id}`)
+  }
 }

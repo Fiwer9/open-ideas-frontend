@@ -9,3 +9,11 @@ export const fetchDirections = createAsyncThunk<
   const { data } = await DirectionsService.getDirections();
   return data;
 });
+
+export const getDirectionById = createAsyncThunk<
+  ResponseInterface<DirectionResponse>,
+  string
+>("directions/getDirectionById", async (id: string) => {
+  const { data } = await DirectionsService.getDirectionById(id);
+  return data;
+});

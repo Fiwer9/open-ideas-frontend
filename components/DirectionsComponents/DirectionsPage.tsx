@@ -1,36 +1,55 @@
-import React, { memo, useState } from "react";
+import React, {memo, useEffect, useState} from "react";
 import AdminPageLayout from "../AdminPageLayout";
-import { MainText } from "../MainTextComponent";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import {MainText} from "../MainTextComponent";
+import {PlusCircleOutlined} from "@ant-design/icons";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import router from "next/router";
 import ModalCreateDirection from "../ModalsComponents/ModalCreateDirection";
-
 import styles from './styles/DirectionsPage.module.scss'
 import DirectionItem from "./DirectionItem";
-
-interface directionsProps {
-	nameDirection: string
-	titleDescr: string
-	textDescr: string
-	titleExperts: string
-	textExperts: string
-};
-
-const directionsInf: directionsProps = {
-    nameDirection: 'Производственное',
-    titleDescr: 'Описание направления',
-    textDescr: 'Направление занимающийся планово - экономическим обоснованием деятельности производства. Направление занимающийся планово - экономическим обоснованием деятельности производства.Направление занимающийся планово - экономическим обоснованием деятельности производства.Направление занимающийся планово - экономическим обоснованием деятельности производства.',
-    titleExperts:  'Прикреплённые эксперты',
-    textExperts: 'Иванов И. И., Бабушкин Б.Б., Иванов И. И., Бабушкин Б.Б.,Бабушкин Б.Б.,'
-};
+import {useSelector} from "react-redux";
+import {selectDirections, selectStatusDirections} from "../../redux/directionsSlice/selectors";
+import {useAppDispatch} from "../../redux/store";
+import {Status} from "../../redux/queriesSlice/types";
+import {fetchDirections} from "../../redux/directionsSlice/asyncActions";
+import {selectUsers, selectUsersStatus} from "../../redux/usersSlice/selectors";
+import {fetchUsers} from "../../redux/usersSlice/asyncActions";
+import {DirectionResponse} from "../../models/response/DirectionResponse";
 
 const DirectionsPage: React.FC = memo(() => {
+    const [isLoading, setIsLoading] = useState(true);
+    const directions = useSelector(selectDirections);
+    const users = useSelector(selectUsers);
+    const directionsStatus = useSelector(selectStatusDirections);
+    const usersStatus = useSelector(selectUsersStatus);
+    const dispatch = useAppDispatch();
     const [modalCreateDirection, setModalCreateDirection] = useState(false);
-
     const closeModal = () => {
         setModalCreateDirection(false);
     };
+    
+    const fetchData = async () => {
+        await dispatch(fetchDirections());
+        await dispatch(fetchUsers());
+    }
+    
+    useEffect(() => {
+        if (
+          directionsStatus === Status.SUCCESS &&
+          usersStatus === Status.SUCCESS
+        )
+        {
+            setIsLoading(false);
+        }
+    }, [directionsStatus, usersStatus])
+    
+    useEffect(() => {
+        fetchData()
+    }, [])
+    
+    const handleDirectionItemClick = (direction: DirectionResponse) => {
+        router.push(`/directions/directionCard?directionId=${direction.id}`)
+    }
   
     return (
       <>
@@ -46,18 +65,13 @@ const DirectionsPage: React.FC = memo(() => {
                 />
             </div>
             <div className={styles.directionsPage}>
-                <DirectionItem 
-                    directionsInf = {directionsInf}
-                    onClickCard={() => router.push(`/directions/directionCard`)}
-                />
-                <DirectionItem 
-                    directionsInf = {directionsInf}
-                    onClickCard={() => router.push(`/directions/directionCard`)}
-                />
-                <DirectionItem 
-                    directionsInf = {directionsInf}
-                    onClickCard={() => router.push(`/directions/directionCard`)}
-                />
+                {directions.map((direction) =>
+                  <DirectionItem
+                    direction={direction}
+                    users={users}
+                    onClickCard={() => handleDirectionItemClick(direction)}
+                  />
+                )}
             </div>
         </AdminPageLayout>
 
