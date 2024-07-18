@@ -8,3 +8,9 @@ export interface DirectionsSliceState {
   status: Status;
   detail: DetailType;
 }
+
+export interface PostDirectionArgs {
+  name: string;
+  description: string;
+  experts?: [number];
+}

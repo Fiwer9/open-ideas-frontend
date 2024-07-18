@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../queriesSlice/types";
 import { DirectionResponse } from "../../models/response/DirectionResponse";
 import { DetailType } from "../../models/response/ResponseInterface";
-import {fetchDirections, getDirectionById} from "./asyncActions";
+import {createDirection, fetchDirections, getDirectionById} from "./asyncActions";
 import { DirectionsSliceState } from "./types";
 
 const initialState: DirectionsSliceState = {
@@ -55,6 +55,23 @@ export const directionsSlice = createSlice({
       state.item = {} as DirectionResponse;
     });
     builder.addCase(getDirectionById.rejected, (state) => {
+      state.status = Status.ERROR;
+      state.item = {} as DirectionResponse;
+    });
+    builder.addCase(createDirection.fulfilled, (state, action) => {
+      if (action.payload.error.is_error) {
+        state.detail = action.payload.error.detail as DetailType;
+        state.status = Status.ERROR;
+        return;
+      }
+      state.item = action.payload.data;
+      state.status = Status.SUCCESS;
+    });
+    builder.addCase(createDirection.pending, (state) => {
+      state.status = Status.LOADING;
+      state.item = {} as DirectionResponse;
+    });
+    builder.addCase(createDirection.rejected, (state) => {
       state.status = Status.ERROR;
       state.item = {} as DirectionResponse;
     });
