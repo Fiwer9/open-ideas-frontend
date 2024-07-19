@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import AdminPageLayout from "../AdminPageLayout";
 import { Button, Form, Input, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
@@ -6,7 +6,7 @@ import router from "next/router";
 
 import styles from './styles/DirectionEditing.module.scss'
 import {getDirectionById, patchDirection} from "../../redux/directionsSlice/asyncActions";
-import {fetchCurrentUser, fetchUsers} from "../../redux/usersSlice/asyncActions";
+import { fetchUsers } from "../../redux/usersSlice/asyncActions";
 import {setPageId, setPageName} from "../../redux/menuSlice/slice";
 import {useAppDispatch} from "../../redux/store";
 import {useSelector} from "react-redux";
@@ -55,7 +55,6 @@ const DirectionEditing: React.FC = () => {
       description,
       experts,
     } = data;
-    console.log(experts)
     await dispatch(
       patchDirection({
         id: Number(directionId),
@@ -119,7 +118,7 @@ const DirectionEditing: React.FC = () => {
                             rules={[
                                 {
                                     required: true,
-                                    message: "Введите описане направления",
+                                    message: "Введите описание направления",
                                 },
                             ]}
                         >
@@ -127,7 +126,7 @@ const DirectionEditing: React.FC = () => {
                                     className={styles.textArea} 
                                     rows={5} 
                                     style={{ borderRadius: 2 }}
-                                    placeholder={'Опишите направление, чем оно занимается\за что ответственно'} 
+                                    placeholder={'Опишите направление, чем оно занимается, за что ответственно'}
                                 />
                         </Form.Item>
                         <Form.Item
@@ -137,7 +136,7 @@ const DirectionEditing: React.FC = () => {
                             rules={[
                                 {
                                     required: true,
-                                    message: "Выберите эксперта",
+                                    message: "Выберите экспертов",
                                 },
                             ]}
                         >

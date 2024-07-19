@@ -11,12 +11,10 @@ import {useSelector} from "react-redux";
 import {selectDirections, selectStatusDirections} from "../../redux/directionsSlice/selectors";
 import {useAppDispatch} from "../../redux/store";
 import {Status} from "../../redux/queriesSlice/types";
-import {postDirection, fetchDirections} from "../../redux/directionsSlice/asyncActions";
+import {fetchDirections} from "../../redux/directionsSlice/asyncActions";
 import {selectUsers, selectUsersStatus} from "../../redux/usersSlice/selectors";
 import {fetchUsers} from "../../redux/usersSlice/asyncActions";
 import {DirectionResponse} from "../../models/response/DirectionResponse";
-import {PostDirectionArgs} from "../../redux/directionsSlice/types";
-import {setStatusDirections} from "../../redux/directionsSlice/slice";
 
 const DirectionsPage: React.FC = memo(() => {
     const [isLoading, setIsLoading] = useState(true);
@@ -29,12 +27,6 @@ const DirectionsPage: React.FC = memo(() => {
     const closeModal = () => {
         setModalCreateDirection(false);
     };
-    
-    const createDirectionModal = async (data: PostDirectionArgs) => {
-        await dispatch(postDirection(data))
-        dispatch(setStatusDirections(Status.WAITING))
-        setModalCreateDirection(false);
-    }
     
     const fetchData = async () => {
         await dispatch(fetchDirections());

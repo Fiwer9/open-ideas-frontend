@@ -2,8 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ResponseInterface } from "../../models/response/ResponseInterface";
 import { DirectionResponse } from "../../models/response/DirectionResponse";
 import DirectionsService from "../../services/DirectionsService";
-import {PostDirectionArgs} from "./types";
-import {PatchDirectionArgs} from "./types";
+import { PostDirectionArgs } from "./types";
+import { PatchDirectionArgs } from "./types";
 
 export const fetchDirections = createAsyncThunk<
   ResponseInterface<DirectionResponse[]>
@@ -42,4 +42,4 @@ export const deleteDirection = createAsyncThunk<
 >("direction/deleteDirection", async (id: number) => {
   const { data } = await DirectionsService.deleteDirection(id);
   return data;
-})
+});

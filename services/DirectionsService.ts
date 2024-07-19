@@ -2,7 +2,7 @@ import { AxiosResponse } from "axios";
 import $api from "../http";
 import { DirectionResponse } from "../models/response/DirectionResponse";
 import { ResponseInterface } from "../models/response/ResponseInterface";
-import {PatchDirectionArgs, PostDirectionArgs} from "../redux/directionsSlice/types";
+import { PatchDirectionArgs, PostDirectionArgs } from "../redux/directionsSlice/types";
 
 export default class DirectionsService {
   static async getDirections(): Promise<
@@ -11,7 +11,9 @@ export default class DirectionsService {
     return $api.get("/queries/directions/");
   }
   
-  static async getDirectionById(id: number): Promise<AxiosResponse<ResponseInterface<DirectionResponse>>> {
+  static async getDirectionById(id: number): Promise<
+    AxiosResponse<ResponseInterface<DirectionResponse>>
+  > {
     return $api.get(`/queries/directions/${id}/`);
   }
   
@@ -30,7 +32,9 @@ export default class DirectionsService {
     });
   }
   
-  static async deleteDirection(id: number): Promise<AxiosResponse<ResponseInterface<null>>> {
+  static async deleteDirection(id: number): Promise<
+    AxiosResponse<ResponseInterface<null>>
+  > {
     return $api.delete(`/queries/directions/${id}/`)
   }
 }

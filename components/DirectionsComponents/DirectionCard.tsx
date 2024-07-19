@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import AdminPageLayout from "../AdminPageLayout";
 import { Button } from "antd";
 import router from "next/router";
