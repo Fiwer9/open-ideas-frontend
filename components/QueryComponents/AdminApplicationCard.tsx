@@ -353,6 +353,7 @@ export const AdminApplicationCard = () => {
       <ModalAdditionalText
         text={"Удалить инициативу?"}
         additionalText={"Восстановить будет невозможно"}
+        buttonText={"Удалить инициативу"}
         handleOk={handleDeleteIdea}
       />
     </>

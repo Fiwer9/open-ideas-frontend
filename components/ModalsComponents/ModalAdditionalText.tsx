@@ -11,11 +11,12 @@ import { Buttons } from "../ButtonComponent/Button";
 interface ModalAdditionalText {
   text: string;
   additionalText: string;
+  buttonText: string;
   handleOk: () => void;
 }
 
 const ModalAdditionalText: React.FC<ModalAdditionalText> = memo(
-  ({ text, additionalText, handleOk }) => {
+  ({ text, additionalText, handleOk, buttonText }) => {
     const isModalActive = useSelector(selectModelSubmitState);
     const dispatch = useAppDispatch();
 
@@ -56,7 +57,7 @@ const ModalAdditionalText: React.FC<ModalAdditionalText> = memo(
               onClick={handleOk}
               danger
             >
-              Удалить инициативу
+              {buttonText}
             </Button>
           </div>,
         ]}

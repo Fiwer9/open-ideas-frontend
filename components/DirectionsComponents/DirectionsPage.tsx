@@ -11,7 +11,7 @@ import {useSelector} from "react-redux";
 import {selectDirections, selectStatusDirections} from "../../redux/directionsSlice/selectors";
 import {useAppDispatch} from "../../redux/store";
 import {Status} from "../../redux/queriesSlice/types";
-import {createDirection, fetchDirections} from "../../redux/directionsSlice/asyncActions";
+import {postDirection, fetchDirections} from "../../redux/directionsSlice/asyncActions";
 import {selectUsers, selectUsersStatus} from "../../redux/usersSlice/selectors";
 import {fetchUsers} from "../../redux/usersSlice/asyncActions";
 import {DirectionResponse} from "../../models/response/DirectionResponse";
@@ -31,7 +31,7 @@ const DirectionsPage: React.FC = memo(() => {
     };
     
     const createDirectionModal = async (data: PostDirectionArgs) => {
-        await dispatch(createDirection(data))
+        await dispatch(postDirection(data))
         dispatch(setStatusDirections(Status.WAITING))
         setModalCreateDirection(false);
     }

@@ -1,21 +1,95 @@
-import React, { memo } from "react";
+import React, {memo, useEffect, useState} from "react";
 import AdminPageLayout from "../AdminPageLayout";
 import { Button, Form, Input, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import router from "next/router";
 
 import styles from './styles/DirectionEditing.module.scss'
+import {getDirectionById, patchDirection} from "../../redux/directionsSlice/asyncActions";
+import {fetchCurrentUser, fetchUsers} from "../../redux/usersSlice/asyncActions";
+import {setPageId, setPageName} from "../../redux/menuSlice/slice";
+import {useAppDispatch} from "../../redux/store";
+import {useSelector} from "react-redux";
+import {selectDirection, selectStatusDirections} from "../../redux/directionsSlice/selectors";
+import {selectUsers, selectUsersStatus} from "../../redux/usersSlice/selectors";
+import {Status} from "../../redux/queriesSlice/types";
+import AdminQuerySkeleton from "../SkeletonComponents/AdminQuerySkeleton";
 
+interface EditDirectionProps {
+  name: string,
+  description: string,
+  experts: [{ value: number, label: string }] | number[]
+}
 
-const DirectionEditing: React.FC = memo(() => {
+const DirectionEditing: React.FC = () => {
+  const { directionId } = router.query as { directionId: string };
+  const [isLoading, setIsLoading] = useState(true);
+  const [form] = Form.useForm<EditDirectionProps>();
+  const users = useSelector(selectUsers);
+  const currentDirection = useSelector(selectDirection);
+  const statusDirections = useSelector(selectStatusDirections);
+  const statusUsers = useSelector(selectUsersStatus);
+  const experts = currentDirection.experts && users.filter((user) => currentDirection.experts.indexOf(user.id) !== -1)
+  const dispatch = useAppDispatch()
+  
+  useEffect(() => {
+    setTimeout(() => {
+      if (
+        statusDirections === Status.SUCCESS &&
+        statusUsers === Status.SUCCESS
+      ) {
+        setIsLoading(false);
+      }
+    }, 1000);
+  }, [statusDirections, statusUsers]);
+  
+  const fetchData = async () => {
+    await dispatch(getDirectionById(Number(directionId)));
+    await dispatch(fetchUsers());
+    dispatch(setPageId(Number(directionId)));
+  }
+  
+  const handleSaveChanges = async (data: EditDirectionProps) => {
+    const {
+      name,
+      description,
+      experts,
+    } = data;
+    console.log(experts)
+    await dispatch(
+      patchDirection({
+        id: Number(directionId),
+        name,
+        description,
+        experts: experts.map((expert) => expert.value ? expert.value : expert)
+    }))
+    router.back()
+  }
+  
+  useEffect(() => {
+    directionId && fetchData();
+  }, [directionId]);
+  
+  useEffect(() => {
+    currentDirection?.name && dispatch(setPageName(currentDirection.name));
+  }, [currentDirection?.name]);
   
     return (
       <>
         <AdminPageLayout>
+          {!isLoading ? (
             <Form
                 name={"editing-direction"}
+                onFinish={handleSaveChanges}
                 layout="vertical"
                 className={styles.form}
+                form={form}
+                initialValues={{
+                  name: currentDirection?.name,
+                  description: currentDirection?.description,
+                  experts: experts && experts.map((expert) => {return { value: expert.id, label: expert.name }})
+                }}
+                
             >
                 <div className={styles.editing}>
                     <p className={styles.heading}>Редактирование направления</p>
@@ -71,24 +145,26 @@ const DirectionEditing: React.FC = memo(() => {
                                     className="select"
                                     style={{ height: 40, marginBottom: 60 }}
                                     placeholder={"Выберите экспертов, отвечающих за данное направление"}
-                                    options={[
-                                        { value: '1', label: 'Экономические' },
-                                        { value: '2', label: 'Технологическое' },
-                                        { value: '3', label: 'Рабочее' },
-                                        { value: '4', label: 'Гуманитарное' },
-                                      ]}
+                                    mode={"multiple"}
+                                    options={[...users
+                                      .filter((user) => user.groups.includes(2))
+                                      .map((user) => ({
+                                        value: user.id,
+                                        label: user.name,
+                                      })),]}
                                 />
                         </Form.Item>
                     </div>
                 </div>
             </Form>
-
+            ) : (
+              <AdminQuerySkeleton />
+            )}
             <div className={styles.btnContainer}>
               <Button
                 className={styles.btnFooter}
-                form={"edit-query"}
+                form={"editing-direction"}
                 htmlType={"submit"}
-                onClick={() => {router.push(`/directions/directionCard`)}}
               >
                 Сохранить изменения
               </Button>
@@ -96,6 +172,6 @@ const DirectionEditing: React.FC = memo(() => {
         </AdminPageLayout>
       </>
     );
-  });
+  };
 
   export default DirectionEditing;

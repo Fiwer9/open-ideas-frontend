@@ -203,6 +203,8 @@ export const getRouteTranslation = (
       return "Направления"
     case `directionCard?directionId=${pageId}`:
       return pageName;
+    case `editingDirection?directionId=${pageId}`:
+      return `${pageName} (Редактирование)`;
 		case "charts":
 			return "Графики";
     case `userCard?userId=${pageId}`:

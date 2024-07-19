@@ -5,7 +5,7 @@ import React, { memo } from 'react'
 
 import styles from './styles/Modal.module.scss'
 import {useAppDispatch} from "../../redux/store";
-import {createDirection, fetchDirections} from "../../redux/directionsSlice/asyncActions";
+import {postDirection, fetchDirections} from "../../redux/directionsSlice/asyncActions";
 import {PostDirectionArgs} from "../../redux/directionsSlice/types";
 import {Buttons} from "../ButtonComponent/Button";
 import {UserResponse} from "../../models/response/UserResponse";
@@ -22,7 +22,7 @@ const ModalCreateDirection = ({ active, setActive, onClickCancel, users }: Modal
   const [form] = Form.useForm<PostDirectionArgs>();
   
   const onSubmit = async (data: PostDirectionArgs) => {
-    await dispatch(createDirection(data))
+    await dispatch(postDirection(data))
     await dispatch(fetchDirections())
     onClickCancel()
   }
@@ -98,6 +98,12 @@ const ModalCreateDirection = ({ active, setActive, onClickCancel, users }: Modal
               className={styles.formItem}
               label={"Прикреплённые эксперты"}
               name={"experts"}
+              rules={[
+                {
+                  required: true,
+                  message: "Выберите экспертов",
+                },
+              ]}
             >
               <Select
                 className="select"

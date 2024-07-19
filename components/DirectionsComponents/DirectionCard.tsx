@@ -10,10 +10,11 @@ import styles from './styles/DirectionCard.module.scss'
 import {setPageId, setPageName} from "../../redux/menuSlice/slice";
 import {useSelector} from "react-redux";
 import {selectDirection, selectStatusDirections} from "../../redux/directionsSlice/selectors";
-import {getDirectionById} from "../../redux/directionsSlice/asyncActions";
+import {deleteDirection, getDirectionById} from "../../redux/directionsSlice/asyncActions";
 import {selectUsers, selectUsersStatus} from "../../redux/usersSlice/selectors";
 import {fetchUsers} from "../../redux/usersSlice/asyncActions";
 import {Status} from "../../redux/queriesSlice/types";
+import AdminQuerySkeleton from "../SkeletonComponents/AdminQuerySkeleton";
 
 const DirectionCard: React.FC = () => {
     const { directionId } = router.query as { directionId: string };
@@ -38,11 +39,12 @@ const DirectionCard: React.FC = () => {
 
     const handleDeleteDirection = async () => {
         dispatch(changeIsModalSubmitActive(false));
+        await dispatch(deleteDirection(Number(directionId)))
         await router.push("/directions");
     };
     
     const fetchData = async () => {
-        await dispatch(getDirectionById(directionId));
+        await dispatch(getDirectionById(Number(directionId)));
         await dispatch(fetchUsers());
         dispatch(setPageId(Number(directionId)));
     }
@@ -58,6 +60,7 @@ const DirectionCard: React.FC = () => {
     return (
       <>
         <AdminPageLayout>
+            {!isLoading ? (
             <div className={styles.content}>
                 <div className={styles.nameDirection}>
                     <p className={styles.name}>{currentDirection.name}</p>
@@ -78,12 +81,14 @@ const DirectionCard: React.FC = () => {
                     </div>
                 </div>
             </div>
-
+              ) : (
+              <AdminQuerySkeleton />
+              )}
             <div className={styles.btnContainer}>
                 <Button
                     type="primary"
                     className={styles.btnBlue}
-                    onClick={() => {router.push(`/directions/editingDirection`)}}
+                    onClick={() => {router.push(`/directions/editingDirection?directionId=${currentDirection.id}`)}}
                 >
                     Редактировать данные направления
                 </Button>
@@ -100,6 +105,7 @@ const DirectionCard: React.FC = () => {
         <ModalAdditionalText
             text={"Удалить направление?"}
             additionalText={"Восстановить будет невозможно"}
+            buttonText={"Удалить направление"}
             handleOk={handleDeleteDirection}
         />
       </>

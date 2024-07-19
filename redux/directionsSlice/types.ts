@@ -12,5 +12,12 @@ export interface DirectionsSliceState {
 export interface PostDirectionArgs {
   name: string;
   description: string;
-  experts?: [number];
+  experts: number[];
+}
+
+export interface PatchDirectionArgs {
+  id: number;
+  name: string;
+  description: string;
+  experts: number[];
 }
