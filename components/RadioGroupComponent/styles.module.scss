@@ -1,0 +1,11 @@
+@import "../../styles/variable";
+
+.textOption {
+  margin: 0;
+  font: {
+    family: Poppins, sans-serif;
+    weight: 400;
+    size: 16px;
+  };
+  color: $color-gray-43;
+}
