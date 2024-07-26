@@ -3,11 +3,12 @@
 .contentBlock {
   margin-top: 30px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 10px;
 
   .textOption {
     margin: 0;
+    width: 182px;
     font: {
       family: Poppins, sans-serif;
       weight: 400;
@@ -17,7 +18,18 @@
   }
 
   .radioBlock {
+    margin-left: auto;
+    margin-right: 0;
     display: flex;
     flex-direction: row;
+    align-items: end;
+    gap: 16px;
+
+    @media (max-width: 1024px) {
+      gap: 10px;
+    }
+  }
+  @media (max-width: 1440px) {
+    flex-direction: column;
   }
 }
