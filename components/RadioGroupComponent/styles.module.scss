@@ -1,11 +1,23 @@
 @import "../../styles/variable";
 
-.textOption {
-  margin: 0;
-  font: {
-    family: Poppins, sans-serif;
-    weight: 400;
-    size: 16px;
-  };
-  color: $color-gray-43;
+.contentBlock {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .textOption {
+    margin: 0;
+    font: {
+      family: Poppins, sans-serif;
+      weight: 400;
+      size: 16px;
+    };
+    color: $color-gray-43;
+  }
+
+  .radioBlock {
+    display: flex;
+    flex-direction: row;
+  }
 }

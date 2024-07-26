@@ -1,4 +1,4 @@
-import {AssigmentSettings} from "../../redux/settingsSlice/types";
+import {AssignmentSettings} from "../../redux/settingsSlice/types";
 
 export interface SettingsResponse {
     id: number,
@@ -6,5 +6,5 @@ export interface SettingsResponse {
     max_file_size: number,
     max_files_attached: number,
     anonymous_status: boolean,
-    assigment_settings: AssigmentSettings
+    assignment_settings: AssignmentSettings
 }

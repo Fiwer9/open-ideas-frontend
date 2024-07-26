@@ -8,7 +8,7 @@ import {putSettings} from "../../redux/settingsSlice/asyncActions";
 import {selectSettings} from "../../redux/settingsSlice/selectors";
 import RadioGroupComponent from "../../components/RadioGroupComponent";
 import {RadioChangeEvent} from "antd";
-import {AssigmentSettings} from "../../redux/settingsSlice/types";
+import {AssignmentSettings} from "../../redux/settingsSlice/types";
 
 const SettingsContainer = () => {
   const settings = useSelector(selectSettings);
@@ -20,7 +20,7 @@ const SettingsContainer = () => {
   const [maxFileSize, setMaxFileSize] = useState(1024);
   const [maxFilesAttached, setMaxFilesAttached] = useState(3);
   const [allowDistributionQueries, setAllowDistributionQueries] = useState(false);
-  const [distribOption, setDistribOption] = useState<AssigmentSettings>();
+  const [distribOption, setDistribOption] = useState<AssignmentSettings>();
 
   useEffect(() => {
     if (settings) {
@@ -28,10 +28,10 @@ const SettingsContainer = () => {
       setMaxFileSize(settings.max_file_size);
       setMaxFilesAttached(settings.max_files_attached);
       setIsAnonymous(settings.anonymous_status);
-      if (settings.assigment_settings !== AssigmentSettings.MANUAL)
+      if (settings.assignment_settings !== AssignmentSettings.MANUAL)
       {
-        
-        setDistribOption(settings.assigment_settings)
+        setAllowDistributionQueries(true)
+        setDistribOption(settings.assignment_settings)
       }
       else {
         setAllowDistributionQueries(false)
@@ -61,17 +61,16 @@ const SettingsContainer = () => {
   
   const changeDistribution = (e: RadioChangeEvent) => {
     setDistribOption(e.target.value);
-    console.log(e.target.value);
-    dispatch(putSettings({id: 1, assigment_settings: e.target.value}))
+    dispatch(putSettings({id: 1, assignment_settings: e.target.value}))
   }
   
   const changeAllowDistribQueries = (bool: boolean) => {
     setAllowDistributionQueries(bool);
-    if (allowDistributionQueries === true) {
-      dispatch(putSettings({id: 1, assigment_settings: AssigmentSettings.DIRECTION}))
+    if (bool) {
+      dispatch(putSettings({id: 1, assignment_settings: AssignmentSettings.DIRECTION}))
     }
     else {
-      dispatch(putSettings({id: 1, assigment_settings: AssigmentSettings.MANUAL}))
+      dispatch(putSettings({id: 1, assignment_settings: AssignmentSettings.MANUAL}))
     }
   }
 

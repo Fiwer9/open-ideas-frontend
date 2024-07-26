@@ -23,7 +23,7 @@ export interface deleteDomainArgs {
   id: number | string;
 }
 
-export enum AssigmentSettings {
+export enum AssignmentSettings {
   MANUAL = "manual",
   DIRECTION = "direction",
   DEPARTMENT = "department"
@@ -35,5 +35,5 @@ export interface putSettingsArgs {
   max_file_size?: number;
   max_files_attached?: number;
   anonymous_status?: boolean;
-  assigment_settings?: AssigmentSettings;
+  assignment_settings?: AssignmentSettings;
 }
