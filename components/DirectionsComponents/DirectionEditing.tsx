@@ -31,7 +31,7 @@ const DirectionEditing: React.FC = () => {
   const statusUsers = useSelector(selectUsersStatus);
   const experts = currentDirection.experts && users.filter((user) => currentDirection.experts.indexOf(user.id) !== -1)
   const dispatch = useAppDispatch()
-  
+
   useEffect(() => {
     setTimeout(() => {
       if (
@@ -42,13 +42,13 @@ const DirectionEditing: React.FC = () => {
       }
     }, 1000);
   }, [statusDirections, statusUsers]);
-  
+
   const fetchData = async () => {
     await dispatch(getDirectionById(Number(directionId)));
     await dispatch(fetchUsers());
     dispatch(setPageId(Number(directionId)));
   }
-  
+
   const handleSaveChanges = async (data: EditDirectionProps) => {
     const {
       name,
@@ -64,15 +64,15 @@ const DirectionEditing: React.FC = () => {
     }))
     router.back()
   }
-  
+
   useEffect(() => {
     directionId && fetchData();
   }, [directionId]);
-  
+
   useEffect(() => {
     currentDirection?.name && dispatch(setPageName(currentDirection.name));
   }, [currentDirection?.name]);
-  
+
     return (
       <>
         <AdminPageLayout>
@@ -88,7 +88,7 @@ const DirectionEditing: React.FC = () => {
                   description: currentDirection?.description,
                   experts: experts && experts.map((expert) => {return { value: expert.id, label: expert.name }})
                 }}
-                
+
             >
                 <div className={styles.editing}>
                     <p className={styles.heading}>Редактирование направления</p>
@@ -122,9 +122,9 @@ const DirectionEditing: React.FC = () => {
                                 },
                             ]}
                         >
-                                <TextArea 
-                                    className={styles.textArea} 
-                                    rows={5} 
+                                <TextArea
+                                    className={styles.textArea}
+                                    rows={5}
                                     style={{ borderRadius: 2 }}
                                     placeholder={'Опишите направление, чем оно занимается, за что ответственно'}
                                 />
@@ -145,6 +145,18 @@ const DirectionEditing: React.FC = () => {
                                     style={{ height: 40, marginBottom: 60 }}
                                     placeholder={"Выберите экспертов, отвечающих за данное направление"}
                                     mode={"multiple"}
+																		showSearch={true}
+																		filterOption={(input, option) =>
+																			(option?.label.toLowerCase() ?? "").includes(
+																				input.toLowerCase(),
+																			)
+																		}
+																		notFoundContent={"Нет экспертов"}
+																		filterSort={(optionA, optionB) =>
+																			(optionA?.label ?? "")
+																				.toLowerCase()
+																				.localeCompare((optionB?.label ?? "").toLowerCase())
+																		}
                                     options={[...users
                                       .filter((user) => user.groups.includes(2))
                                       .map((user) => ({

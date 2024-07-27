@@ -111,6 +111,7 @@ const ModalCreateDirection = ({ active, setActive, onClickCancel, users }: Modal
                 mode={"multiple"}
                 showSearch={true}
                 placeholder={"Выберите экспертов, отвечающих за данное направление"}
+								notFoundContent={"Нет экспертов"}
 								filterOption={(input, option) =>
 									(option?.label.toLowerCase() ?? "").includes(
 										input.toLowerCase(),
