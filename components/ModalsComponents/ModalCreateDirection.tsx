@@ -20,17 +20,17 @@ interface ModalCreateDirectionProps {
 const ModalCreateDirection = ({ active, setActive, onClickCancel, users }: ModalCreateDirectionProps) => {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm<PostDirectionArgs>();
-  
+
   const onSubmit = async (data: PostDirectionArgs) => {
     await dispatch(postDirection(data))
     await dispatch(fetchDirections())
     onClickCancel()
   }
-  
+
   const onReset = () => {
     onClickCancel()
   };
-  
+
   if (!active) {
     return;
   }
@@ -109,8 +109,18 @@ const ModalCreateDirection = ({ active, setActive, onClickCancel, users }: Modal
                 className="select"
                 style={{ height: 40, marginBottom: 60 }}
                 mode={"multiple"}
-                showSearch={false}
+                showSearch={true}
                 placeholder={"Выберите экспертов, отвечающих за данное направление"}
+								filterOption={(input, option) =>
+									(option?.label.toLowerCase() ?? "").includes(
+										input.toLowerCase(),
+									)
+								}
+								filterSort={(optionA, optionB) =>
+									(optionA?.label ?? "")
+										.toLowerCase()
+										.localeCompare((optionB?.label ?? "").toLowerCase())
+								}
                 options={[...users
                   .filter((user) => user.groups.includes(2))
                   .map((user) => ({
@@ -119,7 +129,7 @@ const ModalCreateDirection = ({ active, setActive, onClickCancel, users }: Modal
                   })),]}
               />
             </Form.Item>
-            
+
             <div className={styles.btnContainer}>
               <div className={styles.btnWhite}>
                 <Buttons
