@@ -131,6 +131,7 @@ const DirectionEditing: React.FC = () => {
                         </Form.Item>
                         <Form.Item
                             className={styles.formItem}
+														style={{ marginBottom: 60 }}
                             label={"Прикреплённые эксперты"}
                             name={"experts"}
                             rules={[
@@ -142,7 +143,7 @@ const DirectionEditing: React.FC = () => {
                         >
                                 <Select
                                     className="select"
-                                    style={{ height: 40, marginBottom: 60 }}
+                                    style={{ height: 40 }}
                                     placeholder={"Выберите экспертов, отвечающих за данное направление"}
                                     mode={"multiple"}
 																		showSearch={true}

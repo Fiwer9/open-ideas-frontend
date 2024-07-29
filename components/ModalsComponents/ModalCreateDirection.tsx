@@ -96,6 +96,7 @@ const ModalCreateDirection = ({ active, setActive, onClickCancel, users }: Modal
             </Form.Item>
             <Form.Item
               className={styles.formItem}
+							style={{ marginBottom: 60 }}
               label={"Прикреплённые эксперты"}
               name={"experts"}
               rules={[
@@ -107,7 +108,7 @@ const ModalCreateDirection = ({ active, setActive, onClickCancel, users }: Modal
             >
               <Select
                 className="select"
-                style={{ height: 40, marginBottom: 60 }}
+                style={{ height: 40 }}
                 mode={"multiple"}
                 showSearch={true}
                 placeholder={"Выберите экспертов, отвечающих за данное направление"}
