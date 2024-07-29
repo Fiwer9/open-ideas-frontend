@@ -97,7 +97,7 @@ $color-pule-purple: #F0F5FF;
   background-color: transparent;
   cursor: pointer;
 }
-  
+
 @mixin sliderSmallStyles {
   @media (max-width: 3000px) {
     display: none;
@@ -255,6 +255,10 @@ $color-pule-purple: #F0F5FF;
 }
 
 .btnRed {
+  font: {
+    family: Poppins, sans-serif;
+    weight: 400;
+  };
   border: 1px solid $color-red;
   display: inline-block;
   background-color: $color-white;
