@@ -1,4 +1,5 @@
 import { SettingsResponse } from "../models/response/SettingsResponse";
+import {AssignmentSettings} from "../redux/settingsSlice/types";
 
 export const getSettings = (): SettingsResponse => {
   try {
@@ -9,6 +10,7 @@ export const getSettings = (): SettingsResponse => {
         max_file_size: 1024,
         max_files_attached: 7,
         anonymous_status: false,
+        assignment_settings: AssignmentSettings.MANUAL
       }
     );
   } catch (e) {
@@ -18,6 +20,7 @@ export const getSettings = (): SettingsResponse => {
       max_file_size: 1024,
       max_files_attached: 7,
       anonymous_status: false,
+      assignment_settings: AssignmentSettings.MANUAL
     };
   }
 };

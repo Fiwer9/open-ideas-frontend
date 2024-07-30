@@ -9,3 +9,4 @@ export { default as comments } from "./commentsSlice/slice";
 export { default as modals } from "./modalsSlice/slice";
 export { default as header } from "./headerSlice/slice";
 export { default as settings } from "./settingsSlice/slice";
+export { default as files } from "./filesSlice/slice";

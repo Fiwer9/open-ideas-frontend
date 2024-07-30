@@ -1,45 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../redux/authSlice/selectors";
-import { useAppDispatch } from "../../redux/store";
-import {
-  selectOrganizations,
-  selectOrgStatus,
-} from "../../redux/organizationsSlice/selectors";
-import {
-  selectDirections,
-  selectStatusDirections,
-} from "../../redux/directionsSlice/selectors";
-import { Status } from "../../redux/queriesSlice/types";
-import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
-import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
-import { Button, Card, Form, Input, Select, Upload } from "antd";
+import React, {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
+import {selectCurrentUser} from "../../redux/authSlice/selectors";
+import {useAppDispatch} from "../../redux/store";
+import {selectOrganizations, selectOrgStatus,} from "../../redux/organizationsSlice/selectors";
+import {selectDirections, selectStatusDirections,} from "../../redux/directionsSlice/selectors";
+import {Status} from "../../redux/queriesSlice/types";
+import {fetchOrganizations} from "../../redux/organizationsSlice/asyncActions";
+import {fetchDirections} from "../../redux/directionsSlice/asyncActions";
+import {Button, Card, Form, Input, message, Select, Upload, UploadFile} from "antd";
 import styles from "./styles/CreateQuery.module.scss";
-import { Logo } from "../PicturesComponents/Logo";
-import {
-  formatDateToServer,
-  getOrganizationName,
-  getOrganizationNameById,
-} from "../../utils/utils";
-import { Buttons } from "../ButtonComponent/Button";
+import {Logo} from "../PicturesComponents/Logo";
+import {formatDateToServer, getOrganizationName, getOrganizationNameById} from "../../utils/utils";
+import {Buttons} from "../ButtonComponent/Button";
 import router from "next/router";
 import ModalAntdSubmit from "../ModalsComponents/ModalAntdSubmit";
-import { postQuery } from "../../redux/queriesSlice/asyncActions";
 import TextArea from "antd/lib/input/TextArea";
 import ModalAntdBack from "../ModalsComponents/ModalAntdBack";
-import {
-  changeIsModalResetActive,
-  changeIsModalSubmitActive,
-} from "../../redux/modalsSlice/slice";
-import { MainText } from "../MainTextComponent";
-import { setStatusQueries } from "../../redux/queriesSlice/slice";
-import { setStatusDirections } from "../../redux/directionsSlice/slice";
-import { selectUserForHeader } from "../../redux/headerSlice/selectors";
-import { fetchUserHeader } from "../../redux/headerSlice/asyncActions";
-import { selectSettings } from "../../redux/settingsSlice/selectors";
-import { InputLabel } from "../InputLabelComponent/InputLabel";
-import { UploadOutlined } from "@ant-design/icons";
-import { fetchSettings } from "../../redux/settingsSlice/asyncActions";
+import {changeIsModalResetActive, changeIsModalSubmitActive,} from "../../redux/modalsSlice/slice";
+import {MainText} from "../MainTextComponent";
+import {setStatusQueries} from "../../redux/queriesSlice/slice";
+import {setStatusDirections} from "../../redux/directionsSlice/slice";
+import {selectUserForHeader} from "../../redux/headerSlice/selectors";
+import {fetchUserHeader} from "../../redux/headerSlice/asyncActions";
+import {selectSettings} from "../../redux/settingsSlice/selectors";
+import {UploadOutlined} from "@ant-design/icons";
+import {fetchSettings} from "../../redux/settingsSlice/asyncActions";
+import {postQuery} from "../../redux/queriesSlice/asyncActions";
+import {selectQueryData} from "../../redux/queriesSlice/selectors";
+import {postFiles} from "../../redux/filesSlice/asyncActions";
 
 interface PostQueryProps {
   name: string;
@@ -47,6 +35,7 @@ interface PostQueryProps {
   organization: string;
   initiative_direction: number;
   implementation_effect: string;
+  files: UploadFile<any>[];
 }
 
 function NewCreateQuery() {
@@ -60,6 +49,8 @@ function NewCreateQuery() {
   const statusDirections = useSelector(selectStatusDirections);
   const statusOrganizations = useSelector(selectOrgStatus);
   const settings = useSelector(selectSettings);
+  const currentQuery = useSelector(selectQueryData);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadFile<any>[]>([]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -84,6 +75,16 @@ function NewCreateQuery() {
     user_id && fetchData();
   }, [user_id]);
 
+  useEffect(() => {
+    if (uploadedFiles.length !== 0) {
+      const formFileData = new FormData()
+      formFileData.append('query', currentQuery.id.toString())
+      formFileData.append('query_draft', '')
+      uploadedFiles.map((file) => formFileData.append('file', file.originFileObj))
+      dispatch(postFiles(formFileData))
+    }
+  }, [currentQuery])
+
   const onSubmit = async (data: PostQueryProps) => {
     const {
       name,
@@ -91,17 +92,20 @@ function NewCreateQuery() {
       description,
       initiative_direction,
       implementation_effect,
+      files
     } = data;
+    setUploadedFiles(files)
     const formattedEndDate = formatDateToServer(new Date(), "-");
-    dispatch(
+    await dispatch(
       postQuery({
         name,
-        implementation_effect,
-        date: formattedEndDate,
-        status: "check",
-        initiative_direction,
-        initiator_users: [user_id],
         description,
+        implementation_effect,
+        initiative_direction,
+        date: formattedEndDate,
+        planned_implementation_date: formattedEndDate,
+        status: "check",
+        initiator_users: [user_id],
         organization: getOrganizationNameById(organization, organizations),
       }),
     );
@@ -246,15 +250,46 @@ function NewCreateQuery() {
                 />
               </Form.Item>
               {settings?.allow_file_attachment && (
-                <Form.Item className={styles.formItems}>
-                  <div className={styles.label}>
-                    <InputLabel title={"Загрузка дополнительных файлов"} />
-                  </div>
+                <Form.Item
+                  className={styles.formItems}
+                  name={"files"}
+                  valuePropName={"fileList"}
+                  getValueFromEvent={(event) => {
+                    return event?.fileList;
+                  }}
+                  label={"Загрузка дополнительных файлов"}
+                  rules={[
+                    {
+                      validator(_, fileList) {
+                        return new Promise((resolve, reject) => {
+                          if (
+                            fileList &&
+                            fileList[0].size > settings?.max_file_size
+                          ) {
+                            reject("Размер файла превышен!");
+                          } else {
+                            resolve("Файл загружен!");
+                          }
+                        });
+                      },
+                    },
+                  ]}
+                >
                   <Upload
-                    maxCount={5}
+                    maxCount={settings?.max_files_attached}
                     accept=".pdf, .webm, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
                     multiple
                     className="upload"
+                    beforeUpload={(file) => {
+                      return new Promise((resolve, reject) => {
+                        if (file.size > settings?.max_file_size) {
+                          reject("Размер файла превышен!");
+                          message.error("Размер файла превышен!");
+                        } else {
+                          resolve("Файл загружен!");
+                        }
+                      });
+                    }}
                   >
                     <Button
                       className={styles.uploadBtn}

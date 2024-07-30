@@ -23,10 +23,17 @@ export interface deleteDomainArgs {
   id: number | string;
 }
 
+export enum AssignmentSettings {
+  MANUAL = "manual",
+  DIRECTION = "direction",
+  DEPARTMENT = "department"
+}
+
 export interface putSettingsArgs {
   id: number;
   allow_file_attachment?: boolean;
   max_file_size?: number;
   max_files_attached?: number;
   anonymous_status?: boolean;
+  assignment_settings?: AssignmentSettings;
 }

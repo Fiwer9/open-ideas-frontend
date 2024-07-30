@@ -305,7 +305,7 @@ export const EditingApplication = () => {
                   className={`${styles.formField} ${styles.inp}`}
                   options={[
                     ...users
-                      .filter((user) => user.is_active && user.is_verified)
+                      .filter((user) => user.groups.includes(2))
                       .map((user) => ({
                         value: user.id,
                         label: user.name,

@@ -31,6 +31,7 @@ export default class SettingsService {
     max_file_size,
     max_files_attached,
     anonymous_status,
+    assignment_settings,
   }: putSettingsArgs): Promise<
     AxiosResponse<ResponseInterface<SettingsResponse>>
   > {
@@ -39,6 +40,7 @@ export default class SettingsService {
       max_file_size,
       max_files_attached,
       anonymous_status,
+      assignment_settings
     });
   }
 }

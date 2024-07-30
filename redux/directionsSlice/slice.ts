@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../queriesSlice/types";
 import { DirectionResponse } from "../../models/response/DirectionResponse";
-import { DetailType } from "../../models/response/ResponseInterface";
-import { fetchDirections } from "./asyncActions";
+import { postDirection, fetchDirections, getDirectionById, patchDirection, deleteDirection } from "./asyncActions";
 import { DirectionsSliceState } from "./types";
+import { deleteDirectionBuilder, fetchDirectionBuilder, fetchDirectionsBuilder } from "./builders";
 
 const initialState: DirectionsSliceState = {
   items: [],
+  item: {} as DirectionResponse,
   status: Status.WAITING,
   detail: {},
 };
@@ -23,23 +24,11 @@ export const directionsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchDirections.fulfilled, (state, action) => {
-      if (action.payload.error.is_error) {
-        state.detail = action.payload.error.detail as DetailType;
-        state.status = Status.ERROR;
-        return;
-      }
-      state.items = action.payload.data;
-      state.status = Status.SUCCESS;
-    });
-    builder.addCase(fetchDirections.pending, (state) => {
-      state.status = Status.LOADING;
-      state.items = [];
-    });
-    builder.addCase(fetchDirections.rejected, (state) => {
-      state.status = Status.ERROR;
-      state.items = [];
-    });
+    fetchDirectionsBuilder(builder, fetchDirections);
+    fetchDirectionBuilder(builder, getDirectionById);
+    fetchDirectionBuilder(builder, postDirection);
+    fetchDirectionBuilder(builder, patchDirection);
+    deleteDirectionBuilder(builder, deleteDirection);
   },
 });
 

@@ -16,4 +16,5 @@ export interface UserResponse {
   is_verified: boolean;
   is_active: boolean;
   is_superuser: boolean;
+  groups: number[];
 }

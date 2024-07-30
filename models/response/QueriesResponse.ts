@@ -27,6 +27,7 @@ export interface QueriesResponse {
   status: QueryStatus;
   implementation_effect: string;
   organization: number;
+  planned_implementation_date: string;
   initiator_users: [number];
   expert_users?: [number];
 }

@@ -53,6 +53,7 @@ export const postQueryBuilder = (
     if (action.payload.error.is_error) {
       state.detail = action.payload.error.detail as DetailType;
     }
+    state.item = action.payload.data;
     state.status = Status.SUCCESS;
   });
   builder.addCase(patch.pending, (state) => {
