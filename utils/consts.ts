@@ -25,10 +25,6 @@ export const monthLabels = [
 	"Jun",
 	"Jul",
 	"Aug",
-	"Sep",
-	"Oct",
-	"Nov",
-	"Dec",
 ];
 
 export const data = {

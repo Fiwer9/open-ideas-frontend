@@ -32,7 +32,7 @@ export const getAnalyticsForGraphic = (queries : QueriesResponse[]) => {
 			statusStatistics.set(currentStatus, countQueries)
 		}
 		else {
-			const countQueries = new Array<number>(12).fill(0)
+			const countQueries = new Array<number>(12).fill(0)// количество месяцев + названия // parameter sort in slice
 			countQueries[month] = 1
 			statusStatistics.set(currentStatus, countQueries)
 		}
@@ -84,3 +84,10 @@ const convertStatus = (status: string) => {
 		return 'Отклонены'
 }
 
+export const filterAnalytics = (startDate: string, endDate: string, queries : QueriesResponse[]) => {
+	const start = new Date(startDate)
+	const end = new Date(endDate)
+	return queries.filter((query) =>
+		(new Date(query.date) <= end) && (new Date(query.date) >= start)
+	)
+}

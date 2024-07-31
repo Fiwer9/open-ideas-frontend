@@ -176,7 +176,7 @@ export const Charts: React.FC = memo(() => {
                   Количество инициатив : {queries.length}
                 </p>
                 <div className={styles.calendar}>
-                  <Filter />
+                  <Filter queries={queries}/>
                 </div>
               </div>
               <div className={styles.lineCharts}>
