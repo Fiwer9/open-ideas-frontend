@@ -243,6 +243,12 @@ export const Charts: React.FC = memo(() => {
                     color2={"rgba(143, 183, 217)"}
                     colorTag3={"#B08B8B"}
                     color3={"rgba(97, 23, 23, 0.5)"}
+                    colorTag4={"#32CD32"}
+                    color4={"rgba(50, 205, 50, 0.46)"}
+                    colorTag5={"#FF8C00"}
+                    color5={"rgba(255, 140, 0, 0.46)"}
+                    colorTag6={"#DAA520"}
+                    color6={"rgba(218, 165, 32, 0.46)"}
                   />
                 </div>
               </div>
