@@ -49,7 +49,7 @@ function ContentDate() {
 const Filter: React.FC<FilterProps> = memo(({ queries }) => {
   const [isOpenFilter, setIsOpenFilter] = useState(false);
   const dispatch = useAppDispatch();
-  
+
   const onChangeDate = (value) => {
     if (value !== null) {
       dispatch(setFilter({
@@ -61,19 +61,15 @@ const Filter: React.FC<FilterProps> = memo(({ queries }) => {
           dayjs(value[1]).format('YYYY-MM-DD'), queries)
       ))
     }
+		else {
+			dispatch(setFilter({
+				startDate: "",
+				endDate: ""
+			}))
+			dispatch(setQueries(queries))
+		}
   }
-  
-  const onClickTriangle = () => {
-    setIsOpenFilter(!isOpenFilter)
-    if (isOpenFilter === true) {
-      dispatch(setFilter({
-        startDate: "",
-        endDate: ""
-      }))
-      dispatch(setQueries(queries))
-    }
-  }
-  
+
   return (
     <div className={styles.filter}>
       <div className={styles.container}>
@@ -86,7 +82,7 @@ const Filter: React.FC<FilterProps> = memo(({ queries }) => {
               width={15}
               height={10}
               alt=""
-              onClick={() => onClickTriangle()}
+              onClick={() =>  setIsOpenFilter(!isOpenFilter)}
               className={
                 isOpenFilter ? styles.triangleOpen : styles.triangleClose
               }
