@@ -41,7 +41,6 @@ import { fetchQueries } from "../../redux/queriesSlice/asyncActions";
 import { useAppDispatch } from "../../redux/store";
 import AdminPageLayout from "../AdminPageLayout";
 import GraphsSkeleton from "../SkeletonComponents/GraphsSkeleton";
-import {setQueries} from "../../redux/queriesSlice/slice";
 
 ChartJS.register(
   CategoryScale,
@@ -138,9 +137,10 @@ export const Charts: React.FC = memo(() => {
     if (organizations) {
       setData({
         ...data,
-        labels: getGraphicLabels(queryFilter.startDate, queryFilter.endDate,
-          new Date(queryFilter.endDate).getDate() - new Date(queryFilter.startDate).getDate(),
-          new Date(queryFilter.endDate).getUTCMonth()  - new Date(queryFilter.startDate).getUTCMonth(),
+        labels: getGraphicLabels(
+          queryFilter.startDate,
+          queryFilter.endDate,
+          new Date(queryFilter.endDate).getUTCMonth() - new Date(queryFilter.startDate).getUTCMonth(),
           new Date(queryFilter.endDate).getFullYear() -  new Date(queryFilter.startDate).getFullYear()
         ),
         datasets: updatedDataset

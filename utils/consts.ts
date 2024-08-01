@@ -32,7 +32,7 @@ export const monthLabels = [
 	"Dec"
 ];
 
-export const getGraphicLabels = (startDate: string, endDate: string, days: number, months: number, years: number): string[] => {
+export const getGraphicLabels = (startDate: string, endDate: string, months: number, years: number): string[] => {
 	const count = daysInMonth(new Date(startDate).getUTCMonth() + 1, new Date(startDate).getFullYear())
 	if (years === 0 && months === 0) {
 		const array = [...Array(count).keys()].map((numb) => (numb + 1).toString())

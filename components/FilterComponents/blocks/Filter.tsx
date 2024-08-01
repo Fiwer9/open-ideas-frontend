@@ -7,7 +7,7 @@ const { RangePicker } = DatePicker;
 
 import styles from "../styles/Filter.module.scss";
 import {QueriesResponse} from "../../../models/response/QueriesResponse";
-import {filterAnalytics, getAnalyticsForGraphic} from "../../../utils/getAnalytics";
+import {filterAnalytics} from "../../../utils/getAnalytics";
 import {useAppDispatch} from "../../../redux/store";
 import {setFilter, setQueries} from "../../../redux/queriesSlice/slice";
 
@@ -50,6 +50,30 @@ const Filter: React.FC<FilterProps> = memo(({ queries }) => {
   const [isOpenFilter, setIsOpenFilter] = useState(false);
   const dispatch = useAppDispatch();
   
+  const onChangeDate = (value) => {
+    if (value !== null) {
+      dispatch(setFilter({
+        startDate: dayjs(value[0]).format('YYYY-MM-DD'),
+        endDate: dayjs(value[1]).format('YYYY-MM-DD')
+      }))
+      dispatch(setQueries(
+        filterAnalytics(dayjs(value[0]).format('YYYY-MM-DD'),
+          dayjs(value[1]).format('YYYY-MM-DD'), queries)
+      ))
+    }
+  }
+  
+  const onClickTriangle = () => {
+    setIsOpenFilter(!isOpenFilter)
+    if (isOpenFilter === true) {
+      dispatch(setFilter({
+        startDate: "",
+        endDate: ""
+      }))
+      dispatch(setQueries(queries))
+    }
+  }
+  
   return (
     <div className={styles.filter}>
       <div className={styles.container}>
@@ -62,7 +86,7 @@ const Filter: React.FC<FilterProps> = memo(({ queries }) => {
               width={15}
               height={10}
               alt=""
-              onClick={() => setIsOpenFilter(!isOpenFilter)}
+              onClick={() => onClickTriangle()}
               className={
                 isOpenFilter ? styles.triangleOpen : styles.triangleClose
               }
@@ -78,17 +102,7 @@ const Filter: React.FC<FilterProps> = memo(({ queries }) => {
               dayjs("01.01.2023", dateFormatList[0]),
               dayjs("15.04.2023", dateFormatList[0]),
             ]}
-						onChange={(value) => { if (value !== null) {
-              dispatch(setFilter({
-                startDate: dayjs(value[0]).format('YYYY-MM-DD'),
-                endDate: dayjs(value[1]).format('YYYY-MM-DD')
-              }))
-              dispatch(setQueries(
-                filterAnalytics(dayjs(value[0]).format('YYYY-MM-DD'),
-                  dayjs(value[1]).format('YYYY-MM-DD'), queries)
-              ))
-            }
-            }}
+						onChange={(value) => onChangeDate(value)}
             format={dateFormatList}
           />
         ) : null}

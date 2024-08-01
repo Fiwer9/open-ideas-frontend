@@ -1,6 +1,5 @@
 import { getDirectionName, getOrganizationName, statusTranslation } from "./utils";
 import { QueriesResponse } from "../models/response/QueriesResponse";
-import {monthLabels} from "./consts";
 
 export enum AnalyticType {
 	DIRECTION,
@@ -22,25 +21,39 @@ const statusOptionsProcess = [
 	'Принята к реализации'
 ]
 
+export const getMonth = (date: string) => new Date(date).getUTCMonth();
+
+export const getYear = (date: string) => new Date(date).getFullYear();
+
 export const daysInMonth = (month: number, year: number) => {
 	return new Date(year, month, 0).getDate();
 }
 
-const getXOptionsForGraphic = (queryDate: string, months: number, years: number, startDate: string, endDate: string) => {
+const getIndexOfXOption = (initialValue: number, arrayLength: number, queryDateValue: number) => {
+	const arr: number[] = []
+	for (let i = initialValue; i < arrayLength; i++) {
+		arr.push(i)
+	}
+	return arr.indexOf(queryDateValue);
+}
+
+const getXOptionsForGraphic = (
+	queryDate: string,
+	months: number,
+	years: number,
+	startDate: string,
+	endDate: string
+): number => {
 	if (years === 0 && months === 0) {
 		return new Date(queryDate).getDate() - 1;
 	}
 	if (years === 0 && months >= 1) {
-		const arr = []
-		for (let i = new Date(startDate).getUTCMonth(); i < new Date(endDate).getUTCMonth() + 1; i++) {
-			arr.push(i)
-		}
-		return arr.indexOf(new Date(queryDate).getUTCMonth());
+		return getIndexOfXOption(getMonth(startDate), getMonth(endDate) + 1, getMonth(queryDate))
 	}
 	if (years === 1) {
 		const arrLength = 12 + months
 		const arr: number[] = []
-		for (let i = new Date(startDate).getUTCMonth(); i < new Date(startDate).getUTCMonth() + arrLength + 1; i++) {
+		for (let i = getMonth(startDate); i < getMonth(startDate) + arrLength + 1; i++) {
 			if (arr.indexOf(i % 12) !== -1) {
 				arr.push((i % 12) + 14)
 			}
@@ -48,29 +61,25 @@ const getXOptionsForGraphic = (queryDate: string, months: number, years: number,
 				arr.push(i % 12)
 			}
 		}
-		if (new Date(queryDate).getFullYear() === new Date(startDate).getFullYear()
-			|| arr.indexOf(new Date(queryDate).getUTCMonth() + 14) === -1) {
-			return arr.indexOf(new Date(queryDate).getUTCMonth());
+		if (getYear(queryDate) === getYear(startDate)
+			|| arr.indexOf(getMonth(queryDate) + 14) === -1) {
+			return arr.indexOf(getMonth(queryDate));
 		}
 		else {
-			return arr.indexOf(new Date(queryDate).getUTCMonth() + 14);
+			return arr.indexOf(getMonth(queryDate) + 14);
 		}
 	}
 	if (years > 1) {
-		const arr: number[] = []
-		for (let i = new Date(startDate).getFullYear(); i < new Date(endDate).getFullYear() + 1; i++) {
-			arr.push(i)
-		}
-		return arr.indexOf(new Date(queryDate).getFullYear());
+		return getIndexOfXOption(getYear(startDate), getYear(endDate) + 1, getYear(queryDate))
 	}
 	else {
 		return new Date(queryDate).getUTCMonth();
 	}
 }
 
-const getSizeArray = (startDate: string, endDate: string, days: number, months: number, years: number) => {
+const getSizeArray = (startDate: string, endDate: string, months: number, years: number) => {
 	if (years === 0 && months === 0) {
-		return daysInMonth(new Date(endDate).getUTCMonth() + 1, new Date(endDate).getFullYear())
+		return daysInMonth(getMonth(endDate) + 1, getYear(endDate));
 	}
 	if (years === 0 && months >= 1) {
 		return months + 1;
@@ -80,7 +89,7 @@ const getSizeArray = (startDate: string, endDate: string, days: number, months: 
 		return arrLength + 1;
 	}
 	if (years > 1) {
-		return new Date(endDate).getUTCFullYear() - new Date(startDate).getUTCFullYear() + 1
+		return getYear(endDate) - getYear(startDate) + 1
 	}
 	else {
 		return 12;
@@ -88,10 +97,9 @@ const getSizeArray = (startDate: string, endDate: string, days: number, months: 
 }
 
 export const getAnalyticsForGraphic = (queries : QueriesResponse[], startDate: string, endDate: string) => {
-	const days = new Date(endDate).getDate() - new Date(startDate).getDate()
 	const months = (new Date(endDate).getUTCMonth() + 1) - (new Date(startDate).getUTCMonth() + 1)
 	const years = new Date(endDate).getFullYear() -  new Date(startDate).getFullYear()
-	const count = getSizeArray(startDate, endDate, days, months, years)
+	const count = getSizeArray(startDate, endDate, months, years)
 	const statusStatistics = new Map<string, number[]>()
 	for (let i = 0; i < queries.length; i++) {
 		const currentStatus = convertStatus(statusTranslation[queries[i].status])
@@ -117,7 +125,6 @@ export const getAnalyticsForGraphic = (queries : QueriesResponse[], startDate: s
 	if (!statusStatistics.has('Выполнены')) {
 		statusStatistics.set('Выполнены', countQueries)
 	}
-	console.log(statusStatistics)
 	return statusStatistics;
 }
 
