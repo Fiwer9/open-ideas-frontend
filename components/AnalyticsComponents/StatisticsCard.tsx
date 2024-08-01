@@ -16,11 +16,18 @@ interface StatisticsCardProps {
 	color1: string,
 	color2: string,
 	color3: string
+  color4: string,
+  color5: string,
+  color6: string
+  colorTag4: string,
+  colorTag5: string,
+  colorTag6: string,
 }
 
-export const StatisticsCard = ( { title, dataPieChart, numInitiatives, colorTag1, colorTag2, colorTag3,
-                                  color1, color2, color3 } : StatisticsCardProps ) => {
-	const colorTags = [colorTag1, colorTag2, colorTag3]
+export const StatisticsCard = ( { title, dataPieChart, numInitiatives,
+                                  colorTag1, colorTag2, colorTag3, colorTag4, colorTag5, colorTag6,
+                                  color1, color2, color3, color4, color5, color6 } : StatisticsCardProps ) => {
+	const colorTags = [colorTag1, colorTag2, colorTag3, colorTag4, colorTag5, colorTag6]
   const data = {
     datasets: [
       {
@@ -29,11 +36,17 @@ export const StatisticsCard = ( { title, dataPieChart, numInitiatives, colorTag1
           color1,
           color2,
           color3,
+          color4,
+          color5,
+          color6
         ],
         borderColor: [
           color1,
           color2,
           color3,
+          color4,
+          color5,
+          color6
         ],
         borderWidth: 1,
       },

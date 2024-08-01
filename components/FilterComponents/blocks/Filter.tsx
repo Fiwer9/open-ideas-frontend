@@ -89,11 +89,6 @@ const Filter: React.FC<FilterProps> = memo(({ queries }) => {
               ))
             }
             }}
-            // && console.log(
-            //   getAnalyticsForGraphic(
-            //     filterAnalytics(dayjs(value[0]).format('YYYY-MM-DD'), dayjs(value[1]).format('YYYY-MM-DD'), queries), dayjs(value[0]).format('YYYY-MM-DD'),  dayjs(value[1]).format('YYYY-MM-DD')))}}
-						// 	// ? console.log(filterAnalytics(dayjs(value[0]).format('YYYY-MM-DD'), dayjs(value[1]).format('YYYY-MM-DD'), queries))
-						// 	// : console.log(value)}}
             format={dateFormatList}
           />
         ) : null}

@@ -28,26 +28,59 @@ export const daysInMonth = (month: number, year: number) => {
 
 const getXOptionsForGraphic = (queryDate: string, months: number, years: number, startDate: string, endDate: string) => {
 	if (years === 0 && months === 0) {
-		return new Date(queryDate).getDate() - 1
+		return new Date(queryDate).getDate() - 1;
 	}
-	if (months < 12 && months >= 1) {
+	if (years === 0 && months >= 1) {
 		const arr = []
 		for (let i = new Date(startDate).getUTCMonth(); i < new Date(endDate).getUTCMonth() + 1; i++) {
 			arr.push(i)
 		}
-		return arr.indexOf(new Date(queryDate).getUTCMonth())
+		return arr.indexOf(new Date(queryDate).getUTCMonth());
+	}
+	if (years === 1) {
+		const arrLength = 12 + months
+		const arr: number[] = []
+		for (let i = new Date(startDate).getUTCMonth(); i < new Date(startDate).getUTCMonth() + arrLength + 1; i++) {
+			if (arr.indexOf(i % 12) !== -1) {
+				arr.push((i % 12) + 14)
+			}
+			else {
+				arr.push(i % 12)
+			}
+		}
+		if (new Date(queryDate).getFullYear() === new Date(startDate).getFullYear()
+			|| arr.indexOf(new Date(queryDate).getUTCMonth() + 14) === -1) {
+			return arr.indexOf(new Date(queryDate).getUTCMonth());
+		}
+		else {
+			return arr.indexOf(new Date(queryDate).getUTCMonth() + 14);
+		}
+	}
+	if (years > 1) {
+		const arr: number[] = []
+		for (let i = new Date(startDate).getFullYear(); i < new Date(endDate).getFullYear() + 1; i++) {
+			arr.push(i)
+		}
+		return arr.indexOf(new Date(queryDate).getFullYear());
 	}
 	else {
-		return new Date(queryDate).getUTCMonth()
+		return new Date(queryDate).getUTCMonth();
 	}
 }
 
-const getSizeArray = (date: string, days: number, months: number, years: number) => {
+const getSizeArray = (startDate: string, endDate: string, days: number, months: number, years: number) => {
 	if (years === 0 && months === 0) {
-		return daysInMonth(new Date(date).getUTCMonth() + 1, new Date(date).getFullYear())
+		return daysInMonth(new Date(endDate).getUTCMonth() + 1, new Date(endDate).getFullYear())
 	}
-	if (months < 12 && months >= 1) {
+	if (years === 0 && months >= 1) {
 		return months + 1;
+	}
+	if (years === 1) {
+		const arrLength = 12 + months
+		return arrLength + 1;
+	}
+	if (years > 1) {
+		return new Date(endDate).getUTCFullYear() - new Date(startDate).getUTCFullYear() + 1
 	}
 	else {
 		return 12;
@@ -58,7 +91,7 @@ export const getAnalyticsForGraphic = (queries : QueriesResponse[], startDate: s
 	const days = new Date(endDate).getDate() - new Date(startDate).getDate()
 	const months = (new Date(endDate).getUTCMonth() + 1) - (new Date(startDate).getUTCMonth() + 1)
 	const years = new Date(endDate).getFullYear() -  new Date(startDate).getFullYear()
-	const count = getSizeArray(endDate, days, months, years)
+	const count = getSizeArray(startDate, endDate, days, months, years)
 	const statusStatistics = new Map<string, number[]>()
 	for (let i = 0; i < queries.length; i++) {
 		const currentStatus = convertStatus(statusTranslation[queries[i].status])
