@@ -7,7 +7,9 @@ const { RangePicker } = DatePicker;
 
 import styles from "../styles/Filter.module.scss";
 import {QueriesResponse} from "../../../models/response/QueriesResponse";
-import {filterAnalytics} from "../../../utils/getAnalytics";
+import {filterAnalytics, getAnalyticsForGraphic} from "../../../utils/getAnalytics";
+import {useAppDispatch} from "../../../redux/store";
+import {setFilter, setQueries} from "../../../redux/queriesSlice/slice";
 
 const dateFormatList = ["DD.MM.YYYY", "DD.MM.YY", "DD-MM-YYYY", "DD-MM-YY"];
 
@@ -46,7 +48,8 @@ function ContentDate() {
 
 const Filter: React.FC<FilterProps> = memo(({ queries }) => {
   const [isOpenFilter, setIsOpenFilter] = useState(false);
-
+  const dispatch = useAppDispatch();
+  
   return (
     <div className={styles.filter}>
       <div className={styles.container}>
@@ -75,9 +78,22 @@ const Filter: React.FC<FilterProps> = memo(({ queries }) => {
               dayjs("01.01.2023", dateFormatList[0]),
               dayjs("15.04.2023", dateFormatList[0]),
             ]}
-						onChange={(value) => { value !== null
-							? console.log(filterAnalytics(dayjs(value[0]).format('YYYY-MM-DD'), dayjs(value[1]).format('YYYY-MM-DD'), queries))
-							: console.log(value)}}
+						onChange={(value) => { if (value !== null) {
+              dispatch(setFilter({
+                startDate: dayjs(value[0]).format('YYYY-MM-DD'),
+                endDate: dayjs(value[1]).format('YYYY-MM-DD')
+              }))
+              dispatch(setQueries(
+                filterAnalytics(dayjs(value[0]).format('YYYY-MM-DD'),
+                  dayjs(value[1]).format('YYYY-MM-DD'), queries)
+              ))
+            }
+            }}
+            // && console.log(
+            //   getAnalyticsForGraphic(
+            //     filterAnalytics(dayjs(value[0]).format('YYYY-MM-DD'), dayjs(value[1]).format('YYYY-MM-DD'), queries), dayjs(value[0]).format('YYYY-MM-DD'),  dayjs(value[1]).format('YYYY-MM-DD')))}}
+						// 	// ? console.log(filterAnalytics(dayjs(value[0]).format('YYYY-MM-DD'), dayjs(value[1]).format('YYYY-MM-DD'), queries))
+						// 	// : console.log(value)}}
             format={dateFormatList}
           />
         ) : null}

@@ -20,6 +20,7 @@ const initialState: QueriesSliceState = {
   item: {} as QueriesResponse,
   status: Status.WAITING,
   detail: {},
+  queryFilter: {} as {startDate: string, endDate: string}
 };
 
 export const queriesSlice = createSlice({
@@ -32,6 +33,9 @@ export const queriesSlice = createSlice({
     setQueries: (state, action: PayloadAction<QueriesResponse[]>) => {
       state.items = action.payload;
     },
+    setFilter: (state, action: PayloadAction<{startDate: string, endDate: string}>) => {
+      state.queryFilter = action.payload;
+    },
   },
   extraReducers: (builder) => {
     fetchQueriesBuilder(builder, fetchQueriesByName);
@@ -43,6 +47,6 @@ export const queriesSlice = createSlice({
   },
 });
 
-export const { setQueries, setStatusQueries } = queriesSlice.actions;
+export const { setQueries, setStatusQueries, setFilter } = queriesSlice.actions;
 
 export default queriesSlice.reducer;

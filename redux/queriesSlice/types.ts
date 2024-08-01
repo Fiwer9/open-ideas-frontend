@@ -13,6 +13,7 @@ export enum Status {
 }
 
 export interface QueriesSliceState {
+  queryFilter: {startDate: string, endDate: string};
   items: QueriesResponse[];
   item?: QueriesResponse;
   status: Status;

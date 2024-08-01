@@ -20,7 +20,7 @@ import {
   getAnalyticsForPieChart,
   StatisticItem,
 } from "../../utils/getAnalytics";
-import { monthLabels, statusOptions } from "../../utils/consts";
+import {getGraphicLabels, monthLabels, statusOptions} from "../../utils/consts";
 import { Status } from "../../redux/queriesSlice/types";
 import { useSelector } from "react-redux";
 import {
@@ -32,7 +32,7 @@ import {
   selectStatusDirections,
 } from "../../redux/directionsSlice/selectors";
 import {
-  selectQueriesData,
+  selectQueriesData, selectQueryFilter,
   selectStatusQueries,
 } from "../../redux/queriesSlice/selectors";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
@@ -88,10 +88,6 @@ const dataset = [
 ];
 
 export const Charts: React.FC = memo(() => {
-  const [data, setData] = useState({
-    labels: monthLabels,
-    datasets: [],
-  });
   const [isLoading, setIsLoading] = useState(true);
   const [dataDirection, setDataDirection] = useState<StatisticItem[]>([]);
   const [dataOrganization, setDataOrganization] = useState<StatisticItem[]>([]);
@@ -99,6 +95,7 @@ export const Charts: React.FC = memo(() => {
   const directions = useSelector(selectDirections);
   const organizations = useSelector(selectOrganizations);
   const queries = useSelector(selectQueriesData);
+  const queryFilter = useSelector(selectQueryFilter);
   const statusOrganizations = useSelector(selectOrgStatus);
   const statusDirections = useSelector(selectStatusDirections);
   const statusQuery = useSelector(selectStatusQueries);
@@ -107,6 +104,10 @@ export const Charts: React.FC = memo(() => {
   );
   const initiativeOrganizations = queries.map((query) => query.organization);
   const initiativeStatuses = queries.map((query) => query.status);
+  const [data, setData] = useState({
+    labels: monthLabels,
+    datasets: [],
+  });
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -128,12 +129,20 @@ export const Charts: React.FC = memo(() => {
   };
 
   useEffect(() => {
-    const dataForGraphic = getAnalyticsForGraphic(queries);
+    const dataForGraphic = getAnalyticsForGraphic(queries, queryFilter.startDate, queryFilter.endDate);
     const updatedDataset = dataset.map((dataItem) => {
       return { ...dataItem, data: dataForGraphic.get(dataItem.label) };
     });
     if (organizations) {
-      setData({ ...data, datasets: updatedDataset });
+      setData({
+        ...data,
+        labels: getGraphicLabels(queryFilter.startDate, queryFilter.endDate,
+          new Date(queryFilter.endDate).getDate() - new Date(queryFilter.startDate).getDate(),
+          (new Date(queryFilter.endDate).getUTCMonth() + 1) - (new Date(queryFilter.startDate).getUTCMonth() + 1),
+          new Date(queryFilter.endDate).getFullYear() -  new Date(queryFilter.startDate).getFullYear()
+        ),
+        datasets: updatedDataset
+      });
       setDataDirection(
         getAnalyticsForPieChart(
           initiativeDirections,
@@ -156,7 +165,7 @@ export const Charts: React.FC = memo(() => {
         ),
       );
     }
-  }, [organizations, directions, queries]);
+  }, [organizations, directions, queries, queryFilter]);
 
   useEffect(() => {
     fetchData();

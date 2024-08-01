@@ -1,5 +1,6 @@
 import { getDirectionName, getOrganizationName, statusTranslation } from "./utils";
 import { QueriesResponse } from "../models/response/QueriesResponse";
+import {monthLabels} from "./consts";
 
 export enum AnalyticType {
 	DIRECTION,
@@ -21,23 +22,70 @@ const statusOptionsProcess = [
 	'Принята к реализации'
 ]
 
-export const getAnalyticsForGraphic = (queries : QueriesResponse[]) => {
+export const daysInMonth = (month: number, year: number) => {
+	return new Date(year, month, 0).getDate();
+}
+
+const getXOptionsForGraphic = (queryDate: string, months: number, years: number, startDate: string, endDate: string) => {
+	if (years === 0 && months === 0) {
+		return new Date(queryDate).getDate() - 1
+	}
+	if (months < 12 && months >= 1) {
+		const arr = []
+		for (let i = new Date(startDate).getUTCMonth(); i < new Date(endDate).getUTCMonth() + 1; i++) {
+			arr.push(i)
+		}
+		return arr.indexOf(new Date(queryDate).getUTCMonth())
+	}
+	else {
+		return new Date(queryDate).getUTCMonth()
+	}
+}
+
+const getSizeArray = (date: string, days: number, months: number, years: number) => {
+	if (years === 0 && months === 0) {
+		return daysInMonth(new Date(date).getUTCMonth() + 1, new Date(date).getFullYear())
+	}
+	if (months < 12 && months >= 1) {
+		return months + 1;
+	}
+	else {
+		return 12;
+	}
+}
+
+export const getAnalyticsForGraphic = (queries : QueriesResponse[], startDate: string, endDate: string) => {
+	const days = new Date(endDate).getDate() - new Date(startDate).getDate()
+	const months = (new Date(endDate).getUTCMonth() + 1) - (new Date(startDate).getUTCMonth() + 1)
+	const years = new Date(endDate).getFullYear() -  new Date(startDate).getFullYear()
+	const count = getSizeArray(endDate, days, months, years)
 	const statusStatistics = new Map<string, number[]>()
 	for (let i = 0; i < queries.length; i++) {
 		const currentStatus = convertStatus(statusTranslation[queries[i].status])
-		const month = new Date(queries[i].date).getUTCMonth()
+		const xOption = getXOptionsForGraphic(queries[i].date, months, years, startDate, endDate)
 		if (statusStatistics.has(currentStatus)) {
 			const countQueries = statusStatistics.get(currentStatus)
-			countQueries[month] += 1
+			countQueries[xOption] += 1
 			statusStatistics.set(currentStatus, countQueries)
 		}
 		else {
-			const countQueries = new Array<number>(12).fill(0)// количество месяцев + названия // parameter sort in slice
-			countQueries[month] = 1
+			const countQueries = new Array<number>(count).fill(0)
+			countQueries[xOption] = 1
 			statusStatistics.set(currentStatus, countQueries)
 		}
 	}
-	return statusStatistics
+	const countQueries = new Array<number>(count).fill(0)
+	if (!statusStatistics.has('В процессе')) {
+		statusStatistics.set('В процессе', countQueries)
+	}
+	if (!statusStatistics.has('Отклонены')) {
+		statusStatistics.set('Отклонены', countQueries)
+	}
+	if (!statusStatistics.has('Выполнены')) {
+		statusStatistics.set('Выполнены', countQueries)
+	}
+	console.log(statusStatistics)
+	return statusStatistics;
 }
 
 export const getAnalyticsForPieChart = (initiativeValues, statisticItems, analytic : AnalyticType) : StatisticItem[] => {

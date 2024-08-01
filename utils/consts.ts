@@ -1,4 +1,5 @@
 import faker from "faker";
+import {daysInMonth} from "./getAnalytics";
 
 export const statusOptions = [
 	{ value: 'registered', label: 'Зарегистрирована' },
@@ -25,7 +26,23 @@ export const monthLabels = [
 	"Jun",
 	"Jul",
 	"Aug",
+	"Sep",
+	"Oct",
+	"Nov",
+	"Dec"
 ];
+
+export const getGraphicLabels = (startDate: string, endDate: string, days: number, months: number, years: number) => {
+	const count = daysInMonth(new Date(startDate).getUTCMonth() + 1, new Date(startDate).getFullYear())
+	if (years === 0 && months === 0) {
+		const array = [...Array(count).keys()].map((numb) => (numb + 1).toString())
+		return array;
+	}
+	if (months < 12 && months >= 1) {
+		return monthLabels.slice(new Date(startDate).getUTCMonth(), new Date(endDate).getUTCMonth() + 1);
+	}
+	else return monthLabels;
+}
 
 export const data = {
 	labels: monthLabels,
