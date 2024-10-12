@@ -20,7 +20,7 @@ import {
   getAnalyticsForPieChart,
   StatisticItem,
 } from "../../utils/getAnalytics";
-import { monthLabels, statusOptions } from "../../utils/consts";
+import {getGraphicLabels, monthLabels, statusOptions} from "../../utils/consts";
 import { Status } from "../../redux/queriesSlice/types";
 import { useSelector } from "react-redux";
 import {
@@ -32,7 +32,7 @@ import {
   selectStatusDirections,
 } from "../../redux/directionsSlice/selectors";
 import {
-  selectQueriesData,
+  selectQueriesData, selectQueriesFilterData, selectQueryFilter,
   selectStatusQueries,
 } from "../../redux/queriesSlice/selectors";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
@@ -88,10 +88,6 @@ const dataset = [
 ];
 
 export const Charts: React.FC = memo(() => {
-  const [data, setData] = useState({
-    labels: monthLabels,
-    datasets: [],
-  });
   const [isLoading, setIsLoading] = useState(true);
   const [dataDirection, setDataDirection] = useState<StatisticItem[]>([]);
   const [dataOrganization, setDataOrganization] = useState<StatisticItem[]>([]);
@@ -99,14 +95,20 @@ export const Charts: React.FC = memo(() => {
   const directions = useSelector(selectDirections);
   const organizations = useSelector(selectOrganizations);
   const queries = useSelector(selectQueriesData);
+  const filterQueries = useSelector(selectQueriesFilterData);
+  const queryFilter = useSelector(selectQueryFilter);
   const statusOrganizations = useSelector(selectOrgStatus);
   const statusDirections = useSelector(selectStatusDirections);
   const statusQuery = useSelector(selectStatusQueries);
-  const initiativeDirections = queries.map(
+  const initiativeDirections = filterQueries.map(
     (query) => query.initiative_direction,
   );
-  const initiativeOrganizations = queries.map((query) => query.organization);
-  const initiativeStatuses = queries.map((query) => query.status);
+  const initiativeOrganizations = filterQueries.map((query) => query.organization);
+  const initiativeStatuses = filterQueries.map((query) => query.status);
+  const [data, setData] = useState({
+    labels: monthLabels,
+    datasets: [],
+  });
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -128,12 +130,21 @@ export const Charts: React.FC = memo(() => {
   };
 
   useEffect(() => {
-    const dataForGraphic = getAnalyticsForGraphic(queries);
+    const dataForGraphic = getAnalyticsForGraphic(filterQueries, queryFilter.startDate, queryFilter.endDate);
     const updatedDataset = dataset.map((dataItem) => {
       return { ...dataItem, data: dataForGraphic.get(dataItem.label) };
     });
     if (organizations) {
-      setData({ ...data, datasets: updatedDataset });
+      setData({
+        ...data,
+        labels: getGraphicLabels(
+          queryFilter.startDate,
+          queryFilter.endDate,
+          new Date(queryFilter.endDate).getUTCMonth() - new Date(queryFilter.startDate).getUTCMonth(),
+          new Date(queryFilter.endDate).getFullYear() -  new Date(queryFilter.startDate).getFullYear()
+        ),
+        datasets: updatedDataset
+      });
       setDataDirection(
         getAnalyticsForPieChart(
           initiativeDirections,
@@ -156,7 +167,7 @@ export const Charts: React.FC = memo(() => {
         ),
       );
     }
-  }, [organizations, directions, queries]);
+  }, [organizations, directions, queries, filterQueries]);
 
   useEffect(() => {
     fetchData();
@@ -173,10 +184,10 @@ export const Charts: React.FC = memo(() => {
                 <p
                   className={`${styles.numberInitiatives} ${styles.headerItem}`}
                 >
-                  Количество инициатив : {queries.length}
+                  Количество инициатив : {filterQueries.length}
                 </p>
                 <div className={styles.calendar}>
-                  <Filter />
+                  <Filter queries={queries}/>
                 </div>
               </div>
               <div className={styles.lineCharts}>
@@ -186,7 +197,7 @@ export const Charts: React.FC = memo(() => {
                 <div className={styles.statisticsCardItem}>
                   <StatisticsCard
                     title={"Инициативы по направлениям"}
-                    numInitiatives={queries.length}
+                    numInitiatives={filterQueries.length}
                     dataPieChart={dataDirection}
                     colorTag1={"#497AF9"}
                     color1={"rgba(27, 90, 248)"}
@@ -194,12 +205,18 @@ export const Charts: React.FC = memo(() => {
                     color2={"rgba(27, 90, 248, 0.46)"}
                     colorTag3={"#E5E5E5"}
                     color3={"rgba(191, 191, 191, 0.2)"}
+                    colorTag4={"#32CD32"}
+                    color4={"rgba(50, 205, 50, 0.46)"}
+                    colorTag5={"#FF8C00"}
+                    color5={"rgba(255, 140, 0, 0.46)"}
+                    colorTag6={"#DAA520"}
+                    color6={"rgba(218, 165, 32, 0.46)"}
                   />
                 </div>
                 <div className={styles.statisticsCardItem}>
                   <StatisticsCard
                     title={"Инициативы по компаниям"}
-                    numInitiatives={queries.length}
+                    numInitiatives={filterQueries.length}
                     dataPieChart={dataOrganization}
                     colorTag1={"#65EBAD"}
                     color1={"rgba(101, 235, 174)"}
@@ -207,12 +224,18 @@ export const Charts: React.FC = memo(() => {
                     color2={"rgba(27, 90, 248, 0.4)"}
                     colorTag3={"#99C5D3"}
                     color3={"rgba(51, 139, 167, 0.6)"}
+                    colorTag4={"#32CD32"}
+                    color4={"rgba(50, 205, 50, 0.46)"}
+                    colorTag5={"#FF8C00"}
+                    color5={"rgba(255, 140, 0, 0.46)"}
+                    colorTag6={"#DAA520"}
+                    color6={"rgba(218, 165, 32, 0.46)"}
                   />
                 </div>
                 <div>
                   <StatisticsCard
                     title={"Инициативы по статусам"}
-                    numInitiatives={queries.length}
+                    numInitiatives={filterQueries.length}
                     dataPieChart={dataStatus}
                     colorTag1={"#18B5B5"}
                     color1={"rgba(23, 180, 180)"}
@@ -220,6 +243,12 @@ export const Charts: React.FC = memo(() => {
                     color2={"rgba(143, 183, 217)"}
                     colorTag3={"#B08B8B"}
                     color3={"rgba(97, 23, 23, 0.5)"}
+                    colorTag4={"#32CD32"}
+                    color4={"rgba(50, 205, 50, 0.46)"}
+                    colorTag5={"#FF8C00"}
+                    color5={"rgba(255, 140, 0, 0.46)"}
+                    colorTag6={"#DAA520"}
+                    color6={"rgba(218, 165, 32, 0.46)"}
                   />
                 </div>
               </div>

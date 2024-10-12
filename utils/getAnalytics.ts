@@ -21,23 +21,111 @@ const statusOptionsProcess = [
 	'Принята к реализации'
 ]
 
-export const getAnalyticsForGraphic = (queries : QueriesResponse[]) => {
+export const getMonth = (date: string) => new Date(date).getUTCMonth();
+
+export const getYear = (date: string) => new Date(date).getFullYear();
+
+export const daysInMonth = (month: number, year: number) => {
+	return new Date(year, month, 0).getDate();
+}
+
+const getIndexOfXOption = (initialValue: number, arrayLength: number, queryDateValue: number) => {
+	const arr: number[] = []
+	for (let i = initialValue; i < arrayLength; i++) {
+		arr.push(i)
+	}
+	return arr.indexOf(queryDateValue);
+}
+
+const getXOptionsForGraphic = (
+	queryDate: string,
+	months: number,
+	years: number,
+	startDate: string,
+	endDate: string
+): number => {
+	if (years === 0 && months === 0) {
+		return new Date(queryDate).getDate() - 1;
+	}
+	if (years === 0 && months >= 1) {
+		return getIndexOfXOption(getMonth(startDate), getMonth(endDate) + 1, getMonth(queryDate))
+	}
+	if (years === 1) {
+		const arrLength = 12 + months
+		const arr: number[] = []
+		for (let i = getMonth(startDate); i < getMonth(startDate) + arrLength + 1; i++) {
+			if (arr.indexOf(i % 12) !== -1) {
+				arr.push((i % 12) + 14)
+			}
+			else {
+				arr.push(i % 12)
+			}
+		}
+		if (getYear(queryDate) === getYear(startDate)
+			|| arr.indexOf(getMonth(queryDate) + 14) === -1) {
+			return arr.indexOf(getMonth(queryDate));
+		}
+		else {
+			return arr.indexOf(getMonth(queryDate) + 14);
+		}
+	}
+	if (years > 1) {
+		return getIndexOfXOption(getYear(startDate), getYear(endDate) + 1, getYear(queryDate))
+	}
+	else {
+		return new Date(queryDate).getUTCMonth();
+	}
+}
+
+const getSizeArray = (startDate: string, endDate: string, months: number, years: number) => {
+	if (years === 0 && months === 0) {
+		return daysInMonth(getMonth(endDate) + 1, getYear(endDate));
+	}
+	if (years === 0 && months >= 1) {
+		return months + 1;
+	}
+	if (years === 1) {
+		const arrLength = 12 + months
+		return arrLength + 1;
+	}
+	if (years > 1) {
+		return getYear(endDate) - getYear(startDate) + 1
+	}
+	else {
+		return 12;
+	}
+}
+
+export const getAnalyticsForGraphic = (queries : QueriesResponse[], startDate: string, endDate: string) => {
+	const months = (new Date(endDate).getUTCMonth() + 1) - (new Date(startDate).getUTCMonth() + 1)
+	const years = new Date(endDate).getFullYear() -  new Date(startDate).getFullYear()
+	const count = getSizeArray(startDate, endDate, months, years)
 	const statusStatistics = new Map<string, number[]>()
 	for (let i = 0; i < queries.length; i++) {
 		const currentStatus = convertStatus(statusTranslation[queries[i].status])
-		const month = new Date(queries[i].date).getUTCMonth()
+		const xOption = getXOptionsForGraphic(queries[i].date, months, years, startDate, endDate)
 		if (statusStatistics.has(currentStatus)) {
 			const countQueries = statusStatistics.get(currentStatus)
-			countQueries[month] += 1
+			countQueries[xOption] += 1
 			statusStatistics.set(currentStatus, countQueries)
 		}
 		else {
-			const countQueries = new Array<number>(12).fill(0)
-			countQueries[month] = 1
+			const countQueries = new Array<number>(count).fill(0)
+			countQueries[xOption] = 1
 			statusStatistics.set(currentStatus, countQueries)
 		}
 	}
-	return statusStatistics
+	const countQueries = new Array<number>(count).fill(0)
+	if (!statusStatistics.has('В процессе')) {
+		statusStatistics.set('В процессе', countQueries)
+	}
+	if (!statusStatistics.has('Отклонены')) {
+		statusStatistics.set('Отклонены', countQueries)
+	}
+	if (!statusStatistics.has('Выполнены')) {
+		statusStatistics.set('Выполнены', countQueries)
+	}
+	return statusStatistics;
 }
 
 export const getAnalyticsForPieChart = (initiativeValues, statisticItems, analytic : AnalyticType) : StatisticItem[] => {
@@ -84,3 +172,10 @@ const convertStatus = (status: string) => {
 		return 'Отклонены'
 }
 
+export const filterAnalytics = (startDate: string, endDate: string, queries : QueriesResponse[]) => {
+	const start = new Date(startDate)
+	const end = new Date(endDate)
+	return queries.filter((query) =>
+		(new Date(query.date) <= end) && (new Date(query.date) >= start)
+	)
+}

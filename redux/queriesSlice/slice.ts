@@ -20,6 +20,8 @@ const initialState: QueriesSliceState = {
   item: {} as QueriesResponse,
   status: Status.WAITING,
   detail: {},
+  filterItems: [],
+  queryFilter: {} as {startDate: string, endDate: string}
 };
 
 export const queriesSlice = createSlice({
@@ -30,7 +32,10 @@ export const queriesSlice = createSlice({
       state.status = action.payload;
     },
     setQueries: (state, action: PayloadAction<QueriesResponse[]>) => {
-      state.items = action.payload;
+      state.filterItems = action.payload;
+    },
+    setFilter: (state, action: PayloadAction<{startDate: string, endDate: string}>) => {
+      state.queryFilter = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -43,6 +48,6 @@ export const queriesSlice = createSlice({
   },
 });
 
-export const { setQueries, setStatusQueries } = queriesSlice.actions;
+export const { setQueries, setStatusQueries, setFilter } = queriesSlice.actions;
 
 export default queriesSlice.reducer;

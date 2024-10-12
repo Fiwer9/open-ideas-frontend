@@ -12,14 +12,17 @@ export const fetchQueriesBuilder = (
       state.detail = action.payload.error.detail as DetailType;
     }
     state.items = action.payload.data;
+    state.filterItems = action.payload.data;
     state.status = Status.SUCCESS;
   });
   builder.addCase(fetch.pending, (state) => {
     state.status = Status.LOADING;
+    state.filterItems = [];
     state.items = [];
   });
   builder.addCase(fetch.rejected, (state) => {
     state.status = Status.ERROR;
+    state.filterItems = [];
     state.items = [];
   });
 };

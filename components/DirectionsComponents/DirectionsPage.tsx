@@ -15,6 +15,7 @@ import {fetchDirections} from "../../redux/directionsSlice/asyncActions";
 import {selectUsers, selectUsersStatus} from "../../redux/usersSlice/selectors";
 import {fetchUsers} from "../../redux/usersSlice/asyncActions";
 import {DirectionResponse} from "../../models/response/DirectionResponse";
+import AdminQuerySkeleton from "../SkeletonComponents/AdminQuerySkeleton";
 
 const DirectionsPage: React.FC = memo(() => {
     const [isLoading, setIsLoading] = useState(true);
@@ -27,12 +28,12 @@ const DirectionsPage: React.FC = memo(() => {
     const closeModal = () => {
         setModalCreateDirection(false);
     };
-    
+
     const fetchData = async () => {
         await dispatch(fetchDirections());
         await dispatch(fetchUsers());
     }
-    
+
     useEffect(() => {
         if (
           directionsStatus === Status.SUCCESS &&
@@ -42,15 +43,15 @@ const DirectionsPage: React.FC = memo(() => {
             setIsLoading(false);
         }
     }, [directionsStatus, usersStatus])
-    
+
     useEffect(() => {
         fetchData()
     }, [])
-    
+
     const handleDirectionItemClick = (direction: DirectionResponse) => {
         router.push(`/directions/directionCard?directionId=${direction.id}`)
     }
-  
+
     return (
       <>
         <AdminPageLayout>
@@ -64,15 +65,20 @@ const DirectionsPage: React.FC = memo(() => {
                         }}
                 />
             </div>
+					{!isLoading ? (
             <div className={styles.directionsPage}>
-                {directions.map((direction) =>
+                {directions.map((direction, count) =>
                   <DirectionItem
+										key={count}
                     direction={direction}
                     users={users}
                     onClickCard={() => handleDirectionItemClick(direction)}
                   />
                 )}
             </div>
+						) : (
+							<AdminQuerySkeleton />
+						)}
         </AdminPageLayout>
 
         <ModalCreateDirection
