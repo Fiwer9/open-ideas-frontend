@@ -1,9 +1,10 @@
 import React from "react";
+
 import { Charts } from "../../components/AnalyticsComponents/Charts";
-import {useCheckStaff} from "../../hooks/useCheckStaff";
+import { useCheckStaff } from "../../hooks/useCheckStaff";
 
 export default function Index() {
-	const isStaff = useCheckStaff();
+  const isStaff = useCheckStaff();
 
-	return <div>{isStaff && <Charts />}</div>;
+  return <div>{isStaff && <Charts />}</div>;
 }

@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
-import styles from "./styles/EditingApplication.module.scss";
+
 import { Button, Form, Input, Select, Upload } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+
+import { useSelector } from "react-redux";
+
+import { useRouter } from "next/router";
+
+import { UploadOutlined } from "@ant-design/icons";
+
 import {
   formatDateToServer,
   getAuthor,
   getOrganizationName,
   getOrganizationNameById,
 } from "../../utils/utils";
-import { useSelector } from "react-redux";
 import {
   selectUser,
   selectUsers,
@@ -32,7 +38,7 @@ import {
   fetchQueriesById,
   patchQuery,
 } from "../../redux/queriesSlice/asyncActions";
-import { useRouter } from "next/router";
+
 import {
   selectQueryData,
   selectStatusQueries,
@@ -43,10 +49,12 @@ import {
   selectStatusDirections,
 } from "../../redux/directionsSlice/selectors";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
-import { UploadOutlined } from "@ant-design/icons";
+
 import AdminPageLayout from "../AdminPageLayout";
 import { Status } from "../../redux/queriesSlice/types";
 import AdminQuerySkeleton from "../SkeletonComponents/AdminQuerySkeleton";
+
+import styles from "./styles/EditingApplication.module.scss";
 
 interface EditQueryProps {
   name: string;
@@ -106,7 +114,7 @@ export const EditingApplication = () => {
     applicationData?.name && dispatch(setPageName(applicationData.name));
     applicationData?.expert_users &&
       dispatch(
-        fetchCurrentUser({ user_id: applicationData?.initiator_users[0] }),
+        fetchCurrentUser({ user_id: applicationData?.initiator_users[0] })
       );
   }, [applicationData?.name]);
 
@@ -117,7 +125,7 @@ export const EditingApplication = () => {
           organization_id: organizationId
             ? organizationId
             : applicationData?.organization,
-        }),
+        })
       );
   }, [organizationId]);
 
@@ -149,7 +157,7 @@ export const EditingApplication = () => {
               ? applicationData?.expert_users
               : [expert_users]
             : null,
-      }),
+      })
     );
     router.back();
   }
@@ -170,7 +178,7 @@ export const EditingApplication = () => {
             initiative_direction: applicationData?.initiative_direction,
             organization: getOrganizationName(
               applicationData?.organization,
-              organizations,
+              organizations
             ),
             department: user?.department?.name,
             expert_users: getAuthor(applicationData?.expert_users, users),
@@ -294,7 +302,7 @@ export const EditingApplication = () => {
                   showSearch
                   filterOption={(input, option) =>
                     (option?.label.toLowerCase() ?? "").includes(
-                      input.toLowerCase(),
+                      input.toLowerCase()
                     )
                   }
                   filterSort={(optionA, optionB) =>
@@ -323,6 +331,7 @@ export const EditingApplication = () => {
               >
                 <Upload
                   maxCount={5}
+                  // eslint-disable-next-line max-len
                   accept=".webm, .pdf, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
                   multiple
                   className="upload"

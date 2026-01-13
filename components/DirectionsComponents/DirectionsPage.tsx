@@ -1,94 +1,101 @@
-import React, {memo, useEffect, useState} from "react";
-import AdminPageLayout from "../AdminPageLayout";
-import {MainText} from "../MainTextComponent";
-import {PlusCircleOutlined} from "@ant-design/icons";
-import FilterBar from "../FilterComponents/blocks/FilterBar";
+import React, { memo, useEffect, useState } from "react";
+
+import { PlusCircleOutlined } from "@ant-design/icons";
+
 import router from "next/router";
+
+import { useSelector } from "react-redux";
+
 import ModalCreateDirection from "../ModalsComponents/ModalCreateDirection";
-import styles from './styles/DirectionsPage.module.scss'
-import DirectionItem from "./DirectionItem";
-import {useSelector} from "react-redux";
-import {selectDirections, selectStatusDirections} from "../../redux/directionsSlice/selectors";
-import {useAppDispatch} from "../../redux/store";
-import {Status} from "../../redux/queriesSlice/types";
-import {fetchDirections} from "../../redux/directionsSlice/asyncActions";
-import {selectUsers, selectUsersStatus} from "../../redux/usersSlice/selectors";
-import {fetchUsers} from "../../redux/usersSlice/asyncActions";
-import {DirectionResponse} from "../../models/response/DirectionResponse";
+import FilterBar from "../FilterComponents/blocks/FilterBar";
+import { MainText } from "../MainTextComponent";
+import AdminPageLayout from "../AdminPageLayout";
+import {
+  selectDirections,
+  selectStatusDirections,
+} from "../../redux/directionsSlice/selectors";
+import { useAppDispatch } from "../../redux/store";
+import { Status } from "../../redux/queriesSlice/types";
+import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
+import {
+  selectUsers,
+  selectUsersStatus,
+} from "../../redux/usersSlice/selectors";
+import { fetchUsers } from "../../redux/usersSlice/asyncActions";
+import { DirectionResponse } from "../../models/response/DirectionResponse";
 import AdminQuerySkeleton from "../SkeletonComponents/AdminQuerySkeleton";
 
+import DirectionItem from "./DirectionItem";
+import styles from "./styles/DirectionsPage.module.scss";
+
 const DirectionsPage: React.FC = memo(() => {
-    const [isLoading, setIsLoading] = useState(true);
-    const directions = useSelector(selectDirections);
-    const users = useSelector(selectUsers);
-    const directionsStatus = useSelector(selectStatusDirections);
-    const usersStatus = useSelector(selectUsersStatus);
-    const dispatch = useAppDispatch();
-    const [modalCreateDirection, setModalCreateDirection] = useState(false);
-    const closeModal = () => {
-        setModalCreateDirection(false);
-    };
+  const [isLoading, setIsLoading] = useState(true);
+  const directions = useSelector(selectDirections);
+  const users = useSelector(selectUsers);
+  const directionsStatus = useSelector(selectStatusDirections);
+  const usersStatus = useSelector(selectUsersStatus);
+  const dispatch = useAppDispatch();
+  const [modalCreateDirection, setModalCreateDirection] = useState(false);
+  const closeModal = () => {
+    setModalCreateDirection(false);
+  };
 
-    const fetchData = async () => {
-        await dispatch(fetchDirections());
-        await dispatch(fetchUsers());
+  const fetchData = async () => {
+    await dispatch(fetchDirections());
+    await dispatch(fetchUsers());
+  };
+
+  useEffect(() => {
+    if (directionsStatus === Status.SUCCESS && usersStatus === Status.SUCCESS) {
+      setIsLoading(false);
     }
+  }, [directionsStatus, usersStatus]);
 
-    useEffect(() => {
-        if (
-          directionsStatus === Status.SUCCESS &&
-          usersStatus === Status.SUCCESS
-        )
-        {
-            setIsLoading(false);
-        }
-    }, [directionsStatus, usersStatus])
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    useEffect(() => {
-        fetchData()
-    }, [])
+  const handleDirectionItemClick = (direction: DirectionResponse) => {
+    router.push(`/directions/directionCard?directionId=${direction.id}`);
+  };
 
-    const handleDirectionItemClick = (direction: DirectionResponse) => {
-        router.push(`/directions/directionCard?directionId=${direction.id}`)
-    }
+  return (
+    <>
+      <AdminPageLayout>
+        <div className={styles.headerDirectionPage}>
+          <MainText text={"Направления"} />
+          <FilterBar
+            icon={<PlusCircleOutlined />}
+            filterText={"Добавить направление"}
+            onClick={() => {
+              setModalCreateDirection(true);
+            }}
+          />
+        </div>
+        {!isLoading ? (
+          <div className={styles.directionsPage}>
+            {directions.map((direction, count) => (
+              <DirectionItem
+                key={count}
+                direction={direction}
+                users={users}
+                onClickCard={() => handleDirectionItemClick(direction)}
+              />
+            ))}
+          </div>
+        ) : (
+          <AdminQuerySkeleton />
+        )}
+      </AdminPageLayout>
 
-    return (
-      <>
-        <AdminPageLayout>
-            <div className={styles.headerDirectionPage}>
-                <MainText text={"Направления"} />
-                <FilterBar
-                        icon={<PlusCircleOutlined />}
-                        filterText={"Добавить направление"}
-                        onClick={() => {
-                            setModalCreateDirection(true);
-                        }}
-                />
-            </div>
-					{!isLoading ? (
-            <div className={styles.directionsPage}>
-                {directions.map((direction, count) =>
-                  <DirectionItem
-										key={count}
-                    direction={direction}
-                    users={users}
-                    onClickCard={() => handleDirectionItemClick(direction)}
-                  />
-                )}
-            </div>
-						) : (
-							<AdminQuerySkeleton />
-						)}
-        </AdminPageLayout>
+      <ModalCreateDirection
+        active={modalCreateDirection}
+        setActive={setModalCreateDirection}
+        users={users}
+        onClickCancel={closeModal}
+      />
+    </>
+  );
+});
 
-        <ModalCreateDirection
-            active={modalCreateDirection}
-            setActive={setModalCreateDirection}
-            users={users}
-            onClickCancel={closeModal}
-        />
-      </>
-    );
-  });
-
-  export default DirectionsPage;
+export default DirectionsPage;

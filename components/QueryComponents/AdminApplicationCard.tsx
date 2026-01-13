@@ -3,6 +3,7 @@ import { Col, Select, UploadProps } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+
 import { fetchCommentsById } from "../../redux/commentsSlice/asyncActions";
 import {
   selectComments,
@@ -46,8 +47,7 @@ import {
   getOrganizationName,
   getStatusClassName,
 } from "../../utils/utils";
-import { CommentBlockAdmin } from "./blocks/CommentBlock";
-import styles from "./styles/AdminApplicationCard.module.scss";
+
 import { changeIsModalSubmitActive } from "../../redux/modalsSlice/slice";
 import ModalAdditionalText from "../ModalsComponents/ModalAdditionalText";
 import { Status } from "../../redux/queriesSlice/types";
@@ -55,6 +55,9 @@ import { setPageId, setPageName } from "../../redux/menuSlice/slice";
 import AdminPageLayout from "../AdminPageLayout";
 import { MainText } from "../MainTextComponent";
 import AdminQuerySkeleton from "../SkeletonComponents/AdminQuerySkeleton";
+
+import styles from "./styles/AdminApplicationCard.module.scss";
+import { CommentBlockAdmin } from "./blocks/CommentBlock";
 
 const props: UploadProps = {
   defaultFileList: [
@@ -138,7 +141,7 @@ export const AdminApplicationCard = () => {
     applicationData?.name && dispatch(setPageName(applicationData.name));
     applicationData?.expert_users &&
       dispatch(
-        fetchCurrentUser({ user_id: applicationData?.initiator_users[0] }),
+        fetchCurrentUser({ user_id: applicationData?.initiator_users[0] })
       );
   }, [applicationData?.name]);
 
@@ -165,7 +168,7 @@ export const AdminApplicationCard = () => {
         initiator_users,
         implementation_effect,
         organization,
-      }),
+      })
     );
   };
 
@@ -187,8 +190,8 @@ export const AdminApplicationCard = () => {
 
   const getLikes = () => {
     let like = 0;
-    for (let user of users) {
-      for (let query_id of user.likes) {
+    for (const user of users) {
+      for (const query_id of user.likes) {
         if (query_id === Number(queryId)) {
           like += 1;
         }
@@ -216,7 +219,7 @@ export const AdminApplicationCard = () => {
                   <Select
                     className={`selectInitiative ${getStatusClassName(
                       styles,
-                      applicationData?.status,
+                      applicationData?.status
                     )}`}
                     style={{ width: 250 }}
                     defaultValue={applicationData?.status}
@@ -226,7 +229,7 @@ export const AdminApplicationCard = () => {
                 </div>
               </div>
               <p className={styles.data}>{`Дата создания ${formatDateRu(
-                applicationData?.date,
+                applicationData?.date
               )}`}</p>
             </div>
 
@@ -259,7 +262,7 @@ export const AdminApplicationCard = () => {
                   <p className={styles.rowInf}>
                     {getDirectionName(
                       applicationData?.initiative_direction,
-                      directions,
+                      directions
                     )}
                   </p>
                 </div>
@@ -268,7 +271,7 @@ export const AdminApplicationCard = () => {
                   <p className={styles.rowInf}>
                     {getOrganizationName(
                       applicationData?.organization,
-                      organizations,
+                      organizations
                     )}
                   </p>
                 </div>

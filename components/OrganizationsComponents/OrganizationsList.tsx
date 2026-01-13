@@ -1,17 +1,23 @@
 import React, { useState } from "react";
+
+import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
+
+import { Form, Input, Table } from "antd";
+
+import router from "next/router";
+
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
 import { MainText } from "../MainTextComponent";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import { Slider } from "../SliderComponents/SliderComponents";
-import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Form, Input, Table } from "antd";
+
+import Modal from "../ModalsComponents/Modal";
+
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 import styles from "./styles/OrganizationsList.module.scss";
-import router from "next/router";
-import Modal from "../ModalsComponents/Modal";
-import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 function ContentModal() {
   return (

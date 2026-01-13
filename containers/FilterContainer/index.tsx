@@ -12,11 +12,14 @@ interface FilterContainerProps {
   downloadBtn?: boolean;
 }
 
-const FilterContainer: React.FC<FilterContainerProps> = ({ placeholder, downloadBtn }) => {
+const FilterContainer: React.FC<FilterContainerProps> = ({
+  placeholder,
+  downloadBtn,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCancel = () => {
-      setIsModalOpen(false);
+    setIsModalOpen(false);
   };
 
   const handleOk = () => {
@@ -28,16 +31,22 @@ const FilterContainer: React.FC<FilterContainerProps> = ({ placeholder, download
       <SearchBar placeholderNum={"Номер"} placeholderQuery={placeholder} />
       <div className={styles.filterContainer}>
         {downloadBtn && (
-            <div>
-              <FilterBar
-                filterText={"Загрузить"}
-                onClick={() => { setIsModalOpen(true) }}
-                icon={<CloudUploadOutlined />}
-              />
+          <div>
+            <FilterBar
+              filterText={"Загрузить"}
+              onClick={() => {
+                setIsModalOpen(true);
+              }}
+              icon={<CloudUploadOutlined />}
+            />
 
-              <ModalDownloadsCSV isModalOpen={isModalOpen} handleCancel={handleCancel} handleOk={handleOk} />
-            </div>
-          )}
+            <ModalDownloadsCSV
+              isModalOpen={isModalOpen}
+              handleCancel={handleCancel}
+              handleOk={handleOk}
+            />
+          </div>
+        )}
         <FilterBar icon={<FilterOutlined />} filterText={"Фильтры"} />
         <FilterCheckboxBar checkboxText={"Архив"} />
       </div>

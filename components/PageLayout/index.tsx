@@ -1,8 +1,11 @@
-import styles from "./styles.module.scss";
-import { Header } from "../HeaderComponents/Header";
-import { Logo } from "../PicturesComponents/Logo";
-import { Tabs } from "../TabsComponent/Tabs";
 import React, { memo } from "react";
+
+import { Header } from "../HeaderComponents/Header";
+
+import Logo from "../PicturesComponents/Logo";
+import { Tabs } from "../TabsComponent/Tabs";
+
+import styles from "./styles.module.scss";
 
 interface PageLayoutProps {
   children: React.ReactNode;

@@ -1,16 +1,23 @@
+import { Col, Form, Input } from "antd";
+
+import router from "next/router";
+
+import React, { useState } from "react";
+
+import { PlusCircleOutlined } from "@ant-design/icons";
+
 import { Slider } from "../SliderComponents/SliderComponents";
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
 import { MainText } from "../MainTextComponent";
-import { Col, Form, Input } from "antd";
+
+import Modal from "../ModalsComponents/Modal";
+
+import FilterBar from "../FilterComponents/blocks/FilterBar";
+
+import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 import styles from "./styles/OrganizationCard.module.scss";
-import router from "next/router";
-import Modal from "../ModalsComponents/Modal";
-import React, { useState } from "react";
-import FilterBar from "../FilterComponents/blocks/FilterBar";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { SliderSmall } from "../SliderComponents/SliderSmall";
 
 function ContentModal() {
   return (

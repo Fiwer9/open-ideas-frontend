@@ -5,7 +5,7 @@ export const useCheckStaff = () => {
   const router = useRouter();
   const [isStaff, setIsStaff] = useState(false);
   const checkUserStatus = () => {
-    if (sessionStorage.getItem("isStaff") !== "true") {
+    if (sessionStorage.getItem("isStaff") === "true") {
       router.push("/queries");
       return false;
     }

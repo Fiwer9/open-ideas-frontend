@@ -3,7 +3,6 @@ import { Checkbox, Form } from "antd";
 
 import styles from "../styles/CheckboxBar.module.scss";
 
-
 interface CheckboxBlockProps {
   checkboxText: string;
   hintText?: string;
@@ -14,7 +13,10 @@ interface CheckboxBlockProps {
 const CheckboxBlock: React.FC<CheckboxBlockProps> = memo(
   ({ checkboxText, hintText, name, paddings }) => {
     return (
-      <div className={styles.checkboxContainerHint} style={{padding: paddings}}>
+      <div
+        className={styles.checkboxContainerHint}
+        style={{ padding: paddings }}
+      >
         <Form.Item
           name={name}
           valuePropName={"checked"}
@@ -23,11 +25,11 @@ const CheckboxBlock: React.FC<CheckboxBlockProps> = memo(
           <Checkbox className="checkbox">{checkboxText}</Checkbox>
         </Form.Item>
         <div>
-            <span className={styles.hintText}>{hintText}</span>
+          <span className={styles.hintText}>{hintText}</span>
         </div>
       </div>
     );
-  },
+  }
 );
 
 export default CheckboxBlock;

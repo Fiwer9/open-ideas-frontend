@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 import { Button } from "antd";
+
 import styles from "../styles/FilterBar.module.scss";
 
 interface FilterBarProps {

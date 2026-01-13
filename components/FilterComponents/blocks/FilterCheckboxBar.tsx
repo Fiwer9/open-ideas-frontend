@@ -1,14 +1,14 @@
 import React, { memo, useState } from "react";
 import { Checkbox } from "antd";
 
+import { CheckboxChangeEvent } from "antd/es/checkbox";
+
 import styles from "../styles/CheckboxBar.module.scss";
 import { useAppDispatch } from "../../../redux/store";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
 import {
   changeIsArchive,
   changeIsExpert,
 } from "../../../redux/filterSlice/slice";
-
 
 interface CheckboxBarProps {
   checkboxText: string;
@@ -48,7 +48,7 @@ const FilterCheckboxBar: React.FC<CheckboxBarProps> = memo(
         </Checkbox>
       </div>
     );
-  },
+  }
 );
 
 export default FilterCheckboxBar;

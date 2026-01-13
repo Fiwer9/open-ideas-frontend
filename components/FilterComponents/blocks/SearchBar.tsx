@@ -1,8 +1,10 @@
 import React, { memo, useCallback } from "react";
 import { Input } from "antd";
+
+import debounce from "lodash.debounce";
+
 import styles from "../styles/SerachBar.module.scss";
 import { useAppDispatch } from "../../../redux/store";
-import debounce from "lodash.debounce";
 import { setSearchValue } from "../../../redux/filterSlice/slice";
 
 interface SearchBarProps {
@@ -19,7 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = memo(
       debounce((str) => {
         dispatch(setSearchValue(str));
       }, 1000),
-      [],
+      []
     );
 
     const onSearchTermChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +38,7 @@ const SearchBar: React.FC<SearchBarProps> = memo(
         </div>
       </div>
     );
-  },
+  }
 );
 
 export default SearchBar;

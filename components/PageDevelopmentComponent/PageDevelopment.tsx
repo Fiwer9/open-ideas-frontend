@@ -1,8 +1,10 @@
 import React from "react";
 
-import styles from './styles/PageDevelopment.module.scss';
 import router from "next/router";
-import { Logo } from "../PicturesComponents/Logo";
+
+import Logo from "../PicturesComponents/Logo";
+
+import styles from "./styles/PageDevelopment.module.scss";
 
 export const PageDevelopment = () => {
   return (
@@ -12,7 +14,12 @@ export const PageDevelopment = () => {
       </div>
       <div className={styles.container}>
         <p className={styles.page}>Страница в разработке</p>
-        <button className={`${styles.btnBlue} ${styles.btnPage}`} onClick={() => router.push('/queries')}>Назад</button>
+        <button
+          className={`${styles.btnBlue} ${styles.btnPage}`}
+          onClick={() => router.push("/queries")}
+        >
+          Назад
+        </button>
       </div>
     </>
   );

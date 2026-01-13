@@ -6,15 +6,15 @@ dayjs.extend(customParseFormat);
 const { RangePicker } = DatePicker;
 
 import styles from "../styles/Filter.module.scss";
-import {QueriesResponse} from "../../../models/response/QueriesResponse";
-import {filterAnalytics} from "../../../utils/getAnalytics";
-import {useAppDispatch} from "../../../redux/store";
-import {setFilter, setQueries} from "../../../redux/queriesSlice/slice";
+import { QueriesResponse } from "../../../models/response/QueriesResponse";
+import { filterAnalytics } from "../../../utils/getAnalytics";
+import { useAppDispatch } from "../../../redux/store";
+import { setFilter, setQueries } from "../../../redux/queriesSlice/slice";
 
 const dateFormatList = ["DD.MM.YYYY", "DD.MM.YY", "DD-MM-YYYY", "DD-MM-YY"];
 
 interface FilterProps {
-	queries: QueriesResponse[];
+  queries: QueriesResponse[];
   onChange?: (start: string, end: string) => void;
   selectedDateStart?: string;
   selectedDateEnd?: string;
@@ -52,23 +52,31 @@ const Filter: React.FC<FilterProps> = memo(({ queries }) => {
 
   const onChangeDate = (value) => {
     if (value !== null) {
-      dispatch(setFilter({
-        startDate: dayjs(value[0]).format('YYYY-MM-DD'),
-        endDate: dayjs(value[1]).format('YYYY-MM-DD')
-      }))
-      dispatch(setQueries(
-        filterAnalytics(dayjs(value[0]).format('YYYY-MM-DD'),
-          dayjs(value[1]).format('YYYY-MM-DD'), queries)
-      ))
+      dispatch(
+        setFilter({
+          startDate: dayjs(value[0]).format("YYYY-MM-DD"),
+          endDate: dayjs(value[1]).format("YYYY-MM-DD"),
+        })
+      );
+      dispatch(
+        setQueries(
+          filterAnalytics(
+            dayjs(value[0]).format("YYYY-MM-DD"),
+            dayjs(value[1]).format("YYYY-MM-DD"),
+            queries
+          )
+        )
+      );
+    } else {
+      dispatch(
+        setFilter({
+          startDate: "",
+          endDate: "",
+        })
+      );
+      dispatch(setQueries(queries));
     }
-		else {
-			dispatch(setFilter({
-				startDate: "",
-				endDate: ""
-			}))
-			dispatch(setQueries(queries))
-		}
-  }
+  };
 
   return (
     <div className={styles.filter}>
@@ -82,7 +90,7 @@ const Filter: React.FC<FilterProps> = memo(({ queries }) => {
               width={15}
               height={10}
               alt=""
-              onClick={() =>  setIsOpenFilter(!isOpenFilter)}
+              onClick={() => setIsOpenFilter(!isOpenFilter)}
               className={
                 isOpenFilter ? styles.triangleOpen : styles.triangleClose
               }
@@ -98,7 +106,7 @@ const Filter: React.FC<FilterProps> = memo(({ queries }) => {
               dayjs("01.01.2023", dateFormatList[0]),
               dayjs("15.04.2023", dateFormatList[0]),
             ]}
-						onChange={(value) => onChangeDate(value)}
+            onChange={(value) => onChangeDate(value)}
             format={dateFormatList}
           />
         ) : null}

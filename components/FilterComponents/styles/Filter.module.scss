@@ -19,7 +19,6 @@
     justify-content: right;
     margin-left: 8px;
 
-
     .dropdownTitle {
       display: flex;
       flex-direction: column;
@@ -30,7 +29,7 @@
           family: Poppins, sans-serif;
           weight: 500;
           size: 14px;
-        };
+        }
       }
 
       .dropdown {
@@ -45,11 +44,11 @@
             family: Poppins, sans-serif;
             weight: 500;
             size: 16px;
-          };
+          }
         }
 
         .triangleOpen {
-          fill: #1890FF;
+          fill: #1890ff;
           transform: rotate(-180deg);
           transition: transform 0.2s;
           cursor: pointer;

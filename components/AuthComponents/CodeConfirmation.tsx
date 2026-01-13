@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Input } from "antd";
-import { InputLabel } from "../InputLabelComponent/InputLabel";
-import { Logo } from "../PicturesComponents/Logo";
-import styles from "./styles/CodeConfirmation.module.scss";
+
 import router from "next/router";
-import { useAppDispatch } from "../../redux/store";
+
 import { useSelector } from "react-redux";
+
+import { useAppDispatch } from "../../redux/store";
+import Logo from "../PicturesComponents/Logo";
+import { InputLabel } from "../InputLabelComponent/InputLabel";
 import {
   selectAuthStatus,
   selectDetail,
@@ -13,6 +15,8 @@ import {
 import { postCodeConfirmation } from "../../redux/authSlice/asyncActions";
 import { Status } from "../../redux/queriesSlice/types";
 import { setStatus } from "../../redux/authSlice/slice";
+
+import styles from "./styles/CodeConfirmation.module.scss";
 
 type ConfirmationProps = {
   email: string;
@@ -33,7 +37,7 @@ export const CodeConfirmation = ({ email }: ConfirmationProps) => {
     dispatch(
       postCodeConfirmation({
         code,
-      }),
+      })
     );
   };
 

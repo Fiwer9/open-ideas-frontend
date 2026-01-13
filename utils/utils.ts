@@ -12,13 +12,14 @@ import { UserResponse } from "../models/response/UserResponse";
 
 export function getDepartmentName(
   depId: number | undefined,
-  departments: IDepartment[],
+  departments: IDepartment[]
 ) {
   for (let dep of departments) {
     if (dep.id === depId) {
       return dep.name;
     }
   }
+  return "Неизвестно";
 }
 
 export const getNames = (users: UserResponse[]) => [
@@ -33,15 +34,15 @@ export function getQueriesByNumber(queries: QueriesResponse[]) {
 }
 
 export const getOrganizationsFilter = (
-  organizations: OrganizationsResponse[],
+  organizations: OrganizationsResponse[]
 ) => [...new Set(organizations?.map((organization) => organization.name))];
 export function getOrganizationName(
   id: number,
-  organizations: OrganizationsResponse[],
+  organizations: OrganizationsResponse[]
 ) {
   try {
     const { name } = organizations.find(
-      (organization) => organization.id === id,
+      (organization) => organization.id === id
     );
     return name;
   } catch (e) {
@@ -59,10 +60,10 @@ export function getOrganizationId(text: number, organizations: any) {
 
 export function getOrganizationNameById(
   orgName: string,
-  organizations: OrganizationsResponse[],
+  organizations: OrganizationsResponse[]
 ) {
   const data = organizations.find((org) => org.name === orgName);
-  return data.id;
+  return data ? data.id : undefined;
 }
 
 export const statusClassName = (styles: any) => ({
@@ -105,7 +106,8 @@ export function formatDateRu(date: string) {
   try {
     dayjs.locale("ru");
     const currentDate = date.split("T");
-    return dayjs(currentDate[0]).format("DD MMMM YYYY г.");
+    const formatted = dayjs(currentDate[0]).format("DD MMMM YYYY г.");
+    return formatted === "Invalid Date" ? "" : formatted;
   } catch (e) {
     return "";
   }
@@ -119,16 +121,16 @@ export function formatDateToServer(date: Date, separator = ".") {
 }
 
 export const getAllUserLikes = (users: UserResponse[], user_id: number) => {
-  const { likes } = users.find((user) => user.id === user_id);
-  return [...likes];
+  const user = users.find((user) => user.id === user_id);
+  return user ? [...user.likes] : [];
 };
 export const getDirectionName = (
   directionId: number,
-  directions: DirectionResponse[],
+  directions: DirectionResponse[]
 ) => {
   try {
     const { name } = directions.find(
-      (direction) => direction.id === directionId,
+      (direction) => direction.id === directionId
     );
     return name;
   } catch (e) {
@@ -166,7 +168,7 @@ export const fetchData = async (
   setIsLoading: any,
   setData: any,
   getData: any,
-  arg?: any,
+  arg?: any
 ) => {
   setIsLoading(true);
   try {
@@ -182,7 +184,7 @@ export const fetchData = async (
 export const getRouteTranslation = (
   route: string,
   pageName: string,
-  pageId: number,
+  pageId: number
 ) => {
   switch (route) {
     case "queries":
@@ -200,13 +202,13 @@ export const getRouteTranslation = (
     case "users":
       return "Таблица пользователей";
     case "directions":
-      return "Направления"
+      return "Направления";
     case `directionCard?directionId=${pageId}`:
       return pageName;
     case `editingDirection?directionId=${pageId}`:
       return `${pageName} (Редактирование)`;
-		case "charts":
-			return "Графики";
+    case "charts":
+      return "Графики";
     case `userCard?userId=${pageId}`:
       return pageName;
     case `editingUser?userId=${pageId}`:

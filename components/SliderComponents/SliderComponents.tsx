@@ -8,21 +8,25 @@ import {
   SettingOutlined,
   PullRequestOutlined,
 } from "@ant-design/icons";
-import { ArrowBack } from "./ArrowBack";
-import { ArrowNext } from "./ArrowNext";
-import { Logo } from "../PicturesComponents/Logo";
+
 import { Button, Layout, theme } from "antd";
 import router from "next/router";
 const { Sider } = Layout;
 
-import styles from "./styles/sider.module.scss";
+import { useSelector } from "react-redux";
+
 import {
   selectCurrentPage,
   selectMenuIsCollapsed,
 } from "../../redux/menuSlice/selectors";
-import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
 import { changeCollapsed, setCurrentPage } from "../../redux/menuSlice/slice";
+
+import Logo from "../PicturesComponents/Logo";
+
+import styles from "./styles/sider.module.scss";
+import { ArrowNext } from "./ArrowNext";
+import { ArrowBack } from "./ArrowBack";
 
 const menuList = [
   { url: "/queries" },

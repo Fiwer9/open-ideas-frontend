@@ -26,7 +26,7 @@ export interface deleteDomainArgs {
 export enum AssignmentSettings {
   MANUAL = "manual",
   DIRECTION = "direction",
-  DEPARTMENT = "department"
+  DEPARTMENT = "department",
 }
 
 export interface putSettingsArgs {

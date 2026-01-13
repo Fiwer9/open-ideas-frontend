@@ -1,33 +1,57 @@
-import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
-import {selectCurrentUser} from "../../redux/authSlice/selectors";
-import {useAppDispatch} from "../../redux/store";
-import {selectOrganizations, selectOrgStatus,} from "../../redux/organizationsSlice/selectors";
-import {selectDirections, selectStatusDirections,} from "../../redux/directionsSlice/selectors";
-import {Status} from "../../redux/queriesSlice/types";
-import {fetchOrganizations} from "../../redux/organizationsSlice/asyncActions";
-import {fetchDirections} from "../../redux/directionsSlice/asyncActions";
-import {Button, Card, Form, Input, message, Select, Upload, UploadFile} from "antd";
-import styles from "./styles/CreateQuery.module.scss";
-import {Logo} from "../PicturesComponents/Logo";
-import {formatDateToServer, getOrganizationName, getOrganizationNameById} from "../../utils/utils";
-import {Buttons} from "../ButtonComponent/Button";
-import router from "next/router";
-import ModalAntdSubmit from "../ModalsComponents/ModalAntdSubmit";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import {
+  Button,
+  Card,
+  Form,
+  Input,
+  message,
+  Select,
+  Upload,
+  UploadFile,
+} from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import { UploadOutlined } from "@ant-design/icons";
+import router from "next/router";
+
+import { useAppDispatch } from "../../redux/store";
+import { selectCurrentUser } from "../../redux/authSlice/selectors";
+import {
+  selectOrganizations,
+  selectOrgStatus,
+} from "../../redux/organizationsSlice/selectors";
+import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
+import {
+  selectDirections,
+  selectStatusDirections,
+} from "../../redux/directionsSlice/selectors";
+import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
+import { setStatusDirections } from "../../redux/directionsSlice/slice";
+import { selectUserForHeader } from "../../redux/headerSlice/selectors";
+import { fetchUserHeader } from "../../redux/headerSlice/asyncActions";
+import {
+  changeIsModalResetActive,
+  changeIsModalSubmitActive,
+} from "../../redux/modalsSlice/slice";
+import { selectQueryData } from "../../redux/queriesSlice/selectors";
+import { Status } from "../../redux/queriesSlice/types";
+import { postQuery } from "../../redux/queriesSlice/asyncActions";
+import { setStatusQueries } from "../../redux/queriesSlice/slice";
+import { selectSettings } from "../../redux/settingsSlice/selectors";
+import { fetchSettings } from "../../redux/settingsSlice/asyncActions";
+import { postFiles } from "../../redux/filesSlice/asyncActions";
+import { Buttons } from "../ButtonComponent/Button";
+import Logo from "../PicturesComponents/Logo";
+import { MainText } from "../MainTextComponent";
 import ModalAntdBack from "../ModalsComponents/ModalAntdBack";
-import {changeIsModalResetActive, changeIsModalSubmitActive,} from "../../redux/modalsSlice/slice";
-import {MainText} from "../MainTextComponent";
-import {setStatusQueries} from "../../redux/queriesSlice/slice";
-import {setStatusDirections} from "../../redux/directionsSlice/slice";
-import {selectUserForHeader} from "../../redux/headerSlice/selectors";
-import {fetchUserHeader} from "../../redux/headerSlice/asyncActions";
-import {selectSettings} from "../../redux/settingsSlice/selectors";
-import {UploadOutlined} from "@ant-design/icons";
-import {fetchSettings} from "../../redux/settingsSlice/asyncActions";
-import {postQuery} from "../../redux/queriesSlice/asyncActions";
-import {selectQueryData} from "../../redux/queriesSlice/selectors";
-import {postFiles} from "../../redux/filesSlice/asyncActions";
+import ModalAntdSubmit from "../ModalsComponents/ModalAntdSubmit";
+import {
+  formatDateToServer,
+  getOrganizationName,
+  getOrganizationNameById,
+} from "../../utils/utils";
+
+import styles from "./styles/CreateQuery.module.scss";
 
 interface PostQueryProps {
   name: string;
@@ -53,15 +77,13 @@ function NewCreateQuery() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadFile<any>[]>([]);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (
-        user.status === Status.SUCCESS &&
-        statusDirections === Status.SUCCESS &&
-        statusOrganizations === Status.SUCCESS
-      ) {
-        setIsLoading(false);
-      }
-    }, 1000);
+    if (
+      user.status === Status.SUCCESS &&
+      statusDirections === Status.SUCCESS &&
+      statusOrganizations === Status.SUCCESS
+    ) {
+      setIsLoading(false);
+    }
   }, [user.status, statusDirections, statusOrganizations]);
 
   const fetchData = async () => {
@@ -77,13 +99,15 @@ function NewCreateQuery() {
 
   useEffect(() => {
     if (uploadedFiles.length !== 0) {
-      const formFileData = new FormData()
-      formFileData.append('query', currentQuery.id.toString())
-      formFileData.append('query_draft', '')
-      uploadedFiles.map((file) => formFileData.append('file', file.originFileObj))
-      dispatch(postFiles(formFileData))
+      const formFileData = new FormData();
+      formFileData.append("query", currentQuery.id.toString());
+      formFileData.append("query_draft", "");
+      uploadedFiles.map((file) =>
+        formFileData.append("file", file.originFileObj)
+      );
+      dispatch(postFiles(formFileData));
     }
-  }, [currentQuery])
+  }, [currentQuery]);
 
   const onSubmit = async (data: PostQueryProps) => {
     const {
@@ -92,9 +116,9 @@ function NewCreateQuery() {
       description,
       initiative_direction,
       implementation_effect,
-      files
+      files,
     } = data;
-    setUploadedFiles(files)
+    setUploadedFiles(files);
     const formattedEndDate = formatDateToServer(new Date(), "-");
     await dispatch(
       postQuery({
@@ -107,7 +131,7 @@ function NewCreateQuery() {
         status: "check",
         initiator_users: [user_id],
         organization: getOrganizationNameById(organization, organizations),
-      }),
+      })
     );
     dispatch(setStatusQueries(Status.WAITING));
     dispatch(setStatusDirections(Status.WAITING));
@@ -135,11 +159,12 @@ function NewCreateQuery() {
             </div>
 
             <Form
+              data-testid="createQueryForm"
               initialValues={{
                 initiator_users: user.userName,
                 organization: getOrganizationName(
                   user.organizationId,
-                  organizations,
+                  organizations
                 ),
               }}
               layout={"vertical"}
@@ -190,11 +215,13 @@ function NewCreateQuery() {
                 ]}
               >
                 <Input
+                  data-testid="initiativeName"
                   className={styles.inp}
                   placeholder={"Напишите название инициативы "}
                 />
               </Form.Item>
               <Form.Item
+                data-testid="initiativeDirection"
                 className={styles.formItems}
                 name={"initiative_direction"}
                 rules={[
@@ -277,6 +304,7 @@ function NewCreateQuery() {
                 >
                   <Upload
                     maxCount={settings?.max_files_attached}
+                    // eslint-disable-next-line max-len
                     accept=".pdf, .webm, .doc, .docx, .odt, .xml, application/*, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/*, .png, video/*, audio/*"
                     multiple
                     className="upload"
@@ -312,6 +340,7 @@ function NewCreateQuery() {
                 </div>
                 <div className={styles.btnBlue}>
                   <Buttons
+                    dataTestId="submit1"
                     text={"Отправить"}
                     onClick={() => {
                       dispatch(changeIsModalSubmitActive(true));
@@ -328,12 +357,14 @@ function NewCreateQuery() {
       <ModalAntdSubmit
         form={"create-query"}
         text={
+          // eslint-disable-next-line max-len
           "Вы уверены, что хотите зарегистрировать инициативу и внесли все необходимые данные? После регистрации внесение изменений невозможно"
         }
       />
       <ModalAntdBack
         form={"create-query"}
         text={
+          // eslint-disable-next-line max-len
           "Вы уверены, что хотите отменить создание инициативы? При отмене заявки ранее внесенная информация не будет сохранена"
         }
       />

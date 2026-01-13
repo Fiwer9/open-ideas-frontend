@@ -30,7 +30,7 @@ const DomainsContainer = () => {
         setEditInputIndex(-1);
         setEditInputValue("");
       },
-      [editInputValue, store],
+      [editInputValue, store]
     ),
     handleClose: useCallback(
       (removedTag: number) => {
@@ -38,7 +38,7 @@ const DomainsContainer = () => {
         const newTags = tags.filter((tag) => tag.id !== removedTag);
         dispatch(setDomains(newTags));
       },
-      [tags, store],
+      [tags, store]
     ),
     handleInputConfirm: useCallback(() => {
       let id = 0;

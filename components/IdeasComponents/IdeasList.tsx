@@ -1,15 +1,21 @@
 import React from "react";
-import styles from "./styles/IdeasList.module.scss";
+
+import { PlusCircleOutlined } from "@ant-design/icons";
+
+import router from "next/router";
+
+import { Table } from "antd";
+
 import { Header } from "../HeaderComponents/Header";
 import { Tabs } from "../TabsComponent/Tabs";
 import { MainText } from "../MainTextComponent";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import FilterCheckboxBar from "../FilterComponents/blocks/FilterCheckboxBar";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import router from "next/router";
-import { Table } from "antd";
-import { Logo } from "../PicturesComponents/Logo";
+
+import Logo from "../PicturesComponents/Logo";
+
+import styles from "./styles/IdeasList.module.scss";
 
 export const IdeasList = () => {
   const columns: any = [
@@ -21,6 +27,7 @@ export const IdeasList = () => {
       showSorterTooltip: false,
       sorter: (a: any, b: any) => a.id - b.id,
       align: "center",
+      "data-testid": "id",
     },
     {
       title: "Инициатива (Идея)",
@@ -28,6 +35,7 @@ export const IdeasList = () => {
       key: "initiative",
       width: "60%",
       filters: [],
+      "data-testid": "initiative",
     },
     {
       title: "Направление",
@@ -35,6 +43,7 @@ export const IdeasList = () => {
       key: "direction",
       width: "15%",
       filters: [],
+      "data-testid": "direction",
     },
     {
       title: "Статус заявки",
@@ -42,6 +51,7 @@ export const IdeasList = () => {
       key: "status",
       width: "15%",
       filters: [],
+      "data-testid": "status",
     },
   ];
 
@@ -98,6 +108,7 @@ export const IdeasList = () => {
           <FilterCheckboxBar checkboxText={"Архив"} />
         </div>
         <Table
+          data-testid="table"
           className={styles.table}
           columns={columns}
           dataSource={dataSource}

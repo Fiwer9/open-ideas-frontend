@@ -1,9 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Status } from "../queriesSlice/types";
 import { DirectionResponse } from "../../models/response/DirectionResponse";
-import { postDirection, fetchDirections, getDirectionById, patchDirection, deleteDirection } from "./asyncActions";
+import {
+  postDirection,
+  fetchDirections,
+  getDirectionById,
+  patchDirection,
+  deleteDirection,
+} from "./asyncActions";
 import { DirectionsSliceState } from "./types";
-import { deleteDirectionBuilder, fetchDirectionBuilder, fetchDirectionsBuilder } from "./builders";
+import {
+  deleteDirectionBuilder,
+  fetchDirectionBuilder,
+  fetchDirectionsBuilder,
+} from "./builders";
 
 const initialState: DirectionsSliceState = {
   items: [],

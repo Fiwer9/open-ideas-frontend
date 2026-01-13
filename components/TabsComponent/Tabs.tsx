@@ -1,8 +1,9 @@
 import React, { memo, useEffect } from "react";
-import styles from "./styles/Tabs.module.scss";
+
 import { Tag } from "antd";
 import router from "next/router";
 import { useSelector } from "react-redux";
+
 import { selectCurrentUser } from "../../redux/authSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
 import { changeSelectedTag, setCurrentPage } from "../../redux/menuSlice/slice";
@@ -11,6 +12,8 @@ import {
   selectSelectedTag,
 } from "../../redux/menuSlice/selectors";
 import { fetchUserIsStaff } from "../../redux/menuSlice/asyncActions";
+
+import styles from "./styles/Tabs.module.scss";
 
 const { CheckableTag } = Tag;
 
@@ -48,7 +51,7 @@ export const Tabs: React.FC = memo(() => {
       <div className={styles.tabs}>
         {tagsData.map((tag) => {
           const isAdministratorTagDisabled =
-            tag === "Панель администратора" && !isStaff;
+            tag === "Панель администратора" && isStaff;
 
           return (
             <CheckableTag

@@ -9,12 +9,14 @@ interface ButtonsProps {
   props?: string;
   className?: string;
   form?: string;
+  dataTestId?: string;
 }
 
 export const Buttons: React.FC<ButtonsProps> = memo(
-  ({ text, onClick, type, props, className, form }) => {
+  ({ text, onClick, type, props, className, form, dataTestId }) => {
     return (
       <button
+        data-testid={dataTestId}
         form={form}
         className={
           props === "disabled"
@@ -27,5 +29,5 @@ export const Buttons: React.FC<ButtonsProps> = memo(
         {text}
       </button>
     );
-  },
+  }
 );

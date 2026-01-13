@@ -1,12 +1,15 @@
 import React, { memo } from "react";
 import { Modal } from "antd";
-import styles from "./styles/Modal.module.scss";
-import { Logo } from "../PicturesComponents/Logo";
-import { Buttons } from "../ButtonComponent/Button";
+
 import { useSelector } from "react-redux";
+
+import Logo from "../PicturesComponents/Logo";
+import { Buttons } from "../ButtonComponent/Button";
 import { useAppDispatch } from "../../redux/store";
 import { selectModelResetState } from "../../redux/modalsSlice/selectors";
 import { changeIsModalResetActive } from "../../redux/modalsSlice/slice";
+
+import styles from "./styles/Modal.module.scss";
 
 interface ModalAntdProps {
   form: string;

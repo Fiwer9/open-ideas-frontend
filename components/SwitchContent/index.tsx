@@ -1,7 +1,9 @@
 import React, { memo, useCallback } from "react";
-import styles from "./styles.module.scss";
+
 import { InputNumber } from "antd";
 import debounce from "lodash.debounce";
+
+import styles from "./styles.module.scss";
 
 interface SwitchContentProps {
   maxFileSize: number;
@@ -26,7 +28,7 @@ const SwitchContent: React.FC<SwitchContentProps> = ({
           debounce((num) => {
             onChangeCount(num);
           }, 1000),
-          [],
+          []
         )}
         defaultValue={maxFilesAttached}
         max={7}
@@ -42,7 +44,7 @@ const SwitchContent: React.FC<SwitchContentProps> = ({
           debounce((num) => {
             onChangeSize(num);
           }, 1000),
-          [],
+          []
         )}
         max={5000}
       />

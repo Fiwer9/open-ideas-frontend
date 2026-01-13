@@ -29,8 +29,8 @@
 
   .cardLog {
     border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.20);
-    box-shadow: 0 4px 30.1px 0 rgba(77, 71, 195, 0.40);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 30.1px 0 rgba(77, 71, 195, 0.4);
 
     height: 540px;
     width: 600px;
@@ -69,7 +69,7 @@
 
     em {
       height: 50px;
-      border-right: 1px solid rgba(176, 176, 176, 0.50);
+      border-right: 1px solid rgba(176, 176, 176, 0.5);
     }
 
     .tag {
@@ -79,7 +79,7 @@
       justify-content: center;
       font-size: 24px;
       line-height: 20px;
-      background: #FFFFFF;
+      background: #ffffff;
       color: #434343;
       border-radius: 8px;
 
@@ -95,8 +95,8 @@
     }
     :global {
       .ant-tag-checkable-checked {
-        background: var(--Geek-Blue-1, #F0F5FF);
-        color: #2F54EB;
+        background: var(--Geek-Blue-1, #f0f5ff);
+        color: #2f54eb;
       }
     }
   }
@@ -146,9 +146,9 @@
 
   .cardReg {
     border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.20);
-    box-shadow: 0 4px 30.1px 0 rgba(77, 71, 195, 0.40);
-  
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 30.1px 0 rgba(77, 71, 195, 0.4);
+
     height: 620px;
     width: 600px;
     display: flex;
@@ -161,7 +161,7 @@
     .regContent {
       @include regContentSize;
     }
-  
+
     .input {
       margin-bottom: 50px;
     }

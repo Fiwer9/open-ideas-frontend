@@ -26,6 +26,9 @@ export const headerSlice = createSlice({
     setDepartment: (state, action: PayloadAction<string>) => {
       state.department = action.payload;
     },
+    setUserStatus: (state, action: PayloadAction<Status>) => {
+      state.status = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserHeader.fulfilled, (state, action) => {
@@ -35,8 +38,8 @@ export const headerSlice = createSlice({
         return;
       }
       state.userName = action.payload.data.name;
-      state.department = action.payload.data.department.name;
-      state.organizationId = action.payload.data.department.organization;
+      state.department = action.payload.data.department?.name;
+      state.organizationId = action.payload.data.department?.organization;
       state.status = Status.SUCCESS;
     });
     builder.addCase(fetchUserHeader.pending, (state) => {
@@ -67,7 +70,7 @@ export const headerSlice = createSlice({
   },
 });
 
-export const { setDepartment, setOrganization, setUserName } =
+export const { setDepartment, setOrganization, setUserName, setUserStatus } =
   headerSlice.actions;
 
 export default headerSlice.reducer;

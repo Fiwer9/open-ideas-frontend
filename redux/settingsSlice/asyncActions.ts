@@ -38,7 +38,7 @@ export const deleteDomain = createAsyncThunk<void, deleteDomainArgs>(
   "settings/deleteDomain",
   async ({ id }) => {
     await DomainsService.deleteDomain(id);
-  },
+  }
 );
 export const fetchSettings = createAsyncThunk<
   ResponseInterface<SettingsResponse[]>

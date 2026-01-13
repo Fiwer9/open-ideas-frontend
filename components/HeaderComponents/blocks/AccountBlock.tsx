@@ -1,7 +1,9 @@
 import React, { memo, useEffect, useState } from "react";
-import styles from "../styles/Account.module.scss";
+
 import { Button } from "antd";
 import { useSelector } from "react-redux";
+
+import styles from "../styles/Account.module.scss";
 import { useAppDispatch } from "../../../redux/store";
 import { selectCurrentUser } from "../../../redux/authSlice/selectors";
 import { fetchOrganizationById } from "../../../redux/organizationsSlice/asyncActions";

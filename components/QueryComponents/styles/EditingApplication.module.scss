@@ -1,6 +1,5 @@
 @import "../../../styles/variable.scss";
 
-
 .contentContainer {
   margin-top: 46px;
 
@@ -60,13 +59,13 @@
         top: 50px;
         right: 50px;
         left: 50px;
-      };
+      }
 
       @media (max-width: 1700px) {
         margin: {
           right: 30px;
           left: 30px;
-        };
+        }
       }
 
       @media (max-width: 1440px) {
@@ -80,7 +79,7 @@
 .btnContainer {
   margin-bottom: 70px;
   padding: 20px 20px;
-  box-shadow: 1px 20px 40px 0 #0000001A;
+  box-shadow: 1px 20px 40px 0 #0000001a;
   background-color: $color-white;
   border-radius: 8px;
 
@@ -91,7 +90,6 @@
       family: RobotoRegular, sans-serif;
       weight: 400;
       size: 16px;
-    };
+    }
   }
 }
-

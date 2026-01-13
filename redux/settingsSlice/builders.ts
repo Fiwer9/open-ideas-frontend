@@ -6,7 +6,7 @@ import { Status } from "../queriesSlice/types";
 
 export const fetchDomainsBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<SettingsSliceState>>,
-  fetch: AsyncThunk<any, any, any>,
+  fetch: AsyncThunk<any, any, any>
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
@@ -27,7 +27,7 @@ export const fetchDomainsBuilder = (
 
 export const postDomainBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<SettingsSliceState>>,
-  fetch: AsyncThunk<any, any, any>,
+  fetch: AsyncThunk<any, any, any>
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
@@ -47,7 +47,7 @@ export const postDomainBuilder = (
 
 export const patchDomainBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<SettingsSliceState>>,
-  fetch: AsyncThunk<any, any, any>,
+  fetch: AsyncThunk<any, any, any>
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
@@ -70,7 +70,7 @@ export const patchDomainBuilder = (
 
 export const deleteDomainBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<SettingsSliceState>>,
-  fetch: AsyncThunk<any, any, any>,
+  fetch: AsyncThunk<any, any, any>
 ) => {
   builder.addCase(fetch.fulfilled, (state) => {
     state.status = Status.SUCCESS;
@@ -86,7 +86,7 @@ export const deleteDomainBuilder = (
 
 export const fetchSettingsBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<SettingsSliceState>>,
-  fetch: AsyncThunk<any, any, any>,
+  fetch: AsyncThunk<any, any, any>
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
@@ -108,7 +108,7 @@ export const fetchSettingsBuilder = (
 
 export const putSettingsBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<SettingsSliceState>>,
-  fetch: AsyncThunk<any, any, any>,
+  fetch: AsyncThunk<any, any, any>
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {

@@ -15,7 +15,7 @@ export default class SettingsService {
     allow_file_attachment?: boolean | undefined,
     max_file_size?: number | undefined,
     max_files_attached?: number | undefined,
-    anonymous_status?: boolean,
+    anonymous_status?: boolean
   ): Promise<AxiosResponse<ResponseInterface<SettingsResponse>>> {
     return $api.post("/settings/", {
       allow_file_attachment,
@@ -40,7 +40,7 @@ export default class SettingsService {
       max_file_size,
       max_files_attached,
       anonymous_status,
-      assignment_settings
+      assignment_settings,
     });
   }
 }

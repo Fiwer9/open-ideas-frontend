@@ -1,7 +1,5 @@
-import {QueriesResponse} from "./QueriesResponse";
+import { QueriesResponse } from "./QueriesResponse";
 
 export interface LikesResponse {
-    likes: [
-        QueriesResponse[]
-    ];
+  likes: [QueriesResponse[]];
 }

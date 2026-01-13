@@ -1,7 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { MainText } from "../MainTextComponent";
-import { StatisticsCard } from "./StatisticsCard";
-import Filter from "../FilterComponents/blocks/Filter";
+
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -13,16 +11,23 @@ import {
   Tooltip,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import styles from "./styles/Charts.module.scss";
+
+import { useSelector } from "react-redux";
+
 import {
   AnalyticType,
   getAnalyticsForGraphic,
   getAnalyticsForPieChart,
   StatisticItem,
 } from "../../utils/getAnalytics";
-import {getGraphicLabels, monthLabels, statusOptions} from "../../utils/consts";
+import {
+  getGraphicLabels,
+  monthLabels,
+  statusOptions,
+} from "../../utils/consts";
 import { Status } from "../../redux/queriesSlice/types";
-import { useSelector } from "react-redux";
+import Filter from "../FilterComponents/blocks/Filter";
+import { MainText } from "../MainTextComponent";
 import {
   selectOrganizations,
   selectOrgStatus,
@@ -32,7 +37,9 @@ import {
   selectStatusDirections,
 } from "../../redux/directionsSlice/selectors";
 import {
-  selectQueriesData, selectQueriesFilterData, selectQueryFilter,
+  selectQueriesData,
+  selectQueriesFilterData,
+  selectQueryFilter,
   selectStatusQueries,
 } from "../../redux/queriesSlice/selectors";
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
@@ -42,6 +49,10 @@ import { useAppDispatch } from "../../redux/store";
 import AdminPageLayout from "../AdminPageLayout";
 import GraphsSkeleton from "../SkeletonComponents/GraphsSkeleton";
 
+import styles from "./styles/Charts.module.scss";
+
+import { StatisticsCard } from "./StatisticsCard";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -49,7 +60,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 );
 
 export const options = {
@@ -101,9 +112,11 @@ export const Charts: React.FC = memo(() => {
   const statusDirections = useSelector(selectStatusDirections);
   const statusQuery = useSelector(selectStatusQueries);
   const initiativeDirections = filterQueries.map(
-    (query) => query.initiative_direction,
+    (query) => query.initiative_direction
   );
-  const initiativeOrganizations = filterQueries.map((query) => query.organization);
+  const initiativeOrganizations = filterQueries.map(
+    (query) => query.organization
+  );
   const initiativeStatuses = filterQueries.map((query) => query.status);
   const [data, setData] = useState({
     labels: monthLabels,
@@ -130,7 +143,11 @@ export const Charts: React.FC = memo(() => {
   };
 
   useEffect(() => {
-    const dataForGraphic = getAnalyticsForGraphic(filterQueries, queryFilter.startDate, queryFilter.endDate);
+    const dataForGraphic = getAnalyticsForGraphic(
+      filterQueries,
+      queryFilter.startDate,
+      queryFilter.endDate
+    );
     const updatedDataset = dataset.map((dataItem) => {
       return { ...dataItem, data: dataForGraphic.get(dataItem.label) };
     });
@@ -140,31 +157,33 @@ export const Charts: React.FC = memo(() => {
         labels: getGraphicLabels(
           queryFilter.startDate,
           queryFilter.endDate,
-          new Date(queryFilter.endDate).getUTCMonth() - new Date(queryFilter.startDate).getUTCMonth(),
-          new Date(queryFilter.endDate).getFullYear() -  new Date(queryFilter.startDate).getFullYear()
+          new Date(queryFilter.endDate).getUTCMonth() -
+            new Date(queryFilter.startDate).getUTCMonth(),
+          new Date(queryFilter.endDate).getFullYear() -
+            new Date(queryFilter.startDate).getFullYear()
         ),
-        datasets: updatedDataset
+        datasets: updatedDataset,
       });
       setDataDirection(
         getAnalyticsForPieChart(
           initiativeDirections,
           directions,
-          AnalyticType.DIRECTION,
-        ),
+          AnalyticType.DIRECTION
+        )
       );
       setDataOrganization(
         getAnalyticsForPieChart(
           initiativeOrganizations,
           organizations,
-          AnalyticType.ORGANIZATION,
-        ),
+          AnalyticType.ORGANIZATION
+        )
       );
       setDataStatus(
         getAnalyticsForPieChart(
           initiativeStatuses,
           statusOptions,
-          AnalyticType.QUERYSTATUS,
-        ),
+          AnalyticType.QUERYSTATUS
+        )
       );
     }
   }, [organizations, directions, queries, filterQueries]);
@@ -187,7 +206,7 @@ export const Charts: React.FC = memo(() => {
                   Количество инициатив : {filterQueries.length}
                 </p>
                 <div className={styles.calendar}>
-                  <Filter queries={queries}/>
+                  <Filter queries={queries} />
                 </div>
               </div>
               <div className={styles.lineCharts}>

@@ -8,34 +8,37 @@ import {
 } from "@ant-design/icons";
 import { Layout, theme } from "antd";
 import router from "next/router";
+
 const { Sider } = Layout;
-import styles from "./styles/siderSmall.module.scss";
+import { useSelector } from "react-redux";
+
 import {
   selectCurrentPage,
   selectMenuIsCollapsed,
 } from "../../redux/menuSlice/selectors";
-import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../redux/store";
 import { changeCollapsed, setCurrentPage } from "../../redux/menuSlice/slice";
 
+import styles from "./styles/siderSmall.module.scss";
+
 const items: MenuProps["items"] = [
   {
-    label: 'Инициативы',
+    label: "Инициативы",
     key: "/queries",
     icon: <BulbOutlined style={{ fontSize: "150%" }} />,
   },
   {
-    label: 'Пользователи',
+    label: "Пользователи",
     key: "/users",
     icon: <UserOutlined style={{ fontSize: "150%" }} />,
   },
   {
-    label: 'Организации',
+    label: "Организации",
     key: "/organizations",
     icon: <ReconciliationOutlined style={{ fontSize: "150%" }} />,
   },
   {
-    label: 'Настройки',
+    label: "Настройки",
     key: "/settings",
     icon: <SettingOutlined style={{ fontSize: "150%" }} />,
   },
@@ -59,7 +62,7 @@ export const SliderSmall: React.FC = memo(() => {
       <Sider
         className={styles.sider}
         style={{ background: colorBgContainer }}
-        collapsedWidth={'100%'}
+        collapsedWidth={"100%"}
         trigger={null}
       >
         <Menu
@@ -67,7 +70,7 @@ export const SliderSmall: React.FC = memo(() => {
           onClick={handleClickItem}
           selectedKeys={selectedPage}
           items={items}
-          className='menuSmall'
+          className="menuSmall"
         ></Menu>
       </Sider>
     </Layout>

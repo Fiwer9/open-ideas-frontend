@@ -1,12 +1,15 @@
 import React, { memo } from "react";
 import { Modal } from "antd";
-import styles from "./styles/Modal.module.scss";
-import { Buttons } from "../ButtonComponent/Button";
-import { Logo } from "../PicturesComponents/Logo";
+
 import { useSelector } from "react-redux";
+
+import { Buttons } from "../ButtonComponent/Button";
+import Logo from "../PicturesComponents/Logo";
 import { useAppDispatch } from "../../redux/store";
 import { selectModelSubmitState } from "../../redux/modalsSlice/selectors";
 import { changeIsModalSubmitActive } from "../../redux/modalsSlice/slice";
+
+import styles from "./styles/Modal.module.scss";
 
 interface ModalAntdProps {
   form: string;
@@ -48,6 +51,7 @@ const ModalAntdSubmit: React.FC<ModalAntdProps> = memo(({ form, text }) => {
             onClick={handleOk}
           />
           <Buttons
+            dataTestId="submit2"
             className={styles.btnBlue}
             key={2}
             form={form}

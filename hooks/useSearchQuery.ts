@@ -1,16 +1,25 @@
-import {useEffect} from "react";
-import {QueriesResponse} from "../models/response/QueriesResponse";
+import { useEffect } from "react";
+import { QueriesResponse } from "../models/response/QueriesResponse";
 
-export const useSearchQuery = (searchNum: any, lisOfQuery: any, getData: any, setIsLoading: any, setData: any) => {
-
+export const useSearchQuery = (
+  searchNum: any,
+  lisOfQuery: any,
+  getData: any,
+  setIsLoading: any,
+  setData: any
+) => {
   useEffect(() => {
-    const filterQuery = async (searchText: any, listOfQuery: QueriesResponse[], getData: any) => {
+    const filterQuery = async (
+      searchText: any,
+      listOfQuery: QueriesResponse[],
+      getData: any
+    ) => {
       if (!searchText) {
         try {
-          const data = await getData()
+          const data = await getData();
           return data.data;
         } catch (e) {
-          console.error(e.message)
+          console.error(e.message);
         }
       } else {
         return listOfQuery.filter(({ name }) =>
@@ -19,14 +28,12 @@ export const useSearchQuery = (searchNum: any, lisOfQuery: any, getData: any, se
       }
     };
 
-
-    setIsLoading(true)
+    setIsLoading(true);
     const debounce = setTimeout(async () => {
-      const filteredQuery = filterQuery(searchNum, lisOfQuery, getData)
+      const filteredQuery = filterQuery(searchNum, lisOfQuery, getData);
       setData(await filteredQuery);
       setIsLoading(false);
-    }, 300)
-
+    }, 300);
 
     return () => clearTimeout(debounce);
   }, [searchNum]);

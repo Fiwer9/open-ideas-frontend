@@ -10,7 +10,6 @@
   padding-bottom: 20px;
 
   .form {
-
     .headerContainer {
       display: flex;
       justify-content: space-between;
@@ -51,7 +50,7 @@
           .numberLikes {
             margin-left: 8px;
             font: {
-             family: "RobotoRegular", sans-serif;
+              family: "RobotoRegular", sans-serif;
               size: 14px;
             }
           }
@@ -80,24 +79,24 @@
           background: #790298;
         }
 
-        .statusAnalysis{
-          background: #1890FF;
+        .statusAnalysis {
+          background: #1890ff;
         }
 
-        .statusAccepted{
+        .statusAccepted {
           background: #6c57e0;
         }
 
-        .statusImplementation{
-          background: #D09B11D9;
+        .statusImplementation {
+          background: #d09b11d9;
         }
 
-        .statusRejected{
-          background: #EC0B4E;
+        .statusRejected {
+          background: #ec0b4e;
         }
 
-        .statusDone{
-          background: #00A71B;
+        .statusDone {
+          background: #00a71b;
         }
       }
     }
@@ -221,7 +220,7 @@
       }
     }
 
-    .footerContainerChild{
+    .footerContainerChild {
       margin-top: 18px;
       display: flex;
       justify-content: space-between;
@@ -258,7 +257,7 @@
       }
     }
 
-    .footerContainer{
+    .footerContainer {
       margin-top: 18px;
       display: flex;
       justify-content: space-between;

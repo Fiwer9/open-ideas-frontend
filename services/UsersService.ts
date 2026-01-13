@@ -12,13 +12,13 @@ export default class UsersService {
   }
 
   static async getUsersByName(
-    value: string,
+    value: string
   ): Promise<AxiosResponse<ResponseInterface<UserResponse[]>>> {
     return $api.get(`/users/users?search=${value}`);
   }
 
   static async getCurrentUser(
-    id: number | string,
+    id: number | string
   ): Promise<AxiosResponse<ResponseInterface<UserResponse>>> {
     return $api.get(`/users/users/${id}/`);
   }

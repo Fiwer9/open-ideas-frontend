@@ -1,63 +1,62 @@
 @import "../../../styles/variable";
 
 .content {
-    max-width: 800px;
+  max-width: 800px;
 
-    .nameDirection {
-        .name {
-            margin: 0;
-            @include pageTitle;
-        }
-
-        .date {
-            margin: 0;
-            margin-top: 20px;
-            font: {
-            family: RobotoRegular, sans-serif;
-            weight: 400;
-            size: 16px;
-            };
-            color: $color-gray-43;
-        }
+  .nameDirection {
+    .name {
+      margin: 0;
+      @include pageTitle;
     }
 
-
-    .infContent {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-
-        .row {
-            display: flex;
-            flex-direction: row;
-            margin-top: 38px;
-
-            .rowText {
-                flex: 0 0 45%;
-                margin: 0;
-                font: {
-                    family: Poppins, sans-serif;
-                    weight: 600;
-                    size: 20px;
-                };
-                color: rgba($color-gray-43, 0.8);
-            }
-
-            .rowInf {
-                margin: 0;
-                font: {
-                    family: Poppins, sans-serif;
-                    weight: 600;
-                    size: 20px;
-                };
-                color: $color-black-22;
-            }
-        }
+    .date {
+      margin: 0;
+      margin-top: 20px;
+      font: {
+        family: RobotoRegular, sans-serif;
+        weight: 400;
+        size: 16px;
+      }
+      color: $color-gray-43;
     }
+  }
+
+  .infContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      margin-top: 38px;
+
+      .rowText {
+        flex: 0 0 45%;
+        margin: 0;
+        font: {
+          family: Poppins, sans-serif;
+          weight: 600;
+          size: 20px;
+        }
+        color: rgba($color-gray-43, 0.8);
+      }
+
+      .rowInf {
+        margin: 0;
+        font: {
+          family: Poppins, sans-serif;
+          weight: 600;
+          size: 20px;
+        }
+        color: $color-black-22;
+      }
+    }
+  }
 }
 
 .btnContainer {
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 40px;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 40px;
 }

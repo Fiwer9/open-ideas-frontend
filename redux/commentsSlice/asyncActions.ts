@@ -1,8 +1,8 @@
-import { createAsyncThunk } from "@reduxjs/toolkit"
-import { CommentResponse } from "../../models/response/CommentResponse"
-import { ResponseInterface } from "../../models/response/ResponseInterface"
-import CommentService from "../../services/CommentService"
-import { FetchCommentsByQueryArgs, PostCommentsArgs } from "./types"
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { CommentResponse } from "../../models/response/CommentResponse";
+import { ResponseInterface } from "../../models/response/ResponseInterface";
+import CommentService from "../../services/CommentService";
+import { FetchCommentsByQueryArgs, PostCommentsArgs } from "./types";
 
 export const fetchCommentsById = createAsyncThunk<
   ResponseInterface<CommentResponse[]>,

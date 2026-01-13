@@ -1,12 +1,16 @@
 import React, { memo } from "react";
 import { useSelector } from "react-redux";
+
+import { Button, Modal } from "antd";
+
 import { selectModelSubmitState } from "../../redux/modalsSlice/selectors";
 import { useAppDispatch } from "../../redux/store";
 import { changeIsModalSubmitActive } from "../../redux/modalsSlice/slice";
-import { Button, Modal } from "antd";
-import styles from "./styles/Modal.module.scss";
-import { Logo } from "../PicturesComponents/Logo";
+
+import Logo from "../PicturesComponents/Logo";
 import { Buttons } from "../ButtonComponent/Button";
+
+import styles from "./styles/Modal.module.scss";
 
 interface ModalAdditionalText {
   text: string;

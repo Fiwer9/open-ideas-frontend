@@ -11,13 +11,13 @@ export default class DomainsService {
   }
 
   static async deleteDomain(
-    id: number | string,
+    id: number | string
   ): Promise<AxiosResponse<ResponseInterface<DomainsResponse>>> {
     return $api.delete(`/domain/domains/${id}`);
   }
 
   static postDomain(
-    domain: string,
+    domain: string
   ): Promise<AxiosResponse<ResponseInterface<DomainsResponse>>> {
     return $api.post(`/domain/domains/`, { domain });
   }

@@ -1,8 +1,6 @@
-import React, { memo } from "react";
+"use client";
+import React from "react";
 import Image from "next/image";
-import logo from "../../public/img/logo.svg";
-import logoMin from "../../public/img/logo-min.svg";
-import logoBig from "../../public/img/logoBig.svg";
 
 import styles from "./styles/Logo.module.scss";
 
@@ -14,14 +12,20 @@ interface LogoProps {
   className?: any;
 }
 
-export const Logo: React.FC<LogoProps> = memo(({ width, height, min, big, className }) => {
+export default function Logo({
+  width,
+  height,
+  min,
+  big,
+  className,
+}: LogoProps) {
   return (
     <>
       {big ? (
         <Image
           width={width}
           height={height}
-          src={logoBig}
+          src="/img/logoBig.svg"
           alt="Открытые идеи"
           className={className}
         />
@@ -31,15 +35,15 @@ export const Logo: React.FC<LogoProps> = memo(({ width, height, min, big, classN
             <Image
               width={width}
               height={height}
-              src={logoMin}
+              src="/img/logo-min.svg"
               alt="Открытые идеи"
-              className={`${styles.logoMin} ${className}`}
+              className={className}
             />
           ) : (
             <Image
               width={width}
               height={height}
-              src={logo}
+              src="/img/logo.svg"
               alt="Открытые идеи"
               className={`${styles.logo} ${className}`}
             />
@@ -48,4 +52,4 @@ export const Logo: React.FC<LogoProps> = memo(({ width, height, min, big, classN
       )}
     </>
   );
-});
+}

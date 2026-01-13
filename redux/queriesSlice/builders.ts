@@ -5,7 +5,7 @@ import { DetailType } from "../../models/response/ResponseInterface";
 
 export const fetchQueriesBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<QueriesSliceState>>,
-  fetch: AsyncThunk<any, any, any>,
+  fetch: AsyncThunk<any, any, any>
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
@@ -29,7 +29,7 @@ export const fetchQueriesBuilder = (
 
 export const fetchQueryBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<QueriesSliceState>>,
-  fetch: AsyncThunk<any, any, any>,
+  fetch: AsyncThunk<any, any, any>
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
@@ -50,7 +50,7 @@ export const fetchQueryBuilder = (
 
 export const postQueryBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<QueriesSliceState>>,
-  patch: AsyncThunk<any, any, any>,
+  patch: AsyncThunk<any, any, any>
 ) => {
   builder.addCase(patch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {

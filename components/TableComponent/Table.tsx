@@ -1,11 +1,15 @@
 import React, { memo } from "react";
-import styles from "./styles/Table.module.scss";
+
 import { Table } from "antd";
+
+import type { TableProps as RcTableProps } from "rc-table/lib/Table";
+
 import { DirectionResponse } from "../../models/response/DirectionResponse";
 import { QueriesResponse } from "../../models/response/QueriesResponse";
 import { UserResponse } from "../../models/response/UserResponse";
 import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
-import type { TableProps as RcTableProps } from "rc-table/lib/Table";
+
+import styles from "./styles/Table.module.scss";
 
 interface DataTable {
   data:
@@ -40,5 +44,5 @@ export const DataTable: React.FC<DataTable> = memo(
         />
       </div>
     );
-  },
+  }
 );

@@ -1,9 +1,12 @@
 import React, { memo, ReactNode } from "react";
+
 import { Slider } from "../SliderComponents/SliderComponents";
 import { Tabs } from "../TabsComponent/Tabs";
 import { Header } from "../HeaderComponents/Header";
-import styles from "./styles.module.scss";
+
 import { SliderSmall } from "../SliderComponents/SliderSmall";
+
+import styles from "./styles.module.scss";
 
 interface AdminPageLayoutProps {
   children: ReactNode;

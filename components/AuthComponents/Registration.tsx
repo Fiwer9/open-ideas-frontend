@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Select } from "antd";
-import { InputLabel } from "../InputLabelComponent/InputLabel";
-import { Logo } from "../PicturesComponents/Logo";
-import { Buttons } from "../ButtonComponent/Button";
 
-import styles from "./styles/Registration.module.scss";
 import router from "next/router";
-import { useAppDispatch } from "../../redux/store";
+
 import { useSelector } from "react-redux";
+
+import { useAppDispatch } from "../../redux/store";
+import { Buttons } from "../ButtonComponent/Button";
+import Logo from "../PicturesComponents/Logo";
+import { InputLabel } from "../InputLabelComponent/InputLabel";
 import { selectAuthStatus } from "../../redux/authSlice/selectors";
 import { Status } from "../../redux/queriesSlice/types";
 import {
@@ -19,6 +20,8 @@ import {
   selectOrganizations,
 } from "../../redux/organizationsSlice/selectors";
 import { putRegistration } from "../../redux/authSlice/asyncActions";
+
+import styles from "./styles/Registration.module.scss";
 
 export const Registration = () => {
   const [name, setName] = useState<string>("");
@@ -59,9 +62,10 @@ export const Registration = () => {
         putRegistration({
           name,
           departmentId,
-        }),
+        })
       );
     } catch (error: any) {
+      // eslint-disable-next-line no-console
       console.error(error.response.data.message);
     }
   };
@@ -86,6 +90,7 @@ export const Registration = () => {
           />
           <div className={styles.input}>
             <Input
+              data-testid="inputFIO"
               onChange={handleInputChange}
               placeholder={"Напишите фамилию, имя и отчество"}
               required
@@ -111,6 +116,7 @@ export const Registration = () => {
                 }
                 loading={status === Status.LOADING}
                 className={styles.select}
+                data-testid="organizationSelect"
                 placeholder={"Название организации"}
                 options={optionsOrg}
                 onChange={(e: any) => {
@@ -158,6 +164,7 @@ export const Registration = () => {
             }
           >
             <Buttons
+              dataTestId="registrationButton"
               text={"Зарегистрироваться"}
               props={
                 name && organizationId && departmentId ? "submit" : "disabled"

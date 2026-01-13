@@ -1,6 +1,5 @@
 @import "../../styles/variable.scss";
 
-
 .containerIdeas {
   @include container;
 
@@ -21,13 +20,13 @@
       @media (max-width: 720px) {
         padding: {
           top: 115px;
-        };
+        }
       }
 
       @media (max-width: 540px) {
         padding: {
           top: 55px;
-        };
+        }
       }
 
       .logoHeader {
@@ -52,7 +51,7 @@
         top: 130px;
         left: 20px;
         right: 20px;
-      };
+      }
     }
 
     @media (max-width: 720px) {

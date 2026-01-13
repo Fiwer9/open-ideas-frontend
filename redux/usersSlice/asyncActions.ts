@@ -24,7 +24,7 @@ export const fetchUsers = createAsyncThunk<ResponseInterface<UserResponse[]>>(
   async () => {
     const { data } = await UsersService.getUsers();
     return data;
-  },
+  }
 );
 
 export const fetchUsersByName = createAsyncThunk<

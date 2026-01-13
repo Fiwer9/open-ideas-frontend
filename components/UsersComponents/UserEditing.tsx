@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import CheckboxBlock from "../FilterComponents/blocks/CheckboxBlock";
+
 import { Button, Form, Input, Select } from "antd";
 
-import styles from "./styles/UserEditing.module.scss";
-import { useAppDispatch } from "../../redux/store";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
+
+import { useAppDispatch } from "../../redux/store";
+import CheckboxBlock from "../FilterComponents/blocks/CheckboxBlock";
 import {
   selectUser,
   selectUsersStatus,
@@ -33,6 +34,8 @@ import { setPageId, setPageName } from "../../redux/menuSlice/slice";
 import AdminPageLayout from "../AdminPageLayout";
 import { Status } from "../../redux/queriesSlice/types";
 import AdminQuerySkeleton from "../SkeletonComponents/AdminQuerySkeleton";
+
+import styles from "./styles/UserEditing.module.scss";
 
 interface EditUserProps {
   userName: string;
@@ -159,7 +162,7 @@ export const UserEditing = () => {
       verification,
     } = data;
     const depart = departments.find(
-      (_department) => _department.id === department.value,
+      (_department) => _department.id === department.value
     );
     dispatch(
       patchUser({
@@ -171,7 +174,7 @@ export const UserEditing = () => {
         is_staff: personal,
         is_superuser: superuser,
         is_verified: verification,
-      }),
+      })
     );
     router.back();
   };
@@ -183,7 +186,7 @@ export const UserEditing = () => {
           ? dep.organization === organization
           : user?.department
             ? dep.organization === user?.department.id
-            : "Не назначено",
+            : "Не назначено"
       )
       .map((department) => {
         return {
@@ -322,6 +325,7 @@ export const UserEditing = () => {
                   name={"active"}
                   checkboxText={"Активный"}
                   hintText={
+                    // eslint-disable-next-line max-len
                     "Отметьте, если пользователь должен считаться активным. Уберите эту отметку вместо удаления учётной записи."
                   }
                   paddings={10}

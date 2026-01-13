@@ -1,12 +1,13 @@
 import React, { memo, useEffect, useState } from "react";
 import Image from "next/image";
-import avatar from "../../public/img/AvatarAratrum.svg";
 
-import styles from "./styles/UserCard.module.scss";
 import { Button, Col } from "antd";
 import { useRouter } from "next/router";
-import { getOrganizationName, getQueriesByNumber } from "../../utils/utils";
+
 import { useSelector } from "react-redux";
+
+import { getOrganizationName, getQueriesByNumber } from "../../utils/utils";
+import avatar from "../../public/img/AvatarAratrum.svg";
 import {
   selectUser,
   selectUsersStatus,
@@ -27,6 +28,8 @@ import { setPageId, setPageName } from "../../redux/menuSlice/slice";
 import { Status } from "../../redux/queriesSlice/types";
 import AdminPageLayout from "../AdminPageLayout";
 import UsersSkeleton from "../SkeletonComponents/UsersSkeleton";
+
+import styles from "./styles/UserCard.module.scss";
 
 export const UserCard: React.FC = memo(() => {
   const router = useRouter();
@@ -94,8 +97,8 @@ export const UserCard: React.FC = memo(() => {
                   <p className={styles.rowInf}>
                     {queries
                       ? getQueriesByNumber(queries)
-                          .toString()
-                          .replaceAll(",", ", ")
+                        .toString()
+                        .replaceAll(",", ", ")
                       : ""}
                   </p>
                 </div>
@@ -106,9 +109,9 @@ export const UserCard: React.FC = memo(() => {
                     <p className={styles.rowInf}>
                       {organizations && user?.department
                         ? getOrganizationName(
-                            user?.department.organization,
-                            organizations,
-                          )
+                          user?.department.organization,
+                          organizations
+                        )
                         : "Не назначено"}
                     </p>
                   </div>

@@ -7,7 +7,7 @@ import { Status } from "../queriesSlice/types";
 
 export const fetchUsersBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<UsersSliceState>>,
-  fetch: AsyncThunk<any, any, any>,
+  fetch: AsyncThunk<any, any, any>
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
@@ -30,7 +30,7 @@ export const fetchUsersBuilder = (
 
 export const fetchUserBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<UsersSliceState>>,
-  fetch: AsyncThunk<any, any, any>,
+  fetch: AsyncThunk<any, any, any>
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {
@@ -53,7 +53,7 @@ export const fetchUserBuilder = (
 
 export const patchLikesBuilder = (
   builder: ActionReducerMapBuilder<WritableDraft<UsersSliceState>>,
-  fetch: AsyncThunk<any, any, any>,
+  fetch: AsyncThunk<any, any, any>
 ) => {
   builder.addCase(fetch.fulfilled, (state, action) => {
     if (action.payload.error.is_error) {

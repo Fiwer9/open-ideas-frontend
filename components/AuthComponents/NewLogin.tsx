@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
-import styles from "./styles/NewLogin.module.scss";
+
 import { Button, Card, Form, Input, Tag } from "antd";
-import { Logo } from "../PicturesComponents/Logo";
-import { InputLabel } from "../InputLabelComponent/InputLabel";
+
 import Link from "next/link";
+
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { useAppDispatch } from "../../redux/store";
+
 import { useSelector } from "react-redux";
+
+import router from "next/router";
+
+import Logo from "../PicturesComponents/Logo";
+import { InputLabel } from "../InputLabelComponent/InputLabel";
+
+import { useAppDispatch } from "../../redux/store";
+
 import {
   selectDetail,
   selectAuthStatus,
@@ -17,7 +25,8 @@ import {
 } from "../../redux/authSlice/asyncActions";
 import { Status } from "../../redux/queriesSlice/types";
 import { setStatus } from "../../redux/authSlice/slice";
-import router from "next/router";
+
+import styles from "./styles/NewLogin.module.scss";
 
 const { CheckableTag } = Tag;
 
@@ -153,7 +162,9 @@ function NewLogin() {
                     iconRender={(visible) =>
                       visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                     }
-                    onChange={(evt) => handleInputChange(evt, setPasswordRepeat)}
+                    onChange={(evt) =>
+                      handleInputChange(evt, setPasswordRepeat)
+                    }
                     status={status === Status.ERROR ? "error" : undefined}
                     value={status !== Status.ERROR ? passwordRepeat : ""}
                     placeholder={"Введите пароль"}

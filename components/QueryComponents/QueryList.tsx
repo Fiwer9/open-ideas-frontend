@@ -1,6 +1,15 @@
+"use client";
+
 import React, { memo, useCallback, useEffect, useState } from "react";
 
-import styles from "./styles/QueryList.module.scss";
+import { useRouter } from "next/router";
+
+import { PlusCircleOutlined } from "@ant-design/icons";
+
+import { useSelector } from "react-redux";
+
+import debounce from "lodash.debounce";
+
 import {
   QueriesResponse,
   QueryStatus,
@@ -16,10 +25,8 @@ import { MainText } from "../MainTextComponent";
 import { DataTable } from "../TableComponent/Table";
 import FilterBar from "../FilterComponents/blocks/FilterBar";
 import FilterCheckboxBar from "../FilterComponents/blocks/FilterCheckboxBar";
-import { useRouter } from "next/router";
 import SearchBar from "../FilterComponents/blocks/SearchBar";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+
 import { selectCurrentUser } from "../../redux/authSlice/selectors";
 import {
   selectDirections,
@@ -42,7 +49,7 @@ import { setStatusUsers } from "../../redux/usersSlice/slice";
 import { setStatusQueries } from "../../redux/queriesSlice/slice";
 import { setStatusDirections } from "../../redux/directionsSlice/slice";
 import { setStatusOrganizations } from "../../redux/organizationsSlice/slice";
-import debounce from "lodash.debounce";
+
 import {
   getQueryFilterByArchive,
   getQueryFilterByExpert,
@@ -53,7 +60,9 @@ import AdminPageLayout from "../AdminPageLayout";
 import FilterContainer from "../../containers/FilterContainer";
 import PageLayout from "../PageLayout";
 
-export const QueryList: React.FC = memo(() => {
+import styles from "./styles/QueryList.module.scss";
+
+export const QueryList = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const directions = useSelector(selectDirections);
@@ -167,7 +176,7 @@ export const QueryList: React.FC = memo(() => {
         (query) =>
           (query.expert_users.includes(user_id) &&
             query.status === QueryStatus.REJECTED) ||
-          query.status === QueryStatus.DONE,
+          query.status === QueryStatus.DONE
       );
     }
     if (isExpert) {
@@ -270,4 +279,4 @@ export const QueryList: React.FC = memo(() => {
       )}
     </>
   );
-});
+};
