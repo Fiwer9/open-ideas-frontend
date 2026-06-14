@@ -9,6 +9,7 @@ import {
   PointElement,
   Title,
   Tooltip,
+  type ChartData,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
@@ -118,9 +119,9 @@ export const Charts: React.FC = memo(() => {
     (query) => query.organization
   );
   const initiativeStatuses = filterQueries.map((query) => query.status);
-  const [data, setData] = useState({
+  const [data, setData] = useState<ChartData<"line">>({
     labels: monthLabels,
-    datasets: [],
+    datasets: dataset,
   });
   const dispatch = useAppDispatch();
 
