@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosHeaders, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { TokenResponse } from "../models/response/AuthResponse";
 import router from "next/router";
 import { ResponseInterface } from "../models/response/ResponseInterface";
@@ -101,8 +101,9 @@ $api.interceptors.response.use(
       throw error;
     }
 
-    originalRequest.headers = originalRequest.headers ?? {};
-    originalRequest.headers.Authorization = `Bearer ${access}`;
+    const headers = AxiosHeaders.from(originalRequest.headers);
+    headers.set("Authorization", `Bearer ${access}`);
+    originalRequest.headers = headers;
     localStorage.setItem("token_access", access);
     return $api.request(originalRequest);
   }
