@@ -114,9 +114,12 @@ const UsersList: React.FC = () => {
     fetchDataByName();
   }, [searchValue]);
 
-  const getData = () =>
-    usersData.length > 0 &&
-    usersData?.map((user) => ({
+  const getData = () => {
+    if (usersData.length === 0) {
+      return [];
+    }
+
+    return usersData.map((user) => ({
       id: user.id,
       name: user.name,
       email: user.email,
@@ -124,6 +127,7 @@ const UsersList: React.FC = () => {
         ? getOrganizationName(user.department.id, organizations)
         : "Не назначено",
     }));
+  };
 
   const handleRowClick = (user: any) => {
     router.push(`/users/userCard?userId=${user.id}`);
