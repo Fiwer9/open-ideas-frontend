@@ -1,0 +1,76 @@
+@import "../../../styles/variable";
+
+.contentDate {
+  .period {
+    margin: 0;
+  }
+
+  .btnContainer {
+    float: right;
+  }
+}
+
+.filter {
+  position: relative;
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    margin-left: 8px;
+
+    .dropdownTitle {
+      display: flex;
+      flex-direction: column;
+
+      .span {
+        color: rgba(0, 0, 0, 0.4);
+        font: {
+          family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          weight: 500;
+          size: 14px;
+        }
+      }
+
+      .dropdown {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-top: 3px;
+
+        .textDropdown {
+          margin-right: 10px;
+          font: {
+            family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            weight: 500;
+            size: 16px;
+          }
+        }
+
+        .triangleOpen {
+          fill: #1890ff;
+          transform: rotate(-180deg);
+          transition: transform 0.2s;
+          cursor: pointer;
+        }
+
+        .triangleClose {
+          transform: rotate(0deg);
+          transition: transform 0.2s;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .rangePicker {
+      margin-top: 5px;
+    }
+  }
+}
+
+.date-container {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 999;
+}

@@ -1,0 +1,22 @@
+@import "../../../styles/variable.scss";
+
+.container {
+  @extend %container;
+
+  .form {
+    max-width: 472px;
+    @extend %form;
+
+    .content {
+      .inputlabel {
+        font-size: 20px;
+      }
+
+      .text {
+        margin: 0;
+        margin-bottom: 80px;
+        font-size: 16px;
+      }
+    }
+  }
+}

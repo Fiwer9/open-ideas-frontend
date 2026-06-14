@@ -1,0 +1,36 @@
+.tableContainer {
+  margin-top: 17px;
+  overflow: {
+    x: auto;
+    y: hidden;
+  }
+  flex: 1;
+
+  @media (max-width: 430px) {
+    margin-bottom: 65px;
+  }
+
+  .table {
+    table {
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 0;
+
+      tr {
+        cursor: pointer;
+      }
+    }
+
+    :global(.ant-pagination) {
+      margin: 16px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+
+      :global(.ant-pagination-total-text) {
+        order: 10;
+        margin-inline-start: 8px;
+        flex: none;
+      }
+    }
+  }
+}

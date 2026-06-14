@@ -1,0 +1,61 @@
+.inputContainer {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+
+  .inputNumber {
+    max-width: 134px;
+
+    @media (max-width: 768px) {
+      max-width: 91px;
+    }
+
+    input {
+      border-radius: 2px;
+      height: 40px;
+    }
+  }
+
+  .inputSearch {
+    flex: 1;
+    max-width: 883px;
+
+    input {
+      border-radius: 2px;
+      height: 40px;
+    }
+  }
+
+  @media (max-width: 720px) {
+    width: 100%;
+    .inputNumber {
+      min-width: unset;
+    }
+
+    .inputSearch {
+      min-width: unset;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 460px) {
+    flex-direction: row;
+
+    .inputNumber {
+      width: 100%;
+      max-width: 91px;
+    }
+
+    .inputSearch {
+      max-width: 260px;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 375px) {
+    .inputSearch {
+      max-width: 160px;
+      width: 100%;
+    }
+  }
+}

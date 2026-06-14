@@ -1,0 +1,27 @@
+@import "../../../styles/variable";
+
+.btnContainer {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  button {
+    border-radius: 2px;
+    height: 40px;
+  }
+
+  @media (max-width: 720px) {
+    flex-direction: row;
+    gap: 24px;
+    align-items: center;
+  }
+
+  @media (max-width: 420px) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    gap: 16px;
+  }
+}

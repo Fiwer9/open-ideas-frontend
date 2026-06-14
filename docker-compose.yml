@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  react:
+    build:
+      context: .
+      dockerfile: react.Dockerfile
+    restart: unless-stopped
+networks:
+  default:
+    external: true
+    name: open_ideas_common_network

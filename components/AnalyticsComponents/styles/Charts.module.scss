@@ -1,0 +1,46 @@
+@import "../../../styles/variable";
+
+.container {
+  @include container;
+
+  .content {
+    .contentStatic {
+      .headerContent {
+        display: flex;
+        justify-content: space-between;
+
+        .statisticContent {
+          display: flex;
+
+          .statusItem:not(:last-child) {
+            margin-right: 20px;
+          }
+        }
+
+        .headerItem {
+          font: {
+            family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            weight: 700;
+            size: 14px;
+          }
+          color: $color-gray-26;
+        }
+      }
+
+      .statisticsCard {
+        display: flex;
+        margin-top: 34px;
+        margin-bottom: 30px;
+
+        .statisticsCardItem {
+          margin-right: 70px;
+        }
+      }
+
+      .lineCharts {
+        width: 1470px;
+        height: 387px;
+      }
+    }
+  }
+}

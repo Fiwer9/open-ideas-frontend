@@ -1,0 +1,160 @@
+.modal {
+  :global(.ant-modal-content) {
+    padding: 0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  :global(.ant-modal-body) {
+    padding: 0;
+  }
+
+  :global(.ant-modal-close) {
+    top: 12px;
+    right: 12px;
+  }
+}
+
+.expandedCard {
+  display: flex;
+  min-height: 420px;
+  background: #fff;
+}
+
+.expandedLeft {
+  flex: 0 0 48%;
+  padding: 28px 24px;
+}
+
+.expandedDivider {
+  width: 1px;
+  flex-shrink: 0;
+  background: #e8e8e8;
+}
+
+.expandedRight {
+  flex: 1;
+  padding: 28px 24px;
+}
+
+.userCardHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.userCardAvatar {
+  width: 72px;
+  height: 84px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.userCardName {
+  margin: 12px 0 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #000;
+}
+
+.userCardDivider {
+  height: 1px;
+  margin: 16px 0;
+  background: #eee;
+}
+
+.userCardSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.userCardStatsTitle {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+}
+
+.userCardRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.userCardLabel {
+  color: #757575;
+}
+
+.userCardValue {
+  color: #000;
+}
+
+.recentTitle {
+  margin: 0 0 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+}
+
+.initiativesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.initiativeCard {
+  padding: 14px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.initiativeCardClickable {
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: #2f54eb;
+    box-shadow: 0 2px 8px rgba(47, 84, 235, 0.12);
+  }
+}
+
+.initiativeName {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+}
+
+.initiativeRow {
+  margin: 0 0 4px;
+  font-size: 13px;
+  line-height: 1.4;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.initiativeLabel {
+  color: #757575;
+}
+
+.initiativeValue {
+  color: #000;
+}

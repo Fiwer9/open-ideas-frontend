@@ -1,0 +1,15 @@
+@import "../../../styles/variable.scss";
+
+.checkboxContainer {
+  display: flex;
+  flex-wrap: wrap;
+
+  @media (max-width: 615px) {
+    justify-content: center;
+  }
+  .checkbox {
+    margin: 0;
+    padding: 5px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+}

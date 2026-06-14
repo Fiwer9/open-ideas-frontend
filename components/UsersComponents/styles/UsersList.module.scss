@@ -1,0 +1,13 @@
+@import "../../../styles/variable.scss";
+
+.infContainer {
+  @include infContainerTable;
+
+  .filter {
+    margin-left: 300px;
+
+    @media (max-width: 1300px) {
+      margin-left: 19px;
+    }
+  }
+}

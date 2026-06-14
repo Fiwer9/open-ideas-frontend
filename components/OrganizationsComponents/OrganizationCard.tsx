@@ -1,0 +1,150 @@
+import { Col, Form, Input } from "antd";
+
+import router from "next/router";
+
+import React, { useState } from "react";
+
+import { PlusCircleOutlined } from "@ant-design/icons";
+
+import { Slider } from "../SliderComponents/SliderComponents";
+import { Header } from "../HeaderComponents/Header";
+import { Tabs } from "../TabsComponent/Tabs";
+import { MainText } from "../MainTextComponent";
+
+import Modal from "../ModalsComponents/Modal";
+
+import FilterBar from "../FilterComponents/blocks/FilterBar";
+
+import { SliderSmall } from "../SliderComponents/SliderSmall";
+
+import styles from "./styles/OrganizationCard.module.scss";
+
+function ContentModal() {
+  return (
+    <div className={styles.contentMod}>
+      <Form.Item>
+        <Input
+          placeholder={"Напишите название организации"}
+          className={styles.inp}
+        />
+      </Form.Item>
+      <Form.Item>
+        <Input
+          placeholder={"Напишите название отдела"}
+          className={styles.inp}
+        />
+      </Form.Item>
+      <Form.Item>
+        <FilterBar
+          icon={<PlusCircleOutlined />}
+          filterText={"Добавить отдел"}
+        />
+      </Form.Item>
+    </div>
+  );
+}
+
+export const OrganizationCard = () => {
+  const [modalActive, setModalActive] = useState(false);
+  const [secondModalActive, setSecondModalActive] = useState(false);
+  const layout = <ContentModal />;
+
+  const closeModal = () => {
+    setModalActive(false);
+    setSecondModalActive(false);
+  };
+
+  return (
+    <>
+      <div className={styles.container}>
+        <div className={styles.slider}>
+          <Slider />
+        </div>
+        <div className={styles.content}>
+          <div className={styles.headerContainer}>
+            <Header />
+          </div>
+          <Tabs />
+          <MainText text={"Aratreum"} />
+
+          <Col className={styles.column}>
+            <div className={styles.row}>
+              <p className={styles.rowText}>Отделы</p>
+              <p className={styles.rowInf}>Отдел 1, Отдел 2</p>
+            </div>
+          </Col>
+
+          <div className={styles.btnContainer}>
+            <button
+              className={`${styles.btnBlue} ${styles.btnFooter}`}
+              onClick={() => {
+                setModalActive(true);
+              }}
+            >
+              Редактировать данные организации
+            </button>
+            <button
+              className={`${styles.btnRed} ${styles.btnFooter}`}
+              onClick={() => {
+                setSecondModalActive(true);
+              }}
+            >
+              Удалить организацию
+            </button>
+          </div>
+
+          <div className={styles.btnContainer430}>
+            <button
+              className={`${styles.btnBlue} ${styles.btnFooter}`}
+              onClick={() => {
+                setModalActive(true);
+              }}
+            >
+              Редактировать
+            </button>
+            <button
+              className={`${styles.btnRed} ${styles.btnFooter}`}
+              onClick={() => {
+                setSecondModalActive(true);
+              }}
+            >
+              Удалить
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.sliderSmall}>
+          <SliderSmall />
+        </div>
+      </div>
+
+      <Modal
+        active={modalActive}
+        setActive={setModalActive}
+        text1={"Редактирование организации"}
+        classNameBtn1={styles.btnWhite}
+        textBtn1={"Назад"}
+        classNameBtn2={styles.btnBlue}
+        textBtn2={"Редактировать"}
+        onClick1={closeModal}
+        onClick2={() => router.push("/organizations/orgCard")}
+        stylesContentModal={styles.contentModal}
+        layout={layout}
+      />
+
+      <Modal
+        active={secondModalActive}
+        setActive={setSecondModalActive}
+        text1={"Удалить организацию?"}
+        text2={"Восстановить будет невозможно"}
+        classNameBtn1={styles.btnWhite}
+        textBtn1={"Назад"}
+        classNameBtn2={styles.btnRed}
+        textBtn2={"Удалить организацию"}
+        onClick1={closeModal}
+        onClick2={() => router.push("/organizations")}
+        stylesContentModal={styles.contentModalDel}
+      />
+    </>
+  );
+};

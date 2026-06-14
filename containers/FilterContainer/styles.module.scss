@@ -1,0 +1,27 @@
+@import "../../styles/variable.scss";
+
+.infContainer {
+  @include infContainerTable;
+
+  @media (max-width: 430px) {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .filterContainer {
+    display: flex;
+    gap: 10px;
+
+    @media (max-width: 1440px) {
+      margin-left: 100px;
+    }
+
+    @media (max-width: 768px) {
+      margin-left: 50px;
+    }
+
+    @media (max-width: 430px) {
+      margin-left: 0;
+    }
+  }
+}

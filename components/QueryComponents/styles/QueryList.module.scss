@@ -1,0 +1,59 @@
+@import "../../../styles/variable.scss";
+
+.infContainer {
+  @include infContainerTable;
+
+  .searchBar {
+    margin-right: 20px;
+
+    @media (max-width: 630px) {
+      margin-right: -7px;
+    }
+  }
+
+  .btnHead {
+    display: flex;
+    gap: 20px;
+
+    @media (max-width: 738px) {
+      gap: 10px;
+    }
+
+    @media (max-width: 540px) {
+      gap: 5px;
+    }
+
+    @media (max-width: 430px) {
+      display: flex;
+      flex-direction: column;
+      gap: 5;
+    }
+
+    .btnContainerFilt {
+      display: flex;
+      gap: 20px;
+
+      @media (max-width: 738px) {
+        gap: 10px;
+      }
+
+      @media (max-width: 540px) {
+        gap: 5px;
+      }
+    }
+
+    .btnContainer {
+      @media (max-width: 430px) {
+        display: flex;
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+
+  @media (max-width: 540px) {
+    display: flex;
+    flex-direction: column-reverse;
+    text-align: left;
+  }
+}

@@ -1,0 +1,60 @@
+@import "../../../styles/variable.scss";
+
+.container {
+  @extend %container;
+
+  .form {
+    max-width: 472px;
+    @extend %form;
+
+    .logo {
+      margin-bottom: 30px;
+
+      @media (max-width: 420px) {
+        margin-bottom: 11px;
+      }
+    }
+
+    .content {
+      .title {
+        font-size: 20px;
+      }
+
+      @media (max-width: 420px) {
+        .title {
+          font-size: 16px;
+        }
+      }
+
+      .text {
+        margin: 8px 0;
+        color: $color-black-gray;
+      }
+
+      .input {
+        margin-top: 8px;
+        width: 100%;
+
+        input {
+          max-width: 400px;
+        }
+      }
+    }
+
+    .btnBlue {
+      margin-top: 16px;
+      display: inline-block;
+    }
+
+    .btnRepeatCode {
+      margin: 0;
+      margin-top: 6px;
+      font-size: 12px;
+      color: $color-blue;
+    }
+
+    @media (max-width: 420px) {
+      padding: 16px 8px;
+    }
+  }
+}

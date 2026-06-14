@@ -1,0 +1,81 @@
+@import "../../../styles/variable.scss";
+
+.container {
+  @extend %container;
+
+  .form {
+    max-width: 472px;
+    padding: 20px 36px;
+    @extend %form;
+
+    @media (max-width: 320px) {
+      max-width: 270px;
+    }
+
+    @media (max-width: 420px) {
+      max-width: 320px;
+    }
+
+    @media (max-width: 470px) {
+      max-width: 370px;
+    }
+
+    .logo {
+      @media (max-width: 470px) {
+        margin-bottom: 13px;
+        text-align: center;
+      }
+    }
+
+    .content {
+      .input {
+        margin-top: 16px;
+      }
+    }
+
+    .contentSelect {
+      margin: 0;
+      margin-top: 16px;
+
+      @media (max-width: 320px) {
+        .contentSelectTitle {
+          font-size: 16px;
+        }
+      }
+
+      .mySelectContainer {
+        .ant-select {
+          &-selector {
+            border-radius: 2px;
+          }
+        }
+      }
+
+      .select {
+        margin-top: 16px;
+        border-radius: 2px;
+
+        div {
+          span {
+            input {
+              white-space: normal;
+            }
+          }
+        }
+      }
+    }
+
+    .containerBtn {
+      display: flex;
+      justify-content: center;
+      margin-top: 36px;
+    }
+  }
+}
+
+.ant-select-selector {
+  .ant-select-selection-item {
+    text-align: left;
+    padding-left: 16px;
+  }
+}

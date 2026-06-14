@@ -1,0 +1,117 @@
+@import "../../../styles/variable.scss";
+
+.userContainer {
+  display: flex;
+  margin-top: 40px;
+
+  @media (max-width: 560px) {
+    margin-top: 0;
+  }
+
+  .avatar {
+    @media (max-width: 560px) {
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  .infUser {
+    margin-left: 70px;
+
+    @media (max-width: 560px) {
+      margin-left: 20px;
+    }
+
+    .nameUser {
+      margin: 0;
+      @include pageTitle;
+
+      @media (max-width: 560px) {
+        font-size: 20px;
+        text-align: center;
+        margin-top: 25px;
+      }
+    }
+
+    .column {
+      display: flex;
+      margin-top: 20px;
+
+      @media (max-width: 560px) {
+        margin-left: 1em;
+      }
+
+      .row {
+        display: flex;
+        flex-direction: row;
+        width: 793px;
+
+        @media (max-width: 1035px) {
+          display: unset;
+        }
+
+        .rowText {
+          flex: 0 0 40%;
+          margin: 0;
+          margin-top: 20px;
+          font: {
+            family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            weight: 600;
+            size: 20px;
+          }
+          color: rgba($color-gray-43, 0.8);
+
+          @media (max-width: 560px) {
+            font-size: 14px;
+          }
+        }
+
+        .rowInf {
+          margin: 0;
+          margin-top: 20px;
+          font: {
+            family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            weight: 600;
+            size: 20px;
+          }
+          color: $color-black-22;
+
+          @media (max-width: 560px) {
+            font-size: 14px;
+            margin-top: 10px;
+          }
+        }
+      }
+
+      .rowOrg {
+        margin-top: 30px;
+      }
+
+      .rowOrgAdapt {
+        @media (max-width: 768px) {
+          margin-top: 50px;
+        }
+
+        @media (max-width: 560px) {
+          margin-top: 30px;
+        }
+      }
+    }
+
+    .btnFooter {
+      margin-top: 50px;
+      height: 35px;
+      border-radius: 1px;
+      background-color: $color-blue;
+      font-size: 16px;
+
+      @media (max-width: 560px) {
+        margin-top: 21px;
+        margin-left: 1em;
+        padding: 1px 10px;
+        font-size: 14px;
+      }
+    }
+  }
+}

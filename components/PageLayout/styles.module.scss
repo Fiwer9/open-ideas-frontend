@@ -1,0 +1,65 @@
+@import "../../styles/variable.scss";
+
+.containerIdeas {
+  @include container;
+
+  @media (max-width: 511px) {
+    overflow-x: hidden;
+  }
+
+  .contentIdeas {
+    @include content;
+
+    .headerContainer {
+      @media (max-width: 540px) {
+        display: none;
+      }
+    }
+
+    .header {
+      @media (max-width: 720px) {
+        padding: {
+          top: 115px;
+        }
+      }
+
+      @media (max-width: 540px) {
+        padding: {
+          top: 55px;
+        }
+      }
+
+      .logoHeader {
+        margin-top: 50px;
+        position: absolute;
+        top: 12.5px;
+        left: 24px;
+
+        @media (max-width: 540px) {
+          margin-top: 0;
+        }
+      }
+
+      .tabs {
+        margin-right: auto;
+        margin-left: auto;
+      }
+    }
+
+    @media (max-width: 1000px) {
+      padding: {
+        top: 130px;
+        left: 20px;
+        right: 20px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      padding: 16px;
+    }
+
+    @media (max-width: 430px) {
+      margin: 0;
+    }
+  }
+}

@@ -1,0 +1,72 @@
+.modal {
+  :global(.ant-modal-content) {
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  :global(.ant-modal-body) {
+    padding: 0;
+  }
+}
+
+.logo {
+  margin-bottom: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #000;
+  line-height: 1.2;
+}
+
+.resetBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #8c8c8c;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    color: #595959;
+  }
+
+  :global(.anticon) {
+    font-size: 12px;
+  }
+}
+
+.divider {
+  height: 1px;
+  margin: 0 0 20px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.form {
+  :global(.ant-form-item-label > label) {
+    color: #434343;
+    font-size: 14px;
+  }
+
+  :global(.ant-select) {
+    width: 100%;
+  }
+
+  .periodRange {
+    width: 100%;
+  }
+}

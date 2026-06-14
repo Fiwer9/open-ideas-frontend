@@ -1,0 +1,121 @@
+@import "../../../styles/variable";
+
+.contentMod {
+  margin-bottom: 30px;
+
+  .inp {
+  }
+}
+
+.sliderSmall {
+  @include sliderSmallStyles;
+}
+
+.container {
+  @include container;
+
+  @media (max-width: 430px) {
+    @include sliderSmallContent;
+  }
+
+  .slider {
+    @media (max-width: 430px) {
+      display: none;
+    }
+  }
+
+  .content {
+    @include content;
+
+    @media (max-width: 768px) {
+      padding-left: 120px;
+    }
+
+    @media (max-width: 430px) {
+      padding: {
+        left: 20px;
+        right: 20px;
+      }
+    }
+
+    .headerContainer {
+      @media (max-width: 430px) {
+        display: none;
+      }
+    }
+
+    .column {
+      display: flex;
+      flex-direction: row;
+      width: auto;
+
+      .row {
+        display: flex;
+        flex-direction: row;
+
+        .rowText {
+          margin: 0;
+          margin-top: 30px;
+          flex: 0 0 40%;
+          font: {
+            family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            weight: 600;
+            size: 20px;
+          }
+          color: rgba($color-gray-43, 0.8);
+        }
+
+        .rowInf {
+          margin: 0;
+          margin-top: 30px;
+          font: {
+            family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            weight: 600;
+            size: 20px;
+          }
+          color: $color-black-22;
+        }
+      }
+    }
+
+    .btnContainer {
+      position: fixed;
+      bottom: 0;
+      margin-bottom: 40px;
+
+      .btnFooter {
+        @include btnFooter;
+      }
+
+      @media (max-width: 653px) {
+        display: none;
+      }
+    }
+
+    .btnContainer430 {
+      position: fixed;
+      bottom: 0;
+      margin-bottom: 40px;
+
+      @media (max-width: 3000px) {
+        display: none;
+      }
+
+      @media (max-width: 653px) {
+        display: block;
+      }
+
+      .btnFooter {
+        @include btnFooter;
+      }
+    }
+  }
+}
+
+.contentModal {
+  margin: 0;
+}
+
+.contentModalDel {
+  margin: 25px 40px 40px 0;
+}

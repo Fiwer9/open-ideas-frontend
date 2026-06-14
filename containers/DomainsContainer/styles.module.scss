@@ -1,0 +1,28 @@
+@import "../../styles/variable.scss";
+
+.column {
+  .row {
+    width: 682px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .rowText {
+      margin: 0;
+      margin-top: 30px;
+      font: {
+        family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        weight: 600;
+        size: 20px;
+      }
+      color: rgba($color-gray-43, 0.8);
+    }
+
+    .tag {
+      margin: {
+        top: 32px;
+        left: 50px;
+      }
+    }
+  }
+}
