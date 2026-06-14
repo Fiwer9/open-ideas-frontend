@@ -149,9 +149,10 @@ export const Charts: React.FC = memo(() => {
       queryFilter.startDate,
       queryFilter.endDate
     );
-    const updatedDataset = dataset.map((dataItem) => {
-      return { ...dataItem, data: dataForGraphic.get(dataItem.label) };
-    });
+    const updatedDataset = dataset.map((dataItem) => ({
+      ...dataItem,
+      data: dataForGraphic.get(dataItem.label) ?? [],
+    }));
     if (organizations) {
       setData({
         ...data,
