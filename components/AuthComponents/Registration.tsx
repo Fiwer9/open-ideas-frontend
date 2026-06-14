@@ -47,7 +47,7 @@ export const Registration = () => {
   }, []);
 
   useEffect(() => {
-    organizationId && setDepartmentId(null);
+    organizationId && setDepartmentId(undefined);
     organizationId &&
       dispatch(fetchDepartments({ organization_id: organizationId }));
   }, [organizationId]);
@@ -57,6 +57,10 @@ export const Registration = () => {
   };
 
   const handleSubmitButton = async () => {
+    if (!departmentId) {
+      return;
+    }
+
     try {
       dispatch(
         putRegistration({

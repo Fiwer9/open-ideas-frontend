@@ -135,6 +135,10 @@ export const EditingApplication = () => {
   }, [organizationId]);
 
   function handleSaveChanges(data: EditQueryProps) {
+    if (!applicationData?.status || !applicationData.initiator_users) {
+      return;
+    }
+
     const currentDate = new Date();
     const date = formatDateToServer(currentDate, "-");
     const {
@@ -145,23 +149,28 @@ export const EditingApplication = () => {
       expert_users,
       description,
     } = data;
+    const organizationId = getOrganizationNameById(organization, organizations);
+    if (!organizationId) {
+      return;
+    }
+
     dispatch(
       patchQuery({
         date,
-        status: applicationData?.status,
+        status: applicationData.status,
         id: Number(queryId),
-        organization: getOrganizationNameById(organization, organizations),
+        organization: organizationId,
         description,
         name,
         initiative_direction,
         implementation_effect,
-        initiator_users: applicationData?.initiator_users,
+        initiator_users: applicationData.initiator_users,
         expert_users:
           expert_users !== 0
             ? typeof expert_users === "string"
-              ? applicationData?.expert_users
+              ? applicationData.expert_users
               : [expert_users]
-            : null,
+            : undefined,
       })
     );
     router.back();
@@ -182,7 +191,7 @@ export const EditingApplication = () => {
             implementation_effect: applicationData?.implementation_effect,
             initiative_direction: applicationData?.initiative_direction,
             organization: getOrganizationName(
-              applicationData?.organization,
+              applicationData?.organization ?? 0,
               organizations
             ),
             department: user?.department?.name,

@@ -78,7 +78,7 @@ export const BreadcrumbBlock: React.FC = memo(() => {
       ...pathSegments
         .map((segment, index) => {
           const segmentPath = segment.split("?")[0];
-          const label = getRouteTranslation(segmentPath, pageName, pageId);
+          const label = getRouteTranslation(segmentPath, pageName ?? "", pageId ?? 0);
 
           if (!label) {
             return null;

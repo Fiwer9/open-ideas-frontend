@@ -65,7 +65,9 @@ export const UserEditing = () => {
   const { userId } = router.query as { userId: string };
   const [isLoading, setIsLoading] = useState(true);
   const [form] = Form.useForm<EditUserProps>();
-  const [initValues, setInitialValues] = useState<EditUserProps>(null);
+  const [initValues, setInitialValues] = useState<EditUserProps | undefined>(
+    undefined
+  );
   const user = useSelector(selectUser);
   const queries = useSelector(selectQueriesData);
   const organizations = useSelector(selectOrganizations);
@@ -105,23 +107,27 @@ export const UserEditing = () => {
   }, [user?.name]);
 
   const getData = (organizationId?: number): EditUserProps => ({
-    userName: user?.name,
-    email: user?.email,
+    userName: user?.name ?? "",
+    email: user?.email ?? "",
     organization: {
-      value: user?.department.organization,
+      value: user?.department.organization ?? 0,
       label:
-        organizations.length > 0 &&
-        getOrganizationName(user?.department.organization, organizations),
+        organizations.length > 0
+          ? getOrganizationName(
+              user?.department.organization ?? 0,
+              organizations
+            )
+          : "",
     },
     initiatives: getQueries(),
     department: {
-      value: !organizationId ? user?.department.id : null,
-      label: !organizationId ? user?.department.name : "",
+      value: !organizationId ? (user?.department.id ?? 0) : 0,
+      label: !organizationId ? (user?.department.name ?? "") : "",
     },
-    active: user?.is_active,
-    personal: user?.is_staff,
-    superuser: user?.is_superuser,
-    verification: user?.is_verified,
+    active: user?.is_active ?? false,
+    personal: user?.is_staff ?? false,
+    superuser: user?.is_superuser ?? false,
+    verification: user?.is_verified ?? false,
   });
 
   useEffect(() => {
@@ -132,9 +138,12 @@ export const UserEditing = () => {
 
   function getQueries(): InitiativesArgs[] {
     return queries
-      .filter((query) => query.expert_users.find((id) => Number(userId) === id))
+      .filter((query) =>
+        query.expert_users?.find((id) => Number(userId) === id)
+      )
+      .filter((query) => query.id !== undefined)
       .map((query) => ({
-        value: query.id,
+        value: query.id!,
         label: `№${query.id}`,
       }));
   }
@@ -142,6 +151,10 @@ export const UserEditing = () => {
   const onChangeOrganization = (id: number) => {
     setOrganization(id);
     const departmentForOrg = departments.find((dep) => dep.organization === id);
+    if (!departmentForOrg) {
+      return;
+    }
+
     form.setFieldsValue({
       department: {
         value: departmentForOrg.id,
@@ -164,6 +177,10 @@ export const UserEditing = () => {
     const depart = departments.find(
       (_department) => _department.id === department.value
     );
+    if (!depart) {
+      return;
+    }
+
     dispatch(
       patchUser({
         id: Number(userId),
@@ -197,7 +214,7 @@ export const UserEditing = () => {
   };
 
   if (!initValues) {
-    return;
+    return null;
   }
 
   return (

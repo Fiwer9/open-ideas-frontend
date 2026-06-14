@@ -28,7 +28,7 @@ const ModalDrafts = ({
   classNameBtn,
 }: ModalProps) => {
   if (!active) {
-    return;
+    return null;
   }
 
   return (

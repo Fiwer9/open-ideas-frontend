@@ -41,10 +41,8 @@ export function getOrganizationName(
   organizations: OrganizationsResponse[]
 ) {
   try {
-    const { name } = organizations.find(
-      (organization) => organization.id === id
-    );
-    return name;
+    const org = organizations.find((organization) => organization.id === id);
+    return org?.name ?? "Неизвестно";
   } catch (e) {
     return "Неизвестно";
   }

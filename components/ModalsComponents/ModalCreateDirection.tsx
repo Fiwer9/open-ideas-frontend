@@ -35,15 +35,15 @@ const ModalCreateDirection = ({
   const onSubmit = async (data: PostDirectionArgs) => {
     await dispatch(postDirection(data));
     await dispatch(fetchDirections());
-    onClickCancel();
+    onClickCancel?.();
   };
 
   const onReset = () => {
-    onClickCancel();
+    onClickCancel?.();
   };
 
   if (!active) {
-    return;
+    return null;
   }
 
   return (

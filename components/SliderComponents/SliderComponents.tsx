@@ -129,7 +129,7 @@ export const Slider: React.FC = memo(() => {
 
         <Menu
           mode="inline"
-          defaultOpenKeys={!collapsed && ["sub1"]}
+          defaultOpenKeys={!collapsed ? ["sub1"] : undefined}
           onClick={handleClickItem}
           selectedKeys={selectedPage}
           items={items}

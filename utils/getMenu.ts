@@ -10,9 +10,7 @@ export const getMenu = (): MenuSliceState => {
     const currentPage = Array.isArray(parsedCurrentPage)
       ? parsedCurrentPage
       : [parsedCurrentPage];
-    const selectedTag = sessionStorage.getItem("selectedTag")
-      ? sessionStorage.getItem("selectedTag")
-      : "Инициативы";
+    const selectedTag = sessionStorage.getItem("selectedTag") ?? "Инициативы";
     const isStaff = sessionStorage.getItem("isStaff") === "true" || false;
     return {
       isCollapsed,

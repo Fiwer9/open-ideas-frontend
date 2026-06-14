@@ -18,7 +18,7 @@ dayjs.locale("ru");
 type RatingFiltersFormValues = {
   organization?: string;
   department?: string;
-  periodRange?: [Dayjs, Dayjs] | null;
+  periodRange?: [Dayjs, Dayjs];
 };
 
 interface RatingFiltersModalProps {
@@ -38,7 +38,7 @@ const toFormValues = (filters: RatingFilters): RatingFiltersFormValues => ({
   periodRange:
     filters.periodFrom && filters.periodTo
       ? [dayjs(filters.periodFrom), dayjs(filters.periodTo)]
-      : null,
+      : undefined,
 });
 
 const toRatingFilters = (values: RatingFiltersFormValues): RatingFilters => ({

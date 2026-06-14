@@ -3,8 +3,9 @@ import { AssignmentSettings } from "../redux/settingsSlice/types";
 
 export const getSettings = (): SettingsResponse => {
   try {
+    const storedSettings = localStorage.getItem("settings");
     return (
-      JSON.parse(localStorage.getItem("settings")) || {
+      (storedSettings ? JSON.parse(storedSettings) : null) || {
         id: 1,
         allow_file_attachment: false,
         max_file_size: 1024,

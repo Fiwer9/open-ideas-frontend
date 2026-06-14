@@ -38,6 +38,7 @@ import {
   selectStatusQueries,
 } from "../../redux/queriesSlice/selectors";
 import { Status } from "../../redux/queriesSlice/types";
+import { QueryStatus } from "../../models/response/QueriesResponse";
 import { useAppDispatch } from "../../redux/store";
 import { fetchUsers, patchLikes } from "../../redux/usersSlice/asyncActions";
 import {
@@ -194,6 +195,10 @@ export const ApplicationCard: React.FC = memo(() => {
       return;
     }
 
+    if (!applicationData?.id) {
+      return;
+    }
+
     const currentDate = new Date();
     const date = formatDateToServer(currentDate, "-");
     const {
@@ -243,7 +248,7 @@ export const ApplicationCard: React.FC = memo(() => {
   const patchAddLike = async (userId: number) => {
     const likedQueries = [...getAllUserLikes(users, userId), Number(queryId)];
     await dispatch(patchLikes({ userId, likedQueries }));
-    setLike(like + 1);
+    setLike((prev) => (prev ?? 0) + 1);
   };
 
   const patchRemoveLike = async (userId: number) => {
@@ -253,7 +258,7 @@ export const ApplicationCard: React.FC = memo(() => {
       likedQueries.splice(index, 1);
     }
     await dispatch(patchLikes({ userId, likedQueries }));
-    setLike(like - 1);
+    setLike((prev) => (prev ?? 0) - 1);
   };
 
   const props: UploadProps = {
@@ -330,7 +335,7 @@ export const ApplicationCard: React.FC = memo(() => {
                 <p
                   className={`${styles.statusQuery} ${getStatusClassName(
                     styles,
-                    applicationData?.status
+                    applicationData?.status ?? QueryStatus.REGISTERED
                   )}`}
                 >
                   {applicationData?.status

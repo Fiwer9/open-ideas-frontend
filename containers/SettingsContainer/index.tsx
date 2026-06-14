@@ -110,7 +110,8 @@ const SettingsContainer = () => {
         }
         isChecked={allowDistributionQueries}
         layout={
-          allowDistributionQueries && (
+          allowDistributionQueries &&
+          distribOption && (
             <RadioGroupComponent
               onChangeDistribution={changeDistribution}
               distribValue={distribOption}

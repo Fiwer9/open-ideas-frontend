@@ -103,7 +103,8 @@ export const QueryList = () => {
       key: "id",
       width: "5%",
       showSorterTooltip: false,
-      sorter: (a: QueriesResponse, b: QueriesResponse) => a.id - b.id,
+      sorter: (a: QueriesResponse, b: QueriesResponse) =>
+        (a.id ?? 0) - (b.id ?? 0),
       align: "center",
     },
     {
@@ -168,6 +169,10 @@ export const QueryList = () => {
   }, [searchValue]);
 
   const handleRowClick = (query: QueriesResponse) => {
+    if (!query.id) {
+      return;
+    }
+
     dispatch(setPageName(query.name));
     dispatch(setPageId(query.id));
     router.push(`/queries/adminApplication?queryId=${query.id}`);
@@ -190,6 +195,10 @@ export const QueryList = () => {
   };
 
   const handleRowClickIdea = (query: QueriesResponse) => {
+    if (!query.id) {
+      return;
+    }
+
     dispatch(setPageName(query.name));
     dispatch(setPageId(query.id));
     router.push(`/queries/application?queryId=${query.id}`);
@@ -200,7 +209,7 @@ export const QueryList = () => {
   };
 
   if (!isClient) {
-    return;
+    return null;
   }
 
   return (

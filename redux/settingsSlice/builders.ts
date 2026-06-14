@@ -98,11 +98,11 @@ export const fetchSettingsBuilder = (
   });
   builder.addCase(fetch.pending, (state) => {
     state.status = Status.LOADING;
-    state.settings = null;
+    state.settings = undefined;
   });
   builder.addCase(fetch.rejected, (state) => {
     state.status = Status.ERROR;
-    state.settings = null;
+    state.settings = undefined;
   });
 };
 
@@ -123,6 +123,6 @@ export const putSettingsBuilder = (
   });
   builder.addCase(fetch.rejected, (state) => {
     state.status = Status.ERROR;
-    state.settings = null;
+    state.settings = undefined;
   });
 };

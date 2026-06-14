@@ -22,8 +22,8 @@ export const useSearchNum = (
           console.error(e.message);
         }
       } else {
-        return listOfQuery.filter(({ id }) =>
-          id.toString().includes(searchNum.toString())
+        return listOfQuery.filter(
+          ({ id }) => id !== undefined && id.toString().includes(searchNum.toString())
         );
       }
     };

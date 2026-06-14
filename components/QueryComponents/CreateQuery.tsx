@@ -98,15 +98,19 @@ function NewCreateQuery() {
   }, [user_id]);
 
   useEffect(() => {
-    if (uploadedFiles.length !== 0) {
-      const formFileData = new FormData();
-      formFileData.append("query", currentQuery.id.toString());
-      formFileData.append("query_draft", "");
-      uploadedFiles.map((file) =>
-        formFileData.append("file", file.originFileObj)
-      );
-      dispatch(postFiles(formFileData));
+    if (!currentQuery?.id || uploadedFiles.length === 0) {
+      return;
     }
+
+    const formFileData = new FormData();
+    formFileData.append("query", currentQuery.id.toString());
+    formFileData.append("query_draft", "");
+    uploadedFiles.forEach((file) => {
+      if (file.originFileObj) {
+        formFileData.append("file", file.originFileObj);
+      }
+    });
+    dispatch(postFiles(formFileData));
   }, [currentQuery]);
 
   const onSubmit = async (data: PostQueryProps) => {
@@ -119,6 +123,11 @@ function NewCreateQuery() {
       files,
     } = data;
     setUploadedFiles(files);
+    const organizationId = getOrganizationNameById(organization, organizations);
+    if (!organizationId) {
+      return;
+    }
+
     const formattedEndDate = formatDateToServer(new Date(), "-");
     await dispatch(
       postQuery({
@@ -130,7 +139,7 @@ function NewCreateQuery() {
         planned_implementation_date: formattedEndDate,
         status: "check",
         initiator_users: [user_id],
-        organization: getOrganizationNameById(organization, organizations),
+        organization: organizationId,
       })
     );
     dispatch(setStatusQueries(Status.WAITING));

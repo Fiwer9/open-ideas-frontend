@@ -29,7 +29,7 @@ const ModalDownloadsCSV = ({
   handleOk,
 }: ModalDownloadsCSV) => {
   if (!isModalOpen) {
-    return;
+    return null;
   }
 
   const columns: TableColumnsType<DataType> = [

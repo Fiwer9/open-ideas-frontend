@@ -143,8 +143,10 @@ export const getAnalyticsForGraphic = (
     );
     if (statusStatistics.has(currentStatus)) {
       const countQueries = statusStatistics.get(currentStatus);
-      countQueries[xOption] += 1;
-      statusStatistics.set(currentStatus, countQueries);
+      if (countQueries) {
+        countQueries[xOption] += 1;
+        statusStatistics.set(currentStatus, countQueries);
+      }
     } else {
       const countQueries = new Array<number>(count).fill(0);
       countQueries[xOption] = 1;
@@ -178,16 +180,18 @@ export const getAnalyticsForPieChart = (
     );
     if (statistics.find((dir) => dir.name === currentName)) {
       const statDir = statistics.find((dir) => dir.name === currentName);
-      const indexStatDir = statistics.indexOf(statDir);
-      const newPercent = Math.round(
-        ((statDir.count + 1) / initiativeValues.length) * 100
-      );
-      const newStatDir = {
-        ...statDir,
-        count: statDir.count + 1,
-        percent: newPercent,
-      };
-      statistics[indexStatDir] = newStatDir;
+      if (statDir) {
+        const indexStatDir = statistics.indexOf(statDir);
+        const newPercent = Math.round(
+          ((statDir.count + 1) / initiativeValues.length) * 100
+        );
+        const newStatDir: StatisticItem = {
+          ...statDir,
+          count: statDir.count + 1,
+          percent: newPercent,
+        };
+        statistics[indexStatDir] = newStatDir;
+      }
     } else {
       const dirName = getOptions(initiativeValues[i], statisticItems, analytic);
       const statDir: StatisticItem = {

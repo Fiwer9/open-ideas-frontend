@@ -39,6 +39,7 @@ import {
   selectUsersStatus,
 } from "../../redux/usersSlice/selectors";
 import { statusOptions } from "../../utils/consts";
+import { QueryStatus } from "../../models/response/QueriesResponse";
 import {
   formatDateRu,
   formatDateToServer,
@@ -167,6 +168,10 @@ export const AdminApplicationCard = () => {
       return;
     }
 
+    if (!applicationData?.id) {
+      return;
+    }
+
     const currentDate = new Date();
     const date = formatDateToServer(currentDate, "-");
     const {
@@ -229,7 +234,7 @@ export const AdminApplicationCard = () => {
           <div>
             <div className={styles.ideaInfContainer}>
               <div className={styles.headerContainerIdea}>
-                <MainText text={applicationData?.name} />
+                <MainText text={applicationData?.name ?? ""} />
                 <div className={styles.btnHeader}>
                   <div className={styles.likesContainer}>
                     <HeartOutlined width={20} height={20} />
@@ -240,7 +245,7 @@ export const AdminApplicationCard = () => {
                   <Select
                     className={`selectInitiative ${getStatusClassName(
                       styles,
-                      applicationData?.status
+                      applicationData?.status ?? QueryStatus.REGISTERED
                     )}`}
                     style={{ width: 250 }}
                     defaultValue={applicationData?.status}
@@ -291,7 +296,7 @@ export const AdminApplicationCard = () => {
                   <p className={styles.rowText}>Организация:</p>
                   <p className={styles.rowInf}>
                     {getOrganizationName(
-                      applicationData?.organization,
+                      applicationData?.organization ?? 0,
                       Array.isArray(organizations) ? organizations : []
                     )}
                   </p>
