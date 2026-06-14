@@ -1,11 +1,15 @@
 import React, { memo, useEffect, useState } from "react";
 import router from "next/router";
+
+import { useSelector } from "react-redux";
+
+import debounce from "lodash.debounce";
+
 import {
   getEmails,
   getOrganizationName,
   getOrganizationsFilter,
 } from "../../utils/utils";
-import { useSelector } from "react-redux";
 import {
   selectUsers,
   selectUsersStatus,
@@ -15,7 +19,8 @@ import {
   fetchUsers,
   fetchUsersByName,
 } from "../../redux/usersSlice/asyncActions";
-import debounce from "lodash.debounce";
+
+
 import { fetchOrganizations } from "../../redux/organizationsSlice/asyncActions";
 import { selectFilters } from "../../redux/filterSlice/selectors";
 import {

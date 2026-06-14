@@ -1,4 +1,7 @@
 import React, { memo, useEffect } from "react";
+
+import { Flex } from "antd";
+
 import { MainText } from "../../components/MainTextComponent";
 import { useAppDispatch } from "../../redux/store";
 import {
@@ -7,7 +10,6 @@ import {
 } from "../../redux/settingsSlice/asyncActions";
 import AdminPageLayout from "../../components/AdminPageLayout";
 import DomainsContainer from "../../containers/DomainsContainer";
-import { Flex } from "antd";
 import SettingsContainer from "../../containers/SettingsContainer";
 
 const Settings = () => {

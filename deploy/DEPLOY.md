@@ -76,3 +76,49 @@ pm2 logs open-ideas
 curl -I http://127.0.0.1:3000
 systemctl status nginx
 ```
+
+---
+
+## Обрыв SSH / «Network error: Software caused connection abort»
+
+Сборка Next.js тяжёлая. На слабом VPS SSH часто рвётся из‑за нехватки RAM (OOM).
+
+### 1. Подключитесь снова и проверьте память
+
+```bash
+free -h
+dmesg | tail -30 | grep -i -E 'kill|oom'
+```
+
+### 2. Добавьте swap (один раз, ~2 ГБ)
+
+```bash
+fallocate -l 2G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo '/swapfile none swap sw 0 0' >> /etc/fstab
+free -h
+```
+
+### 3. Запускайте сборку в screen (переживёт обрыв PuTTY)
+
+```bash
+apt-get install -y screen
+screen -S build
+cd ~/open-ideas-frontend
+bash deploy/deploy-app.sh
+```
+
+Отсоединиться от screen: **Ctrl+A**, затем **D**.  
+Вернуться: `screen -r build`
+
+После успешной сборки:
+
+```bash
+bash deploy/setup-nginx.sh
+```
+
+### PuTTY: увеличить keepalive
+
+Connection → Seconds between keepalives: **30**
