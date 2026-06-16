@@ -44,6 +44,7 @@ import {
 import { fetchDirections } from "../../redux/directionsSlice/asyncActions";
 import { selectFilters } from "../../redux/filterSlice/selectors";
 import { Status } from "../../redux/queriesSlice/types";
+import { TABLE_PAGE_KEYS } from "../../utils/tablePaginationStorage";
 import { selectSelectedTag } from "../../redux/menuSlice/selectors";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
 import { setStatusUsers } from "../../redux/usersSlice/slice";
@@ -227,6 +228,7 @@ export const QueryList = () => {
             isLoading={showLoading}
             onRowClick={handleRowClick}
             locale={"Тут ещё нет идей"}
+            paginationStorageKey={TABLE_PAGE_KEYS.QUERIES_ADMIN}
           />
         </AdminPageLayout>
       ) : (
@@ -266,6 +268,7 @@ export const QueryList = () => {
             onRowClick={handleRowClickIdea}
             isLoading={showLoading}
             locale={"Тут ещё нет идей"}
+            paginationStorageKey={TABLE_PAGE_KEYS.QUERIES}
           />
           <Modal
             active={modalCreateQuery}

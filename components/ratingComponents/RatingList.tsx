@@ -56,6 +56,9 @@ import { Status } from "../../redux/queriesSlice/types";
 
 import { buildRatingRequestParams } from "../../utils/buildRatingRequestParams";
 
+import { usePersistedTablePage } from "../../hooks/usePersistedTablePage";
+import { TABLE_PAGE_KEYS } from "../../utils/tablePaginationStorage";
+
 
 
 import { RatingFiltersModal } from "./RatingFiltersModal";
@@ -139,6 +142,10 @@ export const RatingList = () => {
   } | null>(null);
 
   const [isDetailsLoading, setIsDetailsLoading] = useState(false);
+
+  const { currentPage, handlePageChange } = usePersistedTablePage(
+    TABLE_PAGE_KEYS.RATING
+  );
 
 
 
@@ -521,6 +528,8 @@ export const RatingList = () => {
 
           pagination={{
 
+            current: currentPage,
+
             pageSize: 10,
 
             position: ["bottomLeft"],
@@ -530,6 +539,8 @@ export const RatingList = () => {
             showTotal: (total, range) =>
 
               `Показано ${range[0]}-${range[1]} из ${total}`,
+
+            onChange: handlePageChange,
 
           }}
 
