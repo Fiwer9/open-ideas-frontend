@@ -9,6 +9,8 @@ import { QueriesResponse } from "../../models/response/QueriesResponse";
 import { UserResponse } from "../../models/response/UserResponse";
 import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
 
+import TableListSkeleton from "../SkeletonComponents/TableListSkeleton";
+
 import styles from "./styles/Table.module.scss";
 
 interface DataTable {
@@ -25,13 +27,20 @@ interface DataTable {
 
 export const DataTable: React.FC<DataTable> = memo(
   ({ data, columns, isLoading, onRowClick, locale }) => {
+    if (isLoading) {
+      return (
+        <div className={styles.tableContainer}>
+          <TableListSkeleton />
+        </div>
+      );
+    }
+
     return (
       <div className={styles.tableContainer}>
         <Table
           className={styles.table}
           dataSource={data as RcTableProps<any>["data"]}
           columns={columns}
-          loading={isLoading}
           onRow={(element) => ({
             onClick: () => {
               onRowClick(element);

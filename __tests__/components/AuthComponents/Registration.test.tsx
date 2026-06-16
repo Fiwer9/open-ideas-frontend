@@ -10,12 +10,6 @@ import organizationsSlice, {
   setOrganizations,
 } from "../../../redux/organizationsSlice/slice";
 
-jest.mock("next/router", () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-  }),
-}));
-
 const createMockStore = () => {
   return configureStore({
     reducer: {

@@ -93,6 +93,11 @@ export const QueryList = () => {
       queriesStatus === Status.SUCCESS
     ) {
       setIsLoading(false);
+    } else if (
+      directionsStatus === Status.ERROR ||
+      queriesStatus === Status.ERROR
+    ) {
+      setIsLoading(false);
     }
   }, [directionsStatus, queriesStatus]);
 
@@ -208,9 +213,7 @@ export const QueryList = () => {
     dispatch(setStatusOrganizations(Status.WAITING));
   };
 
-  if (!isClient) {
-    return null;
-  }
+  const showLoading = !isClient || isLoading;
 
   return (
     <>
@@ -221,7 +224,7 @@ export const QueryList = () => {
           <DataTable
             data={getData() as QueriesResponse[]}
             columns={getColumns()}
-            isLoading={isLoading}
+            isLoading={showLoading}
             onRowClick={handleRowClick}
             locale={"Тут ещё нет идей"}
           />
@@ -261,7 +264,7 @@ export const QueryList = () => {
             columns={directions.length > 0 ? getColumns() : []}
             data={getData() as QueriesResponse[]}
             onRowClick={handleRowClickIdea}
-            isLoading={isLoading}
+            isLoading={showLoading}
             locale={"Тут ещё нет идей"}
           />
           <Modal

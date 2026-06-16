@@ -30,12 +30,6 @@ const mockStore = configureStore({
   },
 });
 
-jest.mock("next/router", () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-  }),
-}));
-
 const createMockStore = () => {
   return configureStore({
     reducer: {

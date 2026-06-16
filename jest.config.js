@@ -12,6 +12,8 @@ module.exports = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
+    "^next/router$": "<rootDir>/__mocks__/next/router.js",
+    "^next/link$": "<rootDir>/__mocks__/next/link.js",
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
     "\\.(svg)$": "identity-obj-proxy",
   },

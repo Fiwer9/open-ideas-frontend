@@ -44,18 +44,28 @@ export const UserCard: React.FC = memo(() => {
   const queriesStatus = useSelector(selectStatusQueries);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (
-        organizationStatus === Status.SUCCESS &&
-        userStatus === Status.SUCCESS &&
-        queriesStatus === Status.SUCCESS
-      ) {
-        setIsLoading(false);
-      }
-    }, 1000);
+    if (
+      organizationStatus === Status.SUCCESS &&
+      userStatus === Status.SUCCESS &&
+      queriesStatus === Status.SUCCESS
+    ) {
+      setIsLoading(false);
+      return;
+    }
+
+    if (
+      [organizationStatus, userStatus, queriesStatus].includes(Status.ERROR)
+    ) {
+      setIsLoading(false);
+    }
   }, [organizationStatus, userStatus, queriesStatus]);
 
   const fetchData = async () => {
+    if (!userId) {
+      return;
+    }
+
+    setIsLoading(true);
     dispatch(setPageId(Number(userId)));
     await dispatch(fetchCurrentUser({ user_id: userId }));
     await dispatch(fetchOrganizations());
@@ -63,7 +73,7 @@ export const UserCard: React.FC = memo(() => {
   };
 
   useEffect(() => {
-    userId && fetchData();
+    fetchData();
   }, [userId]);
 
   useEffect(() => {

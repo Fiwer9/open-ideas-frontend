@@ -3,6 +3,8 @@ import { Modal } from "antd";
 import Image from "next/image";
 import router from "next/router";
 
+import RatingUserExpandedSkeleton from "../SkeletonComponents/RatingUserExpandedSkeleton";
+
 import { EmployeeRecord } from "./ratingTypes";
 
 import styles from "./styles/RatingUserExpandedModal.module.scss";
@@ -11,10 +13,11 @@ interface RatingUserExpandedModalProps {
   employee: EmployeeRecord | null;
   open: boolean;
   onClose: () => void;
+  isLoading?: boolean;
 }
 
 export const RatingUserExpandedModal: React.FC<RatingUserExpandedModalProps> =
-  memo(({ employee, open, onClose }) => {
+  memo(({ employee, open, onClose, isLoading = false }) => {
     if (!employee) {
       return null;
     }
@@ -29,6 +32,11 @@ export const RatingUserExpandedModal: React.FC<RatingUserExpandedModalProps> =
         destroyOnClose
         className={styles.modal}
       >
+        {isLoading ? (
+          <div className={styles.expandedCard}>
+            <RatingUserExpandedSkeleton />
+          </div>
+        ) : (
         <div className={styles.expandedCard}>
           <div className={styles.expandedLeft}>
             <div className={styles.userCardHeader}>
@@ -135,6 +143,7 @@ export const RatingUserExpandedModal: React.FC<RatingUserExpandedModalProps> =
             </div>
           </div>
         </div>
+        )}
       </Modal>
     );
   });

@@ -56,6 +56,7 @@ import {
 } from "../../utils/utils";
 import { Buttons } from "../ButtonComponent/Button";
 import Logo from "../PicturesComponents/Logo";
+import AdminQuerySkeleton from "../SkeletonComponents/AdminQuerySkeleton";
 import { TextAreas } from "../TextAreaComponent/TextArea";
 
 import { setStatusQueries } from "../../redux/queriesSlice/slice";
@@ -281,7 +282,11 @@ export const ApplicationCard: React.FC = memo(() => {
     },
   };
 
-  if (!isLoading && loadFailed) {
+  if (isLoading) {
+    return <AdminQuerySkeleton />;
+  }
+
+  if (loadFailed) {
     return (
       <Alert
         type="error"
@@ -301,7 +306,7 @@ export const ApplicationCard: React.FC = memo(() => {
 
   return (
     <>
-      <Card className={styles.card} loading={isLoading}>
+      <Card className={styles.card}>
         <Flex className={styles.form} vertical={true}>
           <div className={styles.logo}>
             <div className={styles.headerContainer}>

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Alert, Spin, Table } from "antd";
+import { Alert, Table } from "antd";
 
 import Image from "next/image";
 
@@ -19,6 +19,8 @@ import FilterBar from "../FilterComponents/blocks/FilterBar";
 import AdminPageLayout from "../AdminPageLayout";
 
 import PageLayout from "../PageLayout";
+
+import TableListSkeleton from "../SkeletonComponents/TableListSkeleton";
 
 import FilterContainer from "../../containers/FilterContainer";
 
@@ -456,9 +458,13 @@ export const RatingList = () => {
 
 
 
+  const isRatingLoading = ratingStatus === Status.LOADING;
+
+
+
   const ratingTable = (
 
-    <Spin spinning={ratingStatus === Status.LOADING || isDetailsLoading}>
+    <>
 
       {ratingErrorMessage && (
 
@@ -490,6 +496,8 @@ export const RatingList = () => {
 
           bordered
 
+          loading={isRatingLoading && employees.length > 0}
+
           onRow={(record) => ({
 
             onClick: () => handleEmployeeClick(record),
@@ -520,7 +528,7 @@ export const RatingList = () => {
 
         />
 
-        {hoveredEmployee && hoverPosition && (
+        {hoveredEmployee && hoverPosition && !isDetailsLoading && (
 
           <div
 
@@ -544,7 +552,23 @@ export const RatingList = () => {
 
       </div>
 
-    </Spin>
+    </>
+
+  );
+
+
+
+  const showInitialLoading = !isClient || (isRatingLoading && !employees.length);
+
+
+
+  const ratingTableContent = showInitialLoading ? (
+
+    <TableListSkeleton rows={10} />
+
+  ) : (
+
+    ratingTable
 
   );
 
@@ -561,6 +585,8 @@ export const RatingList = () => {
         open={!!expandedEmployee}
 
         onClose={() => setExpandedEmployee(null)}
+
+        isLoading={isDetailsLoading}
 
       />
 
@@ -594,21 +620,13 @@ export const RatingList = () => {
 
     <>
 
-      {ratingTable}
+      {ratingTableContent}
 
       {modals}
 
     </>
 
   );
-
-
-
-  if (!isClient) {
-
-    return null;
-
-  }
 
 
 
