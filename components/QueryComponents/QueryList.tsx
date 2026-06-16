@@ -97,8 +97,10 @@ export const QueryList = () => {
   }, [dispatch, searchValue]);
 
   const tableData = useMemo(() => {
+    const data = queriesTableData ?? [];
+
     if (isExpert && isArchive) {
-      return queriesTableData.filter(
+      return data.filter(
         (query) =>
           (query.expert_users?.includes(user_id) &&
             query.status === QueryStatus.REJECTED) ||
@@ -107,10 +109,10 @@ export const QueryList = () => {
     }
 
     if (isExpert) {
-      return getQueryFilterByExpert(queriesTableData, isExpert, user_id);
+      return getQueryFilterByExpert(data, isExpert, user_id) ?? [];
     }
 
-    return getQueryFilterByArchive(queriesTableData, isArchive);
+    return getQueryFilterByArchive(data, isArchive) ?? [];
   }, [isArchive, isExpert, queriesTableData, user_id]);
 
   const isQueriesPending =

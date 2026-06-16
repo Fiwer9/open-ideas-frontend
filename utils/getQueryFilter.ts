@@ -6,15 +6,16 @@ import {
 export const getQueryFilterByArchive = (
   data: QueriesResponse[],
   isArchive: boolean
-) => {
+): QueriesResponse[] => {
   if (isArchive) {
-    return data?.filter(
+    return data.filter(
       (query) =>
         query.status === QueryStatus.REJECTED ||
         query.status === QueryStatus.DONE
     );
   }
-  return data?.filter(
+
+  return data.filter(
     (query) =>
       query.status !== QueryStatus.REJECTED && query.status !== QueryStatus.DONE
   );
@@ -24,13 +25,15 @@ export const getQueryFilterByExpert = (
   data: QueriesResponse[],
   isExpert: boolean,
   user_id: number
-) => {
-  if (isExpert) {
-    return data?.filter(
-      (query) =>
-        query.expert_users?.includes(user_id) &&
-        query.status !== QueryStatus.DONE &&
-        query.status !== QueryStatus.REJECTED
-    );
+): QueriesResponse[] => {
+  if (!isExpert) {
+    return data;
   }
+
+  return data.filter(
+    (query) =>
+      query.expert_users?.includes(user_id) &&
+      query.status !== QueryStatus.DONE &&
+      query.status !== QueryStatus.REJECTED
+  );
 };
