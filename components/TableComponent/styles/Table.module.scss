@@ -10,6 +10,10 @@
     margin-bottom: 65px;
   }
 
+  &.tableContainerLoading {
+    min-height: calc(17px + 55px + var(--table-rows, 8) * 55px + 56px);
+  }
+
   .table {
     table {
       border: 1px solid rgba(0, 0, 0, 0.2);

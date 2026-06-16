@@ -1,9 +1,9 @@
 import React, { memo } from "react";
-import { Modal } from "antd";
+import { Modal, Spin } from "antd";
 import Image from "next/image";
 import router from "next/router";
 
-import RatingUserExpandedSkeleton from "../SkeletonComponents/RatingUserExpandedSkeleton";
+import InitiativeCardsPlaceholder from "../SkeletonComponents/InitiativeCardsPlaceholder";
 
 import { EmployeeRecord } from "./ratingTypes";
 
@@ -32,11 +32,6 @@ export const RatingUserExpandedModal: React.FC<RatingUserExpandedModalProps> =
         destroyOnClose
         className={styles.modal}
       >
-        {isLoading ? (
-          <div className={styles.expandedCard}>
-            <RatingUserExpandedSkeleton />
-          </div>
-        ) : (
         <div className={styles.expandedCard}>
           <div className={styles.expandedLeft}>
             <div className={styles.userCardHeader}>
@@ -107,46 +102,54 @@ export const RatingUserExpandedModal: React.FC<RatingUserExpandedModalProps> =
 
           <div className={styles.expandedRight}>
             <p className={styles.recentTitle}>Последние 3 инициативы:</p>
-            <div className={styles.initiativesList}>
-              {employee.recentInitiatives.map((initiative) => (
-                <div
-                  key={initiative.id}
-                  className={`${styles.initiativeCard} ${styles.initiativeCardClickable}`}
-                  onClick={() => {
-                    onClose();
-                    router.push(`/queries/application?queryId=${initiative.id}`);
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      onClose();
-                      router.push(`/queries/application?queryId=${initiative.id}`);
-                    }
-                  }}
-                >
-                  <p className={styles.initiativeName}>{initiative.title}</p>
-                  <p className={styles.initiativeRow}>
-                    <span className={styles.initiativeLabel}>Дата:</span>{" "}
-                    <span className={styles.initiativeValue}>
-                      {initiative.date}
-                    </span>
-                  </p>
-                  <p className={styles.initiativeRow}>
-                    <span className={styles.initiativeLabel}>Статус:</span>{" "}
-                    <span className={styles.initiativeValue}>
-                      {initiative.status}
-                    </span>
-                  </p>
-                </div>
-              ))}
-            </div>
+            <Spin spinning={isLoading}>
+              <div className={styles.initiativesList}>
+                {isLoading ? (
+                  <InitiativeCardsPlaceholder count={3} />
+                ) : (
+                  employee.recentInitiatives.map((initiative) => (
+                    <div
+                      key={initiative.id}
+                      className={`${styles.initiativeCard} ${styles.initiativeCardClickable}`}
+                      onClick={() => {
+                        onClose();
+                        router.push(
+                          `/queries/application?queryId=${initiative.id}`
+                        );
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          onClose();
+                          router.push(
+                            `/queries/application?queryId=${initiative.id}`
+                          );
+                        }
+                      }}
+                    >
+                      <p className={styles.initiativeName}>{initiative.title}</p>
+                      <p className={styles.initiativeRow}>
+                        <span className={styles.initiativeLabel}>Дата:</span>{" "}
+                        <span className={styles.initiativeValue}>
+                          {initiative.date}
+                        </span>
+                      </p>
+                      <p className={styles.initiativeRow}>
+                        <span className={styles.initiativeLabel}>Статус:</span>{" "}
+                        <span className={styles.initiativeValue}>
+                          {initiative.status}
+                        </span>
+                      </p>
+                    </div>
+                  ))
+                )}
+              </div>
+            </Spin>
           </div>
         </div>
-        )}
       </Modal>
     );
   });
 
 RatingUserExpandedModal.displayName = "RatingUserExpandedModal";
-

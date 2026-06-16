@@ -6,6 +6,10 @@
 
 .tableWrapper {
   position: relative;
+
+  &.tableWrapperLoading {
+    min-height: calc(17px + 55px + var(--table-rows, 10) * 55px + 56px);
+  }
 }
 
 .tableRow {

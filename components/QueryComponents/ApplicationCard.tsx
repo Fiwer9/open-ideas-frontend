@@ -56,7 +56,7 @@ import {
 } from "../../utils/utils";
 import { Buttons } from "../ButtonComponent/Button";
 import Logo from "../PicturesComponents/Logo";
-import AdminQuerySkeleton from "../SkeletonComponents/AdminQuerySkeleton";
+import ApplicationCardSkeleton from "../SkeletonComponents/ApplicationCardSkeleton";
 import { TextAreas } from "../TextAreaComponent/TextArea";
 
 import { setStatusQueries } from "../../redux/queriesSlice/slice";
@@ -283,7 +283,11 @@ export const ApplicationCard: React.FC = memo(() => {
   };
 
   if (isLoading) {
-    return <AdminQuerySkeleton />;
+    return (
+      <Card className={styles.card}>
+        <ApplicationCardSkeleton />
+      </Card>
+    );
   }
 
   if (loadFailed) {

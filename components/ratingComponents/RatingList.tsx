@@ -20,8 +20,6 @@ import AdminPageLayout from "../AdminPageLayout";
 
 import PageLayout from "../PageLayout";
 
-import TableListSkeleton from "../SkeletonComponents/TableListSkeleton";
-
 import FilterContainer from "../../containers/FilterContainer";
 
 import { selectSelectedTag } from "../../redux/menuSlice/selectors";
@@ -462,6 +460,10 @@ export const RatingList = () => {
 
 
 
+  const isTableLoading = !isClient || isRatingLoading;
+
+
+
   const ratingTable = (
 
     <>
@@ -482,7 +484,12 @@ export const RatingList = () => {
 
       )}
 
-      <div className={styles.tableWrapper}>
+      <div
+        className={`${styles.tableWrapper} ${
+          isTableLoading ? styles.tableWrapperLoading : ""
+        }`}
+        style={{ "--table-rows": 10 } as React.CSSProperties}
+      >
 
         <Table
 
@@ -496,7 +503,7 @@ export const RatingList = () => {
 
           bordered
 
-          loading={isRatingLoading && employees.length > 0}
+          loading={isTableLoading}
 
           onRow={(record) => ({
 
@@ -558,22 +565,6 @@ export const RatingList = () => {
 
 
 
-  const showInitialLoading = !isClient || (isRatingLoading && !employees.length);
-
-
-
-  const ratingTableContent = showInitialLoading ? (
-
-    <TableListSkeleton rows={10} />
-
-  ) : (
-
-    ratingTable
-
-  );
-
-
-
   const modals = (
 
     <>
@@ -620,7 +611,7 @@ export const RatingList = () => {
 
     <>
 
-      {ratingTableContent}
+      {ratingTable}
 
       {modals}
 

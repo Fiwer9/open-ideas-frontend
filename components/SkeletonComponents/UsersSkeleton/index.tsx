@@ -1,33 +1,31 @@
 import React from "react";
-import ContentLoader from "react-content-loader";
+
+import userStyles from "../../UsersComponents/styles/UserCard.module.scss";
+import sk from "../shared/skeleton.module.scss";
+
+import styles from "./UsersSkeleton.module.scss";
 
 const UsersSkeleton = () => (
-  <ContentLoader
-    viewBox="0 0 900 360"
-    width="100%"
-    height={360}
-    speed={2}
-    backgroundColor="#f5f5f5"
-    foregroundColor="#ecebeb"
-  >
-    <circle cx="95" cy="95" r="95" />
+  <div className={userStyles.userContainer} aria-hidden>
+    <div className={`${styles.avatar} ${sk.block} ${sk.pulse}`} />
 
-    <rect x="240" y="20" rx="4" ry="4" width="280" height="24" />
+    <div className={userStyles.infUser}>
+      <div className={`${styles.name} ${sk.block} ${sk.pulse}`} />
 
-    <rect x="240" y="80" rx="3" ry="3" width="120" height="14" />
-    <rect x="400" y="80" rx="3" ry="3" width="240" height="14" />
+      <div className={userStyles.column}>
+        <div className={styles.rows}>
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className={userStyles.row}>
+              <div className={`${styles.label} ${sk.block} ${sk.pulse}`} />
+              <div className={`${styles.value} ${sk.block} ${sk.pulse}`} />
+            </div>
+          ))}
+        </div>
+      </div>
 
-    <rect x="240" y="120" rx="3" ry="3" width="220" height="14" />
-    <rect x="500" y="120" rx="3" ry="3" width="320" height="14" />
-
-    <rect x="240" y="180" rx="3" ry="3" width="140" height="14" />
-    <rect x="420" y="180" rx="3" ry="3" width="200" height="14" />
-
-    <rect x="240" y="220" rx="3" ry="3" width="80" height="14" />
-    <rect x="360" y="220" rx="3" ry="3" width="160" height="14" />
-
-    <rect x="240" y="290" rx="4" ry="4" width="180" height="36" />
-  </ContentLoader>
+      <div className={`${styles.button} ${sk.block} ${sk.pulse}`} />
+    </div>
+  </div>
 );
 
 export default UsersSkeleton;

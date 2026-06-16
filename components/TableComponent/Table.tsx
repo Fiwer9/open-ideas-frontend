@@ -9,8 +9,6 @@ import { QueriesResponse } from "../../models/response/QueriesResponse";
 import { UserResponse } from "../../models/response/UserResponse";
 import { OrganizationsResponse } from "../../models/response/OrganizationsResponse";
 
-import TableListSkeleton from "../SkeletonComponents/TableListSkeleton";
-
 import styles from "./styles/Table.module.scss";
 
 interface DataTable {
@@ -23,24 +21,23 @@ interface DataTable {
   isLoading: boolean;
   onRowClick: (element: typeof this.data) => void;
   locale: string;
+  pageSize?: number;
 }
 
 export const DataTable: React.FC<DataTable> = memo(
-  ({ data, columns, isLoading, onRowClick, locale }) => {
-    if (isLoading) {
-      return (
-        <div className={styles.tableContainer}>
-          <TableListSkeleton />
-        </div>
-      );
-    }
-
+  ({ data, columns, isLoading, onRowClick, locale, pageSize = 8 }) => {
     return (
-      <div className={styles.tableContainer}>
+      <div
+        className={`${styles.tableContainer} ${
+          isLoading ? styles.tableContainerLoading : ""
+        }`}
+        style={{ "--table-rows": pageSize } as React.CSSProperties}
+      >
         <Table
           className={styles.table}
           dataSource={data as RcTableProps<any>["data"]}
           columns={columns}
+          loading={isLoading}
           onRow={(element) => ({
             onClick: () => {
               onRowClick(element);
@@ -50,7 +47,7 @@ export const DataTable: React.FC<DataTable> = memo(
           locale={{ emptyText: locale }}
           bordered
           pagination={{
-            pageSize: 8,
+            pageSize,
             position: ["bottomLeft"],
             showSizeChanger: false,
             showTotal: (total, range) =>
