@@ -17,8 +17,6 @@ export const fetchQueriesBuilder = (
   });
   builder.addCase(fetch.pending, (state) => {
     state.status = Status.LOADING;
-    state.filterItems = [];
-    state.items = [];
   });
   builder.addCase(fetch.rejected, (state) => {
     state.status = Status.ERROR;

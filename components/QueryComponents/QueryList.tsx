@@ -1,14 +1,12 @@
 "use client";
 
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/router";
 
 import { PlusCircleOutlined } from "@ant-design/icons";
 
 import { useSelector } from "react-redux";
-
-import debounce from "lodash.debounce";
 
 import {
   QueriesResponse,
@@ -47,10 +45,6 @@ import { Status } from "../../redux/queriesSlice/types";
 import { TABLE_PAGE_KEYS } from "../../utils/tablePaginationStorage";
 import { selectSelectedTag } from "../../redux/menuSlice/selectors";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
-import { setStatusUsers } from "../../redux/usersSlice/slice";
-import { setStatusQueries } from "../../redux/queriesSlice/slice";
-import { setStatusDirections } from "../../redux/directionsSlice/slice";
-import { setStatusOrganizations } from "../../redux/organizationsSlice/slice";
 
 import {
   getQueryFilterByArchive,
@@ -64,9 +58,10 @@ import PageLayout from "../PageLayout";
 
 import styles from "./styles/QueryList.module.scss";
 
+const EMPTY_TABLE_MESSAGE = "Тут ещё нет идей";
+
 export const QueryList = () => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
   const directions = useSelector(selectDirections);
   const directionsStatus = useSelector(selectStatusDirections);
   const queriesStatus = useSelector(selectStatusQueries);
@@ -89,18 +84,48 @@ export const QueryList = () => {
   }, []);
 
   useEffect(() => {
-    if (
-      directionsStatus === Status.SUCCESS &&
-      queriesStatus === Status.SUCCESS
-    ) {
-      setIsLoading(false);
-    } else if (
-      directionsStatus === Status.ERROR ||
-      queriesStatus === Status.ERROR
-    ) {
-      setIsLoading(false);
+    dispatch(fetchDirections());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (searchValue.trim()) {
+      dispatch(fetchQueriesByName({ value: searchValue }));
+      return;
     }
-  }, [directionsStatus, queriesStatus]);
+
+    dispatch(fetchQueries({}));
+  }, [dispatch, searchValue]);
+
+  const tableData = useMemo(() => {
+    if (isExpert && isArchive) {
+      return queriesTableData.filter(
+        (query) =>
+          (query.expert_users?.includes(user_id) &&
+            query.status === QueryStatus.REJECTED) ||
+          query.status === QueryStatus.DONE
+      );
+    }
+
+    if (isExpert) {
+      return getQueryFilterByExpert(queriesTableData, isExpert, user_id);
+    }
+
+    return getQueryFilterByArchive(queriesTableData, isArchive);
+  }, [isArchive, isExpert, queriesTableData, user_id]);
+
+  const isQueriesPending =
+    queriesStatus === Status.LOADING || queriesStatus === Status.WAITING;
+  const isDirectionsPending =
+    directionsStatus === Status.LOADING || directionsStatus === Status.WAITING;
+  const showLoading =
+    !isClient || isQueriesPending || isDirectionsPending;
+  const emptyTableMessage =
+    !showLoading &&
+    queriesStatus === Status.SUCCESS &&
+    directionsStatus === Status.SUCCESS &&
+    tableData.length === 0
+      ? EMPTY_TABLE_MESSAGE
+      : "";
 
   const getColumns = () => [
     {
@@ -138,13 +163,9 @@ export const QueryList = () => {
       dataIndex: "status",
       key: "status",
       render: (text: QueryStatus) => (
-        <>
-          {
-            <span className={`${getStatusClassName(styles, text)}`}>
-              {statusTranslation[text]}
-            </span>
-          }
-        </>
+        <span className={`${getStatusClassName(styles, text)}`}>
+          {statusTranslation[text]}
+        </span>
       ),
       width: "15%",
       filters: getStatus(queriesTableData)?.map((status) => ({
@@ -157,23 +178,6 @@ export const QueryList = () => {
     },
   ];
 
-  const fetchData = debounce(async () => {
-    await dispatch(fetchDirections());
-    await dispatch(fetchQueries({}));
-  }, 4000);
-
-  const fetchDataByName = useCallback(async () => {
-    await dispatch(fetchQueriesByName({ value: searchValue }));
-  }, [searchValue]);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    fetchDataByName();
-  }, [searchValue]);
-
   const handleRowClick = (query: QueriesResponse) => {
     if (!query.id) {
       return;
@@ -184,22 +188,6 @@ export const QueryList = () => {
     router.push(`/queries/adminApplication?queryId=${query.id}`);
   };
 
-  const getData = () => {
-    if (isExpert && isArchive) {
-      return queriesTableData?.filter(
-        (query) =>
-          (query.expert_users?.includes(user_id) &&
-            query.status === QueryStatus.REJECTED) ||
-          query.status === QueryStatus.DONE
-      );
-    }
-    if (isExpert) {
-      return getQueryFilterByExpert(queriesTableData, isExpert, user_id);
-    }
-
-    return getQueryFilterByArchive(queriesTableData, isArchive);
-  };
-
   const handleRowClickIdea = (query: QueriesResponse) => {
     if (!query.id) {
       return;
@@ -208,13 +196,7 @@ export const QueryList = () => {
     dispatch(setPageName(query.name));
     dispatch(setPageId(query.id));
     router.push(`/queries/application?queryId=${query.id}`);
-    dispatch(setStatusUsers(Status.WAITING));
-    dispatch(setStatusQueries(Status.WAITING));
-    dispatch(setStatusDirections(Status.WAITING));
-    dispatch(setStatusOrganizations(Status.WAITING));
   };
-
-  const showLoading = !isClient || isLoading;
 
   return (
     <>
@@ -223,11 +205,11 @@ export const QueryList = () => {
           <MainText text={"Инициативы"} />
           <FilterContainer placeholder={"Поиск по идеям"} />
           <DataTable
-            data={getData() as QueriesResponse[]}
+            data={tableData}
             columns={getColumns()}
             isLoading={showLoading}
             onRowClick={handleRowClick}
-            locale={"Тут ещё нет идей"}
+            locale={emptyTableMessage}
             paginationStorageKey={TABLE_PAGE_KEYS.QUERIES_ADMIN}
           />
         </AdminPageLayout>
@@ -263,11 +245,11 @@ export const QueryList = () => {
             </div>
           </div>
           <DataTable
-            columns={directions.length > 0 ? getColumns() : []}
-            data={getData() as QueriesResponse[]}
+            columns={getColumns()}
+            data={tableData}
             onRowClick={handleRowClickIdea}
             isLoading={showLoading}
-            locale={"Тут ещё нет идей"}
+            locale={emptyTableMessage}
             paginationStorageKey={TABLE_PAGE_KEYS.QUERIES}
           />
           <Modal

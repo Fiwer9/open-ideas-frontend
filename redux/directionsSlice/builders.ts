@@ -20,7 +20,6 @@ export const fetchDirectionsBuilder = (
   });
   builder.addCase(fetch.pending, (state) => {
     state.status = Status.LOADING;
-    state.items = [];
   });
   builder.addCase(fetch.rejected, (state) => {
     state.status = Status.ERROR;

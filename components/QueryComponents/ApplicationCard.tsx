@@ -59,8 +59,6 @@ import Logo from "../PicturesComponents/Logo";
 import ApplicationCardSkeleton from "../SkeletonComponents/ApplicationCardSkeleton";
 import { TextAreas } from "../TextAreaComponent/TextArea";
 
-import { setStatusQueries } from "../../redux/queriesSlice/slice";
-import { setStatusDirections } from "../../redux/directionsSlice/slice";
 import { setPageId, setPageName } from "../../redux/menuSlice/slice";
 import {
   selectFilesData,
@@ -449,8 +447,6 @@ export const ApplicationCard: React.FC = memo(() => {
                   <Buttons
                     text={"Назад"}
                     onClick={() => {
-                      dispatch(setStatusQueries(Status.WAITING));
-                      dispatch(setStatusDirections(Status.WAITING));
                       router.push("/queries");
                       dispatch(setCurrentComment(""));
                     }}
